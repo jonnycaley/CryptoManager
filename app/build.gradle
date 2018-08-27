@@ -19,6 +19,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+    repositories {
+        jcenter()
+        google()
+        maven { url "https://jitpack.io" }
+    }
 }
 
 dependencies {
@@ -34,8 +42,24 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-
 //  rxjava
     implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+//  news api
+    implementation 'io.cryptocontrol:crypto-news-api:2.4.0'
+
+//  retrofit2
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+
+//  volley
+    implementation 'com.android.volley:volley:1.1.1'
+
+//  recyclerview shimmer
+    implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
+
+//  picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
 }

@@ -1,9 +1,11 @@
-package com.jonnycaley.cryptomanager.ui.news
+package com.jonnycaley.cryptomanager.ui.article
 
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
-class NewsContract {
+
+class ArticleContract {
     interface View : BaseView<Presenter>
+
     interface Presenter : BasePresenter
 }

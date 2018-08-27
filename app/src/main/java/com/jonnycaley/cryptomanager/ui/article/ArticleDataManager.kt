@@ -1,28 +1,29 @@
-package com.jonnycaley.cryptomanager.ui.news
+package com.jonnycaley.cryptomanager.ui.article
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 
-class NewsDataManager private constructor(val UserPreferences: UserPreferences) {
+class ArticleDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: NewsDataManager? = null
+        private var INSTANCE: ArticleDataManager? = null
 
         private lateinit var context: Context
 
-        private val TAG = "NewsData"
+        private val TAG = "ArticleData"
 
         @JvmStatic
-        fun getInstance(context: Context): NewsDataManager {
+        fun getInstance(context: Context): ArticleDataManager {
             if (INSTANCE == null) {
-                INSTANCE = NewsDataManager(UserPreferences.getInstance(context))
+                INSTANCE = ArticleDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!
         }
     }
+
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
