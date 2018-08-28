@@ -42,18 +42,25 @@ class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-//        setSupportActionBar(toolbar)
+        setContentView(R.layout.activity_base)
+//        setupToolbar()
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         loadPortfolioFragment()
     }
 
-    lateinit var portfolioFragment: PortfolioFragment
+//    private fun setupToolbar() {
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+//        setSupportActionBar(toolbar)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+//        supportActionBar?.title = "Splash"
+//    }
+
+    lateinit var portfolioFragment: HomeFragment
 
     private fun loadPortfolioFragment() {
         val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-        portfolioFragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
+        portfolioFragment = HomeFragment().newInstance("Home")/* parcelable */
         transaction.replace(R.id.frame_placeholder, portfolioFragment)
         transaction.commit()
     }

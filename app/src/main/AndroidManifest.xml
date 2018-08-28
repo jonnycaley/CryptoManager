@@ -27,15 +27,28 @@
         <activity
             android:name=".ui.base.BaseActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:label="@string/base_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.article.ArticleActivity"></activity>
+
+        <activity
+            android:name=".ui.article.ArticleActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/article_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".ui.currency.CurrencyActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/article_currency"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
