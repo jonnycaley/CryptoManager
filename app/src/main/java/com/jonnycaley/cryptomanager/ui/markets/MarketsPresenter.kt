@@ -1,16 +1,13 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.markets
 
-import io.reactivex.disposables.CompositeDisposable
-import android.os.StrictMode
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-
-class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.View) : HomeContract.Presenter{
+class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsContract.View) : MarketsContract.Presenter{
 
     var compositeDisposable: CompositeDisposable? = null
 
@@ -22,31 +19,14 @@ class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.Vi
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-        //start stuff here
-
-        getNews()
-    }
-
-
-    private fun getNews() {
-
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
 
         if(dataManager.checkConnection()){
-            dataManager.getCryptoControlService().getTopNews("5")
+
+            dataManager.getCoinMarketCapService().getTop100("0")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map { news ->
-                        view.showNews(news)
-                    }
-                    .flatMap {
-                        dataManager.getCoinMarketCapService().getTop100("0")
-                    }
                     .map { currencies ->
-                        val sortedBy = currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
-
-                        view.showTop100Changes(sortedBy)
+                        view.showTop100Changes(currencies)
                         return@map currencies
                     }
                     .subscribeOn(Schedulers.io())
@@ -66,16 +46,12 @@ class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.Vi
                     })
 
         } else {
-//            view.showNoInternet()
+
         }
     }
 
     override fun detachView() {
         compositeDisposable?.dispose()
-    }
-
-    companion object {
-        val TAG = "HomePresenter"
     }
 
 }

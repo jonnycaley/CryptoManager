@@ -70,4 +70,11 @@ dependencies {
 //  cardview
     implementation 'com.android.support:cardview-v7:27.1.1'
 
+//  save/star/heart button animated
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+
+//  pull to refresh recyclerview
+    implementation 'in.srain.cube:ultra-ptr:1.0.11'
+
+
 }

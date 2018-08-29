@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.home.HomeFragment
+import com.jonnycaley.cryptomanager.ui.portfolio.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
 import kotlinx.android.synthetic.main.content_home.*
@@ -24,10 +25,10 @@ class BaseActivity : AppCompatActivity() {
                 fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
-//            R.id.navigation_markets -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
-//                return@OnNavigationItemSelectedListener true
-//            }
+            R.id.navigation_markets -> {
+                fragmentTransaction.replace(R.id.frame_placeholder, MarketsFragment()).commit()
+                return@OnNavigationItemSelectedListener true
+            }
             R.id.navigation_portfolio -> {
                 fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
                 return@OnNavigationItemSelectedListener true

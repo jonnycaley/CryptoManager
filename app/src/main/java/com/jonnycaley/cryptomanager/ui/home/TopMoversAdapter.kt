@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_top_mover.view.*
 import java.text.DecimalFormat
 
 
-class TopMoversAdapter(private val articles: List<Currency>?, val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
+class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_top_mover, parent, false))
