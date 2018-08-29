@@ -9,4 +9,10 @@
     <color name="light_grey">#E1E1E1</color>
     <color name="white">#ffffff</color>
 
+
+    <color name="stock_green">#3300F900</color>
+    <color name="stock_red">#33FF2600</color>
+    <color name="arrow_green">#6600F900</color>
+    <color name="arrow_red">#66FF2600</color>
+
 </resources>

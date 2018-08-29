@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.adapters
 
 import android.content.Context
 import android.graphics.Color
@@ -9,9 +9,8 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.ui.currency.CurrencyArgs
-import com.squareup.picasso.Picasso
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
-import java.text.DecimalFormat
 
 
 class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
@@ -33,14 +32,14 @@ class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: 
 //                .centerCrop()
 //                .into(holder.image)
 
-        val price = toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 8).toDouble()
+        val price = Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 8).toDouble()
 
-        var priceText = ""
+        var priceText: String
 
         priceText = if(price > 1)
-            toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 2)
+            Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 2)
         else
-            "0${toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 6)}"
+            "0${Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 6)}"
 
         if(priceText.indexOf(".") == priceText.length -1)
             priceText += "0"
@@ -71,18 +70,10 @@ class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: 
         }
 
         holder.itemView.setOnClickListener {
-            CurrencyArgs(item).launch(context!!)
+            CurrencyArgs(item!!).launch(context!!)
 
         }
     }
-
-    fun toDecimals(number : Double, decimalPlaces : Int) : String{
-        val df = DecimalFormat("#")
-        df.setMaximumFractionDigits(decimalPlaces)
-        return df.format(number)
-    }
-
-
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {

@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.reginald.swiperefresh.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipelayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    swiperefresh:enable_top_progress_bar="true"
+    swiperefresh:keep_refresh_head="false"
+    swiperefresh:refresh_mode="pull_mode"
+    swiperefresh:return_to_header_duration="500"
+    swiperefresh:return_to_top_duration="500"
+    swiperefresh:time_out_refresh_complete="2000"
+    swiperefresh:time_out_return_to_top="1000"
+    swiperefresh:top_progress_bar_color_1="#000000"
+    swiperefresh:top_progress_bar_color_2="#ee5522"
+    swiperefresh:top_progress_bar_color_3="#ffa600"
+    swiperefresh:top_progress_bar_color_4="#ffffff">
 
-    <in.srain.cube.views.ptr.PtrFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/store_house_ptr_frame"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content">
 
-        cube_ptr:ptr_duration_to_close="300"
-        cube_ptr:ptr_duration_to_close_header="2000"
-        cube_ptr:ptr_keep_header_when_refresh="true"
-        cube_ptr:ptr_pull_to_fresh="false"
-        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
-        cube_ptr:ptr_resistance="1.7">
-
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_currencies"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            android:layout_height="wrap_content">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_latest_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
 
-    </in.srain.cube.views.ptr.PtrFrameLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_currencies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recycler_view_latest_news"
+                android:nestedScrollingEnabled="false" />
 
-</RelativeLayout>
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</com.reginald.swiperefresh.CustomSwipeRefreshLayout>
+

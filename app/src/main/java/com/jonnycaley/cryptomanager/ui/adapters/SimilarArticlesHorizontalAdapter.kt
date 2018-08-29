@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.article
+package com.jonnycaley.cryptomanager.ui.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -8,13 +8,14 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.SimilarArticle
+import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_news_snap.view.*
+import kotlinx.android.synthetic.main.item_related_news_horizontal.view.*
 
-class RelatedSnapAdapter(private val articles : List<SimilarArticle>?, val context: Context?) : RecyclerView.Adapter<RelatedSnapAdapter.ViewHolder>() {
+class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticle>?, val context: Context?) : RecyclerView.Adapter<SimilarArticlesHorizontalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_snap, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_related_news_horizontal, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

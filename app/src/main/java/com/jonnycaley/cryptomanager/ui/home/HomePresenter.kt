@@ -34,14 +34,14 @@ class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.Vi
         StrictMode.setThreadPolicy(policy)
 
         if(dataManager.checkConnection()){
-            dataManager.getCryptoControlService().getTopNews("5")
+            dataManager.getCryptoControlService().getTopNews("10")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { news ->
                         view.showNews(news)
                     }
                     .flatMap {
-                        dataManager.getCoinMarketCapService().getTop100("0")
+                        dataManager.getCoinMarketCapService().getTop100()
                     }
                     .map { currencies ->
                         val sortedBy = currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()

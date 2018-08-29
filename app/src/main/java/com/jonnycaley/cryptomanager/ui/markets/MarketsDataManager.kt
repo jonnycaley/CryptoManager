@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.markets
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
+import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -33,6 +34,11 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     fun getCoinMarketCapService(): CoinMarketCapService {
         val retrofit = RetrofitHelper().createRetrofit("https://pro-api.coinmarketcap.com/v1/", Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
         return retrofit.create(CoinMarketCapService::class.java)
+    }
+
+    fun getCryptoControlService(): CryptoControlService {
+        val retrofit = RetrofitHelper().createRetrofit("https://pro-api.coinmarketcap.com/v1/", Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
+        return retrofit.create(CryptoControlService::class.java)
     }
 
     fun checkConnection(): Boolean {

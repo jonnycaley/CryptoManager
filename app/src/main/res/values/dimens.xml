@@ -4,6 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_margin_small">2dp</dimen>
+
+
     <dimen name="default_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
 
@@ -11,7 +14,6 @@
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="header_text_size">30sp</dimen>
-
 
 
     <item name="normal_speed" type="dimen" format="float">100</item>

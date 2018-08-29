@@ -12,5 +12,4 @@ interface CryptoControlService {
     @GET("news")
     fun getTopNews(@Query("limit") limit: String): Single<Array<News>>
 
-
 }

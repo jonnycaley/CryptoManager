@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,4 +51,9 @@ object Utils {
         return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read • "
     }
 
+    fun toDecimals(number : Double, decimalPlaces : Int) : String{
+        val df = DecimalFormat("#")
+        df.setMaximumFractionDigits(decimalPlaces)
+        return df.format(number)
+    }
 }

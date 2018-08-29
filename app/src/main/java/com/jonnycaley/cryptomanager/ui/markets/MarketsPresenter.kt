@@ -22,17 +22,19 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
         if(dataManager.checkConnection()){
 
-            dataManager.getCoinMarketCapService().getTop100("0")
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { currencies ->
-                        view.showTop100Changes(currencies)
-                        return@map currencies
+            dataManager.getCoinMarketCapService().getTop100()
+                    .map { view.showTop100Changes(it.data)
+                    }
+                    .flatMap { dataManager.getCryptoControlService().getTopNews("10")
+                    }
+                    .map {
+                        view.showLatestArticles(it)
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Currencies> {
-                        override fun onSuccess(currencies: Currencies) {
+                    .subscribe(object : SingleObserver<Unit> {
+                        override fun onSuccess(currencies: Unit) {
+
                         }
 
                         override fun onSubscribe(d: Disposable) {

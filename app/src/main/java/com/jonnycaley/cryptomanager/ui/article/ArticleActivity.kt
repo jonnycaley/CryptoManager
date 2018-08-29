@@ -13,6 +13,7 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.takusemba.multisnaprecyclerview.OnSnapListener
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
+import com.jonnycaley.cryptomanager.ui.adapters.SimilarArticlesHorizontalAdapter
 
 
 class ArticleActivity : AppCompatActivity(), ArticleContract.View{
@@ -24,7 +25,7 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View{
     private val webview by lazy { findViewById<WebView>(R.id.webview) }
     private val recyclerviewSnap by lazy { findViewById<MultiSnapRecyclerView>(R.id.recyclerview_snap) }
 
-    private val adapter by lazy { RelatedSnapAdapter(args.article.similarArticles, this) }
+    private val adapter by lazy { SimilarArticlesHorizontalAdapter(args.article.similarArticles, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
