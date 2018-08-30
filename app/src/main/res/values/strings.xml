@@ -14,4 +14,10 @@
     <string name="base_activity">BaseActivity</string>
     <string name="article_activity">ArticleActivity</string>
     <string name="article_currency">CurrencyActivity</string>
+
+    <string-array name="top_100_array">
+        <item>USD</item>
+        <item>BTC</item>
+    </string-array>
+
 </resources>

@@ -36,14 +36,28 @@ object Utils {
         val hours = minutes / 60
         val days = hours / 24
 
-        if (seconds < 60)
-            return "$seconds seconds ago"
-        else if (minutes < 60)
-            return "$minutes minutes ago"
-        else if (hours < 24)
-            return "$hours hours ago"
-        else
-            return "$days days ago"
+        when {
+            seconds < 60 -> return if(seconds.toInt() == 1){
+                "$seconds second ago"
+            } else {
+                "$seconds seconds ago"
+            }
+            minutes < 60 -> return if(minutes.toInt() == 1){
+                "$minutes minute ago"
+            } else {
+                "$minutes minutes ago"
+            }
+            hours < 24 -> return if(hours.toInt() == 1){
+                "$hours hour ago"
+            } else {
+                "$hours hours ago"
+            }
+            else -> return if(days.toInt() == 1){
+                "$days day ago"
+            } else {
+                "$days days ago"
+            }
+        }
 
     }
 

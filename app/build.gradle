@@ -82,4 +82,6 @@ dependencies {
 //  pull to refresh recyclerview
     implementation 'com.reginald.swiperefresh:library:1.1.2'
 
+//  searchbar
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
 }

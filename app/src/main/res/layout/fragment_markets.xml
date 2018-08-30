@@ -22,9 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+
+            <SearchView
+                android:id="@+id/search_view_currencies"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"/>
+            <!--android:gravity="end"-->
+            <!--android:layout_gravity="end"-->
+
+            <TextView
+                android:id="@+id/text_latest_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latest News"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:textColor="@color/text_grey" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_latest_news"
@@ -32,14 +50,40 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false" />
 
+            <RelativeLayout
+                android:id="@+id/layout_functions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/small_margin">
+
+
+                <TextView
+                    android:id="@+id/text_top_100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Top 100"
+                    android:textColor="@color/text_grey"/>
+
+                <Spinner
+                    android:id="@+id/spinner_markets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin" />
+
+            </RelativeLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_currencies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/recycler_view_latest_news"
                 android:nestedScrollingEnabled="false" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

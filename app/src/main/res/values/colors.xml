@@ -14,5 +14,6 @@
     <color name="stock_red">#33FF2600</color>
     <color name="arrow_green">#6600F900</color>
     <color name="arrow_red">#66FF2600</color>
+    <color name="text_grey">#807F7F</color>
 
 </resources>

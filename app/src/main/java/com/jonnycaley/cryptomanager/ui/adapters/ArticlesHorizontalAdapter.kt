@@ -22,7 +22,7 @@ class ArticlesHorizontalAdapter(private val articles : Array<News>?, val context
         val item = articles?.get(position)
 
         holder.title.text = item?.title.toString()
-        holder.category.text = item?.primaryCategory.toString()
+        holder.category.text = item?.source?.name.toString()
         holder.date.text = Utils.getTimeFrom(item?.publishedAt)
 
         holder.setIsRecyclable(false)
@@ -41,7 +41,7 @@ class ArticlesHorizontalAdapter(private val articles : Array<News>?, val context
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val title = view.title
-        val category = view.category
+        val category = view.source
         val date = view.date
     }
 

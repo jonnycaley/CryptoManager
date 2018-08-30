@@ -32,12 +32,12 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     }
 
     fun getCoinMarketCapService(): CoinMarketCapService {
-        val retrofit = RetrofitHelper().createRetrofit("https://pro-api.coinmarketcap.com/v1/", Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
+        val retrofit = RetrofitHelper().createRetrofit(Constants.COINMARKETCAP_URL, Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
         return retrofit.create(CoinMarketCapService::class.java)
     }
 
     fun getCryptoControlService(): CryptoControlService {
-        val retrofit = RetrofitHelper().createRetrofit("https://pro-api.coinmarketcap.com/v1/", Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCONTROL_URL, Constants.CRYPTOCONTROL_NAME, Constants.CRYPTOCONTROL_KEY)
         return retrofit.create(CryptoControlService::class.java)
     }
 
