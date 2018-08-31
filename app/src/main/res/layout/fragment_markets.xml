@@ -66,14 +66,13 @@
                     android:text="Top 100"
                     android:textColor="@color/text_grey"/>
 
-                <Spinner
-                    android:id="@+id/spinner_markets"
+                <TextView
+                    android:id="@+id/text_markets"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginEnd="@dimen/default_margin" />
+                    android:text="USD"/>
 
             </RelativeLayout>
 

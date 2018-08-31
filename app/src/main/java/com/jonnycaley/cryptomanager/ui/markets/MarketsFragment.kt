@@ -36,8 +36,6 @@ class MarketsFragment : Fragment(), MarketsContract.View{
     val recyclerViewCurrencies by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_currencies) }
     val recyclerViewLatestNews by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_latest_news) }
 
-    val spinnerMarkets by lazy { root.findViewById<Spinner>(R.id.spinner_markets) }
-
     val searchView : SearchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
 
     override fun setPresenter(presenter: MarketsContract.Presenter) {
@@ -53,11 +51,6 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = ArrayAdapter.createFromResource(context, R.array.top_100_array, android.R.layout.simple_spinner_item)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerMarkets.adapter = adapter
-
-        spinnerMarkets.onItemSelectedListener = SpinnerAdapter(presenter)
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
@@ -86,22 +79,5 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         recyclerViewLatestNews.layoutManager = layoutManager
         similarArticlesAdapter = ArticlesHorizontalAdapter(news, context)
         recyclerViewLatestNews.adapter = similarArticlesAdapter
-    }
-
-    class SpinnerAdapter(presenter: BasePresenter) : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            when(parent?.getItemAtPosition(position)){
-                "BTC" ->{
-                    //get data
-                }
-                "USD" -> {
-                    //get data
-                }
-            }
-        }
     }
 }
