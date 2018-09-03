@@ -41,7 +41,7 @@ class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: 
         else
             "0${Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 6)}"
 
-        if(priceText.indexOf(".") == priceText.length -1)
+        if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
             priceText += "0"
 
         holder.price.text = "$$priceText"

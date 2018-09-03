@@ -15,8 +15,18 @@ class CurrencyPresenter (var dataManager: CurrencyDataManager, var view: Currenc
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-        //start stuff here
-//        getCoinDetails()
+
+        getCoinDetails()
+    }
+
+    private fun getCoinDetails() {
+        if(dataManager.checkConnection()){
+
+
+
+        } else {
+
+        }
     }
 
 

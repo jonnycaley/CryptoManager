@@ -3,7 +3,6 @@ package com.jonnycaley.cryptomanager.ui.home
 import io.reactivex.disposables.CompositeDisposable
 import android.os.StrictMode
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -22,8 +21,6 @@ class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.Vi
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-        //start stuff here
-
         getNews()
     }
 

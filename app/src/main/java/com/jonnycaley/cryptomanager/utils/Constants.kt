@@ -10,4 +10,6 @@ object Constants {
     val COINMARKETCAP_NAME = "CMC_PRO_API_KEY"
     val COINMARKETCAP_KEY = "a17fe7b8-33e3-4a80-a1ee-7e4ffce2078f"
 
+    val CRYPTOCOMPARE_URL = "https://min-api.cryptocompare.com/data/"
+
 }

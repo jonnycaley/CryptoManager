@@ -7,9 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.SearchView
-import android.widget.Spinner
+import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
@@ -19,8 +17,7 @@ import com.jonnycaley.cryptomanager.ui.markets.MarketsContract
 import com.jonnycaley.cryptomanager.ui.markets.MarketsDataManager
 import com.jonnycaley.cryptomanager.ui.markets.MarketsPresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
-import android.widget.ArrayAdapter
-
+import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 
 class MarketsFragment : Fragment(), MarketsContract.View{
@@ -38,6 +35,8 @@ class MarketsFragment : Fragment(), MarketsContract.View{
 
     val searchView : SearchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
 
+    val swipeRefreshLayout : CustomSwipeRefreshLayout by lazy { root.findViewById<CustomSwipeRefreshLayout>(R.id.swipelayout) }
+
     override fun setPresenter(presenter: MarketsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
@@ -50,7 +49,9 @@ class MarketsFragment : Fragment(), MarketsContract.View{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = ArrayAdapter.createFromResource(context, R.array.top_100_array, android.R.layout.simple_spinner_item)
+        swipeRefreshLayout.setOnRefreshListener {
+            Toast.makeText(context, "Refreshing", Toast.LENGTH_SHORT).show()
+        }
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()

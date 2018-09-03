@@ -70,9 +70,16 @@
                     android:id="@+id/text_markets"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/text_gain"
+                    android:text="USD"/>
+
+                <TextView
+                    android:id="@+id/text_gain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:text="USD"/>
+                    android:text="Change"/>
 
             </RelativeLayout>
 
