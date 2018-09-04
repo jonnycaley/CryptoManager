@@ -16,7 +16,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View{
 
     var listener: mListener? = null
 
-    lateinit var presenter : BasePresenter
+    private lateinit var presenter : PortfolioContract.Presenter
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)

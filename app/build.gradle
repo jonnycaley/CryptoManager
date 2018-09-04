@@ -87,4 +87,8 @@ dependencies {
 
 //  charting
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+//  chart time frame selector
+    implementation 'com.github.ceryle:RadioRealButton:v2.1.1'
+
 }

@@ -20,7 +20,7 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View{
 
     private val args by lazy { ArticleArgs.deserializeFrom(intent) }
 
-    lateinit var presenter : BasePresenter
+    private lateinit var presenter : ArticleContract.Presenter
 
     private val webview by lazy { findViewById<WebView>(R.id.webview) }
     private val recyclerviewSnap by lazy { findViewById<MultiSnapRecyclerView>(R.id.recyclerview_snap) }

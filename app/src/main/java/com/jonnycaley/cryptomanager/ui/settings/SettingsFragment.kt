@@ -16,7 +16,7 @@ class SettingsFragment : Fragment(), SettingsContract.View{
 
     var listener: mListener? = null
 
-    lateinit var presenter : BasePresenter
+    private lateinit var presenter : SettingsContract.Presenter
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
         this.presenter = checkNotNull(presenter)

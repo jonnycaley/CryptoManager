@@ -24,7 +24,7 @@ class MarketsFragment : Fragment(), MarketsContract.View{
 
     lateinit var root : View
 
-    lateinit var presenter : BasePresenter
+    private lateinit var presenter : MarketsContract.Presenter
 
     lateinit var currenciesAdapter : CurrenciesAdapter
 

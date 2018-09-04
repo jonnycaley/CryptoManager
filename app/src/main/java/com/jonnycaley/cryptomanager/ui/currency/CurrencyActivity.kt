@@ -16,7 +16,7 @@ import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 
 class CurrencyActivity : AppCompatActivity(), CurrencyContract.View {
 
-    lateinit var presenter: BasePresenter
+    private lateinit var presenter: CurrencyContract.Presenter
 
     val args by lazy { CurrencyArgs.deserializeFrom(intent) }
 

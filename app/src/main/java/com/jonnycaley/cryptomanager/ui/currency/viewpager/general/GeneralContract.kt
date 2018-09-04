@@ -8,8 +8,11 @@ interface GeneralContract {
 
     interface View : BaseView<Presenter> {
         fun getSymbol(): String
-        fun showCandlestickChart(response: Data)
+        fun showCandlestickChart(response: Data, timeUnit: String, aggregate: Int)
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getCurrencyData(timeString: String, symbol: String, conversion: String, limit: Int, aggregate: Int)
+        fun clearChartDisposable()
+    }
 }
