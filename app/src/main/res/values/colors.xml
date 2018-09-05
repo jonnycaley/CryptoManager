@@ -17,5 +17,7 @@
     <color name="text_grey">#807F7F</color>
     <color name="candlestick_green">#70B68B</color>
     <color name="candlestick_red">#D85960</color>
+    <color name="red">#FF2600</color>
+    <color name="green">#008F00</color>
 
 </resources>

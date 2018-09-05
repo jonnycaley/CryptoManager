@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/small_margin"
     android:orientation="horizontal"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="@dimen/card_corner_radius">
 
     <RelativeLayout
         android:layout_width="90dp"
@@ -43,7 +44,7 @@
                 android:id="@+id/movement"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="▼" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/percentage"

@@ -7,13 +7,11 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import android.webkit.WebViewClient
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.takusemba.multisnaprecyclerview.OnSnapListener
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
-import com.jonnycaley.cryptomanager.ui.adapters.SimilarArticlesHorizontalAdapter
 
 
 class ArticleActivity : AppCompatActivity(), ArticleContract.View{

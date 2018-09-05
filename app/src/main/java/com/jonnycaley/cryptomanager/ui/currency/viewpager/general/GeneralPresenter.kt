@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.currency.viewpager.general
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -27,19 +28,28 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
             chartDisposable = CompositeDisposable()
         }
 
-        getCurrencyData(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H)
+        getData()
     }
 
-    override fun getCurrencyData(timeString : String, symbol: String, conversion : String, limit : Int, aggregate : Int) {
+    override fun getData() {
+        clearChartDisposable()
+        clearDisposable()
+
+//      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be seperate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
+        getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H)
+        getCurrencyNews(view.getName())
+    }
+
+    override fun getCurrencyChart(timeString : String, symbol: String, conversion : String, limit : Int, aggregate : Int) {
 
         if (dataManager.checkConnection()) {
 
-            dataManager.getCryptoCompareService().getCurrencyData(timeString, symbol, conversion, limit.toString(), aggregate.toString())
+            dataManager.getCryptoCompareService().getCurrencyGraph(timeString, symbol, conversion, limit.toString(), aggregate.toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : SingleObserver<Data> {
                         override fun onSuccess(response: Data) {
-                            view.showCandlestickChart(response, timeString, aggregate)
+                            view.loadCandlestickChart(response, timeString, aggregate)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -53,6 +63,35 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         } else {
 
         }
+    }
+
+    private fun getCurrencyNews(name: String) {
+
+        if (dataManager.checkConnection()) {
+
+            dataManager.getCryptoControlNewsService().getCurrencyNews(name)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<Array<News>> {
+                        override fun onSuccess(response: Array<News>) {
+                            view.loadCurrencyNews(response)
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
+        } else {
+
+        }
+    }
+
+    private fun clearDisposable() {
+        compositeDisposable?.clear()
     }
 
     override fun clearChartDisposable() {

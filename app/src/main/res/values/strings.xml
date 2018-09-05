@@ -14,6 +14,9 @@
     <string name="base_activity">BaseActivity</string>
     <string name="article_activity">ArticleActivity</string>
     <string name="article_currency">CurrencyActivity</string>
+    <string name="portfolio_empty">Your watchlist is empty!</string>
+    <string name="portfolio_empty_tap">Use the button to add something to your protfolio!</string>
+    <string name="search_activity">SearchActivity</string>
 
     <string-array name="top_100_array">
         <item>USD</item>

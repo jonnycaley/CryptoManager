@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.currency.viewpager.general
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -36,6 +37,11 @@ class GeneralDataManager private constructor(val userPreferences: UserPreference
     fun getCryptoCompareService(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
         return retrofit.create(CryptoCompareService::class.java)
+    }
+
+    fun getCryptoControlNewsService(): CryptoControlService {
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCONTROL_URL, Constants.CRYPTOCONTROL_NAME, Constants.CRYPTOCONTROL_KEY)
+        return retrofit.create(CryptoControlService::class.java)
     }
 
 

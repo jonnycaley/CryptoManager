@@ -1,7 +1,9 @@
 package com.jonnycaley.cryptomanager.utils
 
 import android.content.Context
+import android.graphics.Color
 import android.net.ConnectivityManager
+import com.jonnycaley.cryptomanager.R
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -61,6 +63,24 @@ object Utils {
 
     }
 
+    fun formatPrice(priceAsDouble: Double): String {
+
+        val price = Utils.toDecimals(priceAsDouble, 8).toDouble()
+
+        var priceText: String
+
+        priceText = if(price > 1)
+            Utils.toDecimals(priceAsDouble, 2)
+        else
+            "0${Utils.toDecimals(priceAsDouble, 6)}"
+
+        if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
+            priceText += "0"
+
+        return priceText
+    }
+
+
     fun getReadTime(words: Int?): String {
         return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read • "
     }
@@ -69,5 +89,22 @@ object Utils {
         val df = DecimalFormat("#")
         df.setMaximumFractionDigits(decimalPlaces)
         return df.format(number)
+    }
+
+    fun formatPercentage(percentChange24h: Float?): String {
+        val percentage2DP = String.format("%.2f", percentChange24h)
+
+        return when {
+            percentage2DP == "0.00" -> {
+                "$percentage2DP%"
+//                holder.movement.text = "-"
+            }
+            percentage2DP.toDouble() > 0 -> {
+                "+$percentage2DP%"
+            }
+            else -> {
+                "$percentage2DP%"
+            }
+        }
     }
 }

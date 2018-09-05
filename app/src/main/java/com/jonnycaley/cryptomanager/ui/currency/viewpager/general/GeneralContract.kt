@@ -8,11 +8,14 @@ interface GeneralContract {
 
     interface View : BaseView<Presenter> {
         fun getSymbol(): String
-        fun showCandlestickChart(response: Data, timeUnit: String, aggregate: Int)
+        fun loadCandlestickChart(response: Data, timeUnit: String, aggregate: Int)
+        fun loadCurrencyNews(news: Array<com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News>)
+        fun getName(): String
     }
 
     interface Presenter : BasePresenter {
-        fun getCurrencyData(timeString: String, symbol: String, conversion: String, limit: Int, aggregate: Int)
+        fun getCurrencyChart(timeString: String, symbol: String, conversion: String, limit: Int, aggregate: Int)
         fun clearChartDisposable()
+        fun getData()
     }
 }

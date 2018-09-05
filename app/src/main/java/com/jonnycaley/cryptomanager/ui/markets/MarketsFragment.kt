@@ -11,12 +11,11 @@ import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
-import com.jonnycaley.cryptomanager.ui.adapters.ArticlesHorizontalAdapter
-import com.jonnycaley.cryptomanager.ui.adapters.CurrenciesAdapter
+import com.jonnycaley.cryptomanager.ui.markets.ArticlesHorizontalAdapter
+import com.jonnycaley.cryptomanager.ui.markets.CurrenciesAdapter
 import com.jonnycaley.cryptomanager.ui.markets.MarketsContract
 import com.jonnycaley.cryptomanager.ui.markets.MarketsDataManager
 import com.jonnycaley.cryptomanager.ui.markets.MarketsPresenter
-import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 

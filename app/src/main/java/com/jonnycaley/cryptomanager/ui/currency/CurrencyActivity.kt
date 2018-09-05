@@ -61,9 +61,9 @@ class CurrencyActivity : AppCompatActivity(), CurrencyContract.View {
 
     inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        val NUM_PAGES = 4
+        val NUM_PAGES = 1
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItem(position: Int): Fragment? {
             return GeneralFragment.newInstance(args.currency)
         }
 

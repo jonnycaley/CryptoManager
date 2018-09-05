@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.reginald.swiperefresh.CustomSwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:nestedScrollingEnabled="false"
+    app:ignore="NamespaceTypo"
+    swiperefresh:enable_top_progress_bar="true"
+    swiperefresh:keep_refresh_head="false"
+    swiperefresh:refresh_mode="pull_mode"
+    swiperefresh:return_to_header_duration="500"
+    swiperefresh:return_to_top_duration="500"
+    swiperefresh:time_out_refresh_complete="2000"
+    swiperefresh:time_out_return_to_top="1000"
+    swiperefresh:top_progress_bar_color_1="#000000"
+    swiperefresh:top_progress_bar_color_2="#ee5522"
+    swiperefresh:top_progress_bar_color_3="#ffa600"
+    swiperefresh:top_progress_bar_color_4="#ffffff"
     tools:context=".ui.portfolio.PortfolioFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Portfolio fragment" />
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/portfolio_empty"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/portfolio_empty_tap"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/button_get_started"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Get Started"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</com.reginald.swiperefresh.CustomSwipeRefreshLayout>
