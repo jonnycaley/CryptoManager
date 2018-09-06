@@ -91,4 +91,10 @@ dependencies {
 //  chart time frame selector
     implementation 'com.github.ceryle:RadioRealButton:v2.1.1'
 
+//  data storage (faster apparently)
+    implementation 'io.paperdb:paperdb:2.6'
+
+//  retrofit addition - allows to return data as a string instead of a gson object
+    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+
 }

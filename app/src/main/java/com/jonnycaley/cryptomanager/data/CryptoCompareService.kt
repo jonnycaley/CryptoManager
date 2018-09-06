@@ -14,4 +14,8 @@ interface CryptoCompareService {
     @GET("v2/news/?lang=EN&excludeCategories=Sponsored")
     fun getCurrencyNews(@Query("categories") symbol: String): Single<News>
 
+
+    @GET("all/coinlist")
+    fun getAllCurrencies(): Single<String>
+
 }
