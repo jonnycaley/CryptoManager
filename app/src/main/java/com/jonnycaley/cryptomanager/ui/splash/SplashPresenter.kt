@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
-import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
+import com.jonnycaley.cryptomanager.utils.Constants
+import io.paperdb.Paper
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,17 +26,15 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
             dataManager.getCryptoCompareService().getAllCurrencies()
                     .map { response ->
-                        println(responseToArrays(response))
 
-                        var gson = Gson().fromJson(responseToArrays(response), Currencies::class.java)
+                        dataManager.writeToStorage(Constants.PAPER_ALL_CURRENCIES, responseToArrays(response))
 
-                        gson.data?.forEach { println(it.name) }
+                        return@map true
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Unit?> {
-                        override fun onSuccess(t: Unit) {
-//                            println(t)
+                    .subscribe(object : SingleObserver<Boolean?> {
+                        override fun onSuccess(t: Boolean) {
                             view.toBaseActivity()
                         }
 

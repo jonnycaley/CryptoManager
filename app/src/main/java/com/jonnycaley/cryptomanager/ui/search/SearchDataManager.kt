@@ -1,8 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.search
 
 import android.content.Context
+import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import io.paperdb.Paper
 
 class SearchDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -27,6 +29,10 @@ class SearchDataManager private constructor(val UserPreferences: UserPreferences
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
+    }
+
+    fun readStorage(key : String) : String? {
+        return Paper.book().read(key, null)
     }
 
 }

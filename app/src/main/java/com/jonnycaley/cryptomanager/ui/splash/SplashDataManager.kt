@@ -6,6 +6,7 @@ import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import io.paperdb.Paper
 
 class SplashDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -34,6 +35,10 @@ class SplashDataManager private constructor(val UserPreferences: UserPreferences
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
+    }
+
+    fun writeToStorage(key: String, data: String) {
+        Paper.book().write(key, data)
     }
 
 }
