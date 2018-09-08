@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
-import com.jonnycaley.cryptomanager.utils.Utils
 
 class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQueryTextListener {
 

@@ -18,6 +18,7 @@
     <string name="portfolio_empty_tap">Use the button to add something to your protfolio!</string>
     <string name="search_activity">SearchActivity</string>
     <string name="splash_activity">SplashActivity</string>
+    <string name="transaction_activity">TransactionActivity</string>
 
     <string-array name="top_100_array">
         <item>USD</item>

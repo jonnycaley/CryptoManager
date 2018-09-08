@@ -1,23 +1,23 @@
-package com.jonnycaley.cryptomanager.ui.currency
+package com.jonnycaley.cryptomanager.ui.transaction
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 
-class CurrencyDataManager private constructor(val UserPreferences: UserPreferences) {
+class TransactionDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: CurrencyDataManager? = null
+        private var INSTANCE: TransactionDataManager? = null
 
         private lateinit var context: Context
 
-        private val TAG = "CurrencyData"
+        private val TAG = "TransactionData"
 
         @JvmStatic
-        fun getInstance(context: Context): CurrencyDataManager {
+        fun getInstance(context: Context): TransactionDataManager {
             if (INSTANCE == null) {
-                INSTANCE = CurrencyDataManager(UserPreferences.getInstance(context))
+                INSTANCE = TransactionDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!
