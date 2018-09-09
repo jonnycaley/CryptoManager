@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transaction
+package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -6,19 +6,19 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 
-class TransactionActivity : AppCompatActivity(), TransactionContract.View {
+class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View {
 
-    private lateinit var presenter: TransactionContract.Presenter
+    private lateinit var presenter: FiatTransactionContract.Presenter
 
-    val args by lazy { TransactionArgs.deserializeFrom(intent) }
+    val args by lazy { FiatTransactionArgs.deserializeFrom(intent) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_transaction)
+        setContentView(R.layout.activity_fiat_transaction)
 
         setupToolbar()
 
-        presenter = TransactionPresenter(TransactionDataManager.getInstance(this), this)
+        presenter = FiatTransactionPresenter(FiatTransactionDataManager.getInstance(this), this)
         presenter.attachView()
     }
 
@@ -40,9 +40,8 @@ class TransactionActivity : AppCompatActivity(), TransactionContract.View {
         return false
     }
 
-    override fun setPresenter(presenter: TransactionContract.Presenter) {
+    override fun setPresenter(presenter: FiatTransactionContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
 
 }
-

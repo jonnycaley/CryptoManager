@@ -1,9 +1,9 @@
-package com.jonnycaley.cryptomanager.ui.transaction
+package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
 
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
-class TransactionContract {
+interface FiatTransactionContract {
     interface View : BaseView<Presenter>
     interface Presenter : BasePresenter
 }

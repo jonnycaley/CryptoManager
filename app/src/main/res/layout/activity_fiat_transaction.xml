@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.transactions.currencyTransaction.CurrencyTransactionActivity"
+    tools:context=".ui.transactions.fiatTransaction.FiatTransactionActivity"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -25,34 +25,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/text_trading_pair"
+        <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Trading Pair"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/text_grey"/>
-
-        <TextView
-            android:id="@+id/trading_pair"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BTC/USD"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/text_trading_pair"/>
+            android:textOff="Deposit"
+            android:textOn="Widthdrawl"/>
 
     </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -94,22 +75,23 @@
         android:paddingBottom="@dimen/small_margin">
 
         <TextView
-            android:id="@+id/text_price"
+            android:id="@+id/text_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Price"
+            android:text="Currency"
             android:layout_alignParentStart="true"
             android:textColor="@color/text_grey"/>
 
         <TextView
-            android:id="@+id/price"
+            android:id="@+id/currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="£7,500"
+            android:text="USD"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/text_price"/>
+            android:layout_below="@id/text_currency"/>
 
     </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -128,7 +110,7 @@
             android:id="@+id/text_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quantity"
+            android:text="Quantity (USD)"
             android:layout_alignParentStart="true"
             android:textColor="@color/text_grey"/>
 
@@ -146,7 +128,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/text_grey"/>
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -174,68 +155,6 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey"/>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/small_margin">
-
-        <TextView
-            android:id="@+id/text_deduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Deduct from USD holdings"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/text_grey"/>
-
-        <TextView
-            android:id="@+id/deduct"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yes"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/text_deduct"/>
-
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/small_margin">
-
-        <TextView
-            android:id="@+id/text_transaction_fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Transaction Fee"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/text_grey"/>
-
-        <TextView
-            android:id="@+id/transaction_fee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yes"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/text_transaction_fee"/>
-
-    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

@@ -12,7 +12,9 @@ object Constants {
 
     val CRYPTOCOMPARE_URL = "https://min-api.cryptocompare.com/data/"
 
+    val EXCHANGERATES_URL = "https://api.exchangeratesapi.io/"
 
     val PAPER_ALL_CURRENCIES = "all_currencies"
+    val PAPER_ALL_EXCHANGES = "all_exchanges"
 
 }
