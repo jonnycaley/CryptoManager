@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
+package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService

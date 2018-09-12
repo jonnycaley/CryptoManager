@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
+package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView

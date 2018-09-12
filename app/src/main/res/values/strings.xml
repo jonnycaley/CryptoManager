@@ -20,5 +20,8 @@
     <string name="splash_activity">SplashActivity</string>
     <string name="transaction_activity_currency">CurrrencyTransactionActivity</string>
     <string name="transaction_activity_fiat">FiatTransactionActivity</string>
+    <string name="picker_currency_activity">PickerCurrencyActivity</string>
+    <string name="picker_exchange_activity">PickerExchangeActivity</string>
+    <string name="picker_pair_activity">PickerCurrenPairActivity</string>
 
 </resources>

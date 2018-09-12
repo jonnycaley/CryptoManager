@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.search
+package com.jonnycaley.cryptomanager.ui.pickers.currency
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -7,13 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
-import com.jonnycaley.cryptomanager.ui.transactions.currency.CurrencyTransactionArgs
-import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*
 
-class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: String?, var baseUrl: String?, var context: Context?) : RecyclerView.Adapter<SearchCurrenciesAdapter.ViewHolder>() {
+
+class PickerCurrenciesAdapter(var currencies: List<Datum>?, var context: Context?, var view: PickerCurrencyContract.View) : RecyclerView.Adapter<PickerCurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_currencies, parent, false))
@@ -25,32 +24,23 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
 
         holder.setIsRecyclable(false)
 
-        holder.name.text = item?.coinName
-        holder.symbol.text = item?.symbol
-
         Picasso.with(context)
-                .load(baseImageUrl + item?.imageUrl)
+                .load(R.drawable.circle)
                 .fit()
                 .centerCrop()
                 .transform(CircleTransform())
                 .placeholder(R.drawable.circle)
                 .into(holder.image)
 
-        if(item?.imageUrl == null){
-            holder.imageText.visibility = View.VISIBLE
-            holder.imageText.text = item?.symbol
-            holder.imageText.setBackgroundResource(android.R.color.transparent)
-        }
+        holder.name.text = item?.coinName
+        holder.symbol.text = item?.symbol
 
-        if (baseUrl == null) {
-            holder.itemView.setOnClickListener {
-                FiatTransactionArgs(item?.symbol!!).launch(context!!)
-            }
+        holder.imageText.visibility = View.VISIBLE
+        holder.imageText.text = item?.symbol
+        holder.imageText.setBackgroundResource(android.R.color.transparent)
 
-        } else {
-            holder.itemView.setOnClickListener {
-                CurrencyTransactionArgs(item!!, baseImageUrl, baseUrl).launch(context!!)
-            }
+        holder.itemView.setOnClickListener {
+            view.onPickerChosen(item?.symbol)
         }
     }
 

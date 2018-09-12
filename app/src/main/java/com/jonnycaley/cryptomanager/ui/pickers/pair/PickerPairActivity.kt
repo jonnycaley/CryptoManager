@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
+package com.jonnycaley.cryptomanager.ui.pickers.pair
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -6,27 +6,26 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 
-class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View {
+class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
 
-    private lateinit var presenter: FiatTransactionContract.Presenter
-
-    val args by lazy { FiatTransactionArgs.deserializeFrom(intent) }
+    private lateinit var presenter: PickerPairContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fiat_transaction)
+        setContentView(R.layout.activity_picker_pair)
 
         setupToolbar()
 
-        presenter = FiatTransactionPresenter(FiatTransactionDataManager.getInstance(this), this)
+        presenter = PickerPairPresenter(PickerPairDataManager.getInstance(this), this)
         presenter.attachView()
     }
+
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = args.currency.coinName
+        supportActionBar?.title = "PickerPairActivity"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -40,8 +39,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         return false
     }
 
-    override fun setPresenter(presenter: FiatTransactionContract.Presenter) {
+    override fun setPresenter(presenter: PickerPairContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
-
 }

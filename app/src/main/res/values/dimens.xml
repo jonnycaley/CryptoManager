@@ -17,6 +17,7 @@
     <dimen name="extra_large_text_size">30sp</dimen>
 
     <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="layout_empty">53dp</dimen>
 
     <item name="normal_speed" type="dimen" format="float">100</item>
     <item name="high_speed" type="dimen" format="float">50</item>

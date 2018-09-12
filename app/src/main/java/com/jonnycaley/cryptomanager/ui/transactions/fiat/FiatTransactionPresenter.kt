@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiatTransaction
+package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,25 +25,25 @@ class FiatTransactionPresenter (var dataManager: FiatTransactionDataManager, var
     private fun getCoinDetails() {
         if(dataManager.checkConnection()){
 
-            dataManager.getExchangeRateService().getExchangeRates()
-                    .map { response ->
-                        response.exchanges?.forEach { println(it.name) }
-                    }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Unit?> {
-                        override fun onSuccess(currencies: Unit) {
-                        }
-
-                        override fun onSubscribe(d: Disposable) {
-                            println("Subscribed")
-                            compositeDisposable?.add(d)
-                        }
-
-                        override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
-                        }
-                    })
+//            dataManager.getExchangeRateService().getExchangeRates()
+//                    .map { response ->
+//                        response.exchanges?.forEach { println(it.name) }
+//                    }
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(object : SingleObserver<Unit?> {
+//                        override fun onSuccess(currencies: Unit) {
+//                        }
+//
+//                        override fun onSubscribe(d: Disposable) {
+//                            println("Subscribed")
+//                            compositeDisposable?.add(d)
+//                        }
+//
+//                        override fun onError(e: Throwable) {
+//                            println("onError: ${e.message}")
+//                        }
+//                    })
 
         } else {
 

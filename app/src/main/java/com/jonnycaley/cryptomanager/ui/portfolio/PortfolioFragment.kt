@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -8,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.ui.base.BaseActivity
-import com.jonnycaley.cryptomanager.ui.search.SearchActivity
+import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 
 class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener {
 
@@ -17,7 +15,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     private lateinit var presenter: PortfolioContract.Presenter
 
-    val buttonGetStarted by lazy { mView.findViewById<Button>(R.id.button_get_started) }
+    val buttonAddCurrency by lazy { mView.findViewById<Button>(R.id.button_add_currency) }
+    val buttonAddFiat by lazy { mView.findViewById<Button>(R.id.button_add_fiat) }
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -32,7 +31,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         super.onViewCreated(view, savedInstanceState)
         //view setup should occur here
 
-        buttonGetStarted.setOnClickListener(this)
+        buttonAddCurrency.setOnClickListener(this)
+        buttonAddFiat.setOnClickListener(this)
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
@@ -40,9 +40,16 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     override fun onClick(v: View?) {
         when(v?.id){
-            buttonGetStarted.id -> {
-                startActivity(Intent(context, SearchActivity::class.java))
+            buttonAddFiat.id -> {
+                SearchArgs(FIAT_STRING).launch(context!!)
+            }
+            buttonAddCurrency.id -> {
+                SearchArgs(CURRENCY_STRING).launch(context!!)
             }
         }
+    }
+    companion object {
+        val FIAT_STRING = "FIAT"
+        val CURRENCY_STRING = "CURRENCY"
     }
 }

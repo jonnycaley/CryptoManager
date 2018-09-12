@@ -9,14 +9,17 @@ import android.view.MenuItem
 import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.utils.Utils
 
 class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQueryTextListener {
 
     private lateinit var presenter : SearchContract.Presenter
 
     val searchBar by lazy { findViewById<SearchView>(R.id.search_view) }
-
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val args by lazy { SearchArgs.deserializeFrom(intent) }
 
     lateinit var currenciesAdapter : SearchCurrenciesAdapter
 
@@ -38,6 +41,29 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         currenciesAdapter = SearchCurrenciesAdapter(currencies?.sortedBy { it.sortOrder?.toInt() }, baseImageUrl, baseLinkUrl, this)
         recyclerView.adapter = currenciesAdapter
 
+    }
+
+    override fun getSearchType(): String? {
+        return args.transactionString
+    }
+
+    override fun showFiats(exchangeRates: ExchangeRates) {
+
+        val data = ArrayList<Datum>()
+
+        exchangeRates.rates?.forEach {
+            val datum = Datum()
+
+            datum.coinName = Utils.getFiatName(it.fiat)
+            datum.symbol = it.fiat
+
+            data.add(datum)
+        }
+
+        val mLayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = mLayoutManager
+        currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this)
+        recyclerView.adapter = currenciesAdapter
     }
 
     private fun setupSearchBar() {

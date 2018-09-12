@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".ui.transactions.fiatTransaction.FiatTransactionActivity"
+    tools:context=".ui.transactions.fiat.FiatTransactionActivity"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -35,13 +35,21 @@
 
     </RelativeLayout>
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey"/>
+
     <RelativeLayout
+        android:id="@+id/layout_exchange_filled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
         android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingBottom="@dimen/small_margin"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_exchange"
@@ -52,7 +60,7 @@
             android:textColor="@color/text_grey"/>
 
         <TextView
-            android:id="@+id/exchange"
+            android:id="@+id/text_chosen_exchange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Binance"
@@ -61,12 +69,33 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout_exchange_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingBottom="@dimen/small_margin"
+        android:gravity="center|start">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exchange"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/text_grey"/>
+
+    </RelativeLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/text_grey"/>
 
     <RelativeLayout
+        android:id="@+id/layout_currency_filled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_margin"
@@ -92,6 +121,25 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/layout_currency_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingBottom="@dimen/small_margin"
+        android:gravity="center|start"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Currency"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/text_grey"/>
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
@@ -99,18 +147,39 @@
         android:background="@color/text_grey"/>
 
     <RelativeLayout
+        android:id="@+id/layout_quantity_empty"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingBottom="@dimen/small_margin"
+        android:gravity="center|start">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quantity"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/text_grey"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_quantity_filled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_margin"
         android:paddingRight="@dimen/default_margin"
         android:paddingTop="@dimen/small_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingBottom="@dimen/small_margin"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quantity (USD)"
+            android:text="Quantity"
             android:layout_alignParentStart="true"
             android:textColor="@color/text_grey"/>
 
@@ -118,7 +187,7 @@
             android:id="@+id/quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2"
+            android:text="1"
             android:layout_alignParentStart="true"
             android:layout_below="@id/text_quantity"/>
 
@@ -130,6 +199,7 @@
         android:background="@color/text_grey"/>
 
     <RelativeLayout
+        android:id="@+id/layout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_margin"
@@ -155,6 +225,37 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_deduct_from_holding"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deduct from holdings"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:checked="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -169,21 +270,13 @@
         android:paddingTop="@dimen/small_margin"
         android:paddingBottom="@dimen/small_margin">
 
-        <TextView
-            android:id="@+id/text_notes"
+
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notes"
             android:layout_alignParentStart="true"
-            android:textColor="@color/text_grey"/>
-
-        <TextView
-            android:id="@+id/notes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Blah blah blah"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/text_notes"/>
+            android:textColor="@color/text_grey" />
 
     </RelativeLayout>
 

@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.search
+package com.jonnycaley.cryptomanager.ui.pickers.currency
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
@@ -6,39 +6,36 @@ import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
-import io.paperdb.Paper
 
-class SearchDataManager private constructor(val UserPreferences: UserPreferences) {
+class PickerCurrencyDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: SearchDataManager? = null
+        private var INSTANCE: PickerCurrencyDataManager? = null
 
         private lateinit var context: Context
 
-        private val TAG = "SearchData"
+        private val TAG = "PickerCurrencyData"
 
         @JvmStatic
-        fun getInstance(context: Context): SearchDataManager {
+        fun getInstance(context: Context): PickerCurrencyDataManager {
             if (INSTANCE == null) {
-                INSTANCE = SearchDataManager(UserPreferences.getInstance(context))
+                INSTANCE = PickerCurrencyDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!
         }
     }
 
+
     fun getExchangeRateService(): ExchangeRatesService {
         val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
         return retrofit.create(ExchangeRatesService::class.java)
     }
 
+
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
-    }
-
-    fun readStorage(key : String) : String? {
-        return Paper.book().read(key, null)
     }
 
 }

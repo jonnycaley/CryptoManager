@@ -1,9 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
-import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
 import com.jonnycaley.cryptomanager.utils.Constants
-import io.paperdb.Paper
+import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -28,13 +26,13 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
             dataManager.getCryptoCompareService().getAllCurrencies()
                     .map { response ->
-                        dataManager.writeToStorage(Constants.PAPER_ALL_CURRENCIES, responseToArrays(response))
+                        dataManager.writeToStorage(Constants.PAPER_ALL_CRYPTOS, JsonModifiers.jsonToCryptos(response))
                     }
                     .flatMap {
                         dataManager.getCryptoCompareService().getAllExchanges()
                     }
                     .map { response ->
-                        dataManager.writeToStorage(Constants.PAPER_ALL_EXCHANGES, responseToArraysExchanges(response))
+                        dataManager.writeToStorage(Constants.PAPER_ALL_EXCHANGES, JsonModifiers.jsonToExchanges(response))
                         return@map true
                     }
                     .subscribeOn(Schedulers.io())
@@ -56,39 +54,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         } else {
 
         }
-    }
-
-    private fun responseToArraysExchanges(response: String): String {
-
-        val replacedNulls = response.replace("{}", "{\"null\":[\"null\"]}")
-
-        val responseStepOne = replacedNulls.replace(":[", ",\"converters\":[")
-        val responseStepTwo = responseStepOne.replace("]","]}")
-        val responseStepThree = responseStepTwo.replace(":{",",\"symbols\":[{\"symbol\":")
-        val responseStepFour = responseStepThree.replace("]},","]},{\"symbol\":")
-        val responseStepFive = responseStepFour.replace("]}},","]}},{\"name\":")
-        val responseStepSix = responseStepFive.replace("]}}","]}]}")
-
-        val startString = responseStepSix.substring(0,responseStepSix.length - 1)
-        val endString = responseStepSix[responseStepSix.length - 1]
-
-        val responseStepSeven = "$startString]$endString"
-        val responseStepEight = "{\"exchanges\":[{\"name\":${responseStepSeven.substring(1)}"
-
-        return responseStepEight.trim()
-
-    }
-
-    private fun responseToArrays(response: String): String {
-        val responseNew = response.replace("Data\":{\"","Data\":[\"")
-
-        val responseInArray = responseNew.replace("}},\"BaseImage","}],\"BaseImage")
-
-        val responseFirstIds = responseInArray.replaceFirst(("\\[\""+".*?"+"\":\\{\"Id\"").toRegex(), "[{\"Id\"")
-
-        val responseRemainderIds = responseFirstIds.replace((",\"IsTrading\":"+".*?"+"\\},\""+".*?"+"\":\\{\"Id\"").toRegex(), "\\},{\"Id\"")
-
-        return responseRemainderIds
     }
 
     override fun detachView() {

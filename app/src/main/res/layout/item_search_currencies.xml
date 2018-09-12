@@ -15,10 +15,22 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/default_margin" />
+            android:layout_marginEnd="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/image_text"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:text="GBP"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:visibility="gone"/>
 
 
         <LinearLayout

@@ -126,4 +126,43 @@ object Utils {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
+
+    fun getFiatName(fiat: String?): String? {
+        when(fiat){
+            "AUD" ->{return "Australian Dollar"}
+            "BGN" ->{return "Bulgarian Lev"}
+            "BRL" ->{return "Brazilian Real"}
+            "CAD" ->{return "Canadian Dollar"}
+            "CHF" ->{return "Swiss Franc"}
+            "CNY" ->{return "Chinese Yuan"}
+            "CZK" ->{return "Czech Koruna"}
+            "DKK" ->{return "Danish Krone"}
+            "GBP" ->{return "Pound sterling"}
+            "HKD" ->{return "Hong Kong Dollar"}
+            "HRK" ->{return "Croatian Kuna"}
+            "HUF" ->{return "Hungarian Forint"}
+            "IDR" ->{return "Indonesian Rupiah"}
+            "ILS" ->{return "Israeli New Shekel"}
+            "INR" ->{return "Indian Rupee"}
+            "ISK" ->{return "Icelandic Króna"}
+            "JPY" ->{return "Japanese Yen"}
+            "KRW" ->{return "South Korean won"}
+            "MXN" ->{return "Mexican Peso"}
+            "MYR" ->{return "Malaysian Ringgit"}
+            "NOK" ->{return "Norwegian Krone"}
+            "NZD" ->{return "New Zealand Dollar"}
+            "PHP" ->{return "Philippine Piso"}
+            "PLN" ->{return "Poland złoty"}
+            "RON" ->{return "Romanian Leu"}
+            "RUB" ->{return "Russian Ruble"}
+            "SEK" ->{return "Swedish Krona"}
+            "SGD" ->{return "Singapore Dollar"}
+            "THB" ->{return "Thai Baht"}
+            "TRY" ->{return "Turkish lira"}
+            "ZAR" ->{return "South African Rand"}
+            "EUR" ->{return "Euro"}
+        }
+        return null
+    }
 }
