@@ -1,10 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
-import io.reactivex.SingleObserver
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class FiatTransactionPresenter (var dataManager: FiatTransactionDataManager, var view: FiatTransactionContract.View) : FiatTransactionContract.Presenter{
 
@@ -19,37 +16,19 @@ class FiatTransactionPresenter (var dataManager: FiatTransactionDataManager, var
             compositeDisposable = CompositeDisposable()
         }
 
-        getCoinDetails()
     }
 
-    private fun getCoinDetails() {
-        if(dataManager.checkConnection()){
+    override fun saveFiatTransaction(isDeposit: Boolean, exchange: CharSequence, currency: CharSequence, quantity: CharSequence, date: CharSequence, notes: CharSequence) {
 
-//            dataManager.getExchangeRateService().getExchangeRates()
-//                    .map { response ->
-//                        response.exchanges?.forEach { println(it.name) }
-//                    }
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : SingleObserver<Unit?> {
-//                        override fun onSuccess(currencies: Unit) {
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            println("Subscribed")
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            println("onError: ${e.message}")
-//                        }
-//                    })
-
+        var depositType = if(isDeposit){
+            Variables.Transaction.Type.widthdrawl
         } else {
-
+            Variables.Transaction.Type.deposit
         }
-    }
 
+        dataManager.saveFiatTransaction(depositType, exchange, currency, quantity, date, notes)
+
+    }
 
     override fun detachView() {
         compositeDisposable?.dispose()

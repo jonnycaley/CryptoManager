@@ -100,4 +100,6 @@ dependencies {
 //  edit texts
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
 
+//  date time picker
+    implementation 'com.wdullaer:materialdatetimepicker:3.6.3'
 }

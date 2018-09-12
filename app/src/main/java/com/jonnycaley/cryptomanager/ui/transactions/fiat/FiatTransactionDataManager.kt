@@ -1,11 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import android.content.Context
-import com.jonnycaley.cryptomanager.data.ExchangeRatesService
 import com.jonnycaley.cryptomanager.utils.Constants
-import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import io.paperdb.Paper
 
 class FiatTransactionDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -27,14 +26,12 @@ class FiatTransactionDataManager private constructor(val UserPreferences: UserPr
         }
     }
 
-    fun getExchangeRateService(): ExchangeRatesService {
-        val retrofit = RetrofitHelper().createRetrofit(Constants.EXCHANGERATES_URL, null, null)
-        return retrofit.create(ExchangeRatesService::class.java)
-    }
-
-
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
+    }
+
+    fun saveFiatTransaction(depositType: String, exchange: CharSequence, currency: CharSequence, quantity: CharSequence, date: CharSequence, notes: CharSequence) {
+
     }
 
 }

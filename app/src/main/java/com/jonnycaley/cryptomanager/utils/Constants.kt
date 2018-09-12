@@ -15,6 +15,7 @@ object Constants {
     val EXCHANGERATES_URL = "https://api.exchangeratesapi.io/"
 
     val PAPER_ALL_CRYPTOS = "all_cryptos"
+    val PAPER_ALL_FIAT = "all_fiat"
     val PAPER_ALL_EXCHANGES = "all_exchanges"
 
 }

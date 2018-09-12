@@ -1,9 +1,7 @@
 package com.jonnycaley.cryptomanager.utils
 
 import android.content.Context
-import android.graphics.Color
 import android.net.ConnectivityManager
-import com.jonnycaley.cryptomanager.R
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -11,7 +9,6 @@ import java.util.*
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-
 
 object Utils {
 
@@ -63,7 +60,6 @@ object Utils {
                 "$days days ago"
             }
         }
-
     }
 
     fun formatPrice(priceAsDouble: Double): String {

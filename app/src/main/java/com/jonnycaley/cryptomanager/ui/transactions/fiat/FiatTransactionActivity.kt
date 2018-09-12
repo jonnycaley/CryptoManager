@@ -10,27 +10,37 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import android.content.Intent
-import android.widget.Toast
+import android.widget.EditText
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import java.text.SimpleDateFormat
+import java.util.*
+import android.view.animation.AnimationUtils
+import android.widget.ToggleButton
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 
-
-class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener {
+class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private lateinit var presenter: FiatTransactionContract.Presenter
 
     val args by lazy { FiatTransactionArgs.deserializeFrom(intent) }
 
-    val textChosenExchange by lazy { findViewById<TextView>(R.id.text_chosen_exchange) }
+    val toggleButtonType by lazy { findViewById<ToggleButton>(R.id.toggle_button_type) }
+
+    val requiredExchange by lazy { findViewById<TextView>(R.id.text_chosen_exchange) }
     val layoutExchangeFilled by lazy { findViewById<RelativeLayout>(R.id.layout_exchange_filled) }
     val layoutExchangeEmpty by lazy { findViewById<RelativeLayout>(R.id.layout_exchange_empty) }
 
-    val textCurrency by lazy { findViewById<TextView>(R.id.currency) }
+    val requiredCurrency by lazy { findViewById<TextView>(R.id.currency) }
     val layoutCurrencyFilled by lazy { findViewById<RelativeLayout>(R.id.layout_currency_filled) }
     val layoutCurrencyEmpty by lazy { findViewById<RelativeLayout>(R.id.layout_currency_empty) }
 
-    val layoutQuantityFilled by lazy { findViewById<RelativeLayout>(R.id.layout_quantity_filled) }
-    val layoutQuantityEmpty by lazy { findViewById<RelativeLayout>(R.id.layout_quantity_empty) }
+    val requiredQuantity by lazy { findViewById<EditText>(R.id.edit_text_quantity) }
+    val notes by lazy { findViewById<EditText>(R.id.edit_text_notes) }
+
+    val textViewSubmit by lazy { findViewById<TextView>(R.id.text_view_submit) }
+    val requiredDate by lazy { findViewById<TextView>(R.id.date) }
 
     val layoutDate by lazy { findViewById<RelativeLayout>(R.id.layout_date) }
 
@@ -45,13 +55,40 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         presenter.attachView()
     }
 
+    var yearSet : Int = 0
+    var monthSet : Int = 0
+    var daySet : Int = 0
+
+    override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        yearSet = year
+        monthSet = monthOfYear
+        daySet = dayOfMonth
+        showTimePicker()
+    }
+
+    override fun onTimeSet(view: TimePickerDialog?, hourOfDay: Int, minute: Int, second: Int) {
+        requiredDate.text = formatDate(daySet, monthSet, yearSet, hourOfDay, minute)
+    }
+
+    private fun formatDate(dayOfMonth: Int, monthOfYear: Int, year: Int, hour : Int, minute : Int): CharSequence? {
+        val correctMonth = monthOfYear + 1
+        val strCurrentDate = "$dayOfMonth $correctMonth $year $hour $minute"
+        var format = SimpleDateFormat("dd M yyyy HH mm")
+        val newDate = format.parse(strCurrentDate)
+
+        format = SimpleDateFormat("EEE, dd MMM yyyy HH:mm")
+        val date = format.format(newDate)
+
+        return date
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_EXCHANGE) {
             if (resultCode == Activity.RESULT_OK) {
                 val exchange = data?.getStringExtra("data")
                 layoutExchangeEmpty.visibility = View.GONE
                 layoutExchangeFilled.visibility = View.VISIBLE
-                textChosenExchange.text = exchange
+                requiredExchange.text = exchange
             }
         }
         if (requestCode == REQUEST_CODE_CURRENCY) {
@@ -59,15 +96,15 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
                 val exchange = data?.getStringExtra("data")
                 layoutCurrencyEmpty.visibility = View.GONE
                 layoutCurrencyFilled.visibility = View.VISIBLE
-                textCurrency.text = exchange
+                requiredCurrency.text = exchange
             }
         }
     }
 
     override fun onClick(v: View?) {
-        lateinit var i : Intent
+        lateinit var i: Intent
 
-        when(v?.id){
+        when (v?.id) {
             layoutExchangeFilled.id -> {
                 i = Intent(this, PickerExchangeActivity::class.java)
                 startActivityForResult(i, REQUEST_CODE_EXCHANGE)
@@ -84,26 +121,91 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
                 i = Intent(this, PickerCurrencyActivity::class.java)
                 startActivityForResult(i, REQUEST_CODE_CURRENCY)
             }
-            layoutQuantityFilled.id -> {
-            }
-            layoutQuantityEmpty.id -> {
-            }
             layoutDate.id -> {
-
+                showDatePicker()
+            }
+            textViewSubmit.id -> {
+                if (checkFields()) {
+                    preventFieldChanges()
+                    presenter.saveFiatTransaction(toggleButtonType.isChecked, requiredExchange.text.trim(), requiredCurrency.text.trim(), requiredQuantity.text.trim(), requiredDate.text.trim(), notes.text.trim())
+                }
             }
         }
     }
 
+    private fun preventFieldChanges() {
+        //TODO: prevent the fields being altered whilst saving in process
+    }
+
+    private fun checkFields(): Boolean {
+
+        var canSubmit = true
+
+        val shake = AnimationUtils.loadAnimation(this, R.anim.shake)
+
+        if (requiredExchange.text.toString().trim() == "") {
+            layoutExchangeEmpty.startAnimation(shake)
+            println("No exchange chosen!")
+            canSubmit = false
+        }
+        if (requiredCurrency.text.toString().trim() == "") {
+            layoutCurrencyEmpty.startAnimation(shake)
+            println("No currency chosen!")
+            canSubmit = false
+        }
+        if (requiredQuantity.text.toString().trim() == "") {
+            requiredQuantity.startAnimation(shake)
+            println("No quantity chosen!")
+            canSubmit = false
+        }
+
+        return canSubmit
+    }
+
+    private fun showDatePicker() {
+
+        val now = Calendar.getInstance()
+        val dpd = DatePickerDialog.newInstance(
+                this,
+                now.get(Calendar.YEAR), // Initial year selection
+                now.get(Calendar.MONTH), // Initial month selection
+                now.get(Calendar.DAY_OF_MONTH) // Inital day selection
+        )
+        dpd.show(fragmentManager, "Datepickerdialog")
+    }
+
+    private fun showTimePicker() {
+        val now = Calendar.getInstance()
+        val dpd = TimePickerDialog.newInstance(
+                this,
+                now.get(Calendar.HOUR_OF_DAY), // Initial year selection
+                now.get(Calendar.MINUTE), // Initial month selection
+                false
+        )
+        dpd.show(fragmentManager, "Datepickerdialog")
+    }
+
+
+    fun getCurrentDate(): String {
+
+        val c = Calendar.getInstance().time
+        val df = SimpleDateFormat("EEE, dd MMM yyyy HH:mm")
+
+        return df.format(c)
+    }
+
     private fun setupFields() {
-        textCurrency.text = args.currency
+
+        requiredCurrency.text = args.currency
+        requiredDate.text = getCurrentDate()
 
         layoutExchangeFilled.setOnClickListener(this)
         layoutExchangeEmpty.setOnClickListener(this)
         layoutCurrencyFilled.setOnClickListener(this)
         layoutCurrencyEmpty.setOnClickListener(this)
-        layoutQuantityFilled.setOnClickListener(this)
-        layoutQuantityEmpty.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
+
+        textViewSubmit.setOnClickListener(this)
     }
 
     private fun setupToolbar() {
