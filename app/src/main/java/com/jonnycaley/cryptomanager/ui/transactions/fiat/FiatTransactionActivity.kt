@@ -18,7 +18,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.view.animation.AnimationUtils
 import android.widget.ToggleButton
+import com.jonnycaley.cryptomanager.ui.base.BaseArgs
+import com.jonnycaley.cryptomanager.utils.Constants
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
+import java.text.ParseException
 
 class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -44,6 +47,10 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     val layoutDate by lazy { findViewById<RelativeLayout>(R.id.layout_date) }
 
+    var yearSet : Int = 0
+    var monthSet : Int = 0
+    var daySet : Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat_transaction)
@@ -55,9 +62,13 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         presenter.attachView()
     }
 
-    var yearSet : Int = 0
-    var monthSet : Int = 0
-    var daySet : Int = 0
+    override fun showProgressBar() {
+
+    }
+
+    override fun onTransactionComplete() {
+        BaseArgs(2).launch(this)
+    }
 
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         yearSet = year
@@ -71,12 +82,13 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     }
 
     private fun formatDate(dayOfMonth: Int, monthOfYear: Int, year: Int, hour : Int, minute : Int): CharSequence? {
+
         val correctMonth = monthOfYear + 1
         val strCurrentDate = "$dayOfMonth $correctMonth $year $hour $minute"
         var format = SimpleDateFormat("dd M yyyy HH mm")
         val newDate = format.parse(strCurrentDate)
 
-        format = SimpleDateFormat("EEE, dd MMM yyyy HH:mm")
+        format = SimpleDateFormat(Constants.dateFormat)
         val date = format.format(newDate)
 
         return date
@@ -127,14 +139,28 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             textViewSubmit.id -> {
                 if (checkFields()) {
                     preventFieldChanges()
-                    presenter.saveFiatTransaction(toggleButtonType.isChecked, requiredExchange.text.trim(), requiredCurrency.text.trim(), requiredQuantity.text.trim(), requiredDate.text.trim(), notes.text.trim())
+                    presenter.saveFiatTransaction(toggleButtonType.isChecked, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), requiredQuantity.text.toString().toDouble(), stringToDate(requiredDate.text.trim()), notes.text.trim().toString())
                 }
             }
         }
     }
 
+    fun stringToDate(dateString : CharSequence): Date {
+
+        val format = SimpleDateFormat(Constants.dateFormat)
+
+        var date : Date
+        try {
+            date = format.parse(dateString.toString())
+            return date
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return Date()
+    }
+
     private fun preventFieldChanges() {
-        //TODO: prevent the fields being altered whilst saving in process
+
     }
 
     private fun checkFields(): Boolean {
@@ -189,7 +215,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     fun getCurrentDate(): String {
 
         val c = Calendar.getInstance().time
-        val df = SimpleDateFormat("EEE, dd MMM yyyy HH:mm")
+        val df = SimpleDateFormat(Constants.dateFormat)
 
         return df.format(c)
     }
@@ -234,5 +260,4 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         val REQUEST_CODE_EXCHANGE = 1
         val REQUEST_CODE_CURRENCY = 2
     }
-
 }

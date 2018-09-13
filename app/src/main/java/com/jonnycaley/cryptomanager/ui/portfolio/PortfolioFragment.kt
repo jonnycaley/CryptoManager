@@ -48,6 +48,15 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             }
         }
     }
+
+    fun newInstance(headerStr: String): MarketsFragment {
+        val fragmentDemo = MarketsFragment()
+        val args = Bundle()
+        args.putString("headerStr", headerStr)
+        fragmentDemo.arguments = args
+        return fragmentDemo
+    }
+
     companion object {
         val FIAT_STRING = "FIAT"
         val CURRENCY_STRING = "CURRENCY"

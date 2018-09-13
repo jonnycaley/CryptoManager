@@ -18,4 +18,6 @@ object Constants {
     val PAPER_ALL_FIAT = "all_fiat"
     val PAPER_ALL_EXCHANGES = "all_exchanges"
 
+    val dateFormat = "EEE, dd MMM yyyy HH:mm"
+
 }

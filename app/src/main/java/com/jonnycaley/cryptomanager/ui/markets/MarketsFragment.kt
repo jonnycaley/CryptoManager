@@ -11,6 +11,7 @@ import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
+import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.ui.markets.ArticlesHorizontalAdapter
 import com.jonnycaley.cryptomanager.ui.markets.CurrenciesAdapter
 import com.jonnycaley.cryptomanager.ui.markets.MarketsContract
@@ -79,5 +80,13 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         recyclerViewLatestNews.layoutManager = layoutManager
         similarArticlesAdapter = ArticlesHorizontalAdapter(news, context)
         recyclerViewLatestNews.adapter = similarArticlesAdapter
+    }
+
+    fun newInstance(headerStr: String): MarketsFragment {
+        val fragmentDemo = MarketsFragment()
+        val args = Bundle()
+        args.putString("headerStr", headerStr)
+        fragmentDemo.arguments = args
+        return fragmentDemo
     }
 }

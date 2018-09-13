@@ -1,7 +1,9 @@
 package com.jonnycaley.cryptomanager.ui.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
@@ -41,13 +43,15 @@ class BaseActivity : AppCompatActivity() {
         false
     }
 
+    val args by lazy { BaseArgs.deserializeFrom(Intent()) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 //        setupToolbar()
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        loadPortfolioFragment()
+        loadPortfolioFragment(args.fragment)
     }
 
 //    private fun setupToolbar() {
@@ -57,12 +61,18 @@ class BaseActivity : AppCompatActivity() {
 //        supportActionBar?.title = "Splash"
 //    }
 
-    lateinit var portfolioFragment: HomeFragment
+    lateinit var fragment: Fragment
 
-    private fun loadPortfolioFragment() {
+    private fun loadPortfolioFragment(fragment: Int) {
+
         val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-        portfolioFragment = HomeFragment().newInstance("Home")/* parcelable */
-        transaction.replace(R.id.frame_placeholder, portfolioFragment)
+        when(fragment){
+            0 -> this.fragment = HomeFragment().newInstance("Home")/* parcelable */
+            1 -> this.fragment = MarketsFragment().newInstance("Markets")/* parcelable */
+            2 -> this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
+            3 -> this.fragment = SettingsFragment().newInstance("Settings")/* parcelable */
+        }
+        transaction.replace(R.id.frame_placeholder, this.fragment)
         transaction.commit()
     }
 
