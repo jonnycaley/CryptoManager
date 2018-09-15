@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.portfolio
+package com.jonnycaley.cryptomanager.ui.fiat
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
@@ -9,20 +9,20 @@ import com.pacoworks.rxpaper2.RxPaperBook
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class PortfolioDataManager private constructor(val UserPreferences: UserPreferences) {
+class FiatDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: PortfolioDataManager? = null
+        private var INSTANCE: FiatDataManager? = null
 
         private lateinit var context: Context
 
-        private val TAG = "PortfolioData"
+        private val TAG = "FiatData"
 
         @JvmStatic
-        fun getInstance(context: Context): PortfolioDataManager {
+        fun getInstance(context: Context): FiatDataManager {
             if (INSTANCE == null) {
-                INSTANCE = PortfolioDataManager(UserPreferences.getInstance(context))
+                INSTANCE = FiatDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!

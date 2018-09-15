@@ -16,6 +16,18 @@ import kotlinx.android.synthetic.main.content_home.*
 
 class BaseActivity : AppCompatActivity() {
 
+    lateinit var fragment: Fragment
+
+    val args by lazy { BaseArgs.deserializeFrom(intent) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_base)
+
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        loadFragment(args.fragment)
+    }
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         val fragmentManager: FragmentManager = supportFragmentManager
@@ -43,37 +55,32 @@ class BaseActivity : AppCompatActivity() {
         false
     }
 
-    val args by lazy { BaseArgs.deserializeFrom(Intent()) }
+    private fun loadFragment(fragment: Int) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
-//        setupToolbar()
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        loadPortfolioFragment(args.fragment)
-    }
-
-//    private fun setupToolbar() {
-//        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-//        setSupportActionBar(toolbar)
-//        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-//        supportActionBar?.title = "Splash"
-//    }
-
-    lateinit var fragment: Fragment
-
-    private fun loadPortfolioFragment(fragment: Int) {
+        var selectedItem = 0
 
         val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
         when(fragment){
-            0 -> this.fragment = HomeFragment().newInstance("Home")/* parcelable */
-            1 -> this.fragment = MarketsFragment().newInstance("Markets")/* parcelable */
-            2 -> this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
-            3 -> this.fragment = SettingsFragment().newInstance("Settings")/* parcelable */
+            0 -> {
+                this.fragment = HomeFragment().newInstance("Home")/* parcelable */
+                selectedItem = R.id.navigation_home
+            }
+            1 -> {
+                this.fragment = MarketsFragment().newInstance("Markets")/* parcelable */
+                selectedItem = R.id.navigation_markets
+            }
+            2 -> {
+                this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
+                selectedItem = R.id.navigation_portfolio
+            }
+            3 -> {
+                this.fragment = SettingsFragment().newInstance("Settings")/* parcelable */
+                selectedItem = R.id.navigation_settings
+            }
         }
         transaction.replace(R.id.frame_placeholder, this.fragment)
         transaction.commit()
+        navigation.selectedItemId = selectedItem
     }
 
 }

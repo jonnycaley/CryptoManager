@@ -1,35 +1,36 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiat
+package com.jonnycaley.cryptomanager.ui.transactions.update.fiat
 
 import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.EditText
+import android.widget.RadioButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
-import android.content.Intent
-import android.widget.EditText
+import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
+import com.jonnycaley.cryptomanager.utils.Constants
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.text.SimpleDateFormat
 import java.util.*
-import android.view.animation.AnimationUtils
-import android.widget.ToggleButton
-import com.jonnycaley.cryptomanager.ui.base.BaseArgs
-import com.jonnycaley.cryptomanager.utils.Constants
-import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
-import java.text.ParseException
 
-class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private lateinit var presenter: FiatTransactionContract.Presenter
+    private lateinit var presenter: UpdateFiatTransactionContract.Presenter
 
-    val args by lazy { FiatTransactionArgs.deserializeFrom(intent) }
+    val args by lazy { UpdateFiatTransactionArgs.deserializeFrom(intent) }
 
-    val toggleButtonType by lazy { findViewById<ToggleButton>(R.id.toggle_button_type) }
+    val radioButtonDeposit by lazy { findViewById<RadioButton>(R.id.radio_button_deposit) }
+    val radioButtonWithdrawl by lazy { findViewById<RadioButton>(R.id.radio_button_withdrawl) }
 
     val requiredExchange by lazy { findViewById<TextView>(R.id.text_chosen_exchange) }
     val layoutExchangeFilled by lazy { findViewById<RelativeLayout>(R.id.layout_exchange_filled) }
@@ -47,51 +48,50 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     val layoutDate by lazy { findViewById<RelativeLayout>(R.id.layout_date) }
 
-    var yearSet : Int = 0
-    var monthSet : Int = 0
-    var daySet : Int = 0
+    val chosenDate by lazy { args.transaction.date }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fiat_transaction)
+        setContentView(R.layout.activity_update_fiat_transaction)
+
+        fillFields()
 
         setupToolbar()
-        setupFields()
 
-        presenter = FiatTransactionPresenter(FiatTransactionDataManager.getInstance(this), this)
+        presenter = UpdateFiatTransactionPresenter(UpdateFiatTransactionDataManager.getInstance(this), this)
         presenter.attachView()
     }
 
-    override fun showProgressBar() {
+    private fun fillFields() {
+        when(args.transaction.type){
+            Variables.Transaction.FiatType.deposit ->{
+                radioButtonDeposit.isChecked = true
+            }
+            Variables.Transaction.FiatType.widthdrawl ->{
+                radioButtonWithdrawl.isChecked = true
+            }
+        }
 
-    }
+        layoutExchangeEmpty.visibility = View.GONE
+        layoutExchangeFilled.visibility = View.VISIBLE
+        requiredExchange.text = args.transaction.exchange
 
-    override fun onTransactionComplete() {
-        BaseArgs(2).launch(this)
-    }
+        layoutCurrencyEmpty.visibility = View.GONE
+        layoutCurrencyFilled.visibility = View.VISIBLE
+        requiredCurrency.text = args.transaction.currency
 
-    override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-        yearSet = year
-        monthSet = monthOfYear
-        daySet = dayOfMonth
-        showTimePicker()
-    }
+        requiredQuantity.setText(args.transaction.quantity.toString())
 
-    override fun onTimeSet(view: TimePickerDialog?, hourOfDay: Int, minute: Int, second: Int) {
-        requiredDate.text = formatDate(daySet, monthSet, yearSet, hourOfDay, minute)
-    }
+        requiredDate.text = formatDate(chosenDate)
 
-    private fun formatDate(dayOfMonth: Int, monthOfYear: Int, year: Int, hour : Int, minute : Int): CharSequence? {
+        layoutExchangeFilled.setOnClickListener(this)
+        layoutExchangeEmpty.setOnClickListener(this)
+        layoutCurrencyFilled.setOnClickListener(this)
+        layoutCurrencyEmpty.setOnClickListener(this)
+        layoutDate.setOnClickListener(this)
 
-        val correctMonth = monthOfYear + 1
-        val strCurrentDate = "$dayOfMonth $correctMonth $year $hour $minute"
-        var format = SimpleDateFormat("dd M yyyy HH mm")
-        val newDate = format.parse(strCurrentDate)
-
-        format = SimpleDateFormat(Constants.dateFormat)
-        val date = format.format(newDate)
-
-        return date
+        textViewSubmit.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -139,29 +139,21 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             textViewSubmit.id -> {
                 if (checkFields()) {
                     preventFieldChanges()
-                    presenter.saveFiatTransaction(toggleButtonType.isChecked, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), requiredQuantity.text.toString().toDouble(), stringToDate(requiredDate.text.trim()), notes.text.trim().toString())
+                    var type = Variables.Transaction.FiatType.deposit
+
+                    if (radioButtonWithdrawl.isChecked)
+                        type = Variables.Transaction.FiatType.widthdrawl
+
+                    presenter.updateFiatTransaction(type, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), requiredQuantity.text.toString().toLong(), chosenDate, notes.text.trim().toString())
                 }
             }
         }
     }
 
-    fun stringToDate(dateString : CharSequence): Date {
-
-        val format = SimpleDateFormat(Constants.dateFormat)
-
-        var date : Date
-        try {
-            date = format.parse(dateString.toString())
-            return date
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-        return Date()
+    override fun onTransactionUpdated() {
+        super.onBackPressed()
     }
 
-    private fun preventFieldChanges() {
-
-    }
 
     private fun checkFields(): Boolean {
 
@@ -184,9 +176,30 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             println("No quantity chosen!")
             canSubmit = false
         }
-
         return canSubmit
     }
+
+    private fun preventFieldChanges() {
+
+    }
+
+    override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        chosenDate.year = year - 1900
+        chosenDate.month = monthOfYear
+        chosenDate.date = dayOfMonth
+
+        showTimePicker()
+    }
+
+    override fun onTimeSet(view: TimePickerDialog?, hourOfDay: Int, minute: Int, second: Int) {
+
+        chosenDate.hours = hourOfDay
+        chosenDate.minutes = minute
+        chosenDate.seconds = second
+        requiredDate.text = formatDate(chosenDate)
+    }
+
+
 
     private fun showDatePicker() {
 
@@ -211,34 +224,21 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         dpd.show(fragmentManager, "Datepickerdialog")
     }
 
+    private fun formatDate(date: Date): CharSequence? {
 
-    fun getCurrentDate(): String {
-
-        val c = Calendar.getInstance().time
-        val df = SimpleDateFormat(Constants.dateFormat)
-
-        return df.format(c)
+        val format = SimpleDateFormat(Constants.dateFormat)
+        return format.format(date)
     }
 
-    private fun setupFields() {
-
-        requiredCurrency.text = args.currency
-        requiredDate.text = getCurrentDate()
-
-        layoutExchangeFilled.setOnClickListener(this)
-        layoutExchangeEmpty.setOnClickListener(this)
-        layoutCurrencyFilled.setOnClickListener(this)
-        layoutCurrencyEmpty.setOnClickListener(this)
-        layoutDate.setOnClickListener(this)
-
-        textViewSubmit.setOnClickListener(this)
+    override fun getTransaction(): Transaction {
+        return args.transaction
     }
 
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = args.currency
+        supportActionBar?.title = args.transaction.currency
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -252,7 +252,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         return false
     }
 
-    override fun setPresenter(presenter: FiatTransactionContract.Presenter) {
+    override fun setPresenter(presenter: UpdateFiatTransactionContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
 
@@ -261,3 +261,4 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         val REQUEST_CODE_CURRENCY = 2
     }
 }
+

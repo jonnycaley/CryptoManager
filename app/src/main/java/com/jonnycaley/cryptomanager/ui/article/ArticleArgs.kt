@@ -20,3 +20,5 @@ data class ArticleArgs(val article : News) : ActivityArgs {
     }
 }
 private const val ARTICLE_KEY = "article_key"
+
+

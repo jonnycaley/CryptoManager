@@ -52,7 +52,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.currency.CurrencyActivity"
+            android:name=".ui.crypto.CryptoActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/article_currency"
             android:screenOrientation="portrait"
@@ -64,30 +64,45 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.transactions.currency.CurrencyTransactionActivity"
+            android:name=".ui.transactions.create.crypto.CreateCryptoTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/transaction_activity_currency"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.transactions.fiat.FiatTransactionActivity"
+            android:name=".ui.transactions.create.fiat.CreateFiatTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/transaction_activity_fiat"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.pickers.currency.PickerCurrencyActivity"
+        <activity
+            android:name=".ui.pickers.currency.PickerCurrencyActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/picker_currency_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.pickers.exchange.PickerExchangeActivity"
+        <activity
+            android:name=".ui.pickers.exchange.PickerExchangeActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/picker_exchange_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.pickers.pair.PickerPairActivity"
+        <activity
+            android:name=".ui.pickers.pair.PickerPairActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/picker_pair_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.fiat.FiatActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/fiat_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.transactions.update.fiat.UpdateFiatTransactionActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/update_crypto_transaction_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

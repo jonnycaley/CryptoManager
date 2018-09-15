@@ -159,6 +159,44 @@ object Utils {
             "ZAR" ->{return "South African Rand"}
             "EUR" ->{return "Euro"}
         }
-        return null
+        return ""
+    }
+
+    fun getFiatSymbol(fiat: String?): String {
+        when(fiat){
+            "AUD" ->{return "A$"}
+            "BGN" ->{return "Лв."}
+            "BRL" ->{return "R$"}
+            "CAD" ->{return "C$"}
+            "CHF" ->{return "CHF"}
+            "CNY" ->{return "¥"}
+            "CZK" ->{return "Kč"}
+            "DKK" ->{return "Kr."}
+            "GBP" ->{return "£"}
+            "HKD" ->{return "HK$"}
+            "HRK" ->{return "kn"}
+            "HUF" ->{return "Ft"}
+            "IDR" ->{return "Rp"}
+            "ILS" ->{return "₪"}
+            "INR" ->{return "₹"}
+            "ISK" ->{return "ISK"}
+            "JPY" ->{return "¥"}
+            "KRW" ->{return "₩"}
+            "MXN" ->{return "Mex$"}
+            "MYR" ->{return "RM"}
+            "NOK" ->{return "kr"}
+            "NZD" ->{return "NZ$"}
+            "PHP" ->{return "₱"}
+            "PLN" ->{return "zł"}
+            "RON" ->{return "lei"}
+            "RUB" ->{return "₽"}
+            "SEK" ->{return "kr"}
+            "SGD" ->{return "SG$"}
+            "THB" ->{return "฿"}
+            "TRY" ->{return "₺"}
+            "ZAR" ->{return "R"}
+            "EUR" ->{return "€"}
+        }
+        return ""
     }
 }
