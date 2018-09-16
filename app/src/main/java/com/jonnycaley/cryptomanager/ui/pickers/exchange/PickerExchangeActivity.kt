@@ -8,7 +8,8 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
+import com.jonnycaley.cryptomanager.ui.transactions.create.crypto.CreateCryptoTransactionActivity
 
 class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View {
 
@@ -17,6 +18,8 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
     lateinit var exchangesAdapter : ExchangesAdapter
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val args by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.CRYPTO_KEY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +31,12 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
         presenter.attachView()
     }
 
+    override fun getCrypto(): String? {
+        if(args != null)
+            return args as String
+        return null
+    }
+
     override fun onExchangeChosen(name: String?) {
         val intent = Intent()
         intent.putExtra("data", name)
@@ -35,11 +44,11 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
         finish()
     }
 
-    override fun showExchanges(exchanges: Exchanges?) {
+    override fun showExchanges(exchanges: List<Exchange>?) {
 
         val mLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        exchangesAdapter = ExchangesAdapter(exchanges?.exchanges?.sortedBy { it.name }, this, this)
+        exchangesAdapter = ExchangesAdapter(exchanges?.sortedBy { it.name?.toLowerCase() }, this, this)
         recyclerView.adapter = exchangesAdapter
 
     }

@@ -1,0 +1,45 @@
+
+<com.reginald.swiperefresh.CustomSwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo"
+    swiperefresh:enable_top_progress_bar="true"
+    swiperefresh:keep_refresh_head="false"
+    swiperefresh:refresh_mode="pull_mode"
+    swiperefresh:return_to_header_duration="500"
+    swiperefresh:return_to_top_duration="500"
+    swiperefresh:time_out_refresh_complete="2000"
+    swiperefresh:time_out_return_to_top="1000"
+    swiperefresh:top_progress_bar_color_1="#000000"
+    swiperefresh:top_progress_bar_color_2="#ee5522"
+    swiperefresh:top_progress_bar_color_3="#ffa600"
+    swiperefresh:top_progress_bar_color_4="#ffffff"
+    android:nestedScrollingEnabled="false">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_margin"
+            android:orientation="vertical"
+            android:nestedScrollingEnabled="false">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</com.reginald.swiperefresh.CustomSwipeRefreshLayout>

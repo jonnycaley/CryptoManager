@@ -44,7 +44,7 @@
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="$7,890"
+            android:text=""
             android:textSize="@dimen/extra_large_text_size"/>
 
 
@@ -52,7 +52,7 @@
             android:id="@+id/change"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+$68.90 (+1.72%) "
+            android:text=""
             android:textSize="@dimen/medium_text_size"/>
 
 

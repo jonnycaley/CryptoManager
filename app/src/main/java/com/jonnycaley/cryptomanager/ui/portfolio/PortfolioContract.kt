@@ -13,5 +13,7 @@ interface PortfolioContract {
         fun showTransactions(transactions: ArrayList<Holding>)
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getTransactions()
+    }
 }

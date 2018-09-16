@@ -27,5 +27,6 @@
     <string name="withdrawl">Withdrawl</string>
     <string name="deposit">Deposit</string>
     <string name="update_crypto_transaction_activity">UpdateCryptoTransactionActivity</string>
-
+    <string name="buy">Buy</string>
+    <string name="sell">Sell</string>
 </resources>

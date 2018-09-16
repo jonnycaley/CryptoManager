@@ -196,7 +196,16 @@ object Utils {
             "TRY" ->{return "₺"}
             "ZAR" ->{return "R"}
             "EUR" ->{return "€"}
+            "USD" ->{return "$"}
         }
         return ""
+    }
+
+
+    fun formatDate(date: Date): CharSequence? {
+
+        val format = SimpleDateFormat(Constants.dateFormat)
+
+        return format.format(date)
     }
 }

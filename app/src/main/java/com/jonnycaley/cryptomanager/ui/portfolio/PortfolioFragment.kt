@@ -63,6 +63,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.getTransactions()
+    }
+
     override fun showRefreshing() {
 //        swipeLayout.isRefreshing = true
     }

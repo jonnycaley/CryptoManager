@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.portfolio
+package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
@@ -9,32 +9,32 @@ import com.pacoworks.rxpaper2.RxPaperBook
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class PortfolioDataManager private constructor(val UserPreferences: UserPreferences) {
+class TransactionsDataManager private constructor(val userPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: PortfolioDataManager? = null
+        private var INSTANCE: TransactionsDataManager? = null
 
         private lateinit var context: Context
 
-        private val TAG = "PortfolioData"
+        private val TAG = "TransactionsData"
 
         @JvmStatic
-        fun getInstance(context: Context): PortfolioDataManager {
+        fun getInstance(context: Context): TransactionsDataManager {
             if (INSTANCE == null) {
-                INSTANCE = PortfolioDataManager(UserPreferences.getInstance(context))
+                INSTANCE = TransactionsDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!
         }
     }
 
-    fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
-    }
-
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
 
+
+    fun getTransactions(): Single<ArrayList<Transaction>> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+    }
 }

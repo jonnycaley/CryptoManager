@@ -6,7 +6,10 @@ import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Paper
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class SearchDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -37,8 +40,8 @@ class SearchDataManager private constructor(val UserPreferences: UserPreferences
         return Utils.isNetworkConnected(context)
     }
 
-    fun readStorage(key : String) : String? {
-        return Paper.book().read(key, null)
+    fun readStorage(key : String) : Single<String?> {
+        return RxPaperBook.with(Schedulers.newThread()).read(key, null)
     }
 
 }

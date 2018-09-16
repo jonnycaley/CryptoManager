@@ -15,8 +15,11 @@ object Constants {
     val EXCHANGERATES_URL = "https://api.exchangeratesapi.io/"
 
     val PAPER_ALL_CRYPTOS = "all_cryptos"
-    val PAPER_ALL_FIAT = "all_fiat"
     val PAPER_ALL_EXCHANGES = "all_exchanges"
+
+    val PAPER_TRANSACTIONS = "all_transactions"
+
+//    val PAPER_CRYPTO_TRANSACTIONS = "all_crypto_transactions"
 
     val dateFormat = "EEE, dd MMM yyyy HH:mm"
 

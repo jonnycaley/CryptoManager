@@ -16,7 +16,7 @@ interface CryptoControlService {
     fun getLatestNews(@Query("limit") limit: String): Single<Array<News>>
 
 
-    @GET("news/coin/{currency}")
-    fun getCurrencyNews(@Path("currency") currency: String): Single<Array<News>>
+    @GET("news/coin/{symbol}")
+    fun getCurrencyNews(@Path("symbol") currency: String): Single<Array<News>>
 
 }

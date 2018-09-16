@@ -9,9 +9,9 @@ interface FiatContract {
         fun getFiatCode(): String
         fun showProgressBar()
         fun showTransactions(fiatSymbol : String, showTransactions: List<Transaction>)
-        fun showAvailableFiat(fiatSymbol: String, availableFiatCount: Long)
-        fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: Long)
-        fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: Long)
+        fun showAvailableFiat(fiatSymbol: String, availableFiatCount: Float)
+        fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: Float)
+        fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: Float)
     }
 
     interface Presenter : BasePresenter {

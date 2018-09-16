@@ -68,16 +68,31 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
 
     private fun getAllCurrencies() {
 
-        allCurrencies = Gson().fromJson(dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS), Currencies::class.java)
+        dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
+                .map { json -> allCurrencies = Gson().fromJson(json, Currencies::class.java) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(na: Unit) {
+                        when(allCurrencies){
+                            null -> {
+                                //TODO: show something/download automatically
+                            }
+                            else -> {
+                                view.showCurrencies(allCurrencies!!.data, allCurrencies!!.baseImageUrl, allCurrencies!!.baseLinkUrl)
+                            }
+                        }
+                    }
 
-        when(allCurrencies){
-            null -> {
-                //TODO: show something/download automatically
-            }
-            else -> {
-                view.showCurrencies(allCurrencies!!.data, allCurrencies!!.baseImageUrl, allCurrencies!!.baseLinkUrl)
-            }
-        }
+                    override fun onSubscribe(d: Disposable) {
+                        println("Subscribed")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
 
     }
 

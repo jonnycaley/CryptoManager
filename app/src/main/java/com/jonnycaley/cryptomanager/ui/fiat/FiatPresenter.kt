@@ -1,7 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.fiat
 
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.utils.Utils
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -29,7 +28,7 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
     override fun getTransactions(fiatSymbol: String) {
 
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.currency == fiatSymbol } }
+                .map { transactions -> transactions.filter { it.symbol == fiatSymbol } }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
@@ -53,22 +52,21 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                 })
     }
 
-    private fun getWithdrawnFiatCount(transactions: List<Transaction>): Long {
-        var depositedFiat = 0.toLong()
-        transactions.filter { it.type == Variables.Transaction.FiatType.widthdrawl }.forEach { depositedFiat -= it.quantity }
+    private fun getWithdrawnFiatCount(transactions: List<Transaction>): Float {
+        var depositedFiat = 0.toFloat()
+        transactions.filter { it.quantity < 0  }.forEach { depositedFiat += it.quantity }
         return depositedFiat
     }
 
-    private fun getDepositedFiatCount(transactions: List<Transaction>): Long {
-        var depositedFiat = 0.toLong()
-        transactions.filter { it.type == Variables.Transaction.FiatType.deposit }.forEach { depositedFiat += it.quantity }
+    private fun getDepositedFiatCount(transactions: List<Transaction>): Float {
+        var depositedFiat = 0.toFloat()
+        transactions.filter { it.quantity > 0 }.forEach { depositedFiat += it.quantity }
         return depositedFiat
     }
 
-    private fun getAvailableFiatCount(transactions: List<Transaction>): Long {
-        var availableFiat = 0.toLong()
-        transactions.filter { it.type == Variables.Transaction.FiatType.deposit }.forEach { availableFiat += it.quantity }
-        transactions.filter { it.type == Variables.Transaction.FiatType.widthdrawl }.forEach { availableFiat -= it.quantity }
+    private fun getAvailableFiatCount(transactions: List<Transaction>): Float {
+        var availableFiat = 0.toFloat()
+        transactions.forEach { availableFiat += it.quantity }
         return availableFiat
     }
 

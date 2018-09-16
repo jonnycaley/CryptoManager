@@ -20,7 +20,11 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-        //start stuff here
+
+        getCurrencies()
+    }
+
+    fun getCurrencies() {
 
         if(dataManager.checkConnection()){
 

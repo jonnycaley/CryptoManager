@@ -27,7 +27,7 @@ class TransactionsAdapter(val fiatSymbol : String, val transactions: List<Transa
 
         holder.amount.text = "$fiatSymbol${transaction?.quantity.toString()}"
         holder.to.text = transaction?.exchange
-        holder.currency.text = transaction?.currency.toString()
+        holder.currency.text = transaction?.symbol.toString()
         holder.date.text = formatDate(transaction?.date)
 
         holder.itemView.setOnClickListener {

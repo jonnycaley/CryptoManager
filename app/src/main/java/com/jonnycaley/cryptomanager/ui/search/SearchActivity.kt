@@ -51,6 +51,13 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
         val data = ArrayList<Datum>()
 
+        val datum = Datum()
+
+        datum.coinName = "United States Dollar"
+        datum.symbol = "USD"
+
+        data.add(datum)
+
         exchangeRates.rates?.forEach {
             val datum = Datum()
 

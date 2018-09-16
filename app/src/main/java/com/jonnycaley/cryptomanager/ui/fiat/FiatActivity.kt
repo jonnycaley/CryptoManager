@@ -38,15 +38,15 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
 
     }
 
-    override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: Long) {
+    override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: Float) {
         textAvailable.text = "Available: $fiatSymbol$availableFiatCount"
     }
 
-    override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: Long) {
+    override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: Float) {
         textDeposited.text = "$fiatSymbol$depositedFiatCount"
     }
 
-    override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: Long) {
+    override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: Float) {
         textWithdrawn.text = "$fiatSymbol${withdrawnFiatCount*-1}"
     }
 

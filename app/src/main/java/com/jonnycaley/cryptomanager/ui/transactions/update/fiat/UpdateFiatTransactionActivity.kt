@@ -14,7 +14,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -64,14 +63,11 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
     }
 
     private fun fillFields() {
-        when(args.transaction.type){
-            Variables.Transaction.FiatType.deposit ->{
+        if(args.transaction.quantity > 0 ){
                 radioButtonDeposit.isChecked = true
-            }
-            Variables.Transaction.FiatType.widthdrawl ->{
+            } else {
                 radioButtonWithdrawl.isChecked = true
             }
-        }
 
         layoutExchangeEmpty.visibility = View.GONE
         layoutExchangeFilled.visibility = View.VISIBLE
@@ -79,7 +75,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
 
         layoutCurrencyEmpty.visibility = View.GONE
         layoutCurrencyFilled.visibility = View.VISIBLE
-        requiredCurrency.text = args.transaction.currency
+        requiredCurrency.text = args.transaction.symbol
 
         requiredQuantity.setText(args.transaction.quantity.toString())
 
@@ -139,12 +135,14 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
             textViewSubmit.id -> {
                 if (checkFields()) {
                     preventFieldChanges()
-                    var type = Variables.Transaction.FiatType.deposit
+                    var correctQuantity: Float
 
                     if (radioButtonWithdrawl.isChecked)
-                        type = Variables.Transaction.FiatType.widthdrawl
+                        correctQuantity = (requiredQuantity.text.toString().toFloat() * (-1).toFloat())
+                    else
+                        correctQuantity = requiredQuantity.text.toString().toFloat()
 
-                    presenter.updateFiatTransaction(type, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), requiredQuantity.text.toString().toLong(), chosenDate, notes.text.trim().toString())
+                    presenter.updateFiatTransaction(requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, chosenDate, notes.text.trim().toString())
                 }
             }
         }
@@ -168,7 +166,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         }
         if (requiredCurrency.text.toString().trim() == "") {
             layoutCurrencyEmpty.startAnimation(shake)
-            println("No currency chosen!")
+            println("No symbol chosen!")
             canSubmit = false
         }
         if (requiredQuantity.text.toString().trim() == "") {
@@ -238,7 +236,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = args.transaction.currency
+        supportActionBar?.title = args.transaction.symbol
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

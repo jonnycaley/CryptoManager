@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
+import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.ui.fiat.FiatArgs
 import kotlinx.android.synthetic.main.item_transaction.view.*
 
@@ -26,8 +28,17 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val context: Contex
         holder.amount.text = transaction?.quantity.toString()
         holder.currency.text = transaction?.currency.toString()
 
+        if(transaction?.type ==  Variables.Transaction.Type.fiat) {
+            holder.textFiat.visibility = View.VISIBLE
+        }
+
         holder.itemView.setOnClickListener {
-            FiatArgs(transaction?.currency!!).launch(context!!)
+            if(transaction?.type ==  Variables.Transaction.Type.fiat) {
+                FiatArgs(transaction?.currency!!).launch(context!!)
+            }
+            else{
+                CryptoArgs(transaction?.currency!!).launch(context!!)
+            }
         }
     }
 

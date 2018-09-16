@@ -22,6 +22,10 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             compositeDisposable = CompositeDisposable()
         }
 
+//        getTransactions()
+    }
+
+    override fun getTransactions() {
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -56,23 +60,32 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         val transactionKeys = ArrayList<String>()
 
-        transactions.forEach { if(!transactionKeys.contains(it.currency)){ transactionKeys.add(it.currency)} }
+        transactions.forEach { if(!transactionKeys.contains(it.symbol)){ transactionKeys.add(it.symbol)} } //gets symbol for each currency (fiat/currency)
+
+//        transactions.forEach {
+//            println(it.symbol + "/" + it.pairSymbol )
+//            println(it.price)
+//            println(it.quantity)
+//            println(it.isDeducted)
+//            println("---------")
+//        }
 
         transactionKeys.forEach { key ->
-            val getAllTransactionsFor = transactions.filter { it.currency == key }
-            var getTotalAmount = 0.toDouble()
-            getAllTransactionsFor.filter { it.type == Variables.Transaction.FiatType.deposit }.forEach { getTotalAmount += it.quantity }
-            getAllTransactionsFor.filter { it.type == Variables.Transaction.FiatType.widthdrawl }.forEach { getTotalAmount -= it.quantity }
 
-            var getTotalCost = 0.toLong()
+            var getCurrentHoldings = 0.toFloat()
 
-            getAllTransactionsFor.filter { it.type == Variables.Transaction.FiatType.deposit }.forEach { getTotalCost += (it.price * it.quantity) }
-            getAllTransactionsFor.filter { it.type == Variables.Transaction.FiatType.widthdrawl }.forEach { getTotalCost -= (it.price * it.quantity) }
+            val getAllTransactionsFor = transactions.filter { it.symbol == key }
 
-            if(getAllTransactionsFor[0].type == Variables.Transaction.FiatType.deposit || getAllTransactionsFor[0].type == Variables.Transaction.FiatType.widthdrawl)
-                holdings.add(Holding(key, getTotalAmount, getTotalCost, Variables.Transaction.Type.fiat))
+            getAllTransactionsFor.forEach { getCurrentHoldings += it.quantity }
+
+            val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeducted == true) }
+
+            getAllTransactionsAgainst.forEach { getCurrentHoldings -= (it.price * it.quantity) }
+
+            if(getAllTransactionsFor[0].pairSymbol == null)
+                holdings.add(Holding(key, getCurrentHoldings, Variables.Transaction.Type.fiat))
             else
-                holdings.add(Holding(key, getTotalAmount, getTotalCost, Variables.Transaction.Type.crypto))
+                holdings.add(Holding(key, getCurrentHoldings, Variables.Transaction.Type.crypto))
         }
 
         return holdings

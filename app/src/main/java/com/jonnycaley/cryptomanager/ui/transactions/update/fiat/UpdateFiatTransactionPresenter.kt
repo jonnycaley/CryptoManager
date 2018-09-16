@@ -55,9 +55,9 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
                 })
     }
 
-    override fun updateFiatTransaction(type: String, exchange: String, currency: String, quantity: Long, date: Date, notes: String) {
+    override fun updateFiatTransaction(exchange: String, currency: String, quantity: Float, date: Date, notes: String) {
 
-        val newTransaction = Transaction(type, exchange, currency, quantity, 1, date, notes)
+        val newTransaction = Transaction(exchange, currency, null, quantity, 1.toFloat(), date, notes,null)
 
         otherTransactions.add(newTransaction)
 

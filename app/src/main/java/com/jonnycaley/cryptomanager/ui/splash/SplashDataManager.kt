@@ -8,7 +8,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import io.paperdb.Paper
 
-class SplashDataManager private constructor(val UserPreferences: UserPreferences) {
+class   SplashDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 

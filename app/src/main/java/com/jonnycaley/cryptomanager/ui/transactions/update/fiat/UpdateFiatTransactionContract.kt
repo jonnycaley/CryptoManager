@@ -13,6 +13,6 @@ interface UpdateFiatTransactionContract {
     }
 
     interface Presenter : BasePresenter {
-        fun updateFiatTransaction(type: String, exchange: String, currency: String, quantity: Long, chosenDate: Date, notes: String)
+        fun updateFiatTransaction(exchange: String, currency: String, quantity: Float, chosenDate: Date, notes: String)
     }
 }

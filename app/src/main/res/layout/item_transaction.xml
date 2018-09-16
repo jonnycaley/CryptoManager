@@ -16,7 +16,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" (Fiat)"
-        android:layout_toEndOf="@+id/currency"/>
+        android:layout_toEndOf="@+id/currency"
+        android:visibility="gone"/>
 
 
     <TextView

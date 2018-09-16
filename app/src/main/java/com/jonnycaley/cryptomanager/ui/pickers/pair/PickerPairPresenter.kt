@@ -1,6 +1,14 @@
 package com.jonnycaley.cryptomanager.ui.pickers.pair
 
+import com.google.gson.Gson
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Symbol
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: PickerPairContract.View) : PickerPairContract.Presenter{
 
@@ -14,6 +22,53 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
+
+        getPairs(view.getExchange(), view.getCryproSymbol())
+    }
+
+    private fun getPairs(exchange: String?, crytpoSymbol: String?) {
+
+        dataManager.getExchanges()
+                .map {
+                    json ->
+                    val gson = Gson().fromJson(json, Exchanges::class.java)
+                    if(exchange != "" && exchange != null) {
+                        gson.exchanges?.filter { it.name?.toLowerCase() == exchange.toLowerCase() }
+                    }
+                    else
+                        gson.exchanges
+
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<List<Exchange>?> {
+
+                    override fun onSuccess(exchange: List<Exchange>) {
+
+                        val converters = ArrayList<String>()
+
+                        exchange.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } }
+
+                        val hashSet = HashSet<String>()
+                        hashSet.addAll(converters)
+                        converters.clear()
+                        converters.addAll(hashSet)
+
+                        view.hideProgressBar()
+                        view.showPairs(converters)
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                        view.showProgressBar()
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+
+                })
+
     }
 
     override fun detachView() {
