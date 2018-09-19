@@ -29,18 +29,6 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
         }
     }
 
-    override fun getSymbol(): String? {
-        return currencySymbol
-    }
-
-    override fun loadTransactions(transactions: List<Transaction>) {
-
-        val mLayoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions, context)
-        recyclerView.adapter = transactionsAdapter
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_transactions, container, false)
         return mView
@@ -51,6 +39,20 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
 
         presenter = TransactionsPresenter(TransactionsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun loadTransactions(transactions: List<Transaction>) {
+
+        transactions.forEach { println(it.symbol + "/" + it.pairSymbol ) }
+
+        val mLayoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = mLayoutManager
+        transactionsAdapter = TransactionsAdapter(transactions, currencySymbol!!, context)
+        recyclerView.adapter = transactionsAdapter
+    }
+
+    override fun getSymbol(): String? {
+        return currencySymbol
     }
 
     override fun setPresenter(presenter: TransactionsContract.Presenter) {

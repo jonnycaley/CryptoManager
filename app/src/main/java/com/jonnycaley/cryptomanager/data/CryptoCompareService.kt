@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.data
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.News.News
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.TimeStampPrice.Response
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,5 +21,9 @@ interface CryptoCompareService {
 
     @GET("all/exchanges")
     fun getAllExchanges(): Single<String>
+
+    @GET("histominute")
+    fun getPriceAtTime(@Query("fsym") symbol: String, @Query("tsym") conversion: String, @Query("limit") limit: String, @Query("aggregate") aggregate: String, @Query("toTs") timestamp: String): Single<Response>
+
 
 }

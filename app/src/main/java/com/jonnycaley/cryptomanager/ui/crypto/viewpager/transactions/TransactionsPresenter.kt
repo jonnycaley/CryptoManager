@@ -28,7 +28,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         val symbol = view.getSymbol()
 
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted == true))} }
+                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeductedPrice != null))} }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {

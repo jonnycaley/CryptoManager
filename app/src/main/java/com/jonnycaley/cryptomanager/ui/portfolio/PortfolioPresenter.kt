@@ -78,7 +78,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             getAllTransactionsFor.forEach { getCurrentHoldings += it.quantity }
 
-            val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeducted == true) }
+            val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeductedPrice != null) }
 
             getAllTransactionsAgainst.forEach { getCurrentHoldings -= (it.price * it.quantity) }
 
