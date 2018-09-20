@@ -29,4 +29,5 @@
     <string name="update_crypto_transaction_activity">UpdateCryptoTransactionActivity</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
+    <string name="update_fiat_transaction_activity">UpdateFiatTransactionActivity</string>
 </resources>

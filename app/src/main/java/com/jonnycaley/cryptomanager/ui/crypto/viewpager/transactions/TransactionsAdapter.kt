@@ -21,45 +21,52 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
 
         holder.setIsRecyclable(false)
 
+        println(transaction?.priceUSD)
 
         if(transaction?.symbol == currency){
-            holder.textAmount.text = (transaction?.quantity!!).toString()
-            holder.textPrice.text = transaction.price.toString()
-
+            holder.textPrice.text = (transaction.isDeductedPrice?.times(transaction.price)).toString()
             holder.titlePair.text = "Trading Pair"
             holder.textPair.text = "${transaction.symbol}/${transaction.pairSymbol}"
+
+            holder.textCost.text = transaction.isDeductedPrice?.times((transaction.price * transaction.quantity)).toString()
+
+
+            var multiplier = 1
 
             if(transaction.quantity > 0){
                 holder.titlePrice.text = "${currency.toUpperCase()} Buy Price"
                 holder.titleAmount.text = "Amount Bought"
-
                 holder.layoutBottomSell.visibility = View.GONE
-
             }
             if(transaction.quantity < 0){
+                multiplier = -1
                 holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
                 holder.titleAmount.text = "Amount Sold"
-
+                holder.textProceeds.text = transaction.isDeductedPrice?.times((transaction.quantity * multiplier * transaction.price)).toString()
                 holder.layoutBottomSell.visibility = View.VISIBLE
-                holder.textProceeds.text = "Proceeds here"
             }
+            holder.textAmount.text = (transaction.quantity * multiplier).toString()
+
         }
         if(transaction?.pairSymbol == currency){
 
-            holder.textAmount.text = (transaction.quantity * transaction.price).toString()
             holder.textPair.text = "${transaction.symbol}"
 
-            holder.textPrice.text = transaction.price.toString()
+            holder.textPrice.text = transaction.isDeductedPrice.toString()
+
+            var multiplier = 1
 
             if(transaction.quantity > 0){
+
                 holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
                 holder.titlePair.text = "Due to buy of"
                 holder.titleAmount.text = "Amount Deducted"
 
                 holder.layoutBottomSell.visibility = View.VISIBLE
-                holder.textProceeds.text = "Proceeds here"
             }
             if(transaction.quantity < 0){
+                multiplier = -1
+
                 holder.titlePrice.text = "${currency.toUpperCase()} Buy Price"
                 holder.titlePair.text = "Due to sell of"
                 holder.titleAmount.text = "Amount Added"
@@ -67,15 +74,14 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
                 holder.layoutBottomSell.visibility = View.GONE
 
             }
+            holder.textProceeds.text = (transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))).toString()
+            holder.textAmount.text = (transaction.quantity * transaction.price * multiplier).toString()
+            holder.textCost.text = ((transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))).toString())
+
         }
 
         holder.itemView.setOnClickListener {
-//            if(transaction?.type ==  Variables.Transaction.Type.fiat) {
-//                FiatArgs(transaction?.currency!!).launch(context!!)
-//            }
-//            else{
-//                CryptoArgs(transaction?.currency!!).launch(context!!)
-//            }
+            CryptoArgs(transaction?.currency!!).launch(context!!)
         }
     }
 

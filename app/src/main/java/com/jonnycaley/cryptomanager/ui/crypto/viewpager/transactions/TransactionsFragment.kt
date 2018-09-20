@@ -43,11 +43,9 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
 
     override fun loadTransactions(transactions: List<Transaction>) {
 
-        transactions.forEach { println(it.symbol + "/" + it.pairSymbol ) }
-
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions, currencySymbol!!, context)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, context)
         recyclerView.adapter = transactionsAdapter
     }
 

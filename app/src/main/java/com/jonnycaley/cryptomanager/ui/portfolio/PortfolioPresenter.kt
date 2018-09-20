@@ -60,6 +60,8 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         val transactionKeys = ArrayList<String>()
 
+        transactions.forEach { println("Transaction(exchange = ${it.exchange}, symbol = ${it.symbol}, pairSymbol = ${it.pairSymbol}, quantity = ${it.quantity}, price = ${it.price}, priceUSD = ${it.priceUSD}, date = ${it.date}, notes = ${it.notes}, isDeductedPrice = ${it.isDeductedPrice})") }
+
         transactions.forEach { if(!transactionKeys.contains(it.symbol)){ transactionKeys.add(it.symbol)} } //gets symbol for each currency (fiat/currency)
 
 //        transactions.forEach {
