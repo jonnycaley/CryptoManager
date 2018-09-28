@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.data
 
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.CurrentPrice.Price
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.News.News
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.TimeStampPrice.Response
@@ -25,5 +26,7 @@ interface CryptoCompareService {
     @GET("histominute")
     fun getPriceAtTime(@Query("fsym") symbol: String, @Query("tsym") conversion: String, @Query("limit") limit: String, @Query("aggregate") aggregate: String, @Query("toTs") timestamp: String): Single<Response>
 
+    @GET("price")
+    fun getCurrentPrice(@Query("fsym") symbol: String, @Query("tsyms") conversion: String): Single<Price>
 
 }

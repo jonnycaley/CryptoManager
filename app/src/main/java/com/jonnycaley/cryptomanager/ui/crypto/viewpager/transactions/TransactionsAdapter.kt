@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.update.UpdateCryptoTransactionArgs
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_detail.view.*
 
-class TransactionsAdapter(val transactions: List<Transaction>?, val currency: String, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val transactions: List<Transaction>?, val currency: String, val currentUSDPrice: Double?, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_transaction_detail, parent, false))
@@ -21,38 +23,54 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
 
         holder.setIsRecyclable(false)
 
-        println(transaction?.priceUSD)
-
         if(transaction?.symbol == currency){
-            holder.textPrice.text = (transaction.isDeductedPrice?.times(transaction.price)).toString()
+            holder.textPrice.text = Utils.formatPrice(transaction.isDeductedPrice?.times(transaction.price)!!)
             holder.titlePair.text = "Trading Pair"
             holder.textPair.text = "${transaction.symbol}/${transaction.pairSymbol}"
 
-            holder.textCost.text = transaction.isDeductedPrice?.times((transaction.price * transaction.quantity)).toString()
-
+            holder.textCost.text = Utils.formatPrice(transaction.isDeductedPrice?.times((transaction.price * transaction.quantity)))
 
             var multiplier = 1
 
             if(transaction.quantity > 0){
                 holder.titlePrice.text = "${currency.toUpperCase()} Buy Price"
                 holder.titleAmount.text = "Amount Bought"
+
                 holder.layoutBottomSell.visibility = View.GONE
             }
             if(transaction.quantity < 0){
                 multiplier = -1
                 holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
                 holder.titleAmount.text = "Amount Sold"
-                holder.textProceeds.text = transaction.isDeductedPrice?.times((transaction.quantity * multiplier * transaction.price)).toString()
+                holder.textProceeds.text = Utils.formatPrice(transaction.isDeductedPrice?.times((transaction.quantity * multiplier * transaction.price)))
                 holder.layoutBottomSell.visibility = View.VISIBLE
             }
             holder.textAmount.text = (transaction.quantity * multiplier).toString()
+
+            if (currentUSDPrice != null) {
+                holder.textWorth.text = (currentUSDPrice * (transaction.quantity * multiplier).toDouble()).toString()
+
+                val change = ((((transaction.isDeductedPrice?.times((transaction.price * transaction.quantity)))?.minus((currentUSDPrice * (transaction.quantity * multiplier).toDouble())))?.div((transaction.isDeductedPrice?.times((transaction.price * transaction.quantity))!!)))?.times(-100))?.toFloat()
+                holder.textChange.text = Utils.formatPercentage(change)
+
+                if(change > 0)
+                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                else
+                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
+
+            } else {
+                holder.textWorth.visibility = View.GONE
+                holder.titleWorth.visibility = View.GONE
+                holder.textChange.visibility = View.GONE
+                holder.titleChange.visibility = View.GONE
+            }
 
         }
         if(transaction?.pairSymbol == currency){
 
             holder.textPair.text = "${transaction.symbol}"
 
-            holder.textPrice.text = transaction.isDeductedPrice.toString()
+            holder.textPrice.text = Utils.formatPrice(transaction.isDeductedPrice!!)
 
             var multiplier = 1
 
@@ -74,14 +92,33 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
                 holder.layoutBottomSell.visibility = View.GONE
 
             }
-            holder.textProceeds.text = (transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))).toString()
-            holder.textAmount.text = (transaction.quantity * transaction.price * multiplier).toString()
-            holder.textCost.text = ((transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))).toString())
+
+
+            holder.textProceeds.text = Utils.formatPrice((transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))))
+            holder.textAmount.text = Utils.formatPrice((transaction.quantity * transaction.price * multiplier).toDouble())
+            holder.textCost.text = Utils.formatPrice(transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier)))
+
+            if (currentUSDPrice != null) {
+                holder.textWorth.text = Utils.formatPrice((currentUSDPrice * (transaction.quantity * transaction.price * multiplier).toDouble()))
+
+                var change = (((transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier)))?.minus((currentUSDPrice * (transaction.quantity * transaction.price * multiplier).toDouble())))?.div((transaction.isDeductedPrice?.times((transaction.quantity * transaction.price * multiplier))!!)))?.times(-100)?.toFloat()
+                holder.textChange.text = Utils.formatPercentage(change)
+
+                if(change!! > 0)
+                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                else
+                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
+            } else {
+                holder.textWorth.visibility = View.GONE
+                holder.titleWorth.visibility = View.GONE
+                holder.textChange.visibility = View.GONE
+                holder.titleChange.visibility = View.GONE
+            }
 
         }
 
         holder.itemView.setOnClickListener {
-            CryptoArgs(transaction?.currency!!).launch(context!!)
+            UpdateCryptoTransactionArgs(transaction!!).launch(context!!)
         }
     }
 

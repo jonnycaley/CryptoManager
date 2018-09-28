@@ -41,11 +41,11 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
         presenter.attachView()
     }
 
-    override fun loadTransactions(transactions: List<Transaction>) {
+    override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice : Double?) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, context)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice, context)
         recyclerView.adapter = transactionsAdapter
     }
 

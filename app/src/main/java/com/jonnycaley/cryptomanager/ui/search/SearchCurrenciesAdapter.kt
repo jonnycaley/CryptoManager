@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
-import com.jonnycaley.cryptomanager.ui.transactions.create.crypto.CreateCryptoTransactionArgs
-import com.jonnycaley.cryptomanager.ui.transactions.create.fiat.CreateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.create.CreateFiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*

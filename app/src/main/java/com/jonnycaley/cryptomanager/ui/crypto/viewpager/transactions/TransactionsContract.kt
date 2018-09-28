@@ -8,7 +8,7 @@ interface TransactionsContract {
 
     interface View : BaseView<Presenter> {
         fun getSymbol(): String?
-        fun loadTransactions(transactions: List<Transaction>)
+        fun loadTransactions(transactions: List<Transaction>, currentUsdPrice : Double?)
     }
 
     interface Presenter : BasePresenter

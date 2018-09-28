@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
-import com.jonnycaley.cryptomanager.ui.transactions.create.crypto.CreateCryptoTransactionActivity
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionActivity
 
 class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View {
 

@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.CurrentPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,10 +21,36 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
             compositeDisposable = CompositeDisposable()
         }
 
-        getTransactions()
+        getCryptoPrice()
     }
 
-    private fun getTransactions() {
+    private fun getCryptoPrice() {
+        if(dataManager.checkConnection()){
+
+            dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol()!!, "USD")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<Price> {
+                        override fun onSuccess(response: Price) {
+                            println("Price in usd" + response.uSD)
+                            getTransactions(response.uSD)
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
+
+        } else {
+            getTransactions(null)
+        }
+    }
+
+    private fun getTransactions(basePrice : Double?) {
 
         val symbol = view.getSymbol()
 
@@ -33,7 +60,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
                     override fun onSuccess(transactions: List<Transaction>) {
-                        view.loadTransactions(transactions)
+                        view.loadTransactions(transactions, basePrice)
                     }
 
                     override fun onSubscribe(d: Disposable) {

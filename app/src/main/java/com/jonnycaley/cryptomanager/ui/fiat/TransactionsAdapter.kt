@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.ui.transactions.update.fiat.UpdateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.update.UpdateFiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Constants
 import kotlinx.android.synthetic.main.item_fiat_transaction.view.*
 import java.text.SimpleDateFormat
