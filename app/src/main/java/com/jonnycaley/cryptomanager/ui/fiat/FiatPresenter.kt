@@ -28,16 +28,16 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
     override fun getTransactions(fiatSymbol: String) {
 
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == fiatSymbol } }
+                .map { transactions -> transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeductedPrice != null)} }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
 
                     override fun onSuccess(transactions: List<Transaction>) {
 
-                        view.showAvailableFiat(Utils.getFiatSymbol(view.getFiatCode()), getAvailableFiatCount(transactions))
-                        view.showDepositedFiat(Utils.getFiatSymbol(view.getFiatCode()), getDepositedFiatCount(transactions))
-                        view.showWithdrawnFiat(Utils.getFiatSymbol(view.getFiatCode()), getWithdrawnFiatCount(transactions))
+                        view.showAvailableFiat(Utils.getFiatSymbol(view.getFiatCode()), getAvailableFiatCount(transactions, fiatSymbol))
+                        view.showDepositedFiat(Utils.getFiatSymbol(view.getFiatCode()), getDepositedFiatCount(transactions, fiatSymbol))
+                        view.showWithdrawnFiat(Utils.getFiatSymbol(view.getFiatCode()), getWithdrawnFiatCount(transactions, fiatSymbol))
                         view.showTransactions(Utils.getFiatSymbol(view.getFiatCode()), transactions.sortedBy { it.date }.asReversed())
                     }
 
@@ -52,21 +52,31 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                 })
     }
 
-    private fun getWithdrawnFiatCount(transactions: List<Transaction>): Float {
+    private fun getWithdrawnFiatCount(transactions: List<Transaction>, fiatSymbol : String): Float {
         var depositedFiat = 0.toFloat()
-        transactions.filter { it.quantity < 0  }.forEach { depositedFiat += it.quantity }
+        transactions.forEach { println(it.symbol+"/"+it.pairSymbol+" - Price: "+ it.price + " - Quantity: " + it.quantity) }
+
+        transactions.filter { it.symbol == fiatSymbol && it.quantity < 0  }.forEach { depositedFiat += it.quantity }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) && (it.quantity > 0) }.forEach{ depositedFiat -= (it.price * it.quantity) }
+
         return depositedFiat
     }
 
-    private fun getDepositedFiatCount(transactions: List<Transaction>): Float {
+    private fun getDepositedFiatCount(transactions: List<Transaction>, fiatSymbol : String): Float {
         var depositedFiat = 0.toFloat()
-        transactions.filter { it.quantity > 0 }.forEach { depositedFiat += it.quantity }
+
+        transactions.filter { it.symbol == fiatSymbol && it.quantity > 0 }.forEach { depositedFiat += it.quantity }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) && (it.quantity < 0)}.forEach{ depositedFiat -= (it.price * it.quantity) }
+
         return depositedFiat
     }
 
-    private fun getAvailableFiatCount(transactions: List<Transaction>): Float {
+    private fun getAvailableFiatCount(transactions: List<Transaction>, fiatSymbol : String): Float {
         var availableFiat = 0.toFloat()
-        transactions.forEach { availableFiat += it.quantity }
+
+        transactions.filter { it.symbol == fiatSymbol }.forEach { availableFiat += it.quantity }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) }.forEach{ availableFiat -= (it.price * it.quantity) }
+
         return availableFiat
     }
 

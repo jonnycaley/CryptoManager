@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Available: $100"
+            android:text="Available:"
             android:paddingTop="@dimen/default_padding_top"
             android:paddingBottom="@dimen/default_padding_bottom"/>
 
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/total_deposited"
                     android:gravity="center"
-                    android:text="$200" />
+                    android:text="" />
 
 
             </RelativeLayout>
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/total_withdrawn"
                     android:gravity="center"
-                    android:text="$100" />
+                    android:text="" />
 
             </RelativeLayout>
 

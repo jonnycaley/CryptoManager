@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.item_fiat_transaction.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TransactionsAdapter(val fiatSymbol : String, val transactions: List<Transaction>?, val context: Context?, val view: FiatContract.View) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transactions: List<Transaction>?, val context: Context?, val view: FiatContract.View) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_fiat_transaction, parent, false))
@@ -25,8 +25,19 @@ class TransactionsAdapter(val fiatSymbol : String, val transactions: List<Transa
 
         holder.setIsRecyclable(false)
 
-        holder.amount.text = "$fiatSymbol${transaction?.quantity.toString()}"
-        holder.to.text = transaction?.exchange
+        if(transaction?.symbol == fiat) {
+            holder.amount.text = "$fiatSymbol${Math.abs(transaction.quantity)}"
+            holder.toText.text = "To"
+            holder.to.text = transaction?.exchange
+        }
+        else {
+            holder.amount.text = "$fiatSymbol${Math.abs(transaction?.quantity?.times(transaction?.price!!)!!)}"
+            holder.to.text = transaction?.symbol
+            if(transaction.quantity > 0)
+                holder.toText.text = "Due to buy of"
+            else
+                holder.toText.text = "Due to sell of"
+        }
         holder.currency.text = transaction?.symbol.toString()
         holder.date.text = formatDate(transaction?.date)
 
@@ -51,6 +62,7 @@ class TransactionsAdapter(val fiatSymbol : String, val transactions: List<Transa
         // Holds the TextView that will add each animal to
         val amount = view.amount
         val to = view.to
+        val toText = view.to_text
         val currency = view.currency
         val date = view.date
     }

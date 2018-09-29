@@ -6,26 +6,29 @@ object JsonModifiers {
 
         val startJson = fiats.substring(0, fiats.indexOf("\"rates"))
 
-        var endJson = fiats.substring(fiats.indexOf("\"rates"))
+        var middleJson = fiats.substring(fiats.indexOf("\"rates"), fiats.indexOf("\"date"))
 
+        val endJson = fiats.substring(fiats.indexOf("\"date"))
 
-        endJson = endJson.replace("\"rates\":{", "")
+        middleJson = middleJson.replace("\"rates\":{", "")
 
-        endJson = endJson.replace(":", ",\"rate\":")
+        middleJson = middleJson.replace(":", ",\"rate\":")
 
-        endJson = endJson.replace(",\"rate\"" , "\"rate\"")
+        middleJson = middleJson.replace(",\"rate\"" , "\"rate\"")
 
-        endJson = endJson.replace("," , "},{\"fiat\":")
+        middleJson = middleJson.replace("," , "},{\"fiat\":")
 
-        endJson = endJson.replace("\"rate\"" , ",\"rate\"")
+        middleJson = middleJson.replace("\"rate\"" , ",\"rate\"")
 
-        endJson = "\"rates\":[{\"fiat\":$endJson"
+        middleJson = "\"rates\":[{\"fiat\":$middleJson"
 
-        endJson = endJson.substring(0, endJson.length -1)
+        middleJson = middleJson.substring(0, middleJson.length -1)
 
-        endJson = "$endJson]}"
+        middleJson = "${middleJson.substring(0, middleJson.length - 9)}],"
 
-        return startJson+endJson.trim()
+        println(startJson+middleJson+endJson.trim())
+
+        return startJson+middleJson+endJson.trim()
 
     }
 

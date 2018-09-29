@@ -60,7 +60,7 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
 
         val mLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = TransactionsAdapter(fiatSymbol, transactions, this, this)
+        holdingsAdapter = TransactionsAdapter(args.fiat, fiatSymbol, transactions, this, this)
         recyclerView.adapter = holdingsAdapter
 
     }

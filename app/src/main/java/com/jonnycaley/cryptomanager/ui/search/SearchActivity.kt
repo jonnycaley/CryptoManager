@@ -67,6 +67,8 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
             data.add(datum)
         }
 
+        println(data.size)
+
         val mLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this)

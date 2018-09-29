@@ -40,9 +40,11 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
     private fun getAllFiats() {
         if(dataManager.checkConnection()){
 
+            println("Getting fiats")
+
             dataManager.getExchangeRateService().getExchangeRates()
                     .map { fiats ->
-                        return@map Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
+                        Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -67,6 +69,8 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
     }
 
     private fun getAllCurrencies() {
+
+        println("Getting currencies")
 
         dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
                 .map { json -> allCurrencies = Gson().fromJson(json, Currencies::class.java) }
