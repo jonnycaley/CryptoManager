@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.jonnycaley.cryptomanager.R
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionArgs
 
-class TransactionsFragment : Fragment(), TransactionsContract.View {
+class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener {
 
     private lateinit var presenter : TransactionsContract.Presenter
 
@@ -20,6 +24,7 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
 
     lateinit var mView : View
 
+    val buttonAddTransaction by lazy { mView.findViewById<Button>(R.id.button_add_transaction) }
     val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +42,24 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        buttonAddTransaction.setOnClickListener(this)
+
         presenter = TransactionsPresenter(TransactionsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            buttonAddTransaction.id -> {
+                presenter.getAllCurrencies()
+            }
+        }
+    }
+
+    override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
+        Log.i(TAG, baseImageUrl)
+
+        CreateCryptoTransactionArgs(currency!!, baseImageUrl, baseLinkUrl).launch(context!!)
     }
 
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice : Double?) {
@@ -68,5 +89,6 @@ class TransactionsFragment : Fragment(), TransactionsContract.View {
                 }
 
         private const val ARG_PARAM1 = "symbol"
+        private const val TAG = "TransactionsFragment"
     }
 }

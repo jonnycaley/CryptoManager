@@ -1,12 +1,17 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
+import android.util.Log
+import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.CurrentPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.utils.Constants
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
+
 
 class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: TransactionsContract.View) : TransactionsContract.Presenter {
 
@@ -25,7 +30,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
     }
 
     private fun getCryptoPrice() {
-        if(dataManager.checkConnection()){
+        if (dataManager.checkConnection()) {
 
             dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol()!!, "USD")
                     .subscribeOn(Schedulers.io())
@@ -50,12 +55,35 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         }
     }
 
-    private fun getTransactions(basePrice : Double?) {
+    override fun getAllCurrencies() {
+
+        dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
+                .map { json -> Gson().fromJson(json, Currencies::class.java) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Currencies> {
+                    override fun onSuccess(allCurrencies: Currencies) {
+                        view.startTransaction(allCurrencies.data?.filter { it.symbol == view.getSymbol() }?.get(0), allCurrencies.baseImageUrl, allCurrencies.baseLinkUrl)
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        println("Subscribed")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
+
+    }
+
+    private fun getTransactions(basePrice: Double?) {
 
         val symbol = view.getSymbol()
 
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeductedPrice != null))} }
+                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeductedPrice != null)) } }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
@@ -76,5 +104,9 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
     override fun detachView() {
         compositeDisposable?.dispose()
+    }
+
+    companion object {
+        val TAG = "TransactionsPresenter"
     }
 }

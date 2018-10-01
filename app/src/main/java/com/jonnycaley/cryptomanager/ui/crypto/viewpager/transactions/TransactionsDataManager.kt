@@ -43,4 +43,8 @@ class TransactionsDataManager private constructor(val userPreferences: UserPrefe
     fun getTransactions(): Single<ArrayList<Transaction>> {
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
+
+    fun readStorage(key : String) : Single<String?> {
+        return RxPaperBook.with(Schedulers.newThread()).read(key, null)
+    }
 }
