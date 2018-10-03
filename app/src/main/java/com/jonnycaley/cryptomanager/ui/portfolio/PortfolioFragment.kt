@@ -9,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener {
@@ -31,6 +34,9 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     val layoutNotEmty by lazy { mView.findViewById<LinearLayout>(R.id.layout_portfolio_not_empty) }
 
     val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
+    val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -68,6 +74,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         presenter.getTransactions()
     }
 
+    override fun showError() {
+        //TODO
+    }
+
     override fun showRefreshing() {
 //        swipeLayout.isRefreshing = true
     }
@@ -76,21 +86,36 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //        swipeLayout.isRefreshing = false
     }
 
-    override fun showNoTransactionsLayout() {
+    override fun showBalance(balance: Double) {
+        textBalance.text = "$${Utils.formatPrice(balance)}"
+    }
+
+    override fun showChange(change: Double) {
+
+        if (change < 0) {
+            textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
+            textChange.text = "-$${Utils.formatPrice(change!!).substring(1)}"
+        } else {
+            textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
+            textChange.text = "$${Utils.formatPrice(change!!)}"
+        }
+    }
+
+    override fun showNoHoldingsLayout() {
         layoutEmpty.visibility = View.VISIBLE
         layoutNotEmty.visibility = View.GONE
     }
 
-    override fun showTransactionsLayout() {
+    override fun showHoldingsLayout() {
         layoutEmpty.visibility = View.GONE
         layoutNotEmty.visibility = View.VISIBLE
     }
 
-    override fun showTransactions(transactions: ArrayList<Holding>) {
+    override fun showHoldings(holdings: ArrayList<Holding>, prices: MultiPrices) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(transactions, context)
+        holdingsAdapter = HoldingsAdapter(holdings, prices,  context)
         recyclerView.adapter = holdingsAdapter
     }
 

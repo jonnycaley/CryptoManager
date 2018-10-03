@@ -4,31 +4,44 @@ object JsonModifiers {
 
     fun jsonToCurrencies(fiats: String) : String {
 
-        val startJson = fiats.substring(0, fiats.indexOf("\"rates"))
 
-        var middleJson = fiats.substring(fiats.indexOf("\"rates"), fiats.indexOf("\"date"))
+        var ratesJson = fiats.substring(fiats.indexOf("\"rates"), fiats.indexOf("}") + 1)
 
-        val endJson = fiats.substring(fiats.indexOf("\"date"))
+        ratesJson = ratesJson.replace("\"rates\":{", "")
 
-        middleJson = middleJson.replace("\"rates\":{", "")
+        println("1")
 
-        middleJson = middleJson.replace(":", ",\"rate\":")
+        ratesJson = ratesJson.replace(":", ",\"rate\":")
 
-        middleJson = middleJson.replace(",\"rate\"" , "\"rate\"")
+        println("2")
 
-        middleJson = middleJson.replace("," , "},{\"fiat\":")
+        ratesJson = ratesJson.replace(",\"rate\"" , "\"rate\"")
 
-        middleJson = middleJson.replace("\"rate\"" , ",\"rate\"")
+        println("3")
 
-        middleJson = "\"rates\":[{\"fiat\":$middleJson"
+        ratesJson = ratesJson.replace("," , "},{\"fiat\":")
 
-        middleJson = middleJson.substring(0, middleJson.length -1)
+        println("4")
 
-        middleJson = "${middleJson.substring(0, middleJson.length - 9)}],"
+        ratesJson = ratesJson.replace("\"rate\"" , ",\"rate\"")
 
-        println(startJson+middleJson+endJson.trim())
+        println("5")
 
-        return startJson+middleJson+endJson.trim()
+        ratesJson = "\"rates\":[{\"fiat\":$ratesJson"
+
+        println("6")
+
+        ratesJson = ratesJson.substring(0, ratesJson.length -1)
+
+        println("7")
+
+        ratesJson = "{${ratesJson.substring(0, ratesJson.length - 9)}}]}"
+
+        println("8")
+
+        println(ratesJson.trim())
+
+        return ratesJson.trim()
 
     }
 
@@ -66,4 +79,49 @@ object JsonModifiers {
         return responseRemainderIds
     }
 
+    fun jsonToMultiPrices(json : String): String {
+
+        val jsonToArrayStart = json.replaceFirst("{","{\"prices\":[{\"symbol\":")
+
+        println(jsonToArrayStart)
+
+        val jsonWithSymbol = jsonToArrayStart.replace("},","}},{\"symbol\":")
+
+        println(jsonWithSymbol)
+
+
+        val jsonWithPrices = jsonWithSymbol.replace(":{", ",\"prices\":{")
+
+        println(jsonWithPrices)
+
+
+        val jsonAppendEnd = "$jsonWithPrices]}"
+
+        println(jsonAppendEnd)
+
+
+        return jsonAppendEnd
+
+    }
+
+    fun jsonToGeneral(json: String): String {
+
+        println(json)
+
+        val jsonFromDisplayOnwards = json.substring(0, json.indexOf("\"DISPLAY") -1 )
+
+        println(jsonFromDisplayOnwards)
+
+        val jsonFromUSDOnwards = jsonFromDisplayOnwards.substring(jsonFromDisplayOnwards.indexOf("\"USD"))
+
+        println(jsonFromUSDOnwards)
+
+        val jsonSubEnd = jsonFromUSDOnwards.substring(0, jsonFromUSDOnwards.length - 2)
+
+        println(jsonSubEnd)
+
+        val jsonAddStart = "{$jsonSubEnd}"
+
+        return jsonAddStart
+    }
 }

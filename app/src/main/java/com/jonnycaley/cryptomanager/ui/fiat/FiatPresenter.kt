@@ -28,7 +28,7 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
     override fun getTransactions(fiatSymbol: String) {
 
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeductedPrice != null)} }
+                .map { transactions -> transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) } }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
@@ -57,7 +57,7 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         transactions.forEach { println(it.symbol+"/"+it.pairSymbol+" - Price: "+ it.price + " - Quantity: " + it.quantity) }
 
         transactions.filter { it.symbol == fiatSymbol && it.quantity < 0  }.forEach { depositedFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) && (it.quantity > 0) }.forEach{ depositedFiat -= (it.price * it.quantity) }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity > 0) }.forEach{ depositedFiat -= (it.price * it.quantity) }
 
         return depositedFiat
     }
@@ -66,7 +66,7 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         var depositedFiat = 0.toFloat()
 
         transactions.filter { it.symbol == fiatSymbol && it.quantity > 0 }.forEach { depositedFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) && (it.quantity < 0)}.forEach{ depositedFiat -= (it.price * it.quantity) }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity < 0)}.forEach{ depositedFiat -= (it.price * it.quantity) }
 
         return depositedFiat
     }
@@ -75,7 +75,7 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         var availableFiat = 0.toFloat()
 
         transactions.filter { it.symbol == fiatSymbol }.forEach { availableFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeductedPrice != null) }.forEach{ availableFiat -= (it.price * it.quantity) }
+        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) }.forEach{ availableFiat -= (it.price * it.quantity) }
 
         return availableFiat
     }

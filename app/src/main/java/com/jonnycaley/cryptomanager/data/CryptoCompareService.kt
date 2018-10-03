@@ -2,8 +2,10 @@ package com.jonnycaley.cryptomanager.data
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.CurrentPrice.Price
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.News.News
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.TimeStampPrice.Response
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -28,5 +30,11 @@ interface CryptoCompareService {
 
     @GET("price")
     fun getCurrentPrice(@Query("fsym") symbol: String, @Query("tsyms") conversion: String): Single<Price>
+
+    @GET("pricemulti")
+    fun getMultiPrice(@Query("fsyms") symbol: String, @Query("tsyms") conversion: String): Single<String>
+
+    @GET("pricemultifull")
+    fun getGeneralData(@Query("fsyms") symbol: String, @Query("tsyms") conversion: String): Single<String>
 
 }

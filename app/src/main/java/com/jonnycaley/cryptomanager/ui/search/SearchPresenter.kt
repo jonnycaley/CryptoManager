@@ -59,7 +59,7 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
+                            println("onErrorFiats: ${e.message}")
                         }
                     })
 
@@ -94,7 +94,7 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onErrorCurrencies: ${e.message}")
                     }
                 })
 

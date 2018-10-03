@@ -9,6 +9,7 @@ import java.util.*
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import java.text.NumberFormat
 
 object Utils {
 
@@ -64,17 +65,32 @@ object Utils {
 
     fun formatPrice(priceAsDouble: Double): String {
 
-        val price = Utils.toDecimals(priceAsDouble, 8).toDouble()
+        if(priceAsDouble == 0.0)
+            return "0"
+
+        var absPrice = priceAsDouble
+
+        var priceSubtractor = false
+
+        if(priceAsDouble < 0 ) {
+            priceSubtractor = true
+            absPrice = priceAsDouble * -1
+        }
+
+        val price = Utils.toDecimals(absPrice, 8).toDouble()
 
         var priceText: String
 
         priceText = if(price > 1)
-            Utils.toDecimals(priceAsDouble, 2)
+            Utils.toDecimals(absPrice, 2)
         else
-            "0${Utils.toDecimals(priceAsDouble, 6)}"
+            "0${Utils.toDecimals(absPrice, 6)}"
 
         if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
             priceText += "0"
+
+        if(priceSubtractor)
+            priceText = "-$priceText"
 
         return priceText
     }

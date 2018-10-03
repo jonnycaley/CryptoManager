@@ -5,7 +5,8 @@
     xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipelayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:nestedScrollingEnabled="false"
     app:ignore="NamespaceTypo"
     swiperefresh:enable_top_progress_bar="true"
     swiperefresh:keep_refresh_head="false"
@@ -17,228 +18,405 @@
     swiperefresh:top_progress_bar_color_1="#000000"
     swiperefresh:top_progress_bar_color_2="#ee5522"
     swiperefresh:top_progress_bar_color_3="#ffa600"
-    swiperefresh:top_progress_bar_color_4="#ffffff"
-    android:nestedScrollingEnabled="false">
+    swiperefresh:top_progress_bar_color_4="#ffffff">
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/default_margin"
-        android:orientation="vertical"
-        android:nestedScrollingEnabled="false">
-
-        <TextView
-            android:id="@+id/symbol"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="BTC"
-            android:textSize="@dimen/medium_text_size"/>
-
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="@dimen/extra_large_text_size"/>
+            android:nestedScrollingEnabled="false"
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin">
 
 
-        <TextView
-            android:id="@+id/change"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="@dimen/medium_text_size"/>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="@dimen/card_corner_radius">
-
-            <RelativeLayout
+            <TextView
+                android:id="@+id/price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="@dimen/extra_large_text_size" />
 
-                <co.ceryle.radiorealbutton.RadioRealButtonGroup
-                    android:id="@+id/radio_group"
+
+            <TextView
+                android:id="@+id/change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="@dimen/medium_text_size" />
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true">
+                <!-- app:cardCornerRadius="@dimen/card_corner_radius" -->
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                        android:id="@+id/radio_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        app:rrbg_animateTexts_enter="overshoot"
+                        app:rrbg_animateTexts_scale="1.3"
+                        app:rrbg_animateTexts_textColorFrom="@color/text_grey"
+                        app:rrbg_animateTexts_textColorTo="@color/black"
+                        app:rrbg_animateTexts_textColor_duration="500"
+                        app:rrbg_borderColor="@color/white"
+                        app:rrbg_borderSize="1dp"
+                        app:rrbg_bottomLineRadius="2dp"
+                        app:rrbg_bottomLineSize="1dp"
+                        app:rrbg_dividerColor="@color/black"
+                        app:rrbg_dividerPadding="12dp"
+                        app:rrbg_dividerRadius="2dp"
+                        app:rrbg_dividerSize="0dp"
+                        app:rrbg_enableDeselection="false"
+                        app:rrbg_radius="2dp"
+                        app:rrbg_selectorAboveOfBottomLine="false"
+                        app:rrbg_selectorAnimationType="translate_y"
+                        app:rrbg_selectorColor="@color/white"
+                        app:rrbg_selectorRadius="0dp"
+                        app:rrbg_selectorSize="2dp">
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_checked="true"
+                            app:rrb_drawableGravity="left"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="1H"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="top"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="1D"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="3D"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="1W"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_rippleColor="@color/black"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="1M"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="3M"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="6M"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="1Y"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                        <co.ceryle.radiorealbutton.RadioRealButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:rrb_drawableGravity="right"
+                            app:rrb_drawableHeight="36dp"
+                            app:rrb_drawablePadding="4dp"
+                            app:rrb_drawableWidth="36dp"
+                            app:rrb_selectorColor="@color/black"
+                            app:rrb_text="All"
+                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textFillSpace="true"
+                            app:rrb_textGravity="center"
+                            app:rrb_textSize="10sp" />
+
+                    </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+
+                    <com.github.mikephil.charting.charts.CandleStickChart
+                        android:id="@+id/chart_candlestick"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_below="@id/radio_group"
+                        android:layout_marginBottom="@dimen/small_margin" />
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    app:rrbg_animateTexts_enter="overshoot"
-                    app:rrbg_animateTexts_scale="1.3"
-                    app:rrbg_animateTexts_textColorFrom="@color/text_grey"
-                    app:rrbg_animateTexts_textColorTo="@color/black"
-                    app:rrbg_animateTexts_textColor_duration="500"
-                    app:rrbg_borderColor="@color/white"
-                    app:rrbg_borderSize="1dp"
-                    app:rrbg_bottomLineRadius="2dp"
-                    app:rrbg_bottomLineSize="1dp"
-                    app:rrbg_dividerColor="@color/black"
-                    app:rrbg_dividerPadding="12dp"
-                    app:rrbg_dividerRadius="2dp"
-                    app:rrbg_dividerSize="0dp"
-                    app:rrbg_enableDeselection="false"
-                    app:rrbg_radius="2dp"
-                    app:rrbg_selectorAboveOfBottomLine="false"
-                    app:rrbg_selectorAnimationType="translate_y"
-                    app:rrbg_selectorColor="@color/white"
-                    app:rrbg_selectorRadius="0dp"
-                    app:rrbg_selectorSize="2dp">
+                    android:orientation="vertical"
+                    android:padding="@dimen/default_margin">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/layout_top"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:rrb_checked="true"
-                        app:rrb_drawableGravity="left"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="1H"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:paddingBottom="@dimen/default_padding_bottom">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/title_market_cap"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Market Cap"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size"/>
+
+                            <TextView
+                                android:id="@+id/text_market_cap"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_market_cap"
+                                android:text=""
+                                android:textStyle="bold"/>
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/title_24h_change"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Change (24h)"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size" />
+
+                            <TextView
+                                android:id="@+id/text_24h_change"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_24h_change"
+                                android:text="" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_middle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="top"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="1D"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:paddingBottom="@dimen/default_padding_bottom">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/title_circulating_supply"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Circulating Supply"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size"/>
+
+                            <TextView
+                                android:id="@+id/text_circulating_supply"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_circulating_supply"
+                                android:text="" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/title_24h_volume"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Volume (24h)"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size" />
+
+                            <TextView
+                                android:id="@+id/text_24h_volume"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_24h_volume"
+                                android:text="" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_bottom"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="3D"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        android:orientation="horizontal"
+                        android:layout_weight="2">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="1W"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_rippleColor="@color/black"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="1M"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                            <TextView
+                                android:id="@+id/title_24h_high"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="High (24h)"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size" />
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="3M"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                            <TextView
+                                android:id="@+id/text_24h_high"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_24h_high"
+                                android:text="" />
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="6M"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        </RelativeLayout>
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="1Y"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                    <co.ceryle.radiorealbutton.RadioRealButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
-                        app:rrb_text="All"
-                        app:rrb_textColor="@color/text_grey"
-                        app:rrb_textFillSpace="true"
-                        app:rrb_textGravity="center"
-                        app:rrb_textSize="10sp" />
+                            <TextView
+                                android:id="@+id/title_24h_low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Low (24h)"
+                                android:textColor="@color/text_grey"
+                                android:textSize="@dimen/small_text_size" />
 
-                </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+                            <TextView
+                                android:id="@+id/text_24h_low"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_24h_low"
+                                android:text="" />
+
+                        </RelativeLayout>
 
 
-                <com.github.mikephil.charting.charts.CandleStickChart
-                    android:id="@+id/chart_candlestick"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="@dimen/small_margin"
-                    android:layout_below="@id/radio_group"/>
+                        <com.appyvet.rangebar.RangeBar xmlns:custom="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/rangebar"
+                            android:layout_width="match_parent"
+                            android:layout_height="42dp"
+                            custom:rangeBar="false"
+                            custom:selectorColor="@color/black"
+                            custom:selectorSize="0dp"
+                            android:visibility="gone" />
 
-            </RelativeLayout>
+                    </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_news"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
 
-    </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-    </android.support.v4.widget.NestedScrollView>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+
 </com.reginald.swiperefresh.CustomSwipeRefreshLayout>

@@ -104,4 +104,8 @@ dependencies {
 
 //  date time picker
     implementation 'com.wdullaer:materialdatetimepicker:3.6.3'
+
+//  range bar for price range
+    implementation 'com.appyvet:materialrangebar:1.3'
+
 }
