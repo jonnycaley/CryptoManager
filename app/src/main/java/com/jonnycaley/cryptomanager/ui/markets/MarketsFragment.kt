@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -35,6 +36,8 @@ class MarketsFragment : Fragment(), MarketsContract.View{
 
     val searchView : SearchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
 
+    val progressBarLayout by lazy { root.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
+
     val swipeRefreshLayout : CustomSwipeRefreshLayout by lazy { root.findViewById<CustomSwipeRefreshLayout>(R.id.swipelayout) }
 
     override fun setPresenter(presenter: MarketsContract.Presenter) {
@@ -55,6 +58,22 @@ class MarketsFragment : Fragment(), MarketsContract.View{
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun hideProgressBarLayout() {
+        progressBarLayout.visibility = View.GONE
+    }
+
+    override fun showContentLayout() {
+        swipeRefreshLayout.visibility = View.VISIBLE
+    }
+
+    override fun showProgressBarLayout() {
+        progressBarLayout.visibility = View.VISIBLE
+    }
+
+    override fun hideContentLayout() {
+        swipeRefreshLayout.visibility = View.GONE
     }
 
     override fun getCurrencySearchView(): SearchView {

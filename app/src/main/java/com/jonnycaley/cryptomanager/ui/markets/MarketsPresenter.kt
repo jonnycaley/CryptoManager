@@ -65,10 +65,13 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : SingleObserver<Unit> {
                         override fun onSuccess(currencies: Unit) {
-
+                            view.hideProgressBarLayout()
+                            view.showContentLayout()
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBarLayout()
+                            view.hideContentLayout()
                             println("Subscribed")
                             compositeDisposable?.add(d)
                         }

@@ -93,11 +93,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     override fun showChange(change: Double) {
 
         if (change < 0) {
-            textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
-            textChange.text = "-$${Utils.formatPrice(change!!).substring(1)}"
+            context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+            textChange.text = "-$${Utils.formatPrice(change).substring(1)}"
         } else {
-            textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
-            textChange.text = "$${Utils.formatPrice(change!!)}"
+            context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+            textChange.text = "$${Utils.formatPrice(change)}"
         }
     }
 

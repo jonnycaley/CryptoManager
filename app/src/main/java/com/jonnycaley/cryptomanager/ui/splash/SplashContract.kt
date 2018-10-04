@@ -6,7 +6,10 @@ import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 interface SplashContract {
     interface View : BaseView<Presenter> {
         fun toBaseActivity()
+        fun showInternetRequired()
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getCurrencies()
+    }
 }

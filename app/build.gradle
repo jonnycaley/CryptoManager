@@ -108,4 +108,7 @@ dependencies {
 //  range bar for price range
     implementation 'com.appyvet:materialrangebar:1.3'
 
+//  navigation
+    implementation 'com.github.okaybroda:FragmentStateManager:1.0.1'
+
 }

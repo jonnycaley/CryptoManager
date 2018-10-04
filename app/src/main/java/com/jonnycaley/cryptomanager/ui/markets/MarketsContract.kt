@@ -11,6 +11,10 @@ interface MarketsContract {
         fun showTop100Changes(currencies: List<Currency>?)
         fun showLatestArticles(it: Array<News>)
         fun getCurrencySearchView(): SearchView
+        fun hideProgressBarLayout()
+        fun showContentLayout()
+        fun showProgressBarLayout()
+        fun hideContentLayout()
     }
 
     interface Presenter : BasePresenter

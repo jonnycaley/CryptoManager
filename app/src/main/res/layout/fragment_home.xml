@@ -1,159 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <include layout="@layout/layout_progress"/>
+
+    <ScrollView
+        android:id="@+id/scroll_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
-        <!--<TextView-->
-        <!--android:id="@+id/top_gainers_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:paddingBottom="@dimen/default_margin"-->
-        <!--android:text="Top Gainers"-->
-        <!--android:textColor="@color/black"-->
-        <!--android:textSize="@dimen/header_text_size"-->
-        <!--android:textStyle="bold" />-->
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            app:cardCornerRadius="@dimen/card_corner_radius">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/card_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
+                <!--<TextView-->
+                <!--android:id="@+id/top_gainers_text"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingBottom="@dimen/default_margin"-->
+                <!--android:text="Top Gainers"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/header_text_size"-->
+                <!--android:textStyle="bold" />-->
 
-
-                <RelativeLayout
+                <android.support.v7.widget.CardView
+                    android:id="@+id/card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_margin">
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardUseCompatPadding="true">
 
-                    <TextView
-                        android:id="@+id/card_title"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="title"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/large_text_size"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/card_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/card_title"
-                        android:text="description"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/medium_text_size"
-                        android:maxLines="3"
-                        android:ellipsize="end"/>
+                        <ImageView
+                            android:id="@+id/card_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp" />
 
 
-                    <TextView
-                        android:id="@+id/card_length"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:layout_marginTop="6dp"
-                        android:text="6 minute read"
-                        android:textSize="@dimen/small_text_size"
-                        android:layout_below="@id/card_description"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/default_margin">
 
-                    <TextView
-                        android:id="@+id/card_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:layout_marginTop="6dp"
-                        android:text=" • 3 hours ago"
-                        android:textSize="@dimen/small_text_size"
-                        android:layout_toRightOf="@id/card_length"
-                        android:layout_toEndOf="@id/card_length"
-                        android:layout_below="@id/card_description"/>
+                            <TextView
+                                android:id="@+id/card_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="title"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/large_text_size"
+                                android:textStyle="bold" />
 
-                    <com.like.LikeButton
-                        android:id="@+id/card_star_button"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/card_description"
+                            <TextView
+                                android:id="@+id/card_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/card_title"
+                                android:ellipsize="end"
+                                android:maxLines="3"
+                                android:text="description"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/medium_text_size" />
 
 
-                        app:icon_type="Star"
-                        app:circle_start_color="@color/colorPrimary"
-                        app:circle_end_color="@color/colorAccent"
-                        app:dots_primary_color="@color/colorAccent"
-                        app:dots_secondary_color="@color/colorPrimary"
-                        app:icon_size="15dp"
-                        app:liked="false"
-                        app:anim_scale_factor="2"
-                        app:is_enabled="true" />
+                            <TextView
+                                android:id="@+id/card_length"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/card_description"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="6 minute read"
+                                android:textSize="@dimen/small_text_size" />
 
-                </RelativeLayout>
+                            <TextView
+                                android:id="@+id/card_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/card_description"
+                                android:layout_marginTop="6dp"
+                                android:layout_marginBottom="3dp"
+                                android:layout_toEndOf="@id/card_length"
+                                android:layout_toRightOf="@id/card_length"
+                                android:text=" • 3 hours ago"
+                                android:textSize="@dimen/small_text_size" />
 
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-
-        <TextView
-            android:id="@+id/header_top_100"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Top 100"
-            android:layout_below="@+id/card_view"
-            android:paddingTop="@dimen/default_margin" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_top_movers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/default_margin"
-            android:paddingTop="@dimen/default_margin"
-            android:layout_below="@+id/header_top_100"/>
-
-        <!--<TextView-->
-        <!--android:id="@+id/top_news_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/recycler_view_top_movers"-->
-        <!--android:paddingBottom="@dimen/default_margin"-->
-        <!--android:text="Top News"-->
-        <!--android:textColor="@color/black"-->
-        <!--android:textSize="@dimen/header_text_size"-->
-        <!--android:textStyle="bold" />-->
+                            <com.like.LikeButton
+                                android:id="@+id/card_star_button"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/card_description"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
 
 
-        <com.cooltechworks.views.shimmer.ShimmerRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/shimmer_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/recycler_view_top_movers"
-            android:nestedScrollingEnabled="false"
-            app:shimmer_demo_angle="20"
-            app:shimmer_demo_layout="@layout/item_shimmer_list"
-            app:shimmer_demo_shimmer_color="@color/shimmer_color"
-            app:shimmer_demo_view_holder_item_background="@drawable/bg_card" />
+                                app:anim_scale_factor="2"
+                                app:circle_end_color="@color/colorAccent"
+                                app:circle_start_color="@color/colorPrimary"
+                                app:dots_primary_color="@color/colorAccent"
+                                app:dots_secondary_color="@color/colorPrimary"
+                                app:icon_size="15dp"
+                                app:icon_type="Star"
+                                app:is_enabled="true"
+                                app:liked="false" />
 
-    </RelativeLayout>
+                        </RelativeLayout>
 
-</ScrollView>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+                <TextView
+                    android:id="@+id/header_top_100"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/card_view"
+                    android:paddingTop="@dimen/default_margin"
+                    android:text="Top 100" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_top_movers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/header_top_100"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/default_margin"
+                    android:paddingBottom="@dimen/default_margin" />
+
+                <!--<TextView-->
+                <!--android:id="@+id/top_news_text"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/recycler_view_top_movers"-->
+                <!--android:paddingBottom="@dimen/default_margin"-->
+                <!--android:text="Top News"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="@dimen/header_text_size"-->
+                <!--android:textStyle="bold" />-->
+
+
+                <com.cooltechworks.views.shimmer.ShimmerRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/shimmer_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/recycler_view_top_movers"
+                    android:nestedScrollingEnabled="false"
+                    app:shimmer_demo_angle="20"
+                    app:shimmer_demo_layout="@layout/item_shimmer_list"
+                    app:shimmer_demo_shimmer_color="@color/shimmer_color"
+                    app:shimmer_demo_view_holder_item_background="@drawable/bg_card" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

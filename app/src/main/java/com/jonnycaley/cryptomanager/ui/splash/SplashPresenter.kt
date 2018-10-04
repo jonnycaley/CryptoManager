@@ -21,10 +21,44 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
             compositeDisposable = CompositeDisposable()
         }
 
-        getCurrencies()
+        checkForStorage()
     }
 
-    fun getCurrencies() {
+    private fun checkForStorage() {
+
+        var isStoragePresent = true
+
+        //checking for cryptos is long and if the exchanges is stored it is 99.9% likely the cryptos are as well as they are both done in the same stream
+
+        dataManager.readStorage(Constants.PAPER_ALL_EXCHANGES)
+                .map { storage ->
+                    if((storage == "null") || (storage == ""))
+                        isStoragePresent = false
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit?> {
+                    override fun onSuccess(t: Unit) {
+                        println(isStoragePresent)
+                        if(isStoragePresent)
+                            view.toBaseActivity()
+                        else
+                            getCurrencies()
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+
+                })
+
+    }
+
+    override fun getCurrencies() {
 
         if(dataManager.checkConnection()){
 
@@ -37,17 +71,16 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     }
                     .map { response ->
                         dataManager.writeToStorage(Constants.PAPER_ALL_EXCHANGES, JsonModifiers.jsonToExchanges(response))
-                        return@map true
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Boolean?> {
-                        override fun onSuccess(t: Boolean) {
+                    .subscribe(object : SingleObserver<Unit?> {
+                        override fun onSuccess(t: Unit) {
                             view.toBaseActivity()
                         }
 
                         override fun onSubscribe(d: Disposable) {
-
+                            compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
@@ -57,6 +90,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     })
         } else {
 
+            view.showInternetRequired()
         }
     }
 

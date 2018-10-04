@@ -20,13 +20,84 @@ class BaseActivity : AppCompatActivity() {
 
     val args by lazy { BaseArgs.deserializeFrom(intent) }
 
+    val fragment1: Fragment = HomeFragment()
+    val fragment2: Fragment = MarketsFragment()
+    val fragment3: Fragment = PortfolioFragment()
+    val fragment4: Fragment = SettingsFragment()
+
+    val fragment1TAG = "1"
+    val fragment2TAG = "2"
+    val fragment3TAG = "3"
+    val fragment4TAG = "4"
+
+    val fm = supportFragmentManager
+    var active = fragment1
+
+    private var currentFragment: Fragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        loadFragment(args.fragment)
+//        fm.beginTransaction().add(R.id.frame_placeholder, fragment4, fragment4TAG).hide(fragment4).commit()
+//        fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
+//        fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
+//        fm.beginTransaction().add(R.id.frame_placeholder,fragment1, fragment1TAG).commit()
+
+        loadFragmentNew(args.fragment)
+
+        navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    if(fm.findFragmentByTag(fragment1TAG) == null)
+                        fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
+                    fm.beginTransaction().hide(active).show(fragment1).commit()
+                    active = fragment1
+                    return@OnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_markets -> {
+                    if(fm.findFragmentByTag(fragment2TAG) == null)
+                        fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
+                    fm.beginTransaction().hide(active).show(fragment2).commit()
+                    active = fragment2
+                    return@OnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_portfolio -> {
+                    if(fm.findFragmentByTag(fragment3TAG) == null)
+                        fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
+                    fm.beginTransaction().hide(active).show(fragment3).commit()
+                    active = fragment3
+                    return@OnNavigationItemSelectedListener true
+                }
+
+                R.id.navigation_settings -> {
+                    if(fm.findFragmentByTag(fragment4TAG) == null)
+                        fm.beginTransaction().add(R.id.frame_placeholder,fragment4, fragment4TAG).hide(fragment4).commit()
+                    else
+                        fm.beginTransaction().hide(active).show(fragment4).commit()
+                    active = fragment4
+                    return@OnNavigationItemSelectedListener true
+                }
+            }
+            false
+        })
+
+//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+//        loadFragment(args.fragment)
     }
+
+
+//    private fun replaceFragment(fragment: Fragment, tag: String) {
+//        if (fragment != currentFragment) {
+//            fragmentManager
+//                    ?.beginTransaction()
+//                    ?.replace(R.id.frame_placeholder, fragment, tag)
+//                    ?.commit()
+//            currentFragment = fragment
+//        }
+//    }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
@@ -80,6 +151,48 @@ class BaseActivity : AppCompatActivity() {
         }
         transaction.replace(R.id.frame_placeholder, this.fragment)
         transaction.commit()
+        navigation.selectedItemId = selectedItem
+    }
+
+    private fun loadFragmentNew(fragment: Int) {
+
+        var selectedItem = 0
+
+        when(fragment){
+            0 -> {
+                println("0")
+                if(fm.findFragmentByTag(fragment1TAG) == null) {
+                    fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
+                }
+                fm.beginTransaction().hide(active).show(fragment1).commit()
+                active = fragment1
+                selectedItem = R.id.navigation_home
+            }
+            1 -> {
+                println("1")
+                if(fm.findFragmentByTag(fragment2TAG) == null)
+                    fm.beginTransaction().add(R.id.frame_placeholder,fragment2, fragment2TAG).hide(fragment2).commit()
+                fm.beginTransaction().hide(active).show(fragment2).commit()
+                active = fragment2
+                selectedItem = R.id.navigation_markets
+            }
+            2 -> {
+                println("2")
+                if(fm.findFragmentByTag(fragment3TAG) == null)
+                    fm.beginTransaction().add(R.id.frame_placeholder,fragment3, fragment3TAG).hide(fragment3).commit()
+                fm.beginTransaction().hide(active).show(fragment3).commit()
+                active = fragment3
+                selectedItem = R.id.navigation_portfolio
+            }
+            3 -> {
+                println("3")
+                if(fm.findFragmentByTag(fragment4TAG) == null)
+                    fm.beginTransaction().add(R.id.frame_placeholder,fragment4, fragment4TAG).hide(fragment4).commit()
+                fm.beginTransaction().hide(active).show(fragment4).commit()
+                active = fragment4
+                selectedItem = R.id.navigation_settings
+            }
+        }
         navigation.selectedItemId = selectedItem
     }
 
