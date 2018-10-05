@@ -19,7 +19,7 @@ interface CryptoCompareService {
     fun getCurrencyNews(@Query("categories") symbol: String): Single<News>
 
     @GET("all/coinlist")
-    fun getAllCurrencies(): Single<String>
+    fun getAllCurrencies(): Single<String?>
 
 
     @GET("all/exchanges")

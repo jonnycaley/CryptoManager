@@ -32,4 +32,5 @@
     <string name="update_fiat_transaction_activity">UpdateFiatTransactionActivity</string>
     <string name="splash_internet_required">No internet connection</string>
     <string name="retry">Retry</string>
+    <string name="using_offline_data">Using offline data</string>
 </resources>

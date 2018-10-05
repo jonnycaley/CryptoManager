@@ -45,7 +45,7 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
     }
 
     fun readStorage(key : String) : Single<String?> {
-        return RxPaperBook.with(Schedulers.newThread()).read(key, null)
+        return RxPaperBook.with(Schedulers.newThread()).read(key, "")
     }
 
 }

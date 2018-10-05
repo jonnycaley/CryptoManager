@@ -19,6 +19,9 @@ object Constants {
 
     val PAPER_TRANSACTIONS = "all_transactions"
 
+    val PAPER_HOME_TOP_NEWS = "home_top_news"
+    val PAPER_HOME_TOP_100 = "home_top_100"
+
 //    val PAPER_CRYPTO_TRANSACTIONS = "all_crypto_transactions"
 
     val dateFormat = "EEE, dd MMM yyyy HH:mm"

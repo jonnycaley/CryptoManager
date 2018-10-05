@@ -6,6 +6,10 @@ import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -31,8 +35,6 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
             return INSTANCE!!
         }
     }
-
-
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
@@ -76,6 +78,14 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     fun getCoinMarketCapService(): CoinMarketCapService {
         val retrofit = createRetrofit("https://pro-api.coinmarketcap.com/v1/", Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
         return retrofit.create(CoinMarketCapService::class.java)
+    }
+
+    fun readStorage(key : String) : Single<String?> {
+        return RxPaperBook.with(Schedulers.newThread()).read(key, "")
+    }
+
+    fun writeToStorage(key: String, data: String) {
+        Paper.book().write(key, data)
     }
 
 }

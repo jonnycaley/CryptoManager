@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
+import android.util.Log
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.SingleObserver
@@ -39,11 +40,13 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit?> {
                     override fun onSuccess(t: Unit) {
-                        println(isStoragePresent)
-                        if(isStoragePresent)
+                        if(isStoragePresent){
+                            view.showUsingStorage()
                             view.toBaseActivity()
-                        else
+                        }
+                        else {
                             getCurrencies()
+                        }
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -89,9 +92,12 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
                     })
         } else {
-
             view.showInternetRequired()
         }
+    }
+
+    companion object {
+        val TAG = "SplashPresenter"
     }
 
     override fun detachView() {

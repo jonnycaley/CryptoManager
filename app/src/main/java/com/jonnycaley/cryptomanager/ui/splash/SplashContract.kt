@@ -7,6 +7,7 @@ interface SplashContract {
     interface View : BaseView<Presenter> {
         fun toBaseActivity()
         fun showInternetRequired()
+        fun showUsingStorage()
     }
 
     interface Presenter : BasePresenter {
