@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
@@ -14,7 +15,7 @@ import com.jonnycaley.cryptomanager.ui.fiat.FiatArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_holding.view.*
 
-class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: MultiPrices,  val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
+class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayList<Price>, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_holding, parent, false))
@@ -26,7 +27,7 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: MultiPr
 
         holder.setIsRecyclable(false)
 
-        val price = prices.prices?.filter { it.symbol?.toLowerCase() == transaction?.symbol?.toLowerCase() }?.get(0)?.prices?.uSD
+        val price = prices?.filter { it.symbol?.toLowerCase() == transaction?.symbol?.toLowerCase() }?.get(0)?.prices?.uSD
         val value = price?.times(transaction?.quantity!!)
         val change = value?.minus(transaction?.cost!!)
 

@@ -10,3 +10,7 @@ data class Transaction(val exchange : String, val symbol : String, val pairSymbo
 //isDeductedPrice null -> is not deducted; else -> is deducted and pair/USD price is value
 //priceUSD is the usd price of the symbol at the time
 //price is the price against the pair (e.g. ETH/BTC could be 0.03 BTC)
+
+//for fiat...
+//priceUSD is the (exchange rate price on the transaction day * quantity)
+//price is the exchange rate price on the transaction day

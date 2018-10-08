@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.data.ExchangeRatesService
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
@@ -38,6 +39,11 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+    }
+
+    fun getExchangeRateService(): ExchangeRatesService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
+        return retrofit.create(ExchangeRatesService::class.java)
     }
 
     fun checkConnection(): Boolean {

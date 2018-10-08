@@ -12,12 +12,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
-class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener {
+class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, CustomSwipeRefreshLayout.OnRefreshListener {
 
     lateinit var mView: View
 
@@ -53,6 +55,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
         buttonAddCurrency.setOnClickListener(this)
         buttonAddFiat.setOnClickListener(this)
+        swipeLayout.setOnRefreshListener(this)
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
@@ -67,6 +70,14 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 SearchArgs(CURRENCY_STRING).launch(context!!)
             }
         }
+    }
+
+    override fun hideRefreshing() {
+        swipeLayout.refreshComplete()
+    }
+
+    override fun onRefresh() {
+        presenter.getTransactions()
     }
 
     override fun onResume() {
@@ -111,7 +122,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         layoutNotEmty.visibility = View.VISIBLE
     }
 
-    override fun showHoldings(holdings: ArrayList<Holding>, prices: MultiPrices) {
+    override fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager

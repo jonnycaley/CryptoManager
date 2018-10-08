@@ -21,7 +21,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/deposit"/>
+                android:text="@string/deposit"
+                android:checked="true"/>
             <RadioButton
                 android:id="@+id/radio_button_withdrawl"
                 android:layout_width="0dp"
