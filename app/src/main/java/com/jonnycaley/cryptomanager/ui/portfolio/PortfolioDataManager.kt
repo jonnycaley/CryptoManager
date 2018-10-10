@@ -32,8 +32,13 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
         }
     }
 
-    fun getCryptoCompareService(): CryptoCompareService {
+    fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        return retrofit.create(CryptoCompareService::class.java)
+    }
+
+    fun getCryptoCompareService(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
         return retrofit.create(CryptoCompareService::class.java)
     }
 

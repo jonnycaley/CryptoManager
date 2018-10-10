@@ -1,6 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
+import android.util.Log
 import com.google.gson.Gson
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Prices
@@ -9,15 +11,21 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
-import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.*
+import io.reactivex.Observable
+import io.reactivex.Observer
+import java.util.*
+
 
 class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: PortfolioContract.View) : PortfolioContract.Presenter {
 
     var compositeDisposable: CompositeDisposable? = null
+
+    val TAG = this.javaClass.simpleName
 
     init {
         this.view.setPresenter(this)
@@ -27,10 +35,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-
     }
 
-    override fun getTransactions() {
+    override fun getTransactions(timePeriod: String) {
 
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
@@ -44,7 +51,10 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                             view.showNoHoldingsLayout()
                             view.hideRefreshing()
                         } else {
-                            getLatestPrices(combineTransactions(transactions))
+                            when(timePeriod){
+                                PortfolioFragment.TIME_PERIOD_ALL -> getLatestPrices(combineTransactions(transactions))
+                                else -> getHistoricalPrices(combineTransactions(transactions), transactions, timePeriod)
+                            }
                         }
                     }
 
@@ -54,7 +64,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError")
+                        println("onError: ${e.message}")
                         view.stopRefreshing()
                         view.showError()
                     }
@@ -62,59 +72,122 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 })
     }
 
-    private fun getLatestPrices(combinedTransactions: ArrayList<Holding>) {
+    private fun getLatestPrices(holdings: ArrayList<Holding>) { //happens for the 'ALL' tab
 
         if (dataManager.checkConnection()) {
 
-            var cryptoSymbolsQueryString = ""
-
-            combinedTransactions.filter { it.type == Variables.Transaction.Type.crypto }.forEach { cryptoSymbolsQueryString += it.symbol + "," }
-
-            if (cryptoSymbolsQueryString.isNotEmpty())
-                cryptoSymbolsQueryString = cryptoSymbolsQueryString.substring(0, cryptoSymbolsQueryString.length - 1)
-
             var fiatPrices = ExchangeRates()
 
-            dataManager.getExchangeRateService().getExchangeRates()
-                    .map { fiats ->
-                        fiatPrices = Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
-                    }
-                    .flatMap {
-                        if(cryptoSymbolsQueryString == "")
-                            cryptoSymbolsQueryString = "BTC"
-                        dataManager.getCryptoCompareService().getMultiPrice(cryptoSymbolsQueryString, "USD,BTC") }//gets all crypto conversion rates
-                    .map { json -> JsonModifiers.jsonToMultiPrices(json) }
-                    .map { json -> Gson().fromJson(json, MultiPrices::class.java) }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<MultiPrices> {
+//            Observable.fromArray(holdings)
+//                    .flatMapIterable { transaction -> transaction }
+//                    .flatMap(object : io.reactivex.functions.Function<Holding, ObservableSource<Holding>> {
+//                        @Throws(Exception::class)
+//                        override fun apply(user: Holding): ObservableSource<Holding> {
+//                            return if (!user.isVip) {
+//                                Observable.just<User>(user)
+//                            } else {
+//                                getVipUserFromNetwork("userId")
+//                            }
+//                        }
+//                    })
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe({ user ->
+//                        if (user.isVip) {
+//                            //display vip user
+//                        } else {
+//                            //display regular user
+//                        }
+//                    })
 
-                        override fun onSuccess(cryptoPrices: MultiPrices) {
+                dataManager.getExchangeRateService().getExchangeRates()
+                        .map { fiats ->
+                            fiatPrices = Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
+                        }
+                        .flatMap {
+                            dataManager.getCryptoCompareServiceWithScalars().getMultiPrice(getCryptoQueryString(holdings), "USD,BTC") //gets all crypto conversion rates for all time info
+                        }
+                        .map { json -> JsonModifiers.jsonToMultiPrices(json) }
+                        .map { json -> Gson().fromJson(json, MultiPrices::class.java) }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(object : SingleObserver<MultiPrices> {
 
-                            val prices = ArrayList(cryptoPrices.prices)
+                            override fun onSuccess(cryptoPrices: MultiPrices) {
 
-                            fiatPrices.rates?.forEach { fiatRate ->
-                                val tempPrice = Price()
-                                tempPrice.symbol = fiatRate.fiat
+                                val prices = getPrices(cryptoPrices.prices, fiatPrices)
 
-                                val tempPrices = Prices()
+                                val holdings = ArrayList(holdings.sortedBy { transaction -> prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }[0].prices?.uSD?.times(transaction.quantity) }.asReversed())
 
-                                tempPrices?.uSD = 1/fiatRate.rate!!
-                                tempPrice.prices = tempPrices
+                                view.showHoldingsLayout()
+                                view.showHoldings(holdings, prices)
+                                view.showBalance(getBalance(holdings, prices))
+                                view.showChange(getChange(holdings, prices))
 
-                                prices.add(tempPrice)
+                                view.hideRefreshing()
                             }
 
-                            prices.forEach { println("Price( symbol: ${it.symbol} , uSD: ${it.prices?.uSD})") }
+                            override fun onSubscribe(d: Disposable) {
+                                compositeDisposable?.add(d)
+                            }
 
-                            val holdings = ArrayList(combinedTransactions.sortedBy { transaction -> prices?.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD?.times(transaction.quantity) }.asReversed())
+                            override fun onError(e: Throwable) {
+                                println("onError: ${e.message}")
+                                view.stopRefreshing()
+                                view.showError()
+                            }
 
-                            view.showHoldingsLayout()
-                            view.showHoldings(holdings, prices)
-                            view.showBalance(getBalance(combinedTransactions, prices))
-                            view.showChange(getChange(combinedTransactions, prices))
+                        })
 
-                            view.hideRefreshing()
+            } else {
+
+        }
+
+    }
+
+    private fun getHistoricalPrices(holdings: ArrayList<Holding>, transactions: ArrayList<Transaction>, timePeriod: String) {
+
+        var cryptoSymbol : String? = null
+
+        var prices = ArrayList<Data>()
+
+        if(dataManager.checkConnection()) {
+            Observable.fromArray(holdings)
+                    .flatMapIterable { transaction -> transaction }
+                    .flatMap { transaction ->
+                        //get the price at the time frame requested
+                        cryptoSymbol = transaction.symbol
+                        when (timePeriod) {
+                            PortfolioFragment.TIME_PERIOD_1H -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_MINUTE, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1H)
+                            PortfolioFragment.TIME_PERIOD_1D -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1D)
+                            PortfolioFragment.TIME_PERIOD_1W -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1W)
+                            else -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_DAY, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1M)
+                        }
+                    }
+                    .map { cryptoPrices ->
+
+                        var newHoldingCost = 0.toDouble()
+
+                        transactions.filter { it.symbol == cryptoSymbol || (it.pairSymbol == cryptoSymbol && it.isDeducted) }
+                                .forEach { transaction ->
+                                    if(transaction.date < getDate(timePeriod))
+                                        newHoldingCost += (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
+                                    else
+                                        newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                }
+
+                        holdings.first { it.symbol == cryptoSymbol }.cost = newHoldingCost
+
+                        prices.add(cryptoPrices)
+                    }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : Observer<Boolean> {
+
+                        override fun onComplete() {
+                            getLatestPrices(holdings)
+                        }
+
+                        override fun onNext(cryptoPrices: Boolean) {
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -132,32 +205,88 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         } else {
 
         }
-
     }
 
-    private fun getChange(combinedTransactions: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
+    fun getDate(timePeriod: String) : Date {
+        val cal = Calendar.getInstance()
+
+        when(timePeriod){
+            PortfolioFragment.TIME_PERIOD_1H ->{
+                cal.add(Calendar.HOUR, -1)
+            }
+            PortfolioFragment.TIME_PERIOD_1D ->{
+                cal.add(Calendar.DAY_OF_YEAR, -1)
+            }
+            PortfolioFragment.TIME_PERIOD_1W ->{
+                cal.add(Calendar.DAY_OF_YEAR, -7)
+            }
+            PortfolioFragment.TIME_PERIOD_1M ->{
+                cal.add(Calendar.DAY_OF_YEAR, -30)
+            }
+        }
+        return cal.getTime()
+    }
+
+    private fun getPrices(prices: List<Price>?, fiatPrices: ExchangeRates): ArrayList<Price> {
+
+        val combinesPrices = ArrayList(prices)
+
+        fiatPrices.rates?.forEach { fiatRate ->
+
+            val tempPrice = Price()
+            tempPrice.symbol = fiatRate.fiat
+
+            val tempPrices = Prices()
+
+            tempPrices.uSD = 1 / fiatRate.rate!!
+            tempPrice.prices = tempPrices
+
+            combinesPrices.add(tempPrice)
+        }
+
+//        combinesPrices.forEach { println("Price( symbol: ${it.symbol} , uSD: ${it.prices?.uSD})") }
+
+        return combinesPrices
+    }
+
+    private fun getCryptoQueryString(holdings: ArrayList<Holding>): String {
+
+        var cryptoSymbolsQueryString = ""
+
+        holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { cryptoSymbolsQueryString += it.symbol + "," }
+
+        cryptoSymbolsQueryString = if (cryptoSymbolsQueryString.isNotEmpty())
+            cryptoSymbolsQueryString.substring(0, cryptoSymbolsQueryString.length - 1)
+        else
+            "BTC"
+
+        return cryptoSymbolsQueryString
+    }
+
+    private fun getChange(holdings: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
 
         var change = 0.toDouble()
 
-        combinedTransactions.forEach { transaction ->
+        holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
 
-            val price = combinedPrices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD
-            val value = price?.times(transaction.quantity)
-            change += value?.minus(transaction.cost)!!
+            val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD
+            val value = price?.times(holding.quantity)
+            change += value?.minus(holding.cost)!!
 
         }
 
         return change
     }
 
-    private fun getBalance(combinedTransactions: ArrayList<Holding>, prices: ArrayList<Price>): Double {
+    private fun getBalance(holdings: ArrayList<Holding>, prices: ArrayList<Price>): Double {
 
         var balance = 0.toDouble()
 
-        combinedTransactions.forEach { transaction ->
-            println(transaction.quantity)
-            println(prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD)
-            balance += prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD?.times(transaction.quantity)!! }
+        holdings.forEach { transaction ->
+            //            println(transaction.quantity)
+//            println(prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD)
+            balance += prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD?.times(transaction.quantity)!!
+        }
 
         return balance
 
@@ -175,15 +304,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             if (!transactionKeys.contains(it.symbol)) {
                 transactionKeys.add(it.symbol)
             }
-        } //gets symbol for each symbol (fiat/symbol)
-
-//        transactions.forEach {
-//            println(it.symbol + "/" + it.pairSymbol )
-//            println(it.price)
-//            println(it.quantity)
-//            println(it.isDeducted)
-//            println("---------")
-//        }
+        }
 
         transactionKeys.forEach { key ->
 
@@ -195,7 +316,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             getAllTransactionsFor.forEach {
                 getCurrentHoldings += it.quantity
-                getCost += it.quantity * it.price * it.isDeductedPrice
+                getCost += it.price * it.quantity * it.isDeductedPrice
             }
 
             val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeducted) }
@@ -211,7 +332,12 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.crypto))
         }
 
+//        holdings.forEach { Log.i(TAG, "Holding(Symbol: ${it.symbol}, type: ${it.type}, quantity: ${it.quantity}, cost: ${it.cost})") }
         return holdings
+    }
+
+    override fun clearDisposable() {
+        compositeDisposable?.clear()
     }
 
     override fun detachView() {

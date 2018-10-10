@@ -21,6 +21,7 @@ interface PortfolioContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getTransactions()
+        fun getTransactions(timePeriod : String)
+        fun clearDisposable()
     }
 }

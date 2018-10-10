@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
@@ -19,7 +21,7 @@ import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
-class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, CustomSwipeRefreshLayout.OnRefreshListener {
+class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var mView: View
 
@@ -27,7 +29,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     lateinit var holdingsAdapter : HoldingsAdapter
 
-    val swipeLayout by lazy { mView.findViewById<CustomSwipeRefreshLayout>(R.id.swipelayout) }
+    val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
     val buttonAddCurrency by lazy { mView.findViewById<Button>(R.id.button_add_currency) }
     val buttonAddFiat by lazy { mView.findViewById<Button>(R.id.button_add_fiat) }
@@ -39,6 +41,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
     val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
+
+    val radioGroup : RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
+
+    var chosenPeriod = TIME_PERIOD_1H
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -56,9 +62,35 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         buttonAddCurrency.setOnClickListener(this)
         buttonAddFiat.setOnClickListener(this)
         swipeLayout.setOnRefreshListener(this)
+        setUpPortfolioTimeChoices()
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    private fun setUpPortfolioTimeChoices() {
+
+        radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition ->
+            presenter.clearDisposable()
+            when(currentPosition){
+                0 -> {
+                    chosenPeriod = TIME_PERIOD_1H
+                }
+                1 -> {
+                    chosenPeriod = TIME_PERIOD_1D
+                }
+                2 -> {
+                    chosenPeriod = TIME_PERIOD_1W
+                }
+                3 -> {
+                    chosenPeriod = TIME_PERIOD_1M
+                }
+                4 -> {
+                    chosenPeriod = TIME_PERIOD_ALL
+                }
+            }
+            presenter.getTransactions(chosenPeriod)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -73,16 +105,16 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     }
 
     override fun hideRefreshing() {
-        swipeLayout.refreshComplete()
+        swipeLayout.isRefreshing = false
     }
 
     override fun onRefresh() {
-        presenter.getTransactions()
+        presenter.getTransactions(chosenPeriod)
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.getTransactions()
+        presenter.getTransactions(chosenPeriod)
     }
 
     override fun showError() {
@@ -141,5 +173,20 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     companion object {
         val FIAT_STRING = "FIAT"
         val CURRENCY_STRING = "CURRENCY"
+
+        val TIME_PERIOD_MINUTE = "minute"
+        val TIME_PERIOD_HOUR = "hour"
+        val TIME_PERIOD_DAY = "day"
+
+        val AGGREGATE_1H = "60"
+        val AGGREGATE_1D = "24"
+        val AGGREGATE_1W = "168"
+        val AGGREGATE_1M = "30"
+
+        val TIME_PERIOD_1H = "1H"
+        val TIME_PERIOD_1D = "1D"
+        val TIME_PERIOD_1W = "1W"
+        val TIME_PERIOD_1M = "1M"
+        val TIME_PERIOD_ALL = "ALL"
     }
 }

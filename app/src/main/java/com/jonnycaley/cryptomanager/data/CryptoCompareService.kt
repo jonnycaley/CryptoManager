@@ -26,7 +26,10 @@ interface CryptoCompareService {
     fun getAllExchanges(): Single<String>
 
     @GET("histominute")
-    fun getPriceAtTime(@Query("fsym") symbol: String, @Query("tsym") conversion: String, @Query("limit") limit: String, @Query("aggregate") aggregate: String, @Query("toTs") timestamp: String): Single<Response>
+    fun getPriceAtMinute(@Query("fsym") symbol: String, @Query("tsym") conversion: String, @Query("limit") limit: String, @Query("aggregate") aggregate: String, @Query("toTs") timestamp: String): Single<Response>
+
+    @GET("histo{time}")
+    fun getPriceAtObservable(@Path("time") time: String, @Query("fsym") symbol: String, @Query("tsym") conversion: String, @Query("limit") limit: String): Observable<Data>
 
     @GET("price")
     fun getCurrentPrice(@Query("fsym") symbol: String, @Query("tsyms") conversion: String): Single<Price>

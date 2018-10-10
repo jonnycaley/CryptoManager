@@ -27,7 +27,7 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayLi
 
         holder.setIsRecyclable(false)
 
-        val price = prices?.filter { it.symbol?.toLowerCase() == transaction?.symbol?.toLowerCase() }?.get(0)?.prices?.uSD
+        val price = prices.filter { it.symbol?.toLowerCase() == transaction?.symbol?.toLowerCase() }[0].prices?.uSD
         val value = price?.times(transaction?.quantity!!)
         val change = value?.minus(transaction?.cost!!)
 

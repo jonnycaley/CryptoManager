@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.reginald.swiperefresh.CustomSwipeRefreshLayout
+<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/swipelayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
-    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipelayout"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:nestedScrollingEnabled="false"
-    app:ignore="NamespaceTypo"
-    swiperefresh:enable_top_progress_bar="true"
-    swiperefresh:keep_refresh_head="false"
-    swiperefresh:refresh_mode="pull_mode"
-    swiperefresh:return_to_header_duration="1000"
-    swiperefresh:return_to_top_duration="1000"
-    swiperefresh:time_out_refresh_complete="0"
-    swiperefresh:time_out_return_to_top="0"
-    swiperefresh:top_progress_bar_color_1="#000000"
-    swiperefresh:top_progress_bar_color_2="#ee5522"
-    swiperefresh:top_progress_bar_color_3="#ffa600"
-    swiperefresh:top_progress_bar_color_4="#ffffff"
-    tools:context=".ui.portfolio.PortfolioFragment">
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--<com.reginald.swiperefresh.CustomSwipeRefreshLayout-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/tools"-->
+    <!--xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/swipelayout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:nestedScrollingEnabled="false"-->
+    <!--app:ignore="NamespaceTypo"-->
+    <!--swiperefresh:enable_top_progress_bar="true"-->
+    <!--swiperefresh:keep_refresh_head="false"-->
+    <!--swiperefresh:refresh_mode="pull_mode"-->
+    <!--swiperefresh:return_to_header_duration="1000"-->
+    <!--swiperefresh:return_to_top_duration="1000"-->
+    <!--swiperefresh:time_out_refresh_complete="0"-->
+    <!--swiperefresh:time_out_return_to_top="0"-->
+    <!--swiperefresh:top_progress_bar_color_1="#000000"-->
+    <!--swiperefresh:top_progress_bar_color_2="#ee5522"-->
+    <!--swiperefresh:top_progress_bar_color_3="#ffa600"-->
+    <!--swiperefresh:top_progress_bar_color_4="#ffffff"-->
+    <!--tools:context=".ui.portfolio.PortfolioFragment">-->
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -54,6 +60,105 @@
                 android:text="$0"
                 android:gravity="center"
                 android:textSize="@dimen/large_text_size"/>
+
+
+            <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:id="@+id/radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                app:rrbg_animateTexts_enter="overshoot"
+                app:rrbg_animateTexts_scale="1.3"
+                app:rrbg_animateTexts_textColorFrom="@color/text_grey"
+                app:rrbg_animateTexts_textColorTo="@color/black"
+                app:rrbg_animateTexts_textColor_duration="500"
+                app:rrbg_borderColor="@color/white"
+                app:rrbg_borderSize="1dp"
+                app:rrbg_bottomLineRadius="2dp"
+                app:rrbg_bottomLineSize="1dp"
+                app:rrbg_dividerColor="@color/black"
+                app:rrbg_dividerPadding="12dp"
+                app:rrbg_dividerRadius="2dp"
+                app:rrbg_dividerSize="0dp"
+                app:rrbg_enableDeselection="false"
+                app:rrbg_radius="2dp"
+                app:rrbg_selectorAboveOfBottomLine="false"
+                app:rrbg_selectorAnimationType="translate_y"
+                app:rrbg_selectorColor="@color/white"
+                app:rrbg_selectorRadius="0dp"
+                app:rrbg_selectorSize="2dp">
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_checked="true"
+                    app:rrb_drawableGravity="left"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="4dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_selectorColor="@color/black"
+                    app:rrb_text="1H"
+                    app:rrb_textColor="@color/text_grey"
+                    app:rrb_textGravity="center"
+                    app:rrb_textSize="10sp" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawableGravity="top"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="4dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_selectorColor="@color/black"
+                    app:rrb_text="1D"
+                    app:rrb_textColor="@color/text_grey"
+                    app:rrb_textGravity="center"
+                    app:rrb_textSize="10sp" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawableGravity="right"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="4dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_selectorColor="@color/black"
+                    app:rrb_text="1W"
+                    app:rrb_textColor="@color/text_grey"
+                    app:rrb_textFillSpace="true"
+                    app:rrb_textGravity="center"
+                    app:rrb_textSize="10sp" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawableGravity="right"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="4dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_selectorColor="@color/black"
+                    app:rrb_text="1M"
+                    app:rrb_textColor="@color/text_grey"
+                    app:rrb_textFillSpace="true"
+                    app:rrb_textGravity="center"
+                    app:rrb_textSize="10sp" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_drawableGravity="right"
+                    app:rrb_drawableHeight="36dp"
+                    app:rrb_drawablePadding="4dp"
+                    app:rrb_drawableWidth="36dp"
+                    app:rrb_rippleColor="@color/black"
+                    app:rrb_selectorColor="@color/black"
+                    app:rrb_text="All"
+                    app:rrb_textColor="@color/text_grey"
+                    app:rrb_textFillSpace="true"
+                    app:rrb_textGravity="center"
+                    app:rrb_textSize="10sp" />
+
+            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -120,4 +225,6 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-</com.reginald.swiperefresh.CustomSwipeRefreshLayout>
+<!--</com.reginald.swiperefresh.CustomSwipeRefreshLayout>-->
+
+</android.support.v4.widget.SwipeRefreshLayout>
