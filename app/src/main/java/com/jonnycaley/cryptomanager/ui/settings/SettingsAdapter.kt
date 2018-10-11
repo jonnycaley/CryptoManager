@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
+import kotlinx.android.synthetic.main.item_settings.view.*
 
 
 class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
@@ -20,6 +21,8 @@ class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) :
 
         holder.setIsRecyclable(false)
 
+        holder.setting.text = setting
+
         holder.itemView.setOnClickListener {
 
         }
@@ -31,6 +34,6 @@ class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) :
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
-//        val currency = view.currency
+        val setting = view.setting
     }
 }
