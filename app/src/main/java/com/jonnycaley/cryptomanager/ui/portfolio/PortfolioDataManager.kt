@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.portfolio
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
@@ -53,6 +54,10 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
+    }
+
+    fun getAllCryptos(): Single<String> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_CRYPTOS)
     }
 
 }

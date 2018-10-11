@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
-import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
@@ -51,7 +50,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                             view.showNoHoldingsLayout()
                             view.hideRefreshing()
                         } else {
-                            when(timePeriod){
+                            when (timePeriod) {
                                 PortfolioFragment.TIME_PERIOD_ALL -> getLatestPrices(combineTransactions(transactions))
                                 else -> getHistoricalPrices(combineTransactions(transactions), transactions, timePeriod)
                             }
@@ -76,28 +75,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         if (dataManager.checkConnection()) {
 
-            var fiatPrices = ExchangeRates()
-
-//            Observable.fromArray(holdings)
-//                    .flatMapIterable { transaction -> transaction }
-//                    .flatMap(object : io.reactivex.functions.Function<Holding, ObservableSource<Holding>> {
-//                        @Throws(Exception::class)
-//                        override fun apply(user: Holding): ObservableSource<Holding> {
-//                            return if (!user.isVip) {
-//                                Observable.just<User>(user)
-//                            } else {
-//                                getVipUserFromNetwork("userId")
-//                            }
-//                        }
-//                    })
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe({ user ->
-//                        if (user.isVip) {
-//                            //display vip user
-//                        } else {
-//                            //display regular user
-//                        }
-//                    })
+                var fiatPrices = ExchangeRates()
 
                 dataManager.getExchangeRateService().getExchangeRates()
                         .map { fiats ->
@@ -116,12 +94,12 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                                 val prices = getPrices(cryptoPrices.prices, fiatPrices)
 
-                                val holdings = ArrayList(holdings.sortedBy { transaction -> prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }[0].prices?.uSD?.times(transaction.quantity) }.asReversed())
+                                val holdingsSorted = ArrayList(holdings.sortedBy { transaction -> prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }[0].prices?.uSD?.times(transaction.quantity) }.asReversed())
 
                                 view.showHoldingsLayout()
-                                view.showHoldings(holdings, prices)
-                                view.showBalance(getBalance(holdings, prices))
-                                view.showChange(getChange(holdings, prices))
+                                view.showHoldings(holdingsSorted, prices)
+                                view.showBalance(getBalance(holdingsSorted, prices))
+                                view.showChange(getChange(holdingsSorted, prices))
 
                                 view.hideRefreshing()
                             }
@@ -138,7 +116,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         })
 
-            } else {
+        } else {
 
         }
 
@@ -146,11 +124,11 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
     private fun getHistoricalPrices(holdings: ArrayList<Holding>, transactions: ArrayList<Transaction>, timePeriod: String) {
 
-        var cryptoSymbol : String? = null
+        var cryptoSymbol: String? = null
 
-        var prices = ArrayList<Data>()
+        val prices = ArrayList<Data>()
 
-        if(dataManager.checkConnection()) {
+        if (dataManager.checkConnection()) {
             Observable.fromArray(holdings)
                     .flatMapIterable { transaction -> transaction }
                     .flatMap { transaction ->
@@ -167,12 +145,21 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         var newHoldingCost = 0.toDouble()
 
-                        transactions.filter { it.symbol == cryptoSymbol || (it.pairSymbol == cryptoSymbol && it.isDeducted) }
+                        transactions.filter { it.symbol == cryptoSymbol }
                                 .forEach { transaction ->
-                                    if(transaction.date < getDate(timePeriod))
+                                    if (transaction.date < getDate(timePeriod))
                                         newHoldingCost += (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
                                     else
                                         newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                }
+
+                        transactions.filter { it.pairSymbol == cryptoSymbol && it.isDeducted }
+                                .forEach { transaction ->
+                                    if (transaction.date < getDate(timePeriod))
+                                        newHoldingCost -= (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
+                                    else
+                                        newHoldingCost -= (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+
                                 }
 
                         holdings.first { it.symbol == cryptoSymbol }.cost = newHoldingCost
@@ -207,20 +194,20 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         }
     }
 
-    fun getDate(timePeriod: String) : Date {
+    fun getDate(timePeriod: String): Date {
         val cal = Calendar.getInstance()
 
-        when(timePeriod){
-            PortfolioFragment.TIME_PERIOD_1H ->{
+        when (timePeriod) {
+            PortfolioFragment.TIME_PERIOD_1H -> {
                 cal.add(Calendar.HOUR, -1)
             }
-            PortfolioFragment.TIME_PERIOD_1D ->{
+            PortfolioFragment.TIME_PERIOD_1D -> {
                 cal.add(Calendar.DAY_OF_YEAR, -1)
             }
-            PortfolioFragment.TIME_PERIOD_1W ->{
+            PortfolioFragment.TIME_PERIOD_1W -> {
                 cal.add(Calendar.DAY_OF_YEAR, -7)
             }
-            PortfolioFragment.TIME_PERIOD_1M ->{
+            PortfolioFragment.TIME_PERIOD_1M -> {
                 cal.add(Calendar.DAY_OF_YEAR, -30)
             }
         }
@@ -298,12 +285,17 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         val transactionKeys = ArrayList<String>()
 
-        transactions.forEach { println("Transaction(exchange = ${it.exchange}, symbol = ${it.symbol}, pairSymbol = ${it.pairSymbol}, quantity = ${it.quantity}, price = ${it.price}, priceUSD = ${it.priceUSD}, date = ${it.date}, notes = ${it.notes}, isDeducted = ${it.isDeducted}), isDeductedPrice = ${it.isDeductedPrice})") }
+//        holdings.forEach { println("Transaction(exchange = ${it.exchange}, symbol = ${it.symbol}, pairSymbol = ${it.pairSymbol}, quantity = ${it.quantity}, price = ${it.price}, priceUSD = ${it.priceUSD}, date = ${it.date}, notes = ${it.notes}, isDeducted = ${it.isDeducted}), isDeductedPrice = ${it.isDeductedPrice})") }
 
         transactions.forEach {
             if (!transactionKeys.contains(it.symbol)) {
                 transactionKeys.add(it.symbol)
             }
+        }
+
+        transactions.forEach {
+            if ((it.pairSymbol != null) && (!transactionKeys.contains(it.pairSymbol!!)))
+                transactionKeys.add(it.pairSymbol!!)
         }
 
         transactionKeys.forEach { key ->
@@ -312,9 +304,12 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             var getCost = 0.toDouble()
 
+            var imageUrl : String? = null
+
             val getAllTransactionsFor = transactions.filter { it.symbol == key }
 
             getAllTransactionsFor.forEach {
+                imageUrl = it.baseImageUrl
                 getCurrentHoldings += it.quantity
                 getCost += it.price * it.quantity * it.isDeductedPrice
             }
@@ -322,17 +317,19 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeducted) }
 
             getAllTransactionsAgainst.forEach {
+                imageUrl = it.pairImageUrl
                 getCurrentHoldings -= (it.price * it.quantity)
                 getCost -= it.price * it.quantity * it.isDeductedPrice
             }
 
-            if (getAllTransactionsFor[0].pairSymbol == null)
-                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.fiat))
+            if ((getAllTransactionsFor.isNotEmpty() && getAllTransactionsFor[0].pairSymbol == null) || ((getAllTransactionsAgainst.isNotEmpty() && getAllTransactionsAgainst[0].pairSymbol == null)))
+                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.fiat, imageUrl))
             else
-                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.crypto))
-        }
+                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.crypto, imageUrl))
 
+        }
 //        holdings.forEach { Log.i(TAG, "Holding(Symbol: ${it.symbol}, type: ${it.type}, quantity: ${it.quantity}, cost: ${it.cost})") }
+
         return holdings
     }
 

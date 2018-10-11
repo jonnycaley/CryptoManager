@@ -6,16 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.ui.fiat.FiatArgs
+import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_holding.view.*
 
-class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayList<Price>, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
+class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<Price>, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_holding, parent, false))
@@ -23,32 +25,45 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayLi
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val transaction = transactions?.get(position)
+        val holding = holdings?.get(position)
 
         holder.setIsRecyclable(false)
 
-        val price = prices.filter { it.symbol?.toLowerCase() == transaction?.symbol?.toLowerCase() }[0].prices?.uSD
-        val value = price?.times(transaction?.quantity!!)
-        val change = value?.minus(transaction?.cost!!)
+        val price = prices.filter { it.symbol?.toLowerCase() == holding?.symbol?.toLowerCase() }[0].prices?.uSD
+        val value = price?.times(holding?.quantity!!)
+        val change = value?.minus(holding?.cost!!)
+
+        if(holding?.imageUrl != null && !holding.imageUrl?.contains("null")!!) {
+            Picasso.with(context)
+                    .load(holding.imageUrl)
+                    .fit()
+                    .centerCrop()
+                    .transform(CircleTransform())
+                    .placeholder(R.drawable.circle)
+                    .into(holder.image)
+        }
+        else{
+            holder.image.visibility = View.GONE
+        }
 
         if (change != null && change < 0) {
             holder.change.setTextColor(context?.resources?.getColor(R.color.red)!!)
-            holder.change.text = "-$${Utils.formatPrice(change!!).substring(1)}"
+            holder.change.text = "-$${Utils.formatPrice(change).substring(1)}"
         } else {
             holder.change.setTextColor(context?.resources?.getColor(R.color.green)!!)
             holder.change.text = "$${Utils.formatPrice(change!!)}"
         }
 
-        holder.amount.text = transaction?.quantity.toString()
-        holder.currency.text = transaction?.symbol.toString()
-        holder.symbol.text = transaction?.symbol.toString()
-        holder.value.text = "($${Utils.formatPrice(value!!)})"
+        holder.amount.text = holding?.quantity.toString()
+        holder.currency.text = holding?.symbol.toString()
+        holder.symbol.text = holding?.symbol.toString()
+        holder.value.text = "($${Utils.formatPrice(value)})"
         holder.price.text = "$$price"
 
-        if(transaction?.type ==  Variables.Transaction.Type.fiat) {
+        if(holding?.type ==  Variables.Transaction.Type.fiat) {
             holder.textFiat.visibility = View.VISIBLE
             holder.price.visibility = View.GONE
-            holder.change.text = "$${Utils.formatPrice(value!!)}"
+            holder.change.text = "$${Utils.formatPrice(value)}"
             holder.change.setTextColor(context.resources.getColor(R.color.text_grey))
             holder.symbol.visibility = View.GONE
             holder.value.visibility = View.GONE
@@ -56,17 +71,17 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayLi
         }
 
         holder.itemView.setOnClickListener {
-            if(transaction?.type ==  Variables.Transaction.Type.fiat) {
-                FiatArgs(transaction.symbol).launch(context!!)
+            if(holding?.type ==  Variables.Transaction.Type.fiat) {
+                FiatArgs(holding.symbol).launch(context)
             }
             else{
-                CryptoArgs(transaction?.symbol!!).launch(context!!)
+                CryptoArgs(holding?.symbol!!).launch(context)
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return transactions?.size ?: 0
+        return holdings?.size ?: 0
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
@@ -78,5 +93,6 @@ class HoldingsAdapter(val transactions: ArrayList<Holding>?, val prices: ArrayLi
         val change = view.change
         val value = view.value
         val price = view.price
+        val image = view.image
     }
 }

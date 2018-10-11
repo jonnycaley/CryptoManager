@@ -3,20 +3,26 @@ package com.jonnycaley.cryptomanager.ui.settings
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
+import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrenciesAdapter
 
 class SettingsFragment : Fragment(), SettingsContract.View{
 
-    lateinit var mView : View
+    internal lateinit var view : View
 
     var listener: mListener? = null
 
     private lateinit var presenter : SettingsContract.Presenter
+
+    val recyclerView by lazy { view.findViewById<RecyclerView>(R.id.recycler_view) }
+
+    lateinit var settingsAdapter : SettingsAdapter
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -40,19 +46,25 @@ class SettingsFragment : Fragment(), SettingsContract.View{
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView  = inflater.inflate(R.layout.fragment_settings, container, false)
+        view  = inflater.inflate(R.layout.fragment_settings, container, false)
         println("onCreateView")
-        return mView
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
         //view setup should occur here
 
+        val list = ArrayList<String>()
+
+        val mLayoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = mLayoutManager
+        settingsAdapter = SettingsAdapter(list, context)
+        recyclerView.adapter = settingsAdapter
+
         presenter = SettingsPresenter(SettingsDataManager.getInstance(context!!), this)
         presenter.attachView()
         //get all the info for when the onViewCreated runs...
-        println("onViewCreated")
     }
 
     override fun onDetach() {

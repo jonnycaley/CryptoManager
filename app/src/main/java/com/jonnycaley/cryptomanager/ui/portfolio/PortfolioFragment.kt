@@ -13,13 +13,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
-import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
-import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 

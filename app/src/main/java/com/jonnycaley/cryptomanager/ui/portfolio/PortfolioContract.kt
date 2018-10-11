@@ -1,9 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
-import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
