@@ -130,37 +130,63 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         if (dataManager.checkConnection()) {
             Observable.fromArray(holdings)
-                    .flatMapIterable { transaction -> transaction }
-                    .flatMap { transaction ->
+                    .flatMapIterable { holding -> holding }
+                    .flatMap { holding ->
                         //get the price at the time frame requested
-                        cryptoSymbol = transaction.symbol
+                        cryptoSymbol = holding.symbol
                         when (timePeriod) {
-                            PortfolioFragment.TIME_PERIOD_1H -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_MINUTE, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1H)
-                            PortfolioFragment.TIME_PERIOD_1D -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1D)
-                            PortfolioFragment.TIME_PERIOD_1W -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1W)
-                            else -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_DAY, transaction.symbol, "USD", PortfolioFragment.AGGREGATE_1M)
+                            PortfolioFragment.TIME_PERIOD_1H -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_MINUTE, holding.symbol, "USD", PortfolioFragment.AGGREGATE_1H)
+                            PortfolioFragment.TIME_PERIOD_1D -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, holding.symbol, "USD", PortfolioFragment.AGGREGATE_1D)
+                            PortfolioFragment.TIME_PERIOD_1W -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_HOUR, holding.symbol, "USD", PortfolioFragment.AGGREGATE_1W)
+                            else -> return@flatMap dataManager.getCryptoCompareService().getPriceAtObservable(PortfolioFragment.TIME_PERIOD_DAY, holding.symbol, "USD", PortfolioFragment.AGGREGATE_1M)
                         }
                     }
                     .map { cryptoPrices ->
 
                         var newHoldingCost = 0.toDouble()
 
+                        println(cryptoSymbol)
+
                         transactions.filter { it.symbol == cryptoSymbol }
                                 .forEach { transaction ->
-                                    if (transaction.date < getDate(timePeriod))
+                                    if (transaction.date < getDate(timePeriod)) {
                                         newHoldingCost += (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
-                                    else
+                                        println("Get price from before")
+                                        println(transaction.quantity)
+                                        println(cryptoPrices.data?.get(0)?.close!!)
+                                    }
+                                    else {
+                                        println("Get price from bought")
+                                        println(transaction.quantity)
+                                        println(transaction.price)
+                                        println(transaction.isDeductedPrice)
                                         newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                    }
                                 }
 
                         transactions.filter { it.pairSymbol == cryptoSymbol && it.isDeducted }
                                 .forEach { transaction ->
-                                    if (transaction.date < getDate(timePeriod))
-                                        newHoldingCost -= (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
-                                    else
+                                    if (transaction.date < getDate(timePeriod)) {
+                                        newHoldingCost -= (transaction.price * transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
+                                        println("Get price from before")
+                                        print("Price: " + transaction.price)
+                                        print("PriceUSD: " + transaction.priceUSD)
+                                        println("Quantity" + transaction.quantity)
+                                        println("Price usd time related:" + cryptoPrices.data?.get(0)?.close!!)
+                                        println("${transaction.isDeductedPrice}")
+
+                                    }
+                                    else {
+                                        println("Get price from bought")
+                                        println(transaction.quantity)
+                                        println(transaction.price)
+                                        println(transaction.isDeductedPrice)
                                         newHoldingCost -= (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                    }
 
                                 }
+
+                        println("New cost: $newHoldingCost")
 
                         holdings.first { it.symbol == cryptoSymbol }.cost = newHoldingCost
 
