@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import kotlinx.android.synthetic.main.item_settings.view.*
-
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
 
 class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
@@ -24,7 +26,11 @@ class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) :
         holder.setting.text = setting
 
         holder.itemView.setOnClickListener {
-
+            when(position){
+                0 -> {
+                    startActivity(context!!, Intent(context, SavedArticlesActivity::class.java), null)
+                }
+            }
         }
     }
 

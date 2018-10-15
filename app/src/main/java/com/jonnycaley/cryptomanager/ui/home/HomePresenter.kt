@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 import com.jonnycaley.cryptomanager.utils.Constants
-import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -27,6 +27,51 @@ class HomePresenter (var dataManager: HomeDataManager, var view: HomeContract.Vi
         getNews()
     }
 
+    override fun saveArticle(topArticle: News) {
+        dataManager.getArticles()
+                .map { savedArticles ->
+                    savedArticles.add(topArticle)
+                    return@map savedArticles
+                }
+                .map { savedArticles -> dataManager.saveArticles(savedArticles) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(currencies: Unit) {
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        println("onSubscribe")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
+
+    }
+
+    override fun removeArticle(topArticle: News) {
+        dataManager.getArticles()
+                .map { articles -> return@map articles.filter { it != topArticle } }
+                .map { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(currencies: Unit) {
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        println("onSubscribe")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
+    }
 
     override fun getNews() {
 

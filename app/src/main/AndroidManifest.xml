@@ -64,13 +64,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionActivity"
+            android:name=".ui.transactions.crypto.create.CreateCryptoTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/transaction_activity_currency"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.jonnycaley.cryptomanager.ui.transactions.fiat.create.CreateFiatTransactionActivity"
+            android:name=".ui.transactions.fiat.create.CreateFiatTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/transaction_activity_fiat"
             android:screenOrientation="portrait"
@@ -100,14 +100,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.jonnycaley.cryptomanager.ui.transactions.fiat.update.UpdateFiatTransactionActivity"
+            android:name=".ui.transactions.fiat.update.UpdateFiatTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/update_fiat_transaction_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.jonnycaley.cryptomanager.ui.transactions.crypto.update.UpdateCryptoTransactionActivity"
+        <activity
+            android:name=".ui.transactions.crypto.update.UpdateCryptoTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/update_crypto_transaction_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.settings.savedArticles.SavedArticlesActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/saved_articles_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

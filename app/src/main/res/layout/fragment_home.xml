@@ -101,14 +101,12 @@
                                 android:textSize="@dimen/small_text_size" />
 
                             <com.like.LikeButton
-                                android:id="@+id/card_star_button"
+                                android:id="@+id/like_button_top_article"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/card_description"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
-
-
                                 app:anim_scale_factor="2"
                                 app:circle_end_color="@color/colorAccent"
                                 app:circle_start_color="@color/colorPrimary"
