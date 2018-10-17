@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
@@ -54,6 +55,12 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
                 presenter.getAllCurrencies()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume() //notice how i don't call the presenter.getCryptoPrices() here as it is quite unnecessary to load a new set of prices when this would only run when coming from a transaction detail page which is more than likely not long after the prices are obtained in the first place therefore not worth the loading time wait again for update
+        Log.i(TAG, "onResume()")
     }
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {

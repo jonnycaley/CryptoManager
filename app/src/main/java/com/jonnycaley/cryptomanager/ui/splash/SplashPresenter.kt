@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
-import android.util.Log
+import com.google.gson.Gson
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.SingleObserver
@@ -45,7 +46,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                             view.toBaseActivity()
                         }
                         else {
-                            getCurrencies()
+                            setBaseCurrencyUSD()
                         }
                     }
 
@@ -61,11 +62,24 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
     }
 
+    private fun setBaseCurrencyUSD() {
+
+        dataManager.writeToStorage(Constants.PAPER_BASE_FIAT, "USD")
+
+        getCurrencies()
+    }
+
     override fun getCurrencies() {
 
         if(dataManager.checkConnection()){
 
-            dataManager.getCryptoCompareService().getAllCurrencies()
+            dataManager.getExchangeRateService().getExchangeRates()
+                    .map { json ->
+                        dataManager.saveAllFiats(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java))
+                    }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getAllCurrencies()
+                    }
                     .map { response ->
                         dataManager.writeToStorage(Constants.PAPER_ALL_CRYPTOS, JsonModifiers.jsonToCryptos(response))
                     }

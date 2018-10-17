@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_settings.view.*
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
+import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
 
 class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
@@ -35,6 +36,9 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
                 }
                 2 ->{
                     presenter.deletePortfolio()
+                }
+                3 -> {
+                    startActivity(context!!, Intent(context, SelectCurrencyActivity::class.java), null)
                 }
             }
         }

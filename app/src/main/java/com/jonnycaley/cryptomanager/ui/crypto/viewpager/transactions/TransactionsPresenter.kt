@@ -17,6 +17,8 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
     var compositeDisposable: CompositeDisposable? = null
 
+    var price : Double? = null
+
     init {
         this.view.setPresenter(this)
     }
@@ -37,7 +39,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : SingleObserver<Price> {
                         override fun onSuccess(response: Price) {
-                            println("Price in usd" + response.uSD)
+                            price = response.uSD
                             getTransactions(response.uSD)
                         }
 
@@ -53,6 +55,13 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         } else {
             getTransactions(null)
         }
+    }
+
+    override fun onResume() {
+        if(price != null)
+            getTransactions(price)
+        else
+            getCryptoPrice()
     }
 
     override fun getAllCurrencies() {

@@ -2,6 +2,8 @@ package com.jonnycaley.cryptomanager.ui.splash
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.data.ExchangeRatesService
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -36,6 +38,11 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+    fun getExchangeRateService(): ExchangeRatesService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
+        return retrofit.create(ExchangeRatesService::class.java)
+    }
+
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
@@ -46,6 +53,10 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
 
     fun readStorage(key : String) : Single<String?> {
         return RxPaperBook.with(Schedulers.newThread()).read(key, "")
+    }
+
+    fun saveAllFiats(jsonToCurrencies: ExchangeRates) {
+        Paper.book().write(Constants.PAPER_ALL_FIATS, jsonToCurrencies)
     }
 
 }

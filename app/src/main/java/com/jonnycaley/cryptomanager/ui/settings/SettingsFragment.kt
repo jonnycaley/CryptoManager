@@ -24,8 +24,6 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     val TAG = this.javaClass.simpleName
 
-    var settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio"))
-
     val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
@@ -49,7 +47,15 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
         Log.i(TAG, "onTabClicked()")
     }
 
-    override fun loadSettings() {
+    override fun onResume() {
+        super.onResume()
+        presenter.loadSettings()
+    }
+
+    override fun loadSettings(baseFiat: String) {
+
+        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency ($baseFiat)"))
+
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager

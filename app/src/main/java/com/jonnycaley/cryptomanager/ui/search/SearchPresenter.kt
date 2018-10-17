@@ -12,11 +12,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContract.View) : SearchContract.Presenter{
+class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContract.View) : SearchContract.Presenter {
 
     var compositeDisposable: CompositeDisposable? = null
 
-    var allCurrencies : Currencies? = null
+    var allCurrencies: Currencies? = null
 
     init {
         this.view.setPresenter(this)
@@ -27,7 +27,7 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
             compositeDisposable = CompositeDisposable()
         }
 
-        when(view.getSearchType()){
+        when (view.getSearchType()) {
             PortfolioFragment.CURRENCY_STRING -> {
                 getAllCurrencies()
             }
@@ -38,34 +38,26 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
     }
 
     private fun getAllFiats() {
-        if(dataManager.checkConnection()){
 
-            println("Getting fiats")
-
-            dataManager.getExchangeRateService().getExchangeRates()
-                    .map { fiats ->
-                        Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
+        dataManager.readStorage(Constants.PAPER_ALL_FIATS)
+                .map { json -> Gson().fromJson(json, ExchangeRates::class.java) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<ExchangeRates> {
+                    override fun onSuccess(fiats: ExchangeRates) {
+                        view.showFiats(fiats)
                     }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<ExchangeRates> {
-                        override fun onSuccess(fiats: ExchangeRates) {
-                            view.showFiats(fiats)
-                        }
 
-                        override fun onSubscribe(d: Disposable) {
-                            println("Subscribed")
-                            compositeDisposable?.add(d)
-                        }
+                    override fun onSubscribe(d: Disposable) {
+                        println("Subscribed")
+                        compositeDisposable?.add(d)
+                    }
 
-                        override fun onError(e: Throwable) {
-                            println("onErrorFiats: ${e.message}")
-                        }
-                    })
+                    override fun onError(e: Throwable) {
+                        println("onErrorFiats: ${e.message}")
+                    }
+                })
 
-        } else {
-
-        }
     }
 
     private fun getAllCurrencies() {
@@ -78,7 +70,7 @@ class SearchPresenter (var dataManager: SearchDataManager, var view: SearchContr
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
-                        when(allCurrencies){
+                        when (allCurrencies) {
                             null -> {
                                 //TODO: show something/download automatically
                             }

@@ -30,6 +30,8 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 //        Toast.makeText(this, R.string.using_offline_data, Toast.LENGTH_SHORT).show()
     }
 
+
+
     override fun toBaseActivity() {
         BaseArgs(0).launch(this)
     }

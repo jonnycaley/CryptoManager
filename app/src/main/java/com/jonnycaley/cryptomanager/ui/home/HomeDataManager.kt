@@ -57,11 +57,11 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) {
-        Paper.book().write(Constants.SAVED_ARTICLES, savedArticles)
+        Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
 
 }

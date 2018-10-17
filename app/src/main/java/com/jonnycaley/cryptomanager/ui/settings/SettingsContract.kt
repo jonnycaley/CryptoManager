@@ -9,11 +9,12 @@ interface SettingsContract {
         fun showPortfolioDeletedError()
         fun showSavedArticlesDeleted()
         fun showSavedArticlesDeletedError()
-        fun loadSettings()
+        fun loadSettings(baseFiat: String)
     }
 
     interface Presenter : BasePresenter {
         fun deletePortfolio()
         fun deleteSavedArticles()
+        fun loadSettings()
     }
 }

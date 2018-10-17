@@ -34,4 +34,5 @@
     <string name="retry">Retry</string>
     <string name="using_offline_data">Using offline data</string>
     <string name="saved_articles_activity">Saved Articles</string>
+    <string name="select_currency_activity">Select Currency Activity</string>
 </resources>

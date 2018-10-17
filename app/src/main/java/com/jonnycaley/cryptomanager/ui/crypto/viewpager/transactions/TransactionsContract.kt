@@ -15,5 +15,6 @@ interface TransactionsContract {
 
     interface Presenter : BasePresenter {
         fun getAllCurrencies()
+        fun onResume()
     }
 }

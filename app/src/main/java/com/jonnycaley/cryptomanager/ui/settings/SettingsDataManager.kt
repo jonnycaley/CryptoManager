@@ -39,7 +39,10 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
     }
 
     fun deleteSavedArticles(): Completable {
-        return RxPaperBook.with(Schedulers.newThread()).delete(Constants.SAVED_ARTICLES)
+        return RxPaperBook.with(Schedulers.newThread()).delete(Constants.PAPER_SAVED_ARTICLES)
     }
 
+    fun getBaseFiat(): Single<String> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_FIAT, "USD")
+    }
 }

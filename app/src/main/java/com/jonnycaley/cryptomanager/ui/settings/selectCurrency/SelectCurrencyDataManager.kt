@@ -1,0 +1,49 @@
+package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
+
+import android.content.Context
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.utils.Constants
+import com.jonnycaley.cryptomanager.utils.Utils
+import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
+import com.pacoworks.rxpaper2.RxPaperBook
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
+
+
+class SelectCurrencyDataManager private constructor(val UserPreferences: UserPreferences) {
+
+    companion object {
+
+        private var INSTANCE: SelectCurrencyDataManager? = null
+
+        private lateinit var context: Context
+
+        private val TAG = "SelectCurrencyData"
+
+        @JvmStatic
+        fun getInstance(context: Context): SelectCurrencyDataManager {
+            if (INSTANCE == null) {
+                INSTANCE = SelectCurrencyDataManager(UserPreferences.getInstance(context))
+                this.context = context
+            }
+            return INSTANCE!!
+        }
+    }
+
+    fun checkConnection(): Boolean {
+        return Utils.isNetworkConnected(context)
+    }
+
+    fun getBaseFiat(): Single<String> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_FIAT, "USD")
+    }
+
+    fun getFiats(): Single<ExchangeRates> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_FIATS, ExchangeRates())
+    }
+
+    fun saveBaseCurrency(symbol: String?) : Completable{
+        return RxPaperBook.with(Schedulers.newThread()).write(Constants.PAPER_BASE_FIAT, symbol)
+    }
+}
