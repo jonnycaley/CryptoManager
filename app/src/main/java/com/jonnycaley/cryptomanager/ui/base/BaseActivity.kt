@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -10,7 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.home.HomeFragment
-import com.jonnycaley.cryptomanager.ui.portfolio.MarketsFragment
+import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
 import kotlinx.android.synthetic.main.content_home.*
@@ -59,6 +58,8 @@ class BaseActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
+                    else
+                        (fragment1 as HomeFragment).onTabClicked()
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
                     return@OnNavigationItemSelectedListener true
@@ -67,6 +68,8 @@ class BaseActivity : AppCompatActivity() {
                 R.id.navigation_markets -> {
                     if(fm.findFragmentByTag(fragment2TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
+                    else
+                        (fragment2 as MarketsFragment).onTabClicked()
                     fm.beginTransaction().hide(active).show(fragment2).commit()
                     active = fragment2
                     return@OnNavigationItemSelectedListener true
@@ -75,6 +78,8 @@ class BaseActivity : AppCompatActivity() {
                 R.id.navigation_portfolio -> {
                     if(fm.findFragmentByTag(fragment3TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
+                    else
+                        (fragment3 as PortfolioFragment).onTabClicked()
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
                     return@OnNavigationItemSelectedListener true
@@ -83,6 +88,8 @@ class BaseActivity : AppCompatActivity() {
                 R.id.navigation_settings -> {
                     if(fm.findFragmentByTag(fragment4TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment4, fragment4TAG).hide(fragment4).commit()
+                    else
+                        (fragment4 as SettingsFragment).onTabClicked()
                     fm.beginTransaction().hide(active).show(fragment4).commit()
                     active = fragment4
                     return@OnNavigationItemSelectedListener true

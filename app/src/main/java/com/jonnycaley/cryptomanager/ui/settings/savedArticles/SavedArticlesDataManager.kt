@@ -1,11 +1,12 @@
 package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.content.Context
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -34,9 +35,16 @@ class SavedArticlesDataManager private constructor(val UserPreferences: UserPref
         return Utils.isNetworkConnected(context)
     }
 
-
-    fun getArticles(): Single<ArrayList<News>> {
+    fun getArticles(): Single<ArrayList<Article>> {
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.SAVED_ARTICLES, ArrayList())
+    }
+
+    fun getSavedArticles(): Single<ArrayList<Article>> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.SAVED_ARTICLES, ArrayList())
+    }
+
+    fun saveArticles(savedArticles: ArrayList<Article>) {
+        Paper.book().write(Constants.SAVED_ARTICLES, savedArticles)
     }
 
 }

@@ -3,13 +3,15 @@ package com.jonnycaley.cryptomanager.ui.markets
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class MarketsDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -44,5 +46,14 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
+
+    fun getSavedArticles(): Single<ArrayList<Article>> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.SAVED_ARTICLES, ArrayList())
+    }
+
+    fun saveArticles(savedArticles: ArrayList<Article>) {
+        Paper.book().write(Constants.SAVED_ARTICLES, savedArticles)
+    }
+
 
 }

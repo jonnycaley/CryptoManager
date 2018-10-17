@@ -3,14 +3,13 @@ package com.jonnycaley.cryptomanager.ui.home
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Paper
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -57,11 +56,11 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
         Paper.book().write(key, data)
     }
 
-    fun getArticles(): Single<ArrayList<News>> {
+    fun getSavedArticles(): Single<ArrayList<Article>> {
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.SAVED_ARTICLES, ArrayList())
     }
 
-    fun saveArticles(savedArticles: ArrayList<News>) {
+    fun saveArticles(savedArticles: ArrayList<Article>) {
         Paper.book().write(Constants.SAVED_ARTICLES, savedArticles)
     }
 

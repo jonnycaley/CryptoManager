@@ -19,13 +19,11 @@ import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
-import com.jonnycaley.cryptomanager.ui.home.ArticlesVerticalAdapter
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.text.DecimalFormat
-import java.util.*
+import kotlin.collections.ArrayList
 
 class GeneralFragment : Fragment(), GeneralContract.View {
 
@@ -35,7 +33,7 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
     lateinit var mView : View
 
-    lateinit var articlesVerticalAdapter : ArticlesVerticalAdapter
+    lateinit var articlesVerticalAdapter : GeneralArticlesVerticalAdapter
 
     val price : TextView by lazy { mView.findViewById<TextView>(R.id.price) }
     val change : TextView by lazy { mView.findViewById<TextView>(R.id.change) }
@@ -106,9 +104,9 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         text24hChange.text = "${Utils.formatPrice(cHANGEPCT24HOUR?.toDouble()!!)}%"
     }
 
-    override fun loadCurrencyNews(news: Array<News>) {
+    override fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>) {
 
-        val arrayNews = ArrayList<News>()
+        val arrayNews = ArrayList<Article>()
 
         if(news.size > 9)
 
@@ -118,7 +116,7 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerViewNews.layoutManager = mLayoutManager
-        articlesVerticalAdapter = ArticlesVerticalAdapter(arrayNews, context)
+        articlesVerticalAdapter = GeneralArticlesVerticalAdapter(arrayNews, savedArticles, context, presenter)
         recyclerViewNews.adapter = articlesVerticalAdapter
     }
 

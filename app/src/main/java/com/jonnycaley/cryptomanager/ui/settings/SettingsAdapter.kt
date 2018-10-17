@@ -11,7 +11,7 @@ import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
 
-class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
+class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_settings, parent, false))
@@ -29,6 +29,12 @@ class SettingsAdapter(val settings: ArrayList<String>?, val context: Context?) :
             when(position){
                 0 -> {
                     startActivity(context!!, Intent(context, SavedArticlesActivity::class.java), null)
+                }
+                1 ->{
+                    presenter.deleteSavedArticles()
+                }
+                2 ->{
+                    presenter.deletePortfolio()
                 }
             }
         }

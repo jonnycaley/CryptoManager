@@ -10,10 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SettingsFragment : Fragment(), SettingsContract.View{
+class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     lateinit var mView : View
 
@@ -23,9 +24,9 @@ class SettingsFragment : Fragment(), SettingsContract.View{
 
     val TAG = this.javaClass.simpleName
 
-    var settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles"))
+    var settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio"))
 
-    val recyclerView by lazy { mView!!.findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -40,12 +41,40 @@ class SettingsFragment : Fragment(), SettingsContract.View{
         super.onViewCreated(view, savedInstanceState)
         //view setup should occur here
 
-        val mLayoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = mLayoutManager
-        settingsAdapter = SettingsAdapter(settingsList, context)
-        recyclerView.adapter = settingsAdapter
-
         presenter = SettingsPresenter(SettingsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onTabClicked() {
+        Log.i(TAG, "onTabClicked()")
+    }
+
+    override fun loadSettings() {
+        //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
+        val mLayoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = mLayoutManager
+        settingsAdapter = SettingsAdapter(settingsList, presenter, context)
+        recyclerView.adapter = settingsAdapter
+
+    }
+
+    override fun showPortfolioDeleted() {
+        Toast.makeText(context, "Portfolio Deleted", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showPortfolioDeletedError() {
+        Toast.makeText(context, "An error occurred", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showSavedArticlesDeleted() {
+        Toast.makeText(context, "Articles Deleted", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showSavedArticlesDeletedError() {
+        Toast.makeText(context, "An error occurred", Toast.LENGTH_LONG).show()
+    }
+
+    companion object {
+        val TAG = "SettingsFragment"
     }
 }

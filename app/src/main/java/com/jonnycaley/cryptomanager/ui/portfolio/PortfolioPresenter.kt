@@ -320,7 +320,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         }
 
         transactions.forEach {
-            if ((it.pairSymbol != null) && (!transactionKeys.contains(it.pairSymbol!!)))
+            if ((it.pairSymbol != null) && (!transactionKeys.contains(it.pairSymbol!!) && (it.isDeducted)))
                 transactionKeys.add(it.pairSymbol!!)
         }
 

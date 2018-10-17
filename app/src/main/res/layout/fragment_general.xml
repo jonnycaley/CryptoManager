@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
             android:orientation="vertical"
-            android:padding="@dimen/default_margin">
+            android:padding="@dimen/default_margin"
+            android:descendantFocusability="blocksDescendants">
 
             <TextView
                 android:id="@+id/price"

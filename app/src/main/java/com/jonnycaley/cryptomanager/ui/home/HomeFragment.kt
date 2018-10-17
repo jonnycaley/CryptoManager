@@ -5,32 +5,36 @@ import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.CardView
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ScrollView
+import android.widget.TextView
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.widget.*
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.like.LikeButton
+import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
-import kotlin.collections.ArrayList
 
-class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
+class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener {
 
     lateinit var mView: View
 
     private lateinit var presenter: HomeContract.Presenter
 
-    lateinit var articlesVerticalAdapter: ArticlesVerticalAdapter
+    lateinit var articlesVerticalAdapter: HomeArticlesVerticalAdapter
     lateinit var topMoversAdapter: TopMoversAdapter
 
-    lateinit var topArticle : News
+    lateinit var topArticle : Article
 
     val scrollLayout by lazy { mView.findViewById<ScrollView>(R.id.scroll_layout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
@@ -62,24 +66,30 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerViewShimmerNews.showShimmerAdapter()
-        cardStar.setOnClickListener(this)
+        cardStar.setOnLikeListener(this)
+
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
 
-    override fun onClick(v: View?) {
-        when(v?.id){
-            cardStar.id -> {
-                if(cardStar.isLiked) {
-                    presenter.removeArticle(topArticle)
-                    cardStar.animate()
-                }
-                else {
-                    presenter.saveArticle(topArticle)
-                    cardStar.animate()
-                }
-            }
-         }
+    override fun onTabClicked() {
+        Log.i(TAG, "onTabClicked()")
+        presenter.onResume()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume()
+    }
+
+    override fun liked(p0: LikeButton?) {
+        println("liked")
+        presenter.saveArticle(topArticle)
+    }
+
+    override fun unLiked(p0: LikeButton?) {
+        println("unLiked")
+        presenter.removeArticle(topArticle)
     }
 
     override fun showNoInternet() {
@@ -100,28 +110,29 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         progressBarLayout.visibility = View.VISIBLE
     }
 
-    override fun showNews(news: Array<News>) {
+    override fun showNews(news: ArrayList<Article>, savedArticles: ArrayList<Article>) {
 
-        val arrayList = ArrayList<News>()
+        val newNews = ArrayList<Article>()
 
-        news.forEach { arrayList.add(it) }
+        news.forEach { newNews.add(it) }
 
-        val headerArticle = arrayList.filter { it.thumbnail != null }[0]
+        val headerArticle = newNews.filter { it.thumbnail != null }[0]
 
-        arrayList.remove(headerArticle)
+        newNews.remove(headerArticle)
 
         topArticle = headerArticle
+
+        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
 
         showTopNewsArticle(headerArticle)
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerViewShimmerNews.layoutManager = mLayoutManager
-        articlesVerticalAdapter = ArticlesVerticalAdapter(arrayList, context)
+        articlesVerticalAdapter = HomeArticlesVerticalAdapter(newNews, savedArticles, context, presenter)
         recyclerViewShimmerNews.adapter = articlesVerticalAdapter
-
     }
 
-    private fun showTopNewsArticle(article: News) {
+    private fun showTopNewsArticle(article: Article) {
 
         cardTopArticle.setOnClickListener {
             ArticleArgs(article).launch(context!!)
@@ -137,8 +148,6 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         cardDescription.text = article.description
         cardLength.text = Utils.getReadTime(article.words)
         cardDate.text = Utils.getTimeFrom(article.publishedAt)
-        cardStar.isLiked = false
-
     }
 
     override fun showTop100Changes(sortedBy: List<Currency>?) {
@@ -160,5 +169,9 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener {
         args.putString("headerStr", headerStr)
         fragmentDemo.arguments = args
         return fragmentDemo
+    }
+
+    companion object {
+        val TAG = "HomeFragment"
     }
 }

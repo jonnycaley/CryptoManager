@@ -12,9 +12,10 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.takusemba.multisnaprecyclerview.OnSnapListener
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
+import com.like.LikeButton
+import com.like.OnLikeListener
 
-
-class ArticleActivity : AppCompatActivity(), ArticleContract.View{
+class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListener {
 
     private val args by lazy { ArticleArgs.deserializeFrom(intent) }
 
@@ -25,6 +26,9 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View{
 
     private val adapter by lazy { SimilarArticlesHorizontalAdapter(args.article.similarArticles, this) }
 
+    val likeButton by lazy { findViewById<LikeButton>(R.id.like_button_top_article) }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
@@ -33,6 +37,8 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View{
 
         webview.webViewClient = WebViewClient()
         webview.loadUrl(args.article.url)
+
+        likeButton.setOnLikeListener(this)
 
         if(args.article.similarArticles == null || args.article.similarArticles?.isEmpty()!!){
             recyclerviewSnap.visibility = View.GONE
@@ -47,6 +53,26 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View{
 
         presenter = ArticlePresenter(ArticleDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+
+    override fun liked(p0: LikeButton?) {
+        println("liked")
+        presenter.saveArticle(args.article)
+    }
+
+    override fun unLiked(p0: LikeButton?) {
+        println("unLiked")
+        presenter.removeArticle(args.article)
+    }
+
+    override fun getArticleUrl(): String? {
+        return args.article.url
+    }
+
+    override fun setLikeButton(isLiked: Boolean) {
+        likeButton.visibility = View.VISIBLE
+        likeButton.isLiked = isLiked
     }
 
     private fun setupRelated() {

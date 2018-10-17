@@ -3,9 +3,8 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.General.USD
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.SingleObserver
@@ -116,16 +115,19 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     private fun getCurrencyNews(symbol: String) {
 
         if (dataManager.checkConnection()) {
+            var savedArticles = ArrayList<Article>()
 
-            dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
+            dataManager.getSavedArticles()
+                    .map { articles -> savedArticles = articles }
+                    .flatMap { dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS) }
                     .map { json -> Gson().fromJson(json, Currencies::class.java) }
                     .map { currencies -> currencies.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase()}?.get(0) }
                     .flatMap { currency -> dataManager.getCryptoControlNewsService().getCurrencyNews(currency.coinName!!.toLowerCase().replace(" ", "-")) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Array<News>> {
-                        override fun onSuccess(response: Array<News>) {
-                            view.loadCurrencyNews(response)
+                    .subscribe(object : SingleObserver<Array<Article>> {
+                        override fun onSuccess(articles: Array<Article>) {
+                            view.loadCurrencyNews(articles, savedArticles)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -139,6 +141,53 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         } else {
 
         }
+    }
+
+    override fun saveArticle(topArticle: Article) {
+        dataManager.getSavedArticles()
+                .map { savedArticles ->
+                    savedArticles.add(topArticle)
+                    return@map savedArticles
+                }
+                .map { savedArticles -> dataManager.saveArticles(savedArticles) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(currencies: Unit) {
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        println("onSubscribe")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
+
+    }
+
+    override fun removeArticle(topArticle: Article) {
+
+        dataManager.getSavedArticles()
+                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
+                .map { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(currencies: Unit) {
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        println("onSubscribe")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
     }
 
     private fun clearDisposable() {

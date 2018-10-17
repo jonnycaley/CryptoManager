@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     }
 
     override fun showUsingStorage() {
-        Toast.makeText(this, R.string.using_offline_data, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, R.string.using_offline_data, Toast.LENGTH_SHORT).show()
     }
 
     override fun toBaseActivity() {

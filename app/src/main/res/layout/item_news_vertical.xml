@@ -93,12 +93,11 @@
                 android:layout_toEndOf="@+id/length" />
 
             <com.like.LikeButton
-                android:id="@+id/star_button"
+                android:id="@+id/like_button"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-
                 app:icon_type="Star"
                 app:circle_start_color="@color/colorPrimary"
                 app:circle_end_color="@color/colorAccent"

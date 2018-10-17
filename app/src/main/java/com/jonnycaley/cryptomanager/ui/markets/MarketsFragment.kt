@@ -1,27 +1,23 @@
-package com.jonnycaley.cryptomanager.ui.portfolio
+package com.jonnycaley.cryptomanager.ui.markets
 
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
-import com.jonnycaley.cryptomanager.ui.home.HomeFragment
-import com.jonnycaley.cryptomanager.ui.markets.ArticlesHorizontalAdapter
-import com.jonnycaley.cryptomanager.ui.markets.CurrenciesAdapter
-import com.jonnycaley.cryptomanager.ui.markets.MarketsContract
-import com.jonnycaley.cryptomanager.ui.markets.MarketsDataManager
-import com.jonnycaley.cryptomanager.ui.markets.MarketsPresenter
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 
-class MarketsFragment : Fragment(), MarketsContract.View{
+class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
 
     lateinit var root : View
 
@@ -60,6 +56,17 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         presenter.attachView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("onResume()")
+        presenter.onResume()
+    }
+
+    override fun onTabClicked() {
+        Log.i(TAG, "onTabClicked()")
+        presenter.refresh()
+    }
+
     override fun hideProgressBarLayout() {
         progressBarLayout.visibility = View.GONE
     }
@@ -92,14 +99,16 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         recyclerViewCurrencies.adapter = currenciesAdapter
     }
 
-    override fun showLatestArticles(news: Array<News>) {
+    override fun showLatestArticles(latestArticles: ArrayList<Article>, savedArticles: ArrayList<Article>) {
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         recyclerViewLatestNews.layoutManager = layoutManager
-        similarArticlesAdapter = ArticlesHorizontalAdapter(news, context)
+        similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
         recyclerViewLatestNews.adapter = similarArticlesAdapter
+
     }
+
 
     fun newInstance(headerStr: String): MarketsFragment {
         val fragmentDemo = MarketsFragment()
@@ -107,5 +116,9 @@ class MarketsFragment : Fragment(), MarketsContract.View{
         args.putString("headerStr", headerStr)
         fragmentDemo.arguments = args
         return fragmentDemo
+    }
+
+    companion object {
+        val TAG = "MarketsFragment"
     }
 }

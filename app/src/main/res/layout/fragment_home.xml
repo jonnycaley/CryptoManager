@@ -130,7 +130,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/card_view"
                     android:paddingTop="@dimen/default_margin"
-                    android:text="Top 100" />
+                    android:text="Top 100"
+                    android:visibility="gone"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_top_movers"
@@ -148,7 +149,7 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_below="@+id/recycler_view_top_movers"-->
                 <!--android:paddingBottom="@dimen/default_margin"-->
-                <!--android:text="Top News"-->
+                <!--android:text="Top Article"-->
                 <!--android:textColor="@color/black"-->
                 <!--android:textSize="@dimen/header_text_size"-->
                 <!--android:textStyle="bold" />-->

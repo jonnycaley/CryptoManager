@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -6,21 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.like.LikeButton
+import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
-import kotlin.collections.ArrayList
 
-class ArticlesVerticalAdapter(val newsItems: ArrayList<News>?, val context: Context?) : RecyclerView.Adapter<ArticlesVerticalAdapter.ViewHolder>() {
+
+class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Context?, val presenter: SavedArticlesContract.Presenter) : RecyclerView.Adapter<SavedArticlesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = newsItems?.get(position)
+        val item = articles?.get(position)
 
         if(item?.thumbnail == null){
             holder.image.visibility = View.GONE
@@ -31,6 +33,19 @@ class ArticlesVerticalAdapter(val newsItems: ArrayList<News>?, val context: Cont
                     .centerCrop()
                     .into(holder.image)
         }
+
+        holder.likeButton.isLiked = true
+
+        holder.likeButton.setOnLikeListener(object : OnLikeListener{
+            override fun liked(p0: LikeButton?) {
+
+            }
+
+            override fun unLiked(p0: LikeButton?) {
+                presenter.removeArticle(articles, item!!)
+            }
+
+        })
 
         holder.title.text = item?.title.toString()
         holder.category.text = item?.primaryCategory.toString()
@@ -47,7 +62,7 @@ class ArticlesVerticalAdapter(val newsItems: ArrayList<News>?, val context: Cont
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return newsItems?.size ?: 0
+        return articles?.size ?: 0
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
@@ -57,5 +72,6 @@ class ArticlesVerticalAdapter(val newsItems: ArrayList<News>?, val context: Cont
         val category = view.category
         val date = view.date
         val length = view.length
+        val likeButton = view.like_button
     }
 }

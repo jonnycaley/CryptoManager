@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
@@ -9,7 +10,7 @@ interface GeneralContract {
     interface View : BaseView<Presenter> {
         fun getSymbol(): String
         fun loadCandlestickChart(response: Data, timeUnit: String, aggregate: Int)
-        fun loadCurrencyNews(news: Array<com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News>)
+        fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>)
         fun getName(): String
         fun showCurrentPrice(close: Double?)
         fun showPriceChange(open: Double?, close: Double?)
@@ -26,5 +27,7 @@ interface GeneralContract {
         fun getCurrencyChart(timeString: String, symbol: String, conversion: String, limit: Int, aggregate: Int)
         fun clearChartDisposable()
         fun getData()
+        fun saveArticle(item: Article)
+        fun removeArticle(item: Article)
     }
 }

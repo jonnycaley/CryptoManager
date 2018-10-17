@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +14,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
+import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 
-class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TabInterface {
 
     lateinit var mView: View
 
@@ -64,6 +66,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onTabClicked() {
+        Log.i(TAG, "onTabClicked()")
     }
 
     private fun setUpPortfolioTimeChoices() {
@@ -169,6 +175,9 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     }
 
     companion object {
+
+        val TAG = "PortfolioFragment"
+
         val FIAT_STRING = "FIAT"
         val CURRENCY_STRING = "CURRENCY"
 
@@ -187,4 +196,5 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         val TIME_PERIOD_1M = "1M"
         val TIME_PERIOD_ALL = "ALL"
     }
+
 }
