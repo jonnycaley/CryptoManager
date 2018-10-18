@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.settings
 
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
@@ -9,7 +10,7 @@ interface SettingsContract {
         fun showPortfolioDeletedError()
         fun showSavedArticlesDeleted()
         fun showSavedArticlesDeletedError()
-        fun loadSettings(baseFiat: String)
+        fun loadSettings(baseFiat: Rate)
     }
 
     interface Presenter : BasePresenter {

@@ -18,6 +18,7 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
@@ -150,7 +151,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         cardDate.text = Utils.getTimeFrom(article.publishedAt)
     }
 
-    override fun showTop100Changes(sortedBy: List<Currency>?) {
+    override fun showTop100Changes(sortedBy: List<Currency>?, baseCurrency: Rate) {
 
         val arrayList = ArrayList<Currency>()
 
@@ -158,8 +159,10 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
+        Log.i(TAG, baseCurrency.rate.toString())
+
         recyclerViewTopMovers.layoutManager = layoutManager
-        topMoversAdapter = TopMoversAdapter(arrayList, context)
+        topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency,  context)
         recyclerViewTopMovers.adapter = topMoversAdapter
     }
 

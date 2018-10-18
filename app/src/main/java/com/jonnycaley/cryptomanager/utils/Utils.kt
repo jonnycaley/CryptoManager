@@ -173,6 +173,7 @@ object Utils {
             "THB" ->{return "Thai Baht"}
             "TRY" ->{return "Turkish lira"}
             "ZAR" ->{return "South African Rand"}
+            "USD" ->{return "United States Dollar"}
             "EUR" ->{return "Euro"}
         }
         return ""

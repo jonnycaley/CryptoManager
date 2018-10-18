@@ -39,8 +39,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
 
     private fun getAllFiats() {
 
-        dataManager.readStorage(Constants.PAPER_ALL_FIATS)
-                .map { json -> Gson().fromJson(json, ExchangeRates::class.java) }
+        dataManager.getFiats()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ExchangeRates> {

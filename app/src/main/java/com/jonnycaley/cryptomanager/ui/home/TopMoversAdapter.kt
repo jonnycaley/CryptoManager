@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
 
 
-class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
+class TopMoversAdapter(val articles: ArrayList<Currency>?, val baseFiat : Rate,  val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_top_mover, parent, false))
@@ -32,11 +33,13 @@ class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: 
 //                .centerCrop()
 //                .into(holder.image)
 
-        val priceText = Utils.formatPrice(item?.quote?.uSD?.price?.toDouble()!!)
+        var price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!)
 
-        holder.price.text = "$$priceText"
+        val priceText = Utils.formatPrice(price!!)
 
-        val percentage2DP = Utils.formatPercentage(item.quote?.uSD?.percentChange24h)
+        holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$priceText"
+
+        val percentage2DP = Utils.formatPercentage(item?.quote?.uSD?.percentChange24h)
 
         when {
             percentage2DP.substring(0,1) == "$" -> {
@@ -62,7 +65,7 @@ class TopMoversAdapter(private val articles: ArrayList<Currency>?, val context: 
         holder.percentage.text = "$percentage2DP"
 
         holder.itemView.setOnClickListener {
-            CryptoArgs(item.symbol!!).launch(context!!)
+            CryptoArgs(item?.symbol!!).launch(context!!)
 
         }
     }

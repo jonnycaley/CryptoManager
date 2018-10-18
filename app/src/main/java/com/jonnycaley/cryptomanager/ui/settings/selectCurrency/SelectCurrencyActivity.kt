@@ -9,6 +9,7 @@ import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
 
 
@@ -51,29 +52,29 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
         super.onBackPressed()
     }
 
-    override fun showFiats(fiats: ExchangeRates, baseFiat: String) {
+    override fun showFiats(fiats: List<Rate>?, baseFiat: Rate) {
 
-        val data = ArrayList<Datum>()
-
-        val datum = Datum()
-
-        datum.coinName = "United States Dollar"
-        datum.symbol = "USD"
-
-        data.add(datum)
-
-        fiats.rates?.forEach {
-            val datum = Datum()
-
-            datum.coinName = Utils.getFiatName(it.fiat)
-            datum.symbol = it.fiat
-
-            data.add(datum)
-        }
+//        val data = ArrayList<Datum>()
+//
+//        val datum = Datum()
+//
+//        datum.coinName = "United States Dollar"
+//        datum.symbol = "USD"
+//
+//        data.add(datum)
+//
+//        fiats.rates?.forEach {
+//            val datum = Datum()
+//
+//            datum.coinName = Utils.getFiatName(it.fiat)
+//            datum.symbol = it.fiat
+//
+//            data.add(datum)
+//        }
 
         val mLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        currenciesAdapter = SelectCurrenciesAdapter(data, presenter, this)
+        currenciesAdapter = SelectCurrenciesAdapter(fiats, presenter, this)
         recyclerView.adapter = currenciesAdapter
     }
 

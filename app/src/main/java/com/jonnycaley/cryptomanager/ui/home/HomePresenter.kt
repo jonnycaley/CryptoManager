@@ -1,15 +1,24 @@
 package com.jonnycaley.cryptomanager.ui.home
 
 import android.os.StrictMode
+import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
+import com.jonnycaley.cryptomanager.utils.JsonModifiers
+import com.pacoworks.rxpaper2.RxPaperBook
+import io.reactivex.BackpressureStrategy
+import io.reactivex.FlowableSubscriber
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import org.reactivestreams.Subscription
 
 class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.View) : HomeContract.Presenter {
 
@@ -77,12 +86,16 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                 })
     }
 
+    val savedArticles = ArrayList<Article>()
+
+    var savedCurrencies : Currencies? = null
+
+    var exchangeRates : ExchangeRates? = null
+
     override fun getNews() {
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
-        val savedArticles = ArrayList<Article>()
 
         if (dataManager.checkConnection()) {
 //            dataManager.getSavedArticles()
@@ -101,21 +114,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         dataManager.writeToStorage(Constants.PAPER_HOME_TOP_NEWS, Gson().toJson(this.news))
                         view.showNews(this.news, savedArticles)
                     }
-                    .flatMap {
-                        dataManager.getCoinMarketCapService().getTop100()
-                    }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { currencies ->
-                        view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed())
-                        dataManager.writeToStorage(Constants.PAPER_HOME_TOP_100, Gson().toJson(currencies))
-                    }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : SingleObserver<Unit> {
                         override fun onSuccess(currencies: Unit) {
-                            view.hideProgressBar()
-                            view.showScrollLayout()
+                            getTop100()
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -125,7 +128,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
+                            println("onErrorGetNews: ${e.message}")
                         }
                     })
 
@@ -160,7 +163,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             view.showNoInternet()
                         } else {
                             val currencies = Gson().fromJson(json, Currencies::class.java)
-                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed())
+//                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseFiat.toLowerCase() })
                         }
                     }
                     .subscribeOn(Schedulers.io())
@@ -184,6 +187,53 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         }
     }
 
+    fun getTop100() {
+
+        if(dataManager.checkConnection()) {
+
+            dataManager.getCoinMarketCapService().getTop100()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { currencies ->
+                        dataManager.writeToStorage(Constants.PAPER_HOME_TOP_100, Gson().toJson(currencies))
+                        savedCurrencies = currencies
+                    }
+                    .flatMap {
+                        dataManager.getExchangeRateService().getExchangeRates()
+                    }
+                    .map { json ->
+                        exchangeRates = Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java)
+                    }
+                    .map {
+                        dataManager.getBaseFiat()
+                    }
+                    .map { baseFiat ->
+                        view.showTop100Changes(savedCurrencies?.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), baseFiat)
+                    }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<Unit> {
+                        override fun onSuccess(t: Unit) {
+                            view.hideProgressBar()
+                            view.showScrollLayout()
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+//                            view.showError()
+                        }
+
+                    })
+        } else {
+
+        }
+
+    }
+
     override fun onResume() {
 
         if(news.isEmpty()) {
@@ -194,9 +244,12 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             dataManager.getSavedArticles()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<ArrayList<Article>> {
-                        override fun onSuccess(savedArticles: ArrayList<Article>) {
-                            view.showNews(news, savedArticles)
+                    .map { savedArticles -> view.showNews(news, savedArticles) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<Unit> {
+                        override fun onSuccess(savedArticles: Unit) {
+                            getTop100()
                         }
 
                         override fun onSubscribe(d: Disposable) {

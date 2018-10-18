@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
 
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.SingleObserver
@@ -28,7 +29,7 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
 
     private fun getAllFiats() {
 
-        var baseFiat = "USD"
+        var baseFiat = Rate()
 
         dataManager.getBaseFiat()
                 .map { fiat -> baseFiat = fiat }
@@ -38,7 +39,7 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ExchangeRates> {
                     override fun onSuccess(fiats: ExchangeRates) {
-                        view.showFiats(fiats, baseFiat)
+                        view.showFiats(fiats.rates?.sortedBy { it.fiat }, baseFiat)
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -52,24 +53,29 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
                 })
     }
 
-    override fun saveBaseCurrency(symbol: String?) {
+    override fun saveBaseCurrency(symbol: Rate) {
+
         dataManager.saveBaseCurrency(symbol)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : CompletableObserver {
-                    override fun onComplete() {
-                        view.onCurrencySaved()
-                    }
 
-                    override fun onSubscribe(d: Disposable) {
-                        println("Subscribed")
-                        compositeDisposable?.add(d)
-                    }
+        view.onCurrencySaved()
 
-                    override fun onError(e: Throwable) {
-                        println("onErrorFiats: ${e.message}")
-                    }
-                })
+//        dataManager.saveBaseCurrency(symbol)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(object : CompletableObserver {
+//                    override fun onComplete() {
+//                        view.onCurrencySaved()
+//                    }
+//
+//                    override fun onSubscribe(d: Disposable) {
+//                        println("Subscribed")
+//                        compositeDisposable?.add(d)
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//                        println("onErrorFiats: ${e.message}")
+//                    }
+//                })
     }
 
     override fun detachView() {

@@ -1,12 +1,13 @@
 package com.jonnycaley.cryptomanager.ui.settings
 
 import android.content.Context
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
 import io.reactivex.Completable
-import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 class SettingsDataManager private constructor(val UserPreferences: UserPreferences) {
@@ -33,7 +34,6 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
         return Utils.isNetworkConnected(context)
     }
 
-
     fun deletePortfolio(): Completable {
         return RxPaperBook.with(Schedulers.newThread()).delete(Constants.PAPER_TRANSACTIONS)
     }
@@ -42,7 +42,7 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
         return RxPaperBook.with(Schedulers.newThread()).delete(Constants.PAPER_SAVED_ARTICLES)
     }
 
-    fun getBaseFiat(): Single<String> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_FIAT, "USD")
+    fun getBaseFiat(): Rate {
+        return Paper.book().read(Constants.PAPER_BASE_RATE)
     }
 }

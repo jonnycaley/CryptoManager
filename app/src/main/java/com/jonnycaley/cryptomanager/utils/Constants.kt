@@ -16,7 +16,9 @@ object Constants {
 
     val PAPER_ALL_CRYPTOS = "all_cryptos"
     val PAPER_ALL_EXCHANGES = "all_exchanges"
-    val PAPER_ALL_FIATS = "all_fiats"
+    val PAPER_ALL_RATES = "all_rates"
+
+    val PAPER_BASE_RATE = "base_rate"
 
     val PAPER_TRANSACTIONS = "all_transactions"
 
@@ -24,8 +26,6 @@ object Constants {
     val PAPER_HOME_TOP_100 = "home_top_100"
 
     val PAPER_SAVED_ARTICLES = "saved_articles"
-
-    val PAPER_BASE_FIAT = "base_currency"
 
 //    val PAPER_CRYPTO_TRANSACTIONS = "all_crypto_transactions"
 

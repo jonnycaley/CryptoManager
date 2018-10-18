@@ -4,6 +4,7 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -55,8 +56,12 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return RxPaperBook.with(Schedulers.newThread()).read(key, "")
     }
 
-    fun saveAllFiats(jsonToCurrencies: ExchangeRates) {
-        Paper.book().write(Constants.PAPER_ALL_FIATS, jsonToCurrencies)
+    fun saveAllRates(jsonToCurrencies: ExchangeRates) {
+        Paper.book().write(Constants.PAPER_ALL_RATES, jsonToCurrencies)
+    }
+
+    fun saveBaseRate(baseRate : Rate) {
+        Paper.book().write(Constants.PAPER_BASE_RATE, baseRate)
     }
 
 }

@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.search
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -44,4 +45,8 @@ class SearchDataManager private constructor(val UserPreferences: UserPreferences
         return RxPaperBook.with(Schedulers.newThread()).read(key, null)
     }
 
+
+    fun getFiats(): Single<ExchangeRates> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
+    }
 }

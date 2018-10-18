@@ -2,10 +2,12 @@ package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -35,15 +37,15 @@ class SelectCurrencyDataManager private constructor(val UserPreferences: UserPre
         return Utils.isNetworkConnected(context)
     }
 
-    fun getBaseFiat(): Single<String> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_FIAT, "USD")
+    fun getBaseFiat(): Single<Rate> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_RATE, Rate())
     }
 
     fun getFiats(): Single<ExchangeRates> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_FIATS, ExchangeRates())
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
 
-    fun saveBaseCurrency(symbol: String?) : Completable{
-        return RxPaperBook.with(Schedulers.newThread()).write(Constants.PAPER_BASE_FIAT, symbol)
+    fun saveBaseCurrency(symbol: Rate?){
+        Paper.book().write(Constants.PAPER_BASE_RATE, symbol)
     }
 }
