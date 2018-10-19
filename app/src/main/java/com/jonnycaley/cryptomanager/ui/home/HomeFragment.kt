@@ -25,6 +25,8 @@ import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
+import android.os.Parcelable
+
 
 class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener {
 
@@ -35,12 +37,12 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     lateinit var articlesVerticalAdapter: HomeArticlesVerticalAdapter
     lateinit var topMoversAdapter: TopMoversAdapter
 
-    lateinit var topArticle : Article
+    lateinit var topArticle: Article
 
     val scrollLayout by lazy { mView.findViewById<ScrollView>(R.id.scroll_layout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
-    val recyclerViewShimmerNews by lazy { mView.findViewById<ShimmerRecyclerView>(R.id.shimmer_recycler_view) }
+    val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
     val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
 
     val cardTopArticle by lazy { mView.findViewById<CardView>(R.id.card_view) }
@@ -66,7 +68,6 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerViewShimmerNews.showShimmerAdapter()
         cardStar.setOnLikeListener(this)
 
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
@@ -127,10 +128,11 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         showTopNewsArticle(headerArticle)
 
-        val mLayoutManager = LinearLayoutManager(context)
-        recyclerViewShimmerNews.layoutManager = mLayoutManager
+        val newsLayoutManager = LinearLayoutManager(context)
+        recyclerViewShimmerNews.layoutManager = newsLayoutManager
         articlesVerticalAdapter = HomeArticlesVerticalAdapter(newNews, savedArticles, context, presenter)
         recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+
     }
 
     private fun showTopNewsArticle(article: Article) {
@@ -151,19 +153,28 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         cardDate.text = Utils.getTimeFrom(article.publishedAt)
     }
 
+    var layoutManager: LinearLayoutManager? = null
+
     override fun showTop100Changes(sortedBy: List<Currency>?, baseCurrency: Rate) {
 
         val arrayList = ArrayList<Currency>()
 
         sortedBy?.forEach { arrayList.add(it) }
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
         Log.i(TAG, baseCurrency.rate.toString())
 
-        recyclerViewTopMovers.layoutManager = layoutManager
-        topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency,  context)
-        recyclerViewTopMovers.adapter = topMoversAdapter
+        if (layoutManager == null) {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerViewTopMovers.layoutManager = layoutManager
+            topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency, context)
+            recyclerViewTopMovers.adapter = topMoversAdapter
+
+        } else {
+
+            topMoversAdapter.articles = arrayList
+            topMoversAdapter.baseFiat = baseCurrency
+            topMoversAdapter.notifyDataSetChanged()
+        }
     }
 
     fun newInstance(headerStr: String): HomeFragment {

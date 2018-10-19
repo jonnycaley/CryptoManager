@@ -1,7 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
@@ -9,16 +10,16 @@ interface GeneralContract {
 
     interface View : BaseView<Presenter> {
         fun getSymbol(): String
-        fun loadCandlestickChart(response: Data, timeUnit: String, aggregate: Int)
+        fun loadCandlestickChart(response: HistoricalData, timeUnit: String, aggregate: Int, baseFiat: Rate)
         fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>)
         fun getName(): String
-        fun showCurrentPrice(close: Double?)
-        fun showPriceChange(open: Double?, close: Double?)
-        fun showMarketCap(marketCap: String?)
+        fun showCurrentPrice(close: Double?, baseFiat: Rate)
+        fun showPriceChange(open: Double?, close: Double?, baseFiat: Rate)
+        fun showMarketCap(marketCap: String?, baseFiat : Rate)
         fun showGeneralDataError()
-        fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?)
-        fun show24High(hIGH24HOUR: String?)
-        fun show24Low(lOW24HOUR: String?)
+        fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?, baseFiat: Rate)
+        fun show24High(hIGH24HOUR: String?, baseFiat: Rate)
+        fun show24Low(lOW24HOUR: String?, baseFiat: Rate)
         fun show24Change(cHANGEPCT24HOUR: String?)
         fun showCirculatingSupply(sUPPLY: String?)
     }

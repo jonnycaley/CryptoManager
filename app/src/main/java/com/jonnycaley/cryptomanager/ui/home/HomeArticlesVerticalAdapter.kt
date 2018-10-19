@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 import kotlin.collections.ArrayList
 
-class HomeArticlesVerticalAdapter(val newsItems: ArrayList<Article>?, val savedArticles: ArrayList<Article>, val context: Context?, val presenter: HomeContract.Presenter?) : RecyclerView.Adapter<HomeArticlesVerticalAdapter.ViewHolder>() {
+class HomeArticlesVerticalAdapter(var newsItems: ArrayList<Article>?, var savedArticles: ArrayList<Article>, var context: Context?, var presenter: HomeContract.Presenter?) : RecyclerView.Adapter<HomeArticlesVerticalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))

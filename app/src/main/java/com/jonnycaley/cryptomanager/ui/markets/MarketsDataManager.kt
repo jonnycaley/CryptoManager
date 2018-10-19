@@ -4,6 +4,7 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -48,12 +49,15 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) {
         Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
 
+    fun getBaseFiat(): Rate {
+        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    }
 
 }

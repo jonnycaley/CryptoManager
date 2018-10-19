@@ -5,11 +5,13 @@ import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -44,7 +46,7 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun getExchangeRateService(): ExchangeRatesService {
@@ -57,7 +59,11 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun getAllCryptos(): Single<String> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_CRYPTOS)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
+    }
+
+    fun getBaseFiat(): Rate {
+        return Paper.book().read(Constants.PAPER_BASE_RATE)
     }
 
 }

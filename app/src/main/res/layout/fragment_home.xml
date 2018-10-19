@@ -155,17 +155,13 @@
                 <!--android:textStyle="bold" />-->
 
 
-                <com.cooltechworks.views.shimmer.ShimmerRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/shimmer_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/recycler_view_top_movers"
-                    android:nestedScrollingEnabled="false"
-                    app:shimmer_demo_angle="20"
-                    app:shimmer_demo_layout="@layout/item_shimmer_list"
-                    app:shimmer_demo_shimmer_color="@color/shimmer_color"
-                    app:shimmer_demo_view_holder_item_background="@drawable/bg_card" />
+                    android:nestedScrollingEnabled="false"/>
 
 
             </RelativeLayout>

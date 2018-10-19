@@ -111,4 +111,7 @@ dependencies {
 //  navigation
     implementation 'com.github.okaybroda:FragmentStateManager:1.0.1'
 
+//   average color helper
+    implementation 'com.android.support:palette-v7:27.1.1'
+
 }

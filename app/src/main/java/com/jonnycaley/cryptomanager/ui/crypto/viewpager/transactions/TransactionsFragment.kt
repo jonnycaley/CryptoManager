@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionArgs
 
 class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener {
@@ -65,15 +65,15 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
         Log.i(TAG, baseImageUrl)
-
+        Log.i(TAG, (currency == null).toString())
         CreateCryptoTransactionArgs(currency!!, baseImageUrl, baseLinkUrl).launch(context!!)
     }
 
-    override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice : Double?) {
+    override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice, context)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice, baseFiat, context)
         recyclerView.adapter = transactionsAdapter
     }
 

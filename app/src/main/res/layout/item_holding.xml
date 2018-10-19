@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/currency"
-            android:layout_toEndOf="@id/amount"
+            android:layout_toEndOf="@id/holding"
             android:paddingStart="@dimen/extra_small_margin"
             android:text="BTC" />
 
@@ -60,7 +60,7 @@
 
 
         <TextView
-            android:id="@+id/amount"
+            android:id="@+id/holding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/currency"

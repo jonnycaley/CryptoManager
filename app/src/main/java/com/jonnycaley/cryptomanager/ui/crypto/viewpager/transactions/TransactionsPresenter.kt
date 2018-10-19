@@ -67,21 +67,25 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
     override fun getAllCurrencies() {
 
         dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
-                .map { json -> Gson().fromJson(json, Currencies::class.java) }
+                .map { json ->
+                    println(json)
+                    println("Here")
+                    Gson().fromJson(json, Currencies::class.java)
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Currencies> {
                     override fun onSuccess(allCurrencies: Currencies) {
-                        view.startTransaction(allCurrencies.data?.filter { it.symbol == view.getSymbol() }?.get(0), allCurrencies.baseImageUrl, allCurrencies.baseLinkUrl)
+                        println(allCurrencies.data?.size)
+                        view.startTransaction(allCurrencies.data?.filter { it.symbol?.toLowerCase() == view.getSymbol()?.toLowerCase() }?.first(), allCurrencies.baseImageUrl, allCurrencies.baseLinkUrl)
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        println("Subscribed")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        Log.i(TAG, "onError: ${e.message}")
                     }
                 })
 
@@ -97,7 +101,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<List<Transaction>> {
                     override fun onSuccess(transactions: List<Transaction>) {
-                        view.loadTransactions(transactions, basePrice)
+                        view.loadTransactions(transactions, basePrice, dataManager.getBaseFiat())
                     }
 
                     override fun onSubscribe(d: Disposable) {

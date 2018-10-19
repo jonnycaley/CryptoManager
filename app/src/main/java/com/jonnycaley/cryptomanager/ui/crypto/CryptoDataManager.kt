@@ -1,6 +1,9 @@
 package com.jonnycaley.cryptomanager.ui.crypto
 
 import android.content.Context
+import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.utils.Constants
+import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 
@@ -25,6 +28,10 @@ class CryptoDataManager private constructor(val UserPreferences: UserPreferences
     }
 
 
+    fun getCryptoCompareService(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
+        return retrofit.create(CryptoCompareService::class.java)
+    }
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)

@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.data.model.CryptoCompare.General
+package com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData
 
 import java.io.Serializable
 import com.google.gson.annotations.Expose

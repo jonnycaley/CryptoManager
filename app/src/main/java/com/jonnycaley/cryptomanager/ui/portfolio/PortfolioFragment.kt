@@ -16,6 +16,7 @@ import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -133,18 +134,18 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //        swipeLayout.isRefreshing = false
     }
 
-    override fun showBalance(balance: Double) {
-        textBalance.text = "$${Utils.formatPrice(balance)}"
+    override fun showBalance(balance: Double, baseFiat : Rate) {
+        textBalance.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(balance * baseFiat.rate!!)}"
     }
 
-    override fun showChange(change: Double) {
+    override fun showChange(change: Double, baseFiat : Rate) {
 
         if (change < 0) {
             context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-            textChange.text = "-$${Utils.formatPrice(change).substring(1)}"
+            textChange.text = "-${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(change*baseFiat.rate!!).substring(1)}"
         } else {
             context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-            textChange.text = "$${Utils.formatPrice(change)}"
+            textChange.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(change*baseFiat.rate!!)}"
         }
     }
 
@@ -158,11 +159,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         layoutNotEmty.visibility = View.VISIBLE
     }
 
-    override fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>) {
+    override fun showHoldings(holdings: ArrayList<Holding>, baseFiat : Rate, prices: ArrayList<Price>) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(holdings, prices,  context)
+        holdingsAdapter = HoldingsAdapter(holdings, prices, baseFiat, context)
         recyclerView.adapter = holdingsAdapter
     }
 

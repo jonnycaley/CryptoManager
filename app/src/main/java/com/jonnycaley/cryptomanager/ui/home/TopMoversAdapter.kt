@@ -14,7 +14,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
 
 
-class TopMoversAdapter(val articles: ArrayList<Currency>?, val baseFiat : Rate,  val context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
+class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_top_mover, parent, false))
@@ -70,6 +70,14 @@ class TopMoversAdapter(val articles: ArrayList<Currency>?, val baseFiat : Rate, 
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        //Return the stable ID for the item at position
+        return articles?.get(position)?.id!!
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return articles?.size ?: 0

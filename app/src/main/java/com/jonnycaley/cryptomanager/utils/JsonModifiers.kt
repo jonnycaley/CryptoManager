@@ -4,7 +4,6 @@ object JsonModifiers {
 
     fun jsonToCurrencies(fiats: String) : String {
 
-
         var ratesJson = fiats.substring(fiats.indexOf("\"rates"), fiats.indexOf("}") + 1)
 
         ratesJson = ratesJson.replace("\"rates\":{", "")

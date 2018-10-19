@@ -15,7 +15,7 @@ class Response : Serializable {
     @SerializedName("Aggregated")
     @Expose
     var aggregated: Boolean? = null
-    @SerializedName("Data")
+    @SerializedName("GeneralInfo")
     @Expose
     var data: List<Datum>? = null
     @SerializedName("TimeTo")

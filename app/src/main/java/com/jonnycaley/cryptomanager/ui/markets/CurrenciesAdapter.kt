@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_currency_list.view.*
 
-class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
+class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_currency_list, parent, false))
@@ -21,7 +22,9 @@ class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val context: Contex
 
         val item = newsItems?.get(position)
 
-        holder.price.text = "$${getPriceText(item)}"
+        val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!)
+
+        holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(price)}"
 
         val percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h)
 
@@ -59,16 +62,16 @@ class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val context: Contex
         }
     }
 
-    private fun getPriceText(item: Currency?): CharSequence? {
+    private fun getPriceText(price: Double?): CharSequence? {
 
-        val price = Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 8).toDouble()
+        val roundedPrice = Utils.toDecimals(price!!, 8).toDouble()
 
         var priceText = ""
 
-        priceText = if(price > 1)
-            Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 2)
+        priceText = if(roundedPrice > 1)
+            Utils.toDecimals(roundedPrice, 2)
         else
-            "0${Utils.toDecimals(item?.quote?.uSD?.price?.toDouble()!!, 6)}"
+            "0${Utils.toDecimals(roundedPrice!!, 6)}"
 
         if(priceText.indexOf("") == priceText.length -1)
             priceText += "0"

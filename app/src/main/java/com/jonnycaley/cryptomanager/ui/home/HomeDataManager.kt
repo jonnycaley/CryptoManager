@@ -57,7 +57,7 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun readStorage(key : String) : Single<String?> {
-        return RxPaperBook.with(Schedulers.newThread()).read(key, "")
+        return RxPaperBook.with(Schedulers.io()).read(key, "")
     }
 
     fun writeToStorage(key: String, data: String) {
@@ -74,7 +74,7 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) {

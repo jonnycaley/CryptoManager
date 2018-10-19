@@ -1,9 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
@@ -54,16 +55,19 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         if(dataManager.checkConnection()){
             dataManager.getCryptoCompareServiceWithScalars().getGeneralData(symbol, "USD")
                     .map { json -> JsonModifiers.jsonToGeneral(json) }
-                    .map { json -> Gson().fromJson(json, com.jonnycaley.cryptomanager.data.model.CryptoCompare.General.Data::class.java) }
+                    .map { json -> Gson().fromJson(json, com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data::class.java) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<com.jonnycaley.cryptomanager.data.model.CryptoCompare.General.Data> {
-                        override fun onSuccess(response: com.jonnycaley.cryptomanager.data.model.CryptoCompare.General.Data) {
-                            view.showMarketCap(response.uSD?.mKTCAP)
-                            view.showDaysRange(response.uSD?.lOW24HOUR, response.uSD?.hIGH24HOUR, response.uSD?.pRICE)
+                    .subscribe(object : SingleObserver<com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data> {
+                        override fun onSuccess(response: com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data) {
+
+                            val baseFiat = dataManager.getBaseFiat()
+
+                            view.showMarketCap(response.uSD?.mKTCAP, baseFiat)
+                            view.showDaysRange(response.uSD?.lOW24HOUR, response.uSD?.hIGH24HOUR, response.uSD?.pRICE, baseFiat)
                             view.showCirculatingSupply(response.uSD?.sUPPLY)
-                            view.show24High(response.uSD?.hIGH24HOUR)
-                            view.show24Low(response.uSD?.lOW24HOUR)
+                            view.show24High(response.uSD?.hIGH24HOUR, baseFiat)
+                            view.show24Low(response.uSD?.lOW24HOUR, baseFiat)
                             view.show24Change(response.uSD?.cHANGEPCT24HOUR)
                         }
 
@@ -73,7 +77,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.showGeneralDataError()
-                            Log.i(TAG, "onError: ${e.message}")
+                            Log.i(TAG, "onError1: ${e.message}")
                         }
                     })
         } else {
@@ -88,15 +92,22 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
             dataManager.getCryptoCompareService().getCurrencyGraph(timeString, symbol, conversion, limit.toString(), aggregate.toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Data> {
-                        override fun onSuccess(response: Data) {
-                            view.showPriceChange(response.data?.get(0)?.open, response.data?.get(response.data!!.size - 1)?.close)
+                    .subscribe(object : SingleObserver<HistoricalData> {
+                        override fun onSuccess(response: HistoricalData) {
 
-                            if(isLatestPrice)
-                                view.showCurrentPrice(response.data?.get(response.data!!.size - 1)?.close)
-                            isLatestPrice = false
+                            if(response.data?.isEmpty()!!) {
+                                //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
+                            } else {
+                                val baseFiat = dataManager.getBaseFiat()
 
-                            view.loadCandlestickChart(response, timeString, aggregate)
+                                view.showPriceChange(response.data?.first()?.open, response.data?.last()?.close, baseFiat)
+
+                                if (isLatestPrice)
+                                    view.showCurrentPrice(response.data?.last()?.close, baseFiat)
+                                isLatestPrice = false
+
+                                view.loadCandlestickChart(response, timeString, aggregate, baseFiat)
+                            }
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -104,7 +115,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
-
+                            println("onError2: ${e.message}")
                         }
                     })
         } else {
@@ -135,7 +146,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
+                            println("onError3: ${e.message}")
                         }
                     })
         } else {
@@ -162,7 +173,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError4: ${e.message}")
                     }
                 })
 
@@ -185,7 +196,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError5: ${e.message}")
                     }
                 })
     }

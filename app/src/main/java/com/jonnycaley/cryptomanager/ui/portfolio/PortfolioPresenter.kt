@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
 import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Prices
@@ -94,12 +94,14 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                                 val prices = getPrices(cryptoPrices.prices, fiatPrices)
 
+                                val baseFiat = dataManager.getBaseFiat()
+
                                 val holdingsSorted = ArrayList(holdings.sortedBy { transaction -> prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }[0].prices?.uSD?.times(transaction.quantity) }.asReversed())
 
                                 view.showHoldingsLayout()
-                                view.showHoldings(holdingsSorted, prices)
-                                view.showBalance(getBalance(holdingsSorted, prices))
-                                view.showChange(getChange(holdingsSorted, prices))
+                                view.showHoldings(holdingsSorted, baseFiat, prices)
+                                view.showBalance(getBalance(holdingsSorted, prices), baseFiat)
+                                view.showChange(getChange(holdingsSorted, prices), baseFiat)
 
                                 view.hideRefreshing()
                             }
@@ -126,7 +128,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         var cryptoSymbol: String? = null
 
-        val prices = ArrayList<Data>()
+        val prices = ArrayList<HistoricalData>()
 
         if (dataManager.checkConnection()) {
             Observable.fromArray(holdings)
@@ -151,15 +153,15 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                                 .forEach { transaction ->
                                     if (transaction.date < getDate(timePeriod)) {
                                         newHoldingCost += (transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
-                                        println("Get price from before")
-                                        println(transaction.quantity)
-                                        println(cryptoPrices.data?.get(0)?.close!!)
+//                                        println("Get price from before")
+//                                        println(transaction.quantity)
+//                                        println(cryptoPrices.data?.get(0)?.close!!)
                                     }
                                     else {
-                                        println("Get price from bought")
-                                        println(transaction.quantity)
-                                        println(transaction.price)
-                                        println(transaction.isDeductedPrice)
+//                                        println("Get price from bought")
+//                                        println(transaction.quantity)
+//                                        println(transaction.price)
+//                                        println(transaction.isDeductedPrice)
                                         newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPrice)
                                     }
                                 }
@@ -168,25 +170,25 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                                 .forEach { transaction ->
                                     if (transaction.date < getDate(timePeriod)) {
                                         newHoldingCost -= (transaction.price * transaction.quantity * cryptoPrices.data?.get(0)?.close!!)
-                                        println("Get price from before")
-                                        print("Price: " + transaction.price)
-                                        print("PriceUSD: " + transaction.priceUSD)
-                                        println("Quantity" + transaction.quantity)
-                                        println("Price usd time related:" + cryptoPrices.data?.get(0)?.close!!)
-                                        println("${transaction.isDeductedPrice}")
+//                                        println("Get price from before")
+//                                        print("Price: " + transaction.price)
+//                                        print("PriceUSD: " + transaction.priceUSD)
+//                                        println("Quantity" + transaction.quantity)
+//                                        println("Price usd time related:" + cryptoPrices.data?.get(0)?.close!!)
+//                                        println("${transaction.isDeductedPrice}")
 
                                     }
                                     else {
-                                        println("Get price from bought")
-                                        println(transaction.quantity)
-                                        println(transaction.price)
-                                        println(transaction.isDeductedPrice)
+//                                        println("Get price from bought")
+//                                        println(transaction.quantity)
+//                                        println(transaction.price)
+//                                        println(transaction.isDeductedPrice)
                                         newHoldingCost -= (transaction.quantity * transaction.price * transaction.isDeductedPrice)
                                     }
 
                                 }
 
-                        println("New cost: $newHoldingCost")
+//                        println("New cost: $newHoldingCost")
 
                         holdings.first { it.symbol == cryptoSymbol }.cost = newHoldingCost
 

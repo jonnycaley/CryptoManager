@@ -13,6 +13,7 @@ import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
@@ -87,7 +88,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
         return searchView
     }
 
-    override fun showTop100Changes(currencies: List<Currency>?) {
+    override fun showTop100Changes(currencies: List<Currency>?, baseFiat : Rate) {
 
         val arrayList = ArrayList<Currency>()
 
@@ -95,7 +96,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerViewCurrencies.layoutManager = mLayoutManager
-        currenciesAdapter = CurrenciesAdapter(arrayList, context)
+        currenciesAdapter = CurrenciesAdapter(arrayList, baseFiat,  context)
         recyclerViewCurrencies.adapter = currenciesAdapter
     }
 

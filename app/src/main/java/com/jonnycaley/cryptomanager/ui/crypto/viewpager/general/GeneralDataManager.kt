@@ -4,6 +4,7 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -65,5 +66,10 @@ class GeneralDataManager private constructor(val userPreferences: UserPreference
     fun saveArticles(savedArticles: ArrayList<Article>) {
         Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
+
+    fun getBaseFiat(): Rate {
+        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    }
+
 
 }

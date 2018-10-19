@@ -50,7 +50,8 @@
                     android:layout_marginBottom="@dimen/small_margin"
                     android:text="Latest News"
                     android:textColor="@color/text_grey"
-                    android:textSize="@dimen/medium_text_size" />
+                    android:textSize="@dimen/medium_text_size"
+                    android:visibility="gone"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_latest_news"
@@ -67,7 +68,8 @@
                     android:layout_marginBottom="@dimen/small_margin"
                     android:text="Top 100"
                     android:textColor="@color/text_grey"
-                    android:textSize="@dimen/medium_text_size" />
+                    android:textSize="@dimen/medium_text_size"
+                    android:visibility="gone" />
 
 
                 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

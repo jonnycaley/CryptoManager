@@ -4,7 +4,7 @@ import java.io.Serializable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Data : Serializable {
+class HistoricalData : Serializable {
 
     @SerializedName("Response")
     @Expose
@@ -30,6 +30,7 @@ class Data : Serializable {
     @SerializedName("ConversionType")
     @Expose
     var conversionType: ConversionType? = null
+
 
     companion object {
         private const val serialVersionUID = -7800105711413268755L

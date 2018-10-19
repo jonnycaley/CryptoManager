@@ -1,6 +1,12 @@
 package com.jonnycaley.cryptomanager.ui.crypto
 
+import android.util.Log
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralInfo.GeneralInfo
+import io.reactivex.SingleObserver
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 
 class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContract.View) : CryptoContract.Presenter{
@@ -16,16 +22,32 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
             compositeDisposable = CompositeDisposable()
         }
 
-        getCoinDetails()
+        getCoinColorScheme()
     }
 
-    private fun getCoinDetails() {
+    private fun getCoinColorScheme() {
         if(dataManager.checkConnection()){
 
+            dataManager.getCryptoCompareService().getGeneralInfo(view.getSymbol(), "USD")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : SingleObserver<GeneralInfo> {
+                        override fun onSuccess(info: GeneralInfo) {
+                            Log.i(TAG, "Loading Theme: ${info.data?.first()?.coinInfo?.imageUrl}")
+                            view.loadTheme(info)
+                        }
 
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
 
         } else {
-
+            //TODO: GET IMAGE FROM STORAGE SLOOOOOOOOWER
         }
     }
 

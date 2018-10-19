@@ -3,11 +3,13 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
+import io.paperdb.Paper
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -46,5 +48,9 @@ class TransactionsDataManager private constructor(val userPreferences: UserPrefe
 
     fun readStorage(key : String) : Single<String?> {
         return RxPaperBook.with(Schedulers.newThread()).read(key, null)
+    }
+
+    fun getBaseFiat(): Rate {
+        return Paper.book().read(Constants.PAPER_BASE_RATE)
     }
 }

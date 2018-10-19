@@ -7,8 +7,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import com.jakewharton.rxbinding2.widget.RxSearchView
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import io.reactivex.MaybeSource
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -40,10 +42,13 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .map { savedArticles ->
                         view.showLatestArticles(news, savedArticles)
                     }
-//                    .flatMap { dataManager.getCoinMarketCapService().getTop100USD() }
-//                    .map { t100 ->
-//                        view.showTop100Changes(t100.data)
-//                    }
+//                    .filter { dataManager.checkConnection() }
+                    .flatMap {
+                        dataManager.getCoinMarketCapService().getTop100USD()
+                    }
+                    .map { t100 ->
+                        view.showTop100Changes(t100.data, dataManager.getBaseFiat())
+                    }
                     //TODO: check connection and threading needing and skips frames :(
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -142,8 +147,11 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
             dataManager.getCoinMarketCapService().getTop100USD()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map { t100 ->
-                        view.showTop100Changes(t100.data)
+                    .map { response ->
+                        view.showTop100Changes(response.data, dataManager.getBaseFiat())
+                    }
+                    .map {
+                        dataManager.getBaseFiat()
                     }
                     .flatMap {
                         dataManager.getCryptoControlService().getLatestNews("10")

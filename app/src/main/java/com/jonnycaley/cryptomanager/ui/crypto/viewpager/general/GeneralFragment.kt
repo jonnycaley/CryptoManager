@@ -19,11 +19,13 @@ import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Data
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
+import kotlin.math.absoluteValue
 
 class GeneralFragment : Fragment(), GeneralContract.View {
 
@@ -75,7 +77,7 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         presenter.attachView()
     }
 
-    override fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?) {
+    override fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?, baseFiat: Rate) {
 
         println(lOW24HOUR)
         println(hIGH24HOUR)
@@ -92,16 +94,23 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         textCirculatingSupply.text = formattedString
     }
 
-    override fun show24High(hIGH24HOUR: String?) {
-        text24hHigh.text = "$$hIGH24HOUR"
+    override fun show24High(hIGH24HOUR: String?, baseFiat: Rate) {
+
+        val high = hIGH24HOUR?.toDouble()?.times(baseFiat.rate!!)
+        val formattedHigh = formatChange(high!!, baseFiat)
+
+        text24hHigh.text = "$formattedHigh"
     }
 
-    override fun show24Low(lOW24HOUR: String?) {
-        text24hLow.text = "$$lOW24HOUR"
+    override fun show24Low(lOW24HOUR: String?, baseFiat: Rate) {
+        val low = lOW24HOUR?.toDouble()?.times(baseFiat.rate!!)
+        val formattedLow = formatChange(low!!, baseFiat)
+
+        text24hLow.text = "$formattedLow"
     }
 
     override fun show24Change(cHANGEPCT24HOUR: String?) {
-        text24hChange.text = "${Utils.formatPrice(cHANGEPCT24HOUR?.toDouble()!!)}%"
+        text24hChange.text = "${String.format("%.2f",cHANGEPCT24HOUR?.toDouble()!!)}%"
     }
 
     override fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>) {
@@ -126,19 +135,28 @@ class GeneralFragment : Fragment(), GeneralContract.View {
     }
 
 
-    override fun showCurrentPrice(close: Double?) {
-        price.text = "$${close.toString()}"
+    override fun showCurrentPrice(close: Double?, baseFiat: Rate) {
+        price.text = "${formatChange(close?.times(baseFiat.rate!!)!!, baseFiat)}"
     }
 
-    override fun showMarketCap(marketCap: String?) {
+    override fun showMarketCap(marketCap: String?, baseFiat : Rate) {
+
+        val formattedMarketCap = marketCap?.toDouble()?.times(baseFiat.rate!!)
+
+        val formattedString = formatPrice(formattedMarketCap)
+
+        textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$formattedString"
+    }
+
+    fun formatPrice(price : Double?) : String {
 
         val formatter = DecimalFormat("#,###,###")
-        val formattedString = formatter.format(marketCap?.toDouble())
+        val formattedString = formatter.format(price)
 
-        textMarketCap.text = "$$formattedString"
+        return formattedString
     }
 
-    override fun showPriceChange(open: Double?, close: Double?) {
+    override fun showPriceChange(open: Double?, close: Double?, baseFiat: Rate) {
         when{
             close!! > open!! -> {
                 change.setTextColor(context?.resources?.getColor(R.color.green)!!)
@@ -148,12 +166,12 @@ class GeneralFragment : Fragment(), GeneralContract.View {
             }
         }
 
-        val priceChange = close!! - open!!
+        val priceChange = (close!! - open!!) * baseFiat.rate!!
         var priceText = ""
         if(priceChange > 0)
-            priceText = "+$"+String.format("%.2f",priceChange)
+            priceText = "+${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.absoluteValue)
         else
-            priceText = "-$"+String.format("%.2f",priceChange)
+            priceText = "-${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.absoluteValue)
 
         change.text = priceText + " (" + Utils.formatPercentage((((close - open)/open)*100).toFloat()) + ")"
     }
@@ -193,25 +211,25 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
     }
 
-    private fun getPriceChange(percentChange24h: Float?, price: Float?): String {
+//    private fun getPriceChange(percentChange24h: Float?, price: Float?): String {
+//
+//        val priceChange = price?.minus(price.div((1 + (percentChange24h?.div(100)!!))))
+//
+//        return formatChange(priceChange?.toDouble()!!)
+//    }
 
-        val priceChange = price?.minus(price.div((1 + (percentChange24h?.div(100)!!))))
-
-        return formatChange(priceChange?.toDouble()!!)
-    }
-
-    fun formatChange(priceAsDouble: Double): String {
+    fun formatChange(priceAsDouble: Double, baseFiat : Rate): String {
 
         val price = Utils.toDecimals(priceAsDouble, 8).toDouble()
 
         var priceText: String
 
         priceText = when {
-            price >= 0.01 -> "$${Utils.toDecimals(priceAsDouble, 2)}"
-            price > -0.01 -> "-$0${Utils.toDecimals(priceAsDouble, 6).substring(1)}"
-            price > -1 -> "-$0${Utils.toDecimals(priceAsDouble, 2).substring(1)}" //.substring(1)
+            price >= 0.01 -> "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.toDecimals(priceAsDouble, 2)}"
+            price > -0.01 -> "-${Utils.getFiatSymbol(baseFiat.fiat)}0${Utils.toDecimals(priceAsDouble, 6).substring(1)}"
+            price > -1 -> "-0${Utils.toDecimals(priceAsDouble, 2).substring(1)}" //.substring(1)
             else -> {
-                "$-${Utils.toDecimals(priceAsDouble, 2).substring(1)}"
+                "${Utils.getFiatSymbol(baseFiat.fiat)}-${Utils.toDecimals(priceAsDouble, 2).substring(1)}"
             }
         }
 
@@ -315,14 +333,14 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         yAxisRight.isEnabled = false
     }
 
-    override fun loadCandlestickChart(response: Data, timeUnit: String, aggregate: Int) {
+    override fun loadCandlestickChart(response: HistoricalData, timeUnit: String, aggregate: Int, baseFiat: Rate) {
 
         val entries = ArrayList<CandleEntry>()
 
         for(i in 0 until response.data?.size!!){
             val entry = response.data!![i]
 
-            entries.add(CandleEntry(i.toFloat(), entry.high?.toFloat()!!, entry.low?.toFloat()!!, entry.open?.toFloat()!!, entry.close?.toFloat()!!))
+            entries.add(CandleEntry(i.toFloat(), (entry.high?.times(baseFiat.rate!!))?.toFloat()!!, entry.low?.times(baseFiat.rate!!)?.toFloat()!!, entry.open?.times(baseFiat.rate!!)?.toFloat()!!, entry.close?.times(baseFiat.rate!!)?.toFloat()!!))
         }
 
         val xAxis = candleStickChart.xAxis

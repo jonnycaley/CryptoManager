@@ -10,6 +10,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Curre
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.ui.fiat.FiatArgs
 import com.jonnycaley.cryptomanager.utils.CircleTransform
@@ -17,7 +18,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_holding.view.*
 
-class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<Price>, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
+class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<Price>, val baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_holding, parent, false))
@@ -29,9 +30,12 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
 
         holder.setIsRecyclable(false)
 
-        val price = prices.filter { it.symbol?.toLowerCase() == holding?.symbol?.toLowerCase() }[0].prices?.uSD
+        val symbol = Utils.getFiatSymbol(baseFiat.fiat)
+
+        val price = prices.filter { it.symbol?.toLowerCase() == holding?.symbol?.toLowerCase() }[0].prices?.uSD?.times(baseFiat.rate!!)
+        val cost = holding?.cost?.times(baseFiat.rate!!)
         val value = price?.times(holding?.quantity!!)
-        val change = value?.minus(holding?.cost!!)
+        val change = value?.minus(cost!!)
 
         if(holding?.imageUrl != null && !holding.imageUrl?.contains("null")!!) {
             Picasso.with(context)
@@ -48,26 +52,26 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
 
         if (change != null && change < 0) {
             holder.change.setTextColor(context?.resources?.getColor(R.color.red)!!)
-            holder.change.text = "-$${Utils.formatPrice(change).substring(1)}"
+            holder.change.text = "-$symbol${Utils.formatPrice(change).substring(1)}"
         } else {
             holder.change.setTextColor(context?.resources?.getColor(R.color.green)!!)
-            holder.change.text = "$${Utils.formatPrice(change!!)}"
+            holder.change.text = "$symbol${Utils.formatPrice(change!!)}"
         }
 
-        holder.amount.text = holding?.quantity.toString()
+        holder.holding.text = holding?.quantity.toString()
         holder.currency.text = holding?.symbol.toString()
         holder.symbol.text = holding?.symbol.toString()
-        holder.value.text = "($${Utils.formatPrice(value)})"
-        holder.price.text = "$$price"
+        holder.value.text = "($symbol${Utils.formatPrice(value)})"
+        holder.price.text = "$symbol${Utils.formatPrice(price)}"
 
         if(holding?.type ==  Variables.Transaction.Type.fiat) {
             holder.textFiat.visibility = View.VISIBLE
             holder.price.visibility = View.GONE
-            holder.change.text = "$${Utils.formatPrice(value)}"
+            holder.change.text = "$symbol${Utils.formatPrice(value)}"
             holder.change.setTextColor(context.resources.getColor(R.color.text_grey))
             holder.symbol.visibility = View.GONE
             holder.value.visibility = View.GONE
-            holder.amount.visibility = View.GONE
+            holder.holding.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
@@ -89,7 +93,7 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
         val currency = view.currency
         val symbol = view.symbol
         val textFiat = view.text_fiat
-        val amount = view.amount
+        val holding = view.holding
         val change = view.change
         val value = view.value
         val price = view.price
