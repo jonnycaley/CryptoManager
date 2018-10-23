@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.crypto
 
 import android.util.Log
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralInfo.GeneralInfo
+import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -31,8 +32,11 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
             dataManager.getCryptoCompareService().getGeneralInfo(view.getSymbol(), "USD")
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<GeneralInfo> {
-                        override fun onSuccess(info: GeneralInfo) {
+                    .subscribe(object : Observer<GeneralInfo> {
+                        override fun onComplete() {
+                        }
+
+                        override fun onNext(info: GeneralInfo) {
                             Log.i(TAG, "Loading Theme: ${info.data?.first()?.coinInfo?.imageUrl}")
                             view.loadTheme(info)
                         }

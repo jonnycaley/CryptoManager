@@ -4,6 +4,7 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
@@ -14,12 +15,8 @@ import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Book
 import io.paperdb.Paper
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Single
+import io.reactivex.*
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.Flowable
-
-
 
 
 class HomeDataManager private constructor(val UserPreferences: UserPreferences) {
@@ -56,29 +53,37 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
         return retrofit.create(CoinMarketCapService::class.java)
     }
 
-    fun readStorage(key : String) : Single<String?> {
-        return RxPaperBook.with(Schedulers.io()).read(key, "")
-    }
-
-    fun writeToStorage(key: String, data: String) {
-        Paper.book().write(key, data)
-    }
-
     fun getExchangeRateService(): ExchangeRatesService {
         val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
         return retrofit.create(ExchangeRatesService::class.java)
     }
 
-    fun getBaseFiat(): Rate {
-        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    fun getBaseFiat(): Single<Rate> {
+        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES)
     }
 
-    fun saveArticles(savedArticles: ArrayList<Article>) {
-        Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
+    fun saveArticles(articles: ArrayList<Article>): Completable {
+        return RxPaperBook.with().write(Constants.PAPER_SAVED_ARTICLES, articles)
+    }
+
+    fun saveTopNews(news: ArrayList<Article>): Completable {
+        return RxPaperBook.with().write(Constants.PAPER_HOME_TOP_NEWS, news)
+    }
+
+    fun saveTop100(currencies: Currencies): Completable {
+        return RxPaperBook.with().write(Constants.PAPER_HOME_TOP_100, currencies)
+    }
+
+    fun readTop100(): Single<Currencies> {
+        return RxPaperBook.with().read(Constants.PAPER_HOME_TOP_100)
+    }
+
+    fun readTopNews(): Single<ArrayList<Article>> {
+        return RxPaperBook.with().read(Constants.PAPER_HOME_TOP_NEWS)
     }
 
 }

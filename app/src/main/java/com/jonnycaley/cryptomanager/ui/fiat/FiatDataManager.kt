@@ -30,7 +30,7 @@ class FiatDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun checkConnection(): Boolean {

@@ -15,7 +15,7 @@ class News : Serializable {
     @SerializedName("Promoted")
     @Expose
     var promoted: List<Promoted>? = null
-    @SerializedName("GeneralInfo")
+    @SerializedName("Data")
     @Expose
     var data: List<Datum>? = null
 

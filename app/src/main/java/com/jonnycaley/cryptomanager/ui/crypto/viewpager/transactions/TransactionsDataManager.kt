@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -43,14 +44,14 @@ class TransactionsDataManager private constructor(val userPreferences: UserPrefe
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
-    fun readStorage(key : String) : Single<String?> {
-        return RxPaperBook.with(Schedulers.newThread()).read(key, null)
+    fun getBaseFiat(): Single<Rate> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
-    fun getBaseFiat(): Rate {
-        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    fun readAllCrytpos(): Single<Currencies> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
     }
 }

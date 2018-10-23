@@ -97,7 +97,10 @@ object Utils {
 
 
     fun getReadTime(words: Int?): String {
-        return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read • "
+        if(words != null)
+            return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read • "
+        else
+            return "1 min read • "
     }
 
     fun toDecimals(number : Double, decimalPlaces : Int) : String{

@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import io.reactivex.CompletableObserver
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -51,13 +52,23 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
 
     override fun removeArticle(savedArticles : ArrayList<Article>?, article: Article) {
 
-        println("Removing article")
+        dataManager.saveArticles(savedArticles?.filter { it.url != article.url } as ArrayList<Article>)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+                        loadSavedArticles()
+                    }
 
-        val articles = savedArticles?.filter { it.url != article.url } as ArrayList<Article>
+                    override fun onSubscribe(d: Disposable) {
+                        println("onSubscribe")
+                        compositeDisposable?.add(d)
+                    }
 
-        dataManager.saveArticles(articles)
-
-        loadSavedArticles()
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
     }
 
     override fun detachView() {

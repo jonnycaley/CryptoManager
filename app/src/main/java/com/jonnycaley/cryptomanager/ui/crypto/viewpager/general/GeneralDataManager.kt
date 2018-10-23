@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -11,6 +12,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Paper
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -55,21 +57,20 @@ class GeneralDataManager private constructor(val userPreferences: UserPreference
         return retrofit.create(CryptoControlService::class.java)
     }
 
-    fun readStorage(key : String) : Single<String?> {
-        return RxPaperBook.with(Schedulers.newThread()).read(key, null)
-    }
-
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES)
     }
 
-    fun saveArticles(savedArticles: ArrayList<Article>) {
-        Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
+    fun saveArticles(savedArticles: ArrayList<Article>) : Completable {
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
 
-    fun getBaseFiat(): Rate {
-        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    fun getBaseFiat(): Single<Rate> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
+    fun getAllCryptos(): Single<Currencies> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
+    }
 
 }

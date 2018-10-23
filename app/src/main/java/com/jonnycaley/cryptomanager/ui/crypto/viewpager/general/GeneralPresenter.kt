@@ -1,13 +1,15 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
-import com.jonnycaley.cryptomanager.utils.Constants
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
+import io.reactivex.Completable
+import io.reactivex.CompletableObserver
+import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -43,7 +45,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     override fun getData() {
         clearChartDisposable()
         clearDisposable()
-
 //      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be seperate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
         getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H)
         getCurrencyGeneralData(view.getSymbol())
@@ -52,23 +53,29 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
     private fun getCurrencyGeneralData(symbol: String) {
 
+        var data : Data? = null
+
         if(dataManager.checkConnection()){
             dataManager.getCryptoCompareServiceWithScalars().getGeneralData(symbol, "USD")
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { json -> JsonModifiers.jsonToGeneral(json) }
-                    .map { json -> Gson().fromJson(json, com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data::class.java) }
+                    .map { json -> data = Gson().fromJson(json, Data::class.java) }
+                    .observeOn(Schedulers.io())
+                    .flatMapSingle { dataManager.getBaseFiat() }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data> {
-                        override fun onSuccess(response: com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data) {
+                    .subscribe(object : Observer<Rate> {
+                        override fun onComplete() {
 
-                            val baseFiat = dataManager.getBaseFiat()
+                        }
 
-                            view.showMarketCap(response.uSD?.mKTCAP, baseFiat)
-                            view.showDaysRange(response.uSD?.lOW24HOUR, response.uSD?.hIGH24HOUR, response.uSD?.pRICE, baseFiat)
-                            view.showCirculatingSupply(response.uSD?.sUPPLY)
-                            view.show24High(response.uSD?.hIGH24HOUR, baseFiat)
-                            view.show24Low(response.uSD?.lOW24HOUR, baseFiat)
-                            view.show24Change(response.uSD?.cHANGEPCT24HOUR)
+                        override fun onNext(baseFiat: Rate) {
+                            view.showMarketCap(data?.uSD?.mKTCAP, baseFiat)
+                            view.showDaysRange(data?.uSD?.lOW24HOUR, data?.uSD?.hIGH24HOUR, data?.uSD?.pRICE, baseFiat)
+                            view.showCirculatingSupply(data?.uSD?.sUPPLY)
+                            view.show24High(data?.uSD?.hIGH24HOUR, baseFiat)
+                            view.show24Low(data?.uSD?.lOW24HOUR, baseFiat)
+                            view.show24Change(data?.uSD?.cHANGEPCT24HOUR)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -77,7 +84,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.showGeneralDataError()
-                            Log.i(TAG, "onError1: ${e.message}")
+                            Log.i(TAG, "onError: ${e.message}")
                         }
                     })
         } else {
@@ -89,24 +96,30 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
         if (dataManager.checkConnection()) {
 
+            var graphData : HistoricalData? = null
+
             dataManager.getCryptoCompareService().getCurrencyGraph(timeString, symbol, conversion, limit.toString(), aggregate.toString())
+                    .map { response -> graphData = response }
+                    .flatMapSingle { dataManager.getBaseFiat() }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<HistoricalData> {
-                        override fun onSuccess(response: HistoricalData) {
+                    .subscribe(object : Observer<Rate> {
+                        override fun onComplete() {
+                        }
 
-                            if(response.data?.isEmpty()!!) {
+                        override fun onNext(baseFiat: Rate) {
+
+                            if(graphData?.data?.isEmpty()!!) {
                                 //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
                             } else {
-                                val baseFiat = dataManager.getBaseFiat()
 
-                                view.showPriceChange(response.data?.first()?.open, response.data?.last()?.close, baseFiat)
+                                view.showPriceChange(graphData?.data?.first()?.open, graphData?.data?.last()?.close, baseFiat)
 
                                 if (isLatestPrice)
-                                    view.showCurrentPrice(response.data?.last()?.close, baseFiat)
+                                    view.showCurrentPrice(graphData?.data?.last()?.close, baseFiat)
                                 isLatestPrice = false
 
-                                view.loadCandlestickChart(response, timeString, aggregate, baseFiat)
+                                view.loadCandlestickChart(graphData!!, timeString, aggregate, baseFiat)
                             }
                         }
 
@@ -115,7 +128,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError2: ${e.message}")
+                            println("onError: ${e.message}")
                         }
                     })
         } else {
@@ -130,14 +143,18 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
             dataManager.getSavedArticles()
                     .map { articles -> savedArticles = articles }
-                    .flatMap { dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS) }
-                    .map { json -> Gson().fromJson(json, Currencies::class.java) }
+                    .flatMap { dataManager.getAllCryptos() }
                     .map { currencies -> currencies.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase()}?.get(0) }
+                    .toObservable()
                     .flatMap { currency -> dataManager.getCryptoControlNewsService().getCurrencyNews(currency.coinName!!.toLowerCase().replace(" ", "-")) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Array<Article>> {
-                        override fun onSuccess(articles: Array<Article>) {
+                    .subscribe(object : Observer<Array<Article>> {
+                        override fun onComplete() {
+
+                        }
+
+                        override fun onNext(articles: Array<Article>) {
                             view.loadCurrencyNews(articles, savedArticles)
                         }
 
@@ -146,7 +163,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError3: ${e.message}")
+                            println("onError: ${e.message}")
                         }
                     })
         } else {
@@ -156,15 +173,15 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
     override fun saveArticle(topArticle: Article) {
         dataManager.getSavedArticles()
-                .map { savedArticles ->
-                    savedArticles.add(topArticle)
+                .map { savedArticles -> savedArticles.add(topArticle)
                     return@map savedArticles
                 }
-                .map { savedArticles -> dataManager.saveArticles(savedArticles) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -173,7 +190,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError4: ${e.message}")
+                        println("onError: ${e.message}")
                     }
                 })
 
@@ -183,20 +200,20 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
         dataManager.getSavedArticles()
                 .map { articles -> return@map articles.filter { it.url != topArticle.url } }
-                .map { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
-                    }
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
 
+                    }
                     override fun onSubscribe(d: Disposable) {
                         println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError5: ${e.message}")
+                        println("onError: ${e.message}")
                     }
                 })
     }

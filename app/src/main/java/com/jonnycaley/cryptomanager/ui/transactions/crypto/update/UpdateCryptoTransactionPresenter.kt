@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import io.reactivex.CompletableObserver
+import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,15 +25,10 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-
     }
 
     override fun detachView() {
         compositeDisposable?.dispose()
-    }
-
-    companion object {
-        val TAG = "UpdateCryptoTransactionPresenter"
     }
 
     override fun updateCryptoTransaction(originalTransaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, isDeducted: Boolean, notes: String) {
@@ -59,18 +55,25 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                         if (response.data?.isNotEmpty()!!)
                             priceUsd = response.data?.get(1)?.close!!
                     }
-                    .flatMap { dataManager.getAllCryptos() }
-                    .map { json -> allCryptos = Gson().fromJson(json, Currencies::class.java) }
-                    .flatMap { dataManager.getTransactions() }
+                    .flatMapSingle { dataManager.getAllCryptos() }
+                    .map { cryptos -> allCryptos = cryptos }
+                    .flatMapSingle { dataManager.getTransactions() }
+                    .observeOn(Schedulers.computation())
+                    .map { transactions ->
+                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPrice, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl)
+                        transactions.remove(originalTransaction)
+                        transactions.add(newTransaction)
+                        return@map transactions
+                    }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<java.util.ArrayList<Transaction>> {
-                        override fun onSuccess(transactions: java.util.ArrayList<Transaction>) {
+                    .subscribe(object : Observer<java.util.ArrayList<Transaction>> {
 
-                            val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPrice, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl)
-                            transactions.remove(originalTransaction)
-                            transactions.add(newTransaction)
+                        override fun onComplete() {
 
+                        }
+
+                        override fun onNext(transactions: java.util.ArrayList<Transaction>) {
                             saveTransactions(transactions)
                         }
 
@@ -193,4 +196,7 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
         return 0.toLong()
     }
 
+    companion object {
+        val TAG = "UpdateCryptoTransPres"
+    }
 }

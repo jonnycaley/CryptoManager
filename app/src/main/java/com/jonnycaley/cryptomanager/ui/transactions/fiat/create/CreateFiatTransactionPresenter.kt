@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.transactions.fiat.create
 
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import io.reactivex.*
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -33,18 +34,26 @@ class CreateFiatTransactionPresenter(var dataManagerCreate: CreateFiatTransactio
                     if (!response.data?.isEmpty()!!)
                         priceUsd = response.data?.get(1)?.close!!
                 }
-                .flatMap { dataManagerCreate.getTransactions() }
+                .flatMapSingle { dataManagerCreate.getTransactions() }
+                .observeOn(Schedulers.computation())
+                .map { transactions ->
+
+                    val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null)
+
+                    //TODO: check the "false, 1.toDouble()" above
+
+                    transactions.add(newTransaction)
+                    return@map transactions
+                }
+                .observeOn(Schedulers.io())
+                .flatMapCompletable { transactions -> dataManagerCreate.saveTransactions(transactions) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
-                    override fun onSuccess(transactions: ArrayList<Transaction>) {
+                .subscribe(object : CompletableObserver {
 
-                        val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null)
+                    override fun onComplete() {
+                        view.onTransactionComplete()
 
-                        //TODO: check the "false, 1.toDouble()" above
-
-                        transactions.add(newTransaction)
-                        saveTransactions(transactions)
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -91,7 +100,7 @@ class CreateFiatTransactionPresenter(var dataManagerCreate: CreateFiatTransactio
     }
 
     companion object {
-        val TAG = "CreateFiatTransactionPresenter"
+        val TAG = "CreateFiatTransPres"
     }
 
 }

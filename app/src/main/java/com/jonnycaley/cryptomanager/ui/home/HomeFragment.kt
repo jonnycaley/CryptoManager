@@ -118,7 +118,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         news.forEach { newNews.add(it) }
 
-        val headerArticle = newNews.filter { it.thumbnail != null }[0]
+        val headerArticle = newNews.first { it.thumbnail != null }
 
         newNews.remove(headerArticle)
 
@@ -156,6 +156,9 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     var layoutManager: LinearLayoutManager? = null
 
     override fun showTop100Changes(sortedBy: List<Currency>?, baseCurrency: Rate) {
+
+        Log.i(TAG, "showTop100Changes")
+        Log.i(TAG, (baseCurrency.fiat == null).toString())
 
         val arrayList = ArrayList<Currency>()
 

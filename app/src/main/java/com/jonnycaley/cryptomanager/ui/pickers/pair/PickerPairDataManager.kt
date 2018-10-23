@@ -30,13 +30,11 @@ class PickerPairDataManager private constructor(val UserPreferences: UserPrefere
         }
     }
 
-
-
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
 
-    fun getExchanges(): Single<String?> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_EXCHANGES, null)
+    fun getExchanges(): Single<Exchanges> {
+        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_EXCHANGES)
     }
 }

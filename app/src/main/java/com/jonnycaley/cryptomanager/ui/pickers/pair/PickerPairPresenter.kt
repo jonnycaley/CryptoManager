@@ -29,31 +29,33 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
     private fun getPairs(exchange: String?, crytpoSymbol: String?) {
 
         dataManager.getExchanges()
-                .map {
-                    json ->
-                    val gson = Gson().fromJson(json, Exchanges::class.java)
+                .observeOn(Schedulers.computation())
+                .map { exchanges ->
                     if(exchange != "" && exchange != null) {
-                        gson.exchanges?.filter { it.name?.toLowerCase() == exchange.toLowerCase() }
+                        exchanges.exchanges?.filter { it.name?.toLowerCase() == exchange.toLowerCase() }
                     }
-                    else
-                        gson.exchanges
+                    else {
+                        exchanges.exchanges
+                    }
+                }
+                .map { exchanges ->
 
+                    val converters = ArrayList<String>()
+
+                    exchanges.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } }
+
+                    val hashSet = HashSet<String>()
+                    hashSet.addAll(converters)
+                    converters.clear()
+                    converters.addAll(hashSet)
+
+                    return@map converters
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<List<Exchange>?> {
+                .subscribe(object : SingleObserver<ArrayList<String>> {
 
-                    override fun onSuccess(exchange: List<Exchange>) {
-
-                        val converters = ArrayList<String>()
-
-                        exchange.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } }
-
-                        val hashSet = HashSet<String>()
-                        hashSet.addAll(converters)
-                        converters.clear()
-                        converters.addAll(hashSet)
-
+                    override fun onSuccess(converters: ArrayList<String>) {
                         view.hideProgressBar()
                         view.showPairs(converters)
                     }

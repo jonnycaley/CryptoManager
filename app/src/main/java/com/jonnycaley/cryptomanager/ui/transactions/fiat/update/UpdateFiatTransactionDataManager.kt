@@ -34,7 +34,7 @@ class UpdateFiatTransactionDataManager private constructor(val UserPreferences: 
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun saveTransactions(transactions : ArrayList<Transaction>): Completable {

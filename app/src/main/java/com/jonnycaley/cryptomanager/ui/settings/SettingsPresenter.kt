@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.settings
 
-import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import io.reactivex.CompletableObserver
 import io.reactivex.SingleObserver
@@ -28,9 +27,23 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
 
     override fun loadSettings() {
 
-        println(dataManager.getBaseFiat())
+        dataManager.getBaseFiat()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe (object : SingleObserver<Rate>{
+                    override fun onSuccess(rate: Rate) {
+                        view.loadSettings(rate)
+                    }
 
-        view.loadSettings(dataManager.getBaseFiat())
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        view.showPortfolioDeletedError()
+                    }
+
+                })
 
 //        view.loadSettings(dataManager.getBaseFiat())
 //                .map { json ->

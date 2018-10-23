@@ -34,7 +34,6 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
         dataManager.getBaseFiat()
                 .map { fiat -> baseFiat = fiat }
                 .flatMap { dataManager.getFiats() }
-//                .map { json -> Gson().fromJson(json, ExchangeRates::class.java) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ExchangeRates> {
@@ -56,8 +55,23 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
     override fun saveBaseCurrency(symbol: Rate) {
 
         dataManager.saveBaseCurrency(symbol)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+                        view.onCurrencySaved()
+                    }
 
-        view.onCurrencySaved()
+                    override fun onSubscribe(d: Disposable) {
+                        println("Subscribed")
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onErrorFiats: ${e.message}")
+                    }
+                })
+
 
 //        dataManager.saveBaseCurrency(symbol)
 //                .subscribeOn(Schedulers.io())

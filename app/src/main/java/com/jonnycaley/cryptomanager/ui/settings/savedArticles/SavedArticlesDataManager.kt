@@ -7,6 +7,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Paper
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
@@ -36,15 +37,11 @@ class SavedArticlesDataManager private constructor(val UserPreferences: UserPref
     }
 
     fun getArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES)
     }
 
-    fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
-    }
-
-    fun saveArticles(savedArticles: ArrayList<Article>) {
-        Paper.book().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
+    fun saveArticles(articles: ArrayList<Article>): Completable {
+        return RxPaperBook.with().write(Constants.PAPER_SAVED_ARTICLES, articles)
     }
 
 }

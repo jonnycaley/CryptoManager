@@ -11,6 +11,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import io.reactivex.Observer
 
 
 class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: TransactionsContract.View) : TransactionsContract.Presenter {
@@ -37,8 +39,12 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
             dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol()!!, "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Price> {
-                        override fun onSuccess(response: Price) {
+                    .subscribe(object : Observer<Price> {
+                        override fun onComplete() {
+
+                        }
+
+                        override fun onNext(response: Price) {
                             price = response.uSD
                             getTransactions(response.uSD)
                         }
@@ -66,18 +72,12 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
     override fun getAllCurrencies() {
 
-        dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
-                .map { json ->
-                    println(json)
-                    println("Here")
-                    Gson().fromJson(json, Currencies::class.java)
-                }
+        dataManager.readAllCrytpos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Currencies> {
                     override fun onSuccess(allCurrencies: Currencies) {
-                        println(allCurrencies.data?.size)
-                        view.startTransaction(allCurrencies.data?.filter { it.symbol?.toLowerCase() == view.getSymbol()?.toLowerCase() }?.first(), allCurrencies.baseImageUrl, allCurrencies.baseLinkUrl)
+                        view.startTransaction(allCurrencies.data?.first { it.symbol?.toLowerCase() == view.getSymbol()?.toLowerCase() }, allCurrencies.baseImageUrl, allCurrencies.baseLinkUrl)
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -95,13 +95,16 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
         val symbol = view.getSymbol()
 
+        var transactionz : List<Transaction>? = null
+
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted)) } }
+                .map { transactions -> transactionz = transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted)) } }
+                .flatMap { dataManager.getBaseFiat() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<List<Transaction>> {
-                    override fun onSuccess(transactions: List<Transaction>) {
-                        view.loadTransactions(transactions, basePrice, dataManager.getBaseFiat())
+                .subscribe(object : SingleObserver<Rate> {
+                    override fun onSuccess(baseFiat: Rate) {
+                        view.loadTransactions(transactionz!!, basePrice, baseFiat)
                     }
 
                     override fun onSubscribe(d: Disposable) {

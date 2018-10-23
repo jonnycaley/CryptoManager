@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionDataManager
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -37,7 +38,7 @@ class UpdateCryptoTransactionDataManager private constructor(val UserPreferences
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun saveTransactions(transactions : ArrayList<Transaction>): Completable {
@@ -49,7 +50,7 @@ class UpdateCryptoTransactionDataManager private constructor(val UserPreferences
         return retrofit.create(CryptoCompareService::class.java)
     }
 
-    fun getAllCryptos(): Single<String> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_CRYPTOS)
+    fun getAllCryptos(): Single<Currencies> {
+        return RxPaperBook.with().read(Constants.PAPER_ALL_CRYPTOS)
     }
 }

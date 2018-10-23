@@ -58,12 +58,8 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
         return Utils.isNetworkConnected(context)
     }
 
-    fun getAllCryptos(): Single<String> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
-    }
-
-    fun getBaseFiat(): Rate {
-        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    fun readBaseFiat(): Single<Rate> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
 }

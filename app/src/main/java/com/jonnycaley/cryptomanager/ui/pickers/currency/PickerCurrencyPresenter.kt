@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.pickers.currency
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
+import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -34,8 +35,12 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<ExchangeRates> {
-                        override fun onSuccess(fiats: ExchangeRates) {
+                    .subscribe(object : Observer<ExchangeRates> {
+                        override fun onComplete() {
+
+                        }
+
+                        override fun onNext(fiats: ExchangeRates) {
                             view.showFiats(fiats)
                         }
 

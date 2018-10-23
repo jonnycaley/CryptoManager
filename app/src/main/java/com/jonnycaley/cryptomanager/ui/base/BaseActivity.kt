@@ -109,7 +109,6 @@ class BaseActivity : AppCompatActivity() {
 
         when(fragment){
             0 -> {
-                Log.i(TAG, "0")
                 if(fm.findFragmentByTag(fragment1TAG) == null)
                     fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).commit()
                 fm.beginTransaction().show(fragment1).commit()
@@ -117,7 +116,6 @@ class BaseActivity : AppCompatActivity() {
                 selectedItem = R.id.navigation_home
             }
             1 -> {
-                Log.i(TAG, "1")
                 if(fm.findFragmentByTag(fragment2TAG) == null)
                     fm.beginTransaction().add(R.id.frame_placeholder,fragment2, fragment2TAG).commit()
                 fm.beginTransaction().show(fragment2).commit()
@@ -125,7 +123,6 @@ class BaseActivity : AppCompatActivity() {
                 selectedItem = R.id.navigation_markets
             }
             2 -> {
-                Log.i(TAG, "2")
                 if(fm.findFragmentByTag(fragment3TAG) == null)
                     fm.beginTransaction().add(R.id.frame_placeholder,fragment3, fragment3TAG).commit()
                 fm.beginTransaction().show(fragment3).commit()
@@ -133,7 +130,6 @@ class BaseActivity : AppCompatActivity() {
                 selectedItem = R.id.navigation_portfolio
             }
             3 -> {
-                Log.i(TAG, "3")
                 if(fm.findFragmentByTag(fragment4TAG) == null)
                     fm.beginTransaction().add(R.id.frame_placeholder,fragment4, fragment4TAG).commit()
                 fm.beginTransaction().show(fragment4).commit()

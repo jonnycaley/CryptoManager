@@ -38,13 +38,12 @@ class CreateFiatTransactionDataManager private constructor(val UserPreferences: 
     }
 
     fun getTransactions(): Single<ArrayList<Transaction>> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
+        return RxPaperBook.with().read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun saveTransactions(transactions : ArrayList<Transaction>): Completable {
         return RxPaperBook.with().write(Constants.PAPER_TRANSACTIONS, transactions)
     }
-
 
     fun getCryptoCompareService(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)

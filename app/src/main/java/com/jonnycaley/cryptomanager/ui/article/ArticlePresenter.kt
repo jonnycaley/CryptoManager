@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.article
 
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import io.reactivex.CompletableObserver
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -21,7 +22,6 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
         }
 
         getSavedArticles()
-
     }
 
     private fun getSavedArticles() {
@@ -45,17 +45,19 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
 
 
     override fun saveArticle(topArticle: Article) {
+
         dataManager.getSavedArticles()
                 .map { savedArticles ->
                     if(savedArticles.none { it.url == topArticle.url })
                         savedArticles.add(topArticle)
                     return@map savedArticles
                 }
-                .map { savedArticles -> dataManager.saveArticles(savedArticles) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -74,11 +76,12 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
 
         dataManager.getSavedArticles()
                 .map { articles -> return@map articles.filter { it.url != topArticle.url } }
-                .map { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+
                     }
 
                     override fun onSubscribe(d: Disposable) {

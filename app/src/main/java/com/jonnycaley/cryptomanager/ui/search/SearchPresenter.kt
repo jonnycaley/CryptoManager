@@ -1,11 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.search
 
-import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
-import com.jonnycaley.cryptomanager.utils.Constants
-import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -61,10 +58,8 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
 
     private fun getAllCurrencies() {
 
-        println("Getting currencies")
-
-        dataManager.readStorage(Constants.PAPER_ALL_CRYPTOS)
-                .map { json -> allCurrencies = Gson().fromJson(json, Currencies::class.java) }
+        dataManager.getAllCrypto()
+                .map { json -> allCurrencies = json }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
@@ -80,12 +75,12 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        println("Subscribed")
+                        println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onErrorCurrencies: ${e.message}")
+                        println("onError: ${e.message}")
                     }
                 })
 

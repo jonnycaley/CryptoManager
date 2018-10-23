@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.pickers.exchange
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
@@ -34,8 +35,8 @@ class PickerExchangeDataManager private constructor(val UserPreferences: UserPre
         return Utils.isNetworkConnected(context)
     }
 
-    fun readExchanges(key: String): Single<String>? {
-        return RxPaperBook.with(Schedulers.newThread()).read(key, "")
+    fun readAllExchanges(): Single<Exchanges> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_EXCHANGES)
     }
 
 }

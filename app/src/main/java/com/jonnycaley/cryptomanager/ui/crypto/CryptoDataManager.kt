@@ -27,7 +27,6 @@ class CryptoDataManager private constructor(val UserPreferences: UserPreferences
         }
     }
 
-
     fun getCryptoCompareService(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
         return retrofit.create(CryptoCompareService::class.java)

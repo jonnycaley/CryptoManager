@@ -45,7 +45,7 @@ class SelectCurrencyDataManager private constructor(val UserPreferences: UserPre
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
 
-    fun saveBaseCurrency(symbol: Rate?){
-        Paper.book().write(Constants.PAPER_BASE_RATE, symbol)
+    fun saveBaseCurrency(symbol: Rate?): Completable {
+        return RxPaperBook.with(Schedulers.newThread()).write(Constants.PAPER_BASE_RATE, symbol)
     }
 }

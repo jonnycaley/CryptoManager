@@ -27,12 +27,10 @@ class PickerCurrencyDataManager private constructor(val UserPreferences: UserPre
         }
     }
 
-
     fun getExchangeRateService(): ExchangeRatesService {
         val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
         return retrofit.create(ExchangeRatesService::class.java)
     }
-
 
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)

@@ -34,11 +34,11 @@ class ArticlesHorizontalAdapter(val latestArticles : ArrayList<Article>?, val sa
         holder.likeButton.setOnLikeListener(object : OnLikeListener {
 
             override fun liked(p0: LikeButton?) {
-                presenter?.saveArticle(item!!)
+                presenter.saveArticle(item!!)
             }
 
             override fun unLiked(p0: LikeButton?) {
-                presenter?.removeArticle(item!!)
+                presenter.removeArticle(item!!)
             }
         })
         holder.setIsRecyclable(false)

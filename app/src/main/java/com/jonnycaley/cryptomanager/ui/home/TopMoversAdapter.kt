@@ -33,7 +33,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
 //                .centerCrop()
 //                .into(holder.image)
 
-        var price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!)
+        val price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!)
 
         val priceText = Utils.formatPrice(price!!)
 

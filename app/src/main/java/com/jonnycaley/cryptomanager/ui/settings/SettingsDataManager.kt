@@ -6,9 +6,8 @@ import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
-import io.paperdb.Paper
 import io.reactivex.Completable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Single
 
 class SettingsDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -35,14 +34,14 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
     }
 
     fun deletePortfolio(): Completable {
-        return RxPaperBook.with(Schedulers.newThread()).delete(Constants.PAPER_TRANSACTIONS)
+        return RxPaperBook.with().delete(Constants.PAPER_TRANSACTIONS)
     }
 
     fun deleteSavedArticles(): Completable {
-        return RxPaperBook.with(Schedulers.newThread()).delete(Constants.PAPER_SAVED_ARTICLES)
+        return RxPaperBook.with().delete(Constants.PAPER_SAVED_ARTICLES)
     }
 
-    fun getBaseFiat(): Rate {
-        return Paper.book().read(Constants.PAPER_BASE_RATE)
+    fun getBaseFiat(): Single<Rate> {
+        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
     }
 }

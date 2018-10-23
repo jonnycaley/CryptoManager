@@ -1,15 +1,16 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
 import android.widget.SearchView
-import io.reactivex.SingleObserver
+import com.jakewharton.rxbinding2.widget.RxSearchView
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import io.reactivex.CompletableObserver
+import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import com.jakewharton.rxbinding2.widget.RxSearchView
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
-import io.reactivex.MaybeSource
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -36,25 +37,33 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
         if(news.isEmpty()){
             getData()
         } else {
+
+            var top100 : Currencies? = null
             dataManager.getSavedArticles()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
                     .map { savedArticles ->
                         view.showLatestArticles(news, savedArticles)
                     }
+                    .toObservable()
 //                    .filter { dataManager.checkConnection() }
                     .flatMap {
                         dataManager.getCoinMarketCapService().getTop100USD()
                     }
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { t100 ->
-                        view.showTop100Changes(t100.data, dataManager.getBaseFiat())
+                        top100 = t100
+                    }
+                    .flatMapSingle {
+                        dataManager.getBaseFiat()
                     }
                     //TODO: check connection and threading needing and skips frames :(
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Unit> {
-                        override fun onSuccess(savedArticles: Unit) {
+                    .subscribe(object : Observer<Rate> {
+                        override fun onComplete() {
 
+                        }
+
+                        override fun onNext(baseFiat: Rate) {
+                            view.showTop100Changes(top100?.data, baseFiat)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -74,23 +83,23 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
         refresh()
     }
 
-    override fun saveArticle(topArticle: Article) {
+    override fun saveArticle(article: Article) {
 
         dataManager.getSavedArticles()
                 .map { savedArticles ->
-                    if (savedArticles.none { it.url == topArticle.url })
-                        savedArticles.add(topArticle)
+                    if (savedArticles.none { it.url == article.url })
+                        savedArticles.add(article)
                     return@map savedArticles
                 }
-                .map { savedArticles -> dataManager.saveArticles(savedArticles) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
@@ -101,19 +110,19 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     }
 
-    override fun removeArticle(topArticle: Article) {
+    override fun removeArticle(article: Article) {
 
         dataManager.getSavedArticles()
-                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
-                .map { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .map { articles -> articles.filter { it.url != article.url } }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(currencies: Unit) {
+                .subscribe(object : CompletableObserver {
+                    override fun onComplete() {
+
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
@@ -144,40 +153,49 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
         if (dataManager.checkConnection()) {
 
+            var top100 : Currencies? = null
+
             dataManager.getCoinMarketCapService().getTop100USD()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
                     .map { response ->
-                        view.showTop100Changes(response.data, dataManager.getBaseFiat())
+                        top100 = response
                     }
-                    .map {
+                    .flatMapSingle {
                         dataManager.getBaseFiat()
                     }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { baseFiat ->
+                        view.showTop100Changes(top100?.data, baseFiat)
+                    }
+                    .observeOn(Schedulers.io())
                     .flatMap {
                         dataManager.getCryptoControlService().getLatestNews("10")
                     }
                     .map { news ->
                         news.forEach { this.news.add(it) }
                     }
-                    .flatMap {
+                    .flatMapSingle {
                         dataManager.getSavedArticles()
                     }
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { savedArticles ->
                         view.showLatestArticles(this.news, savedArticles)
                     }
-                    //TODO: handle onErrors for each request in chain
+//                    TODO: handle onErrors for each request in chain
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<Unit> {
-                        override fun onSuccess(currencies: Unit) {
+                    .subscribe(object : Observer<Unit> {
+                        override fun onComplete() {
+
                             view.hideProgressBarLayout()
                             view.showContentLayout()
+                        }
+
+                        override fun onNext(t: Unit) {
+
                         }
 
                         override fun onSubscribe(d: Disposable) {
                             view.showProgressBarLayout()
                             view.hideContentLayout()
-                            println("Subscribed")
                             compositeDisposable?.add(d)
                         }
 
