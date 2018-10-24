@@ -63,7 +63,7 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES)
+        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(articles: ArrayList<Article>): Completable {

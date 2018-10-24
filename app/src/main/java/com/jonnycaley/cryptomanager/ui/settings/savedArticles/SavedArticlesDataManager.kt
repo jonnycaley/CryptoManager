@@ -37,7 +37,7 @@ class SavedArticlesDataManager private constructor(val UserPreferences: UserPref
     }
 
     fun getArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES)
+        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(articles: ArrayList<Article>): Completable {

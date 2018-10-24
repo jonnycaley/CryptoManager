@@ -31,42 +31,63 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
 
         var priceUsd = 1.toDouble()
 
-        dataManager.getCryptoCompareService().getPriceAtMinute(currency, "USD", "1", "1", date.time.toString())
-                .map { response ->
-                    if (!response.data?.isEmpty()!!)
-                        priceUsd = response.data?.get(1)?.close!!
-                }
-                .flatMapSingle { dataManager.getTransactions() }
-                .map { transactions ->
+        var btcPrice = 1.toDouble()
+        var ethPrice = 1.toDouble()
 
-                    val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null)
+        if(dataManager.checkConnection()) {
 
-                    //TODO: check the "false, 1.toDouble()" above
-
-                    transactions.remove(oldTransaction)
-                    transactions.add(newTransaction)
-
-                    return@map transactions
-                }
-                .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : CompletableObserver {
-
-                    override fun onComplete() {
-                        view.onTransactionUpdated()
+            dataManager.getCryptoCompareService().getPriceAtMinute("BTC", "USD", "1", "1", date?.time.toString())
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            btcPrice = response.data!!.last().close!!
                     }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute("ETH", "USD", "1", "1", date?.time.toString())
+                    }
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            ethPrice = response.data!!.last().close!!
+                    }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute(currency, "USD", "1", "1", date.time.toString())
+                    }
+                    .map { response ->
+                        if (!response.data?.isEmpty()!!)
+                            priceUsd = response.data?.get(1)?.close!!
+                    }
+                    .flatMapSingle { dataManager.getTransactions() }
+                    .map { transactions ->
 
-                    override fun onSubscribe(d: Disposable) {
-                        compositeDisposable?.add(d)
+                        val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null, btcPrice, ethPrice)
+
+                        //TODO: check the "false, 1.toDouble()" above
+
+                        transactions.remove(oldTransaction)
+                        transactions.add(newTransaction)
+
+                        return@map transactions
+                    }
+                    .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : CompletableObserver {
+
+                        override fun onComplete() {
+                            view.onTransactionUpdated()
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
 //                        view.showProgressBar()
-                    }
+                        }
 
-                    override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
-                    }
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
+        } else {
 
-                })
+        }
     }
 
 

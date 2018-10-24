@@ -17,6 +17,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
+
 import java.util.*
 
 class CreateCryptoTransactionActivity : AppCompatActivity(), CreateCryptoTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -250,6 +251,8 @@ class CreateCryptoTransactionActivity : AppCompatActivity(), CreateCryptoTransac
                 now.get(Calendar.MONTH), // Initial month selection
                 now.get(Calendar.DAY_OF_MONTH) // Inital day selection
         )
+        dpd.maxDate = now
+
         dpd.show(fragmentManager, "Datepickerdialog")
     }
 

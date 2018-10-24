@@ -33,7 +33,7 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
         val symbol = Utils.getFiatSymbol(baseFiat.fiat)
 
         val price = prices.filter { it.symbol?.toLowerCase() == holding?.symbol?.toLowerCase() }[0].prices?.uSD?.times(baseFiat.rate!!)
-        val cost = holding?.cost?.times(baseFiat.rate!!)
+        val cost = holding?.costUsd?.times(baseFiat.rate!!)
         val value = price?.times(holding?.quantity!!)
         val change = value?.minus(cost!!)
 

@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
 
+import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
@@ -37,13 +38,29 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
         var priceUsd = 1.toDouble()
         var isDeductedPrice = 1.toDouble()
         var allCryptos: Currencies? = null
+        var btcPrice = 1.toDouble()
+        var ethPrice = 1.toDouble()
 
         if (!isBuy)
             correctQuantity *= -1
 
         if (dataManager.checkConnection()) {
 
-            dataManager.getCryptoCompareService().getPriceAtMinute(pair, "USD", "1", "1", date?.time.toString())
+            dataManager.getCryptoCompareService().getPriceAtMinute("BTC", "USD", "1", "1", date?.time.toString())
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            btcPrice = response.data!!.last().close!!
+                    }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute("ETH", "USD", "1", "1", date?.time.toString())
+                    }
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            ethPrice = response.data!!.last().close!!
+                    }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute(pair, "USD", "1", "1", date?.time.toString())
+                    }
                     .map { response ->
                         if (response.data?.isNotEmpty()!!)
                             isDeductedPrice = response.data!![1].close!!
@@ -60,7 +77,10 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
-                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPrice, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl)
+
+                        transactions.forEach { Log.i(TAG, it.date.time.toString()) }
+
+                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPrice, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.remove(originalTransaction)
                         transactions.add(newTransaction)
                         return@map transactions
@@ -91,7 +111,7 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
     }
 
 
-//    private fun updateTransaction(originalTransaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, notes: String, isDeductedPrice: Double?) {
+//    private fun updateTransaction(originalTransaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, notes: String, isDeductedPriceUsd: Double?) {
 //
 //        var correctQuantity = quantity
 //        if (!isBuy)
@@ -110,7 +130,7 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
 //                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
 //                    override fun onSuccess(holdings: ArrayList<Transaction>) {
 //
-//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeductedPrice)
+//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeductedPriceUsd)
 //                        holdings.remove(originalTransaction)
 //                        holdings.add(newTransaction)
 //

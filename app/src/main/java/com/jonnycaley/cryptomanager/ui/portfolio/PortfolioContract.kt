@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
@@ -13,11 +12,13 @@ interface PortfolioContract {
         fun stopRefreshing()
         fun showNoHoldingsLayout()
         fun showHoldingsLayout()
-        fun showHoldings(holdings: ArrayList<Holding>, baseFiat : Rate, prices: ArrayList<Price>)
+        fun showHoldings()
         fun showError()
-        fun showBalance(balance: Double, baseFiat : Rate)
-        fun showChange(change: Double, baseFiat : Rate)
+        fun showBalance()
+        fun showChange()
         fun hideRefreshing()
+        fun getToggledCurrency() : String
+        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance : Double, changeUsd : Double, changeBtc : Double, changeEth : Double)
     }
 
     interface Presenter : BasePresenter {

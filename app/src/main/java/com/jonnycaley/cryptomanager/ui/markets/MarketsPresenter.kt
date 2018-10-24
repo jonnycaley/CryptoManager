@@ -37,13 +37,14 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
         if(news.isEmpty()){
             getData()
         } else {
-
             var top100 : Currencies? = null
             dataManager.getSavedArticles()
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map { savedArticles ->
                         view.showLatestArticles(news, savedArticles)
                     }
                     .toObservable()
+                    .observeOn(Schedulers.io())
 //                    .filter { dataManager.checkConnection() }
                     .flatMap {
                         dataManager.getCoinMarketCapService().getTop100USD()
@@ -52,11 +53,13 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .map { t100 ->
                         top100 = t100
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapSingle {
                         dataManager.getBaseFiat()
                     }
                     //TODO: check connection and threading needing and skips frames :(
                     .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Rate> {
                         override fun onComplete() {
 

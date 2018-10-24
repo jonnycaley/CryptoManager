@@ -31,7 +31,9 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
 
         var correctQuantity = quantity
         var priceUsd = 1.toDouble()
-        var isDeductedPrice = 1.toDouble()
+        var isDeductedPriceUsd = 1.toDouble()
+        var btcPrice = 1.toDouble()
+        var ethPrice = 1.toDouble()
 
         var allCryptos: Currencies? = null
 
@@ -40,10 +42,20 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
 
         if (dataManager.checkConnection()) {
 
-            dataManager.getCryptoCompareService().getPriceAtMinute(pair, "USD", "1", "1", date?.time.toString())
+            dataManager.getCryptoCompareService().getPriceAtMinute("BTC", "USD", "1", "1", date?.time.toString())
                     .map { response ->
                         if (response.data?.isNotEmpty()!!)
-                            isDeductedPrice = response.data!!.last().close!!
+                            btcPrice = response.data!!.last().close!!
+                    }
+                    .flatMap { dataManager.getCryptoCompareService().getPriceAtMinute("ETH", "USD", "1", "1", date?.time.toString()) }
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            ethPrice = response.data!!.last().close!!
+                    }
+                    .flatMap { dataManager.getCryptoCompareService().getPriceAtMinute(pair, "USD", "1", "1", date?.time.toString()) }
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            isDeductedPriceUsd = response.data!!.last().close!!
                     }
                     .flatMap {
                         dataManager.getCryptoCompareService().getPriceAtMinute(view.getSymbol(), "USD", "1", "1", date?.time.toString())
@@ -59,7 +71,7 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
-                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPrice, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl)
+                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.add(newTransaction)
                         return@map transactions
                     }
@@ -106,7 +118,7 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                 })
     }
 
-//    private fun saveTransaction(isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, notes: String, isDeducted: Boolean, isDeductedPrice: Double) {
+//    private fun saveTransaction(isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, notes: String, isDeducted: Boolean, isDeductedPriceUsd: Double) {
 //
 //        var correctQuantity = quantity
 //        if (!isBuy)
@@ -125,7 +137,7 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
 //                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
 //                    override fun onSuccess(holdings: ArrayList<Transaction>) {
 //
-//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeductedPrice)
+//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeductedPriceUsd)
 //                        holdings.add(newTransaction)
 //
 //                        dataManager.saveTransactions(holdings)

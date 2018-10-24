@@ -50,15 +50,15 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.computation()).read(Constants.PAPER_SAVED_ARTICLES)
+        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) : Completable {
-        return RxPaperBook.with(Schedulers.computation()).write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
+        return RxPaperBook.with().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
 
     fun getBaseFiat(): Single<Rate> {
-        return RxPaperBook.with(Schedulers.computation()).read(Constants.PAPER_BASE_RATE)
+        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
     }
 
 }

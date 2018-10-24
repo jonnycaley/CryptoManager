@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -11,9 +12,7 @@ import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.ui.pickers.pair.PickerPairActivity
-import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.jonnycaley.cryptomanager.utils.Utils
-import com.squareup.picasso.Picasso
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.util.*
@@ -65,6 +64,8 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
 
         chosenDate = args.transaction.date
 
+        println("onCreateDate: " + args.transaction.date)
+
         setupToolbar()
         setupHeader()
         setupBody()
@@ -88,7 +89,7 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
         else
             requiredQuantity.setText(args.transaction.quantity.toString())
         requiredDate.text = Utils.formatDate(args.transaction.date)
-        println(args.transaction.isDeductedPrice)
+        println(args.transaction.isDeductedPriceUsd)
         println(args.transaction.quantity)
         if(args.transaction.isDeducted)
             switchDeduct.isChecked = true
@@ -165,6 +166,7 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
             textSubmit.id -> {
                 if(checkFields()){
                     preventChanges()
+                    Log.i(TAG, "Arg trans here:" + args.transaction.date.toString())
                     presenter.updateCryptoTransaction(args.transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), chosenDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
                 }
             }
@@ -312,6 +314,7 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
         val PAIR_KEY = "key_pair"
         val CRYPTO_KEY = "key_crypto"
 
+        val TAG = this::class.java.name
     }
 
 }

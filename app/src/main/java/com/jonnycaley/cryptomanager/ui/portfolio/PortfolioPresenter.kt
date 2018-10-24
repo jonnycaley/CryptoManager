@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.portfolio
 
+import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
@@ -20,7 +21,6 @@ import io.reactivex.Observable
 import io.reactivex.Observer
 import java.util.*
 import kotlin.collections.ArrayList
-
 
 class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: PortfolioContract.View) : PortfolioContract.Presenter {
 
@@ -54,7 +54,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                         } else {
                             when (timePeriod) {
                                 PortfolioFragment.TIME_PERIOD_ALL -> getLatestPrices(combineTransactions(transactions))
-                                else -> getHistoricalPrices(combineTransactions(transactions), transactions, timePeriod)
+                                else -> getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
                             }
                         }
                     }
@@ -73,13 +73,14 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 })
     }
 
+    var baseFiat : Rate = Rate()
+
     private fun getLatestPrices(holdings: ArrayList<Holding>) { //happens for the 'ALL' tab
 
         if (dataManager.checkConnection()) {
 
             var fiatPrices = ExchangeRates()
 
-            var prices : MultiPrices? = null
 
             var newPrices : ArrayList<Price> = ArrayList()
 
@@ -88,29 +89,27 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             dataManager.getExchangeRateService().getExchangeRates()
                     .observeOn(Schedulers.computation())
                     .map { fiats -> fiatPrices = Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java) }
-                    .observeOn(Schedulers.io())
-                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getMultiPrice(getCryptoQueryString(holdings), "USD,BTC") } // gets all crypto conversion rates for all time info
+                    .subscribeOn(Schedulers.io())
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getMultiPrice(getCryptoQueryString(holdings), "USD") } // gets all crypto conversion rates for all time info
                     .observeOn(Schedulers.computation())
-                    .map { json -> JsonModifiers.jsonToMultiPrices(json) }
-                    .map { json -> Gson().fromJson(json, MultiPrices::class.java) }
-                    .map { multiPrices -> prices = multiPrices }
-                    .map { newPrices = getPrices(prices?.prices, fiatPrices) }
-                    .map { holdingsSorted = ArrayList(holdings.sortedBy { transaction -> newPrices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }[0].prices?.uSD?.times(transaction.quantity) }.asReversed()) }
+                    .map { json -> Gson().fromJson(JsonModifiers.jsonToMultiPrices(json), MultiPrices::class.java) }
+                    .map { multiPrices -> newPrices = getPrices(multiPrices.prices, fiatPrices) }
+                    .map { holdingsSorted = ArrayList(holdings.sortedBy { holding -> newPrices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) }.asReversed()) }
                     .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.readBaseFiat() }
+                    .map { fiat -> baseFiat = fiat }
+                    .map { view.saveData(holdingsSorted, newPrices, baseFiat, priceBtc, priceEth, getBalance(holdingsSorted, newPrices), getChangeUsd(holdingsSorted, newPrices), 1.toDouble(), 1.toDouble()) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<Rate> {
+                    .subscribe(object : Observer<Unit> {
                         override fun onComplete() {
-
+                            updateView()
                         }
 
-                        override fun onNext(baseFiat: Rate) {
+                        override fun onNext(baseFiat: Unit) {
 
-                            view.showHoldingsLayout()
-                            view.showHoldings(holdingsSorted, baseFiat, newPrices)
-                            view.showBalance(getBalance(holdingsSorted, newPrices), baseFiat)
-                            view.showChange(getChange(holdingsSorted, newPrices), baseFiat)
+                            println("See here::::::")
+                            println(getChangeUsd(holdingsSorted, newPrices))
 
                             view.hideRefreshing()
                         }
@@ -130,6 +129,15 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         } else {
 
         }
+
+    }
+
+    private fun updateView() {
+
+        view.showHoldingsLayout()
+        view.showHoldings()
+        view.showBalance()
+        view.showChange()
 
     }
 
@@ -169,7 +177,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //                                        println(transaction.quantity)
 //                                        println(transaction.price)
 //                                        println(transaction.isDeductedPrice)
-                                        newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                        newHoldingCost += (transaction.quantity * transaction.price * transaction.isDeductedPriceUsd)
                                     }
                                 }
 
@@ -189,14 +197,14 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //                                        println(transaction.quantity)
 //                                        println(transaction.price)
 //                                        println(transaction.isDeductedPrice)
-                                        newHoldingCost -= (transaction.quantity * transaction.price * transaction.isDeductedPrice)
+                                        newHoldingCost -= (transaction.quantity * transaction.price * transaction.isDeductedPriceUsd)
                                     }
 
                                 }
 
 //                        println("New cost: $newHoldingCost")
 
-                        holdings.first { it.symbol == cryptoSymbol }.cost = newHoldingCost
+                        holdings.first { it.symbol == cryptoSymbol }.costUsd = newHoldingCost
 
                         prices.add(cryptoPrices)
                     }
@@ -209,6 +217,188 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                         }
 
                         override fun onNext(cryptoPrices: Boolean) {
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                            view.stopRefreshing()
+                            view.showError()
+                        }
+
+                    })
+
+        } else {
+
+        }
+    }
+
+
+    var priceBtc = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
+    var priceEth = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
+
+    private fun getHistoricalBtcEthPrices(holdings: ArrayList<Holding>, transactions: ArrayList<Transaction>, timePeriod: String) {
+
+        if (dataManager.checkConnection()) {
+
+            var timePeriodStr = ""
+            var aggregateStr = ""
+
+            when (timePeriod) {
+                PortfolioFragment.TIME_PERIOD_1H -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_MINUTE; aggregateStr = PortfolioFragment.AGGREGATE_1H
+                }
+                PortfolioFragment.TIME_PERIOD_1D -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1D
+                }
+                PortfolioFragment.TIME_PERIOD_1W -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1W
+                }
+                else -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_DAY; aggregateStr = PortfolioFragment.AGGREGATE_1M
+                }
+            }
+
+            Log.i(TAG, "Getting BTC price at time")
+
+            dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "BTC", "USD", aggregateStr)
+                    .observeOn(Schedulers.computation())
+                    .map { btcResponse ->
+
+                        Log.i(TAG, "Got BTC price at time")
+
+                        val tempPrice = Price()
+                        tempPrice.symbol = "BTC"
+
+                        val tempPrices = Prices()
+                        tempPrices.uSD = btcResponse.data?.first()?.close
+
+                        tempPrice.prices = tempPrices
+
+                        priceBtc = tempPrice
+
+//                        var newHoldingCostBtc = 0.toDouble()
+//
+//                        holdings.forEach { holding ->
+//
+//                            transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
+//                                    .forEach { transaction ->
+//                                        if (transaction.date < getDate(timePeriod)) {
+//                                            Log.i(TAG, "1: ${(transaction.priceUSD / btcResponse.data?.get(0)?.close!!)}")
+//                                            Log.i(TAG, "1: ${transaction.price}")
+//                                            newHoldingCostBtc += (transaction.priceUSD / btcResponse.data?.get(0)?.close!!)
+////                                        println("Get price from before")
+////                                        println(transaction.quantity)
+////                                        println(cryptoPrices.data?.get(0)?.close!!)
+//                                        } else {
+////                                        println("Get price from bought")
+////                                        println(transaction.quantity)
+////                                        println(transaction.price)
+////                                        println(transaction.isDeductedPriceUsd)
+//                                            Log.i(TAG, "2: ${(transaction.priceUSD / (transaction.btcPrice))}")
+//                                            newHoldingCostBtc += (transaction.priceUSD / (transaction.btcPrice))
+//                                        }
+//                                    }
+//
+//                            transactions.filter { (it.pairSymbol?.toUpperCase() == holding.symbol.toUpperCase()) && it.isDeducted }
+//                                    .forEach { transaction ->
+//                                        if (transaction.date < getDate(timePeriod)) {
+//                                            Log.i(TAG, "3: ${(transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (btcResponse.data?.get(0)?.close!!))}")
+//                                            newHoldingCostBtc -= (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (btcResponse.data?.get(0)?.close!!))
+////                                        println("Get price from before")
+////                                        print("Price: " + transaction.price)
+////                                        print("PriceUSD: " + transaction.priceUSD)
+////                                        println("Quantity" + transaction.quantity)
+////                                        println("Price usd time related:" + cryptoPrices.data?.get(0)?.close!!)
+////                                        println("${transaction.isDeductedPriceUsd}")
+//
+//                                        } else {
+////                                        println("Get price from bought")
+////                                        println(transaction.quantity)
+////                                        println(transaction.price)
+////                                        println(transaction.isDeductedPriceUsd)
+//                                            Log.i(TAG, "4: ${(transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (transaction.btcPrice))}")
+//                                            newHoldingCostBtc -= (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (transaction.btcPrice))
+//                                        }
+//
+//                                    }
+//                            Log.i(TAG, "NewBTCCost: ${newHoldingCostBtc} for holding ${holding.symbol}")
+//                            holding.costBtc = newHoldingCostBtc
+//                        }
+
+//                        println("New cost: $newHoldingCost")
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMap { dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "ETH", "USD", aggregateStr) }
+                    .observeOn(Schedulers.computation())
+                    .map { ethResponse ->
+
+                        val tempPrice = Price()
+                        tempPrice.symbol = "ETH"
+
+                        val tempPrices = Prices()
+                        tempPrices.uSD = ethResponse.data?.first()?.close
+
+                        tempPrice.prices = tempPrices
+
+                        priceEth = tempPrice
+
+//                        var newHoldingCostEth = 0.toDouble()
+//
+//                        holdings.forEach { holding ->
+//
+//                            transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
+//                                    .forEach { transaction ->
+//                                        if (transaction.date < getDate(timePeriod)) {
+//                                            newHoldingCostEth += (transaction.quantity * ethResponse.data?.get(0)?.close!!)
+////                                        println("Get price from before")
+////                                        println(transaction.quantity)
+////                                        println(cryptoPrices.data?.get(0)?.close!!)
+//                                        } else {
+////                                        println("Get price from bought")
+////                                        println(transaction.quantity)
+////                                        println(transaction.price)
+////                                        println(transaction.isDeductedPriceUsd)
+//                                            newHoldingCostEth += (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (transaction.ethPrice))
+//                                        }
+//                                    }
+//
+//                            transactions.filter { (it.pairSymbol?.toUpperCase() == holding.symbol.toUpperCase()) && it.isDeducted }
+//                                    .forEach { transaction ->
+//                                        if (transaction.date < getDate(timePeriod)) {
+//                                            newHoldingCostEth -= (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / ethResponse.data?.get(0)?.close!!)
+////                                        println("Get price from before")
+////                                        print("Price: " + transaction.price)
+////                                        print("PriceUSD: " + transaction.priceUSD)
+////                                        println("Quantity" + transaction.quantity)
+////                                        println("Price usd time related:" + cryptoPrices.data?.get(0)?.close!!)
+////                                        println("${transaction.isDeductedPriceUsd}")
+//
+//                                        } else {
+////                                        println("Get price from bought")
+////                                        println(transaction.quantity)
+////                                        println(transaction.price)
+////                                        println(transaction.isDeductedPriceUsd)
+//                                            newHoldingCostEth -= (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (transaction.ethPrice))
+//                                        }
+//
+//                                    }
+//                            holding.costEth = newHoldingCostEth
+//                        }
+
+                    }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : Observer<Unit> {
+
+                        override fun onComplete() {
+                            getHistoricalPrices(holdings, transactions, timePeriod)
+                        }
+
+                        override fun onNext(cryptoPrices: Unit) {
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -250,7 +440,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
     private fun getPrices(prices: List<Price>?, fiatPrices: ExchangeRates): ArrayList<Price> {
 
-        val combinesPrices = ArrayList(prices)
+        val combinedPrices = ArrayList(prices)
 
         fiatPrices.rates?.forEach { fiatRate ->
 
@@ -262,12 +452,12 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             tempPrices.uSD = 1 / fiatRate.rate!!
             tempPrice.prices = tempPrices
 
-            combinesPrices.add(tempPrice)
+            combinedPrices.add(tempPrice)
         }
 
 //        combinesPrices.forEach { println("Price( symbol: ${it.symbol} , uSD: ${it.prices?.uSD})") }
 
-        return combinesPrices
+        return combinedPrices
     }
 
     private fun getCryptoQueryString(holdings: ArrayList<Holding>): String {
@@ -281,10 +471,15 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         else
             "BTC"
 
+        if (!cryptoSymbolsQueryString.contains("BTC"))
+            cryptoSymbolsQueryString += ",BTC"
+        if (!cryptoSymbolsQueryString.contains("ETH"))
+            cryptoSymbolsQueryString += ",ETH"
+
         return cryptoSymbolsQueryString
     }
 
-    private fun getChange(holdings: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
+    private fun getChangeUsd(holdings: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
 
         var change = 0.toDouble()
 
@@ -292,7 +487,49 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD
             val value = price?.times(holding.quantity)
-            change += value?.minus(holding.cost)!!
+            change += value?.minus(holding.costUsd)!!
+
+        }
+
+        return change
+    }
+
+
+    private fun getChangeBtc(holdings: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
+
+        var change = 0.toDouble()
+
+        holdings.forEach { holding ->
+
+            Log.i(TAG, "Data for holding: ${holding.symbol}")
+
+            val btcPriceNow = combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD //get the price of btc now
+            Log.i(TAG, "btcPriceNow: ${btcPriceNow}")
+
+            val costInBtc =  holding.costBtc
+            Log.i(TAG, "costInBtc: ${costInBtc}")
+
+            val worthInBtcNow = holding.costUsd / btcPriceNow!!
+            Log.i(TAG, "worthInBtcNow: ${worthInBtcNow}")
+
+            change += worthInBtcNow.minus(costInBtc)
+            Log.i(TAG, "change: ${change}")
+
+        }
+
+        return change
+    }
+
+    private fun getChangeEth(holdings: ArrayList<Holding>, combinedPrices: ArrayList<Price>): Double {
+
+        var change = 0.toDouble()
+
+        holdings.forEach { holding ->
+
+            val ethPriceNow = combinedPrices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD //get the price of btc now
+            val costInEth =  holding.costEth
+            val worthInBtcNow = holding.costUsd / ethPriceNow!!
+            change += worthInBtcNow.minus(costInEth)
 
         }
 
@@ -336,7 +573,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             var getCurrentHoldings = 0.toFloat()
 
-            var getCost = 0.toDouble()
+            var getCostUsd = 0.toDouble()
+            var getCostBtc = 0.toDouble()
+            var getCostEth = 0.toDouble()
 
             var imageUrl: String? = null
 
@@ -345,7 +584,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             getAllTransactionsFor.forEach {
                 imageUrl = it.baseImageUrl
                 getCurrentHoldings += it.quantity
-                getCost += it.price * it.quantity * it.isDeductedPrice
+                getCostUsd += it.price * it.quantity * it.isDeductedPriceUsd
+                getCostBtc += (it.price * it.quantity * it.isDeductedPriceUsd / (it.btcPrice))
+                getCostEth += (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))
             }
 
             val getAllTransactionsAgainst = transactions.filter { (it.pairSymbol == key) && (it.isDeducted) }
@@ -353,13 +594,15 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             getAllTransactionsAgainst.forEach {
                 imageUrl = it.pairImageUrl
                 getCurrentHoldings -= (it.price * it.quantity)
-                getCost -= it.price * it.quantity * it.isDeductedPrice
+                getCostUsd -= it.price * it.quantity * it.isDeductedPriceUsd
+                getCostBtc -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.btcPrice))
+                getCostEth -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))
             }
 
             if ((getAllTransactionsFor.isNotEmpty() && getAllTransactionsFor[0].pairSymbol == null) || ((getAllTransactionsAgainst.isNotEmpty() && getAllTransactionsAgainst[0].pairSymbol == null)))
-                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.fiat, imageUrl))
+                holdings.add(Holding(key, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.fiat, imageUrl))
             else
-                holdings.add(Holding(key, getCurrentHoldings, getCost, Variables.Transaction.Type.crypto, imageUrl))
+                holdings.add(Holding(key, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.crypto, imageUrl))
 
         }
 //        holdings.forEach { Log.i(TAG, "Holding(Symbol: ${it.symbol}, type: ${it.type}, quantity: ${it.quantity}, cost: ${it.cost})") }

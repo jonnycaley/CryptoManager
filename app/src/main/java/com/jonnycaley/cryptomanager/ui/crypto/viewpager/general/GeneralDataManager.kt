@@ -58,7 +58,7 @@ class GeneralDataManager private constructor(val userPreferences: UserPreference
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) : Completable {

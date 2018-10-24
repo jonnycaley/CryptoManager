@@ -37,7 +37,8 @@ class HomeArticlesVerticalAdapter(var newsItems: ArrayList<Article>?, var savedA
         holder.title.text = item?.title.toString()
         holder.category.text = item?.primaryCategory.toString()
         holder.image.alpha = Float.MAX_VALUE
-        holder.date.text = Utils.getTimeFrom(item?.publishedAt)
+        if(item?.publishedAt != null)
+            holder.date.text = Utils.getTimeFrom(item.publishedAt)
         holder.length.text = Utils.getReadTime(item?.words)
 
         holder.likeButton.isLiked = savedArticles.any { it.url == item?.url }

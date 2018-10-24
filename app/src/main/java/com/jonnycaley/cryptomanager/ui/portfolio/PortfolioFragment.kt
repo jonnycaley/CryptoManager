@@ -46,6 +46,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     val radioGroup : RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
     var chosenPeriod = TIME_PERIOD_1H
+    var chosenCurrency = CURRENCY_FIAT
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -63,6 +64,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         buttonAddCurrency.setOnClickListener(this)
         buttonAddFiat.setOnClickListener(this)
         swipeLayout.setOnRefreshListener(this)
+        textBalance.setOnClickListener(this)
         setUpPortfolioTimeChoices()
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
@@ -98,6 +100,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         }
     }
 
+    override fun getToggledCurrency(): String {
+        return chosenCurrency
+    }
+
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddFiat.id -> {
@@ -106,7 +112,46 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             buttonAddCurrency.id -> {
                 SearchArgs(CURRENCY_STRING).launch(context!!)
             }
+            textBalance.id -> {
+                when(chosenCurrency){
+                    CURRENCY_FIAT -> chosenCurrency = CURRENCY_BTC
+                    CURRENCY_BTC -> chosenCurrency = CURRENCY_ETH
+                    CURRENCY_ETH -> chosenCurrency = CURRENCY_FIAT
+                }
+                updateView()
+            }
         }
+    }
+
+    private fun updateView() {
+
+        showHoldingsLayout()
+        showHoldings()
+        showBalance()
+        showChange()
+    }
+
+
+    var holdings: ArrayList<Holding> = ArrayList()
+    var prices: ArrayList<Price> = ArrayList()
+    var baseFiat : Rate = Rate()
+    var priceBtc = Price()
+    var priceEth = Price()
+    var balance = 0.toDouble()
+    var changeUsd = 0.toDouble()
+    var changeBtc = 0.toDouble()
+    var changeEth = 0.toDouble()
+
+    override fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance : Double, changeUsd : Double, changeBtc : Double, changeEth : Double) {
+        this.holdings = holdingsSorted
+        this.prices = newPrices
+        this.baseFiat = baseFiat
+        this.priceBtc = priceBtc
+        this.priceEth = priceEth
+        this.balance = balance
+        this.changeUsd = changeUsd
+        this.changeBtc = changeBtc
+        this.changeEth = changeEth
     }
 
     override fun hideRefreshing() {
@@ -134,18 +179,52 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //        swipeLayout.isRefreshing = false
     }
 
-    override fun showBalance(balance: Double, baseFiat : Rate) {
-        textBalance.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(balance * baseFiat.rate!!)}"
+    override fun showBalance() {
+        when(this.chosenCurrency){ //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
+            CURRENCY_FIAT -> {
+                textBalance.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.balance * this.baseFiat.rate!!)}"
+            }
+            CURRENCY_BTC -> {
+                textBalance.text = "BTC ${Utils.formatPrice(this.balance / this.priceBtc.prices?.uSD!!)}"//₿
+            }
+            CURRENCY_ETH -> {
+                textBalance.text = "ETH ${Utils.formatPrice(this.balance / this.priceEth.prices?.uSD!!)}"//Ξ
+            }
+        }
+//        textBalance.text = "₿${Utils.formatPrice(balance / priceBtc.prices?.uSD!!)}"
+
     }
 
-    override fun showChange(change: Double, baseFiat : Rate) {
+    override fun showChange() {
 
-        if (change < 0) {
-            context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-            textChange.text = "-${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(change*baseFiat.rate!!).substring(1)}"
-        } else {
-            context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-            textChange.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice(change*baseFiat.rate!!)}"
+        when(this.chosenCurrency){ //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
+            CURRENCY_FIAT -> {
+                if (this.changeUsd < 0) {
+                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.changeUsd*this.baseFiat.rate!!).substring(1)}"
+                } else {
+                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                    textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.changeUsd*this.baseFiat.rate!!)}"
+                }
+            }
+            CURRENCY_BTC -> {
+                if (this.changeBtc < 0) {
+                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc).substring(1)}"
+                } else {
+                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                    textChange.text = "BTC ${Utils.formatPrice(this.changeBtc)}"
+                }
+            }
+            CURRENCY_ETH -> {
+                if (this.changeBtc < 0) {
+                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    textChange.text = "-ETH ${Utils.formatPrice(this.changeEth).substring(1)}"
+                } else {
+                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                    textChange.text = "ETH ${Utils.formatPrice(this.changeEth)}"
+                }
+            }
         }
     }
 
@@ -159,12 +238,13 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         layoutNotEmty.visibility = View.VISIBLE
     }
 
-    override fun showHoldings(holdings: ArrayList<Holding>, baseFiat : Rate, prices: ArrayList<Price>) {
+    override fun showHoldings() {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(holdings, prices, baseFiat, context)
+        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, context)
         recyclerView.adapter = holdingsAdapter
+
     }
 
     fun newInstance(headerStr: String): MarketsFragment {
@@ -196,6 +276,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         val TIME_PERIOD_1W = "1W"
         val TIME_PERIOD_1M = "1M"
         val TIME_PERIOD_ALL = "ALL"
+
+        val CURRENCY_FIAT = "FIAT"
+        val CURRENCY_BTC = "BTC"
+        val CURRENCY_ETH = "ETH"
     }
 
 }

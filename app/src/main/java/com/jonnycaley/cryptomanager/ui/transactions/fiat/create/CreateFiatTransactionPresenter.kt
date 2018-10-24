@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import kotlin.collections.ArrayList
 
-class CreateFiatTransactionPresenter(var dataManagerCreate: CreateFiatTransactionDataManager, var view: CreateFiatTransactionContract.View) : CreateFiatTransactionContract.Presenter {
+class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataManager, var view: CreateFiatTransactionContract.View) : CreateFiatTransactionContract.Presenter {
 
     var compositeDisposable: CompositeDisposable? = null
 
@@ -29,50 +29,72 @@ class CreateFiatTransactionPresenter(var dataManagerCreate: CreateFiatTransactio
 
         var priceUsd = 1.toDouble()
 
-        dataManagerCreate.getCryptoCompareService().getPriceAtMinute(currency, "USD", "1", "1", date.time.toString())
-                .map { response ->
-                    if (!response.data?.isEmpty()!!)
-                        priceUsd = response.data?.get(1)?.close!!
-                }
-                .flatMapSingle { dataManagerCreate.getTransactions() }
-                .observeOn(Schedulers.computation())
-                .map { transactions ->
+        var btcPrice = 1.toDouble()
+        var ethPrice = 1.toDouble()
 
-                    val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null)
+        if(dataManager.checkConnection()) {
 
-                    //TODO: check the "false, 1.toDouble()" above
-
-                    transactions.add(newTransaction)
-                    return@map transactions
-                }
-                .observeOn(Schedulers.io())
-                .flatMapCompletable { transactions -> dataManagerCreate.saveTransactions(transactions) }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : CompletableObserver {
-
-                    override fun onComplete() {
-                        view.onTransactionComplete()
-
+            dataManager.getCryptoCompareService().getPriceAtMinute("BTC", "USD", "1", "1", date?.time.toString())
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            btcPrice = response.data!!.last().close!!
                     }
-
-                    override fun onSubscribe(d: Disposable) {
-                        compositeDisposable?.add(d)
-                        view.showProgressBar()
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute("ETH", "USD", "1", "1", date?.time.toString())
                     }
-
-                    override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                    .map { response ->
+                        if (response.data?.isNotEmpty()!!)
+                            ethPrice = response.data!!.last().close!!
                     }
+                    .flatMap {
+                        dataManager.getCryptoCompareService().getPriceAtMinute(currency, "USD", "1", "1", date.time.toString())
+                    }
+                    .map { response ->
+                        if (!response.data?.isEmpty()!!)
+                            priceUsd = response.data?.get(1)?.close!!
+                    }
+                    .flatMapSingle { dataManager.getTransactions() }
+                    .observeOn(Schedulers.computation())
+                    .map { transactions ->
 
-                })
+                        val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null, ethPrice, btcPrice)
+
+                        //TODO: check the "false, 1.toDouble()" above
+
+                        transactions.add(newTransaction)
+                        return@map transactions
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : CompletableObserver {
+
+                        override fun onComplete() {
+                            view.onTransactionComplete()
+
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                            view.showProgressBar()
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+
+                    })
+        } else {
+
+        }
 
     }
 
     private fun saveTransactions(transactions: ArrayList<Transaction>) {
-        if(dataManagerCreate.checkConnection()){
+        if(dataManager.checkConnection()){
 
-            dataManagerCreate.saveTransactions(transactions)
+            dataManager.saveTransactions(transactions)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
