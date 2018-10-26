@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName
 
 class HistoricalData : Serializable {
 
+    @SerializedName("Symbol")
+    @Expose
+    var symbol: String? = null
     @SerializedName("Response")
     @Expose
     var response: String? = null

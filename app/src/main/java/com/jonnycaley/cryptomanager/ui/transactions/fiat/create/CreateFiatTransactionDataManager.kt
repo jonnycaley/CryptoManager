@@ -50,4 +50,9 @@ class CreateFiatTransactionDataManager private constructor(val UserPreferences: 
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+    fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        return retrofit.create(CryptoCompareService::class.java)
+    }
+
 }

@@ -1,6 +1,9 @@
 package com.jonnycaley.cryptomanager.ui.transactions.fiat.create
 
+import com.google.gson.Gson
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.*
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,24 +37,37 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
 
         if(dataManager.checkConnection()) {
 
-            dataManager.getCryptoCompareService().getPriceAtMinute("BTC", "USD", "1", "1", date?.time.toString())
-                    .map { response ->
-                        if (response.data?.isNotEmpty()!!)
-                            btcPrice = response.data!!.last().close!!
+             dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .map {
+                        json ->
+
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            btcPrice = gson.uSD!!
+
+                        println("btcPrice PRICE: $btcPrice")
                     }
-                    .flatMap {
-                        dataManager.getCryptoCompareService().getPriceAtMinute("ETH", "USD", "1", "1", date?.time.toString())
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .map { json ->
+
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            ethPrice = gson.uSD!!
+
+                        println("ethPrice PRICE: $ethPrice")
+
                     }
-                    .map { response ->
-                        if (response.data?.isNotEmpty()!!)
-                            ethPrice = response.data!!.last().close!!
-                    }
-                    .flatMap {
-                        dataManager.getCryptoCompareService().getPriceAtMinute(currency, "USD", "1", "1", date.time.toString())
-                    }
-                    .map { response ->
-                        if (!response.data?.isEmpty()!!)
-                            priceUsd = response.data?.get(1)?.close!!
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .map { json ->
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            priceUsd = gson.uSD!!
+                        println("priceUsd PRICE: $priceUsd ")
+
+
                     }
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())

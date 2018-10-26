@@ -18,7 +18,7 @@ interface PortfolioContract {
         fun showChange()
         fun hideRefreshing()
         fun getToggledCurrency() : String
-        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance : Double, changeUsd : Double, changeBtc : Double, changeEth : Double)
+        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, currenteBtcPrice: Price, currentEthPrice: Price, balance : Double, changeUsd : Double, historicalBtcPrice : Double, historicalEthPrice : Double)
     }
 
     interface Presenter : BasePresenter {

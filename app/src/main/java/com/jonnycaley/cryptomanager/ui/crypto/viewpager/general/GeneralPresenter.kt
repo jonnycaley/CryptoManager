@@ -119,6 +119,8 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                                     view.showCurrentPrice(graphData?.data?.last()?.close, baseFiat)
                                 isLatestPrice = false
 
+                                graphData!!.data?.forEach { println(it.close) }
+
                                 view.loadCandlestickChart(graphData!!, timeString, aggregate, baseFiat)
                             }
                         }

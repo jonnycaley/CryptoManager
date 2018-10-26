@@ -48,5 +48,9 @@ interface CryptoCompareService {
     @GET("coin/generalinfo")
     fun getGeneralInfo(@Query("fsyms") symbol: String, @Query("tsym") conversion: String): Observable<GeneralInfo>
 
+    @GET("pricehistorical")
+    fun getPriceAtTimestamp(@Query("fsym") symbol: String, @Query("tsyms") conversion: String, @Query("ts") timestamp: String): Observable<String>
+
+
 
 }

@@ -188,6 +188,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 textBalance.text = "BTC ${Utils.formatPrice(this.balance / this.priceBtc.prices?.uSD!!)}"//₿
             }
             CURRENCY_ETH -> {
+                Log.i(TAG, "Balance: ${this.balance}")
+                Log.i(TAG, "EthPrice: ${this.priceEth.prices?.uSD!!}")
                 textBalance.text = "ETH ${Utils.formatPrice(this.balance / this.priceEth.prices?.uSD!!)}"//Ξ
             }
         }

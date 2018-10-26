@@ -48,6 +48,19 @@ object JsonModifiers {
 
     }
 
+    fun jsonToTimeStampPrice(response: String): String {
+
+        val responseWithoutFirst = response.substring(1)
+
+        val responseFromBracket = responseWithoutFirst.substring(responseWithoutFirst.indexOf("{"))
+
+        val responseCutLastBracket = responseFromBracket.substring(0,responseFromBracket.length - 1)
+
+        println(responseCutLastBracket)
+
+        return responseCutLastBracket
+    }
+
     fun jsonToCryptos(response: String): String {
         val responseNew = response.replace("Data\":{\"","Data\":[\"")
 

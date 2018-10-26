@@ -50,4 +50,10 @@ class UpdateFiatTransactionDataManager private constructor(val UserPreferences: 
         return Utils.isNetworkConnected(context)
     }
 
+
+    fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        return retrofit.create(CryptoCompareService::class.java)
+    }
+
 }

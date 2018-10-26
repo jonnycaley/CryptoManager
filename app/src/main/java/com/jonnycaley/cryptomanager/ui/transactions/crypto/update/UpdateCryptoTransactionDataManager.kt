@@ -50,6 +50,12 @@ class UpdateCryptoTransactionDataManager private constructor(val UserPreferences
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+
+    fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        return retrofit.create(CryptoCompareService::class.java)
+    }
+
     fun getAllCryptos(): Single<Currencies> {
         return RxPaperBook.with().read(Constants.PAPER_ALL_CRYPTOS)
     }
