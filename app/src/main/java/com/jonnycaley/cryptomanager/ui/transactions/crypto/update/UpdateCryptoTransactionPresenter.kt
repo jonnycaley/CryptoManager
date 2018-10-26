@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
 
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price
@@ -95,8 +96,6 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
-
-                        transactions.forEach { Log.i(TAG, it.date.time.toString()) }
 
                         val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.remove(originalTransaction)

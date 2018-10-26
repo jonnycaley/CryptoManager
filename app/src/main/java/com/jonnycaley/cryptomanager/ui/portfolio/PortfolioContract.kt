@@ -5,6 +5,7 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
+import java.math.BigDecimal
 
 interface PortfolioContract {
     interface View : BaseView<Presenter> {
@@ -18,7 +19,7 @@ interface PortfolioContract {
         fun showChange()
         fun hideRefreshing()
         fun getToggledCurrency() : String
-        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, currenteBtcPrice: Price, currentEthPrice: Price, balance : Double, changeUsd : Double, historicalBtcPrice : Double, historicalEthPrice : Double)
+        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, currenteBtcPrice: Price, currentEthPrice: Price, balance: BigDecimal, changeUsd: BigDecimal, historicalBtcPrice: BigDecimal, historicalEthPrice: BigDecimal)
     }
 
     interface Presenter : BasePresenter {

@@ -21,6 +21,7 @@ import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
+import java.math.BigDecimal
 
 class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TabInterface {
 
@@ -137,12 +138,12 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     var baseFiat : Rate = Rate()
     var priceBtc = Price()
     var priceEth = Price()
-    var balance = 0.toDouble()
-    var changeUsd = 0.toDouble()
-    var changeBtc = 0.toDouble()
-    var changeEth = 0.toDouble()
+    var balance = 0.toBigDecimal()
+    var changeUsd = 0.toBigDecimal()
+    var changeBtc = 0.toBigDecimal()
+    var changeEth = 0.toBigDecimal()
 
-    override fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance : Double, changeUsd : Double, changeBtc : Double, changeEth : Double) {
+    override fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
         this.holdings = holdingsSorted
         this.prices = newPrices
         this.baseFiat = baseFiat
@@ -182,49 +183,45 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     override fun showBalance() {
         when(this.chosenCurrency){ //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
-                textBalance.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.balance * this.baseFiat.rate!!)}"
+                textBalance.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.balance * this.baseFiat.rate?.toBigDecimal()!!).toDouble())}"
             }
             CURRENCY_BTC -> {
-                textBalance.text = "BTC ${Utils.formatPrice(this.balance / this.priceBtc.prices?.uSD!!)}"//₿
+                textBalance.text = "BTC ${Utils.formatPrice((this.balance / this.priceBtc.prices?.uSD?.toBigDecimal()!!).toDouble())}"//₿
             }
             CURRENCY_ETH -> {
-                Log.i(TAG, "Balance: ${this.balance}")
-                Log.i(TAG, "EthPrice: ${this.priceEth.prices?.uSD!!}")
-                textBalance.text = "ETH ${Utils.formatPrice(this.balance / this.priceEth.prices?.uSD!!)}"//Ξ
+                textBalance.text = "ETH ${Utils.formatPrice((this.balance / this.priceEth.prices?.uSD?.toBigDecimal()!!).toDouble())}"//Ξ
             }
         }
-//        textBalance.text = "₿${Utils.formatPrice(balance / priceBtc.prices?.uSD!!)}"
-
     }
 
     override fun showChange() {
 
         when(this.chosenCurrency){ //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
-                if (this.changeUsd < 0) {
+                if (this.changeUsd < 0.toBigDecimal()) {
                     context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.changeUsd*this.baseFiat.rate!!).substring(1)}"
+                    textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd*this.baseFiat.rate?.toBigDecimal()!!).toDouble()).substring(1)}"
                 } else {
                     context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice(this.changeUsd*this.baseFiat.rate!!)}"
+                    textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd*this.baseFiat.rate?.toBigDecimal()!!).toDouble()!!)}"
                 }
             }
             CURRENCY_BTC -> {
-                if (this.changeBtc < 0) {
+                if (this.changeBtc < 0.toBigDecimal()) {
                     context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc).substring(1)}"
+                    textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc.toDouble()).substring(1)}"
                 } else {
                     context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "BTC ${Utils.formatPrice(this.changeBtc)}"
+                    textChange.text = "BTC ${Utils.formatPrice(this.changeBtc.toDouble())}"
                 }
             }
             CURRENCY_ETH -> {
-                if (this.changeBtc < 0) {
+                if (this.changeBtc < 0.toBigDecimal()) {
                     context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-ETH ${Utils.formatPrice(this.changeEth).substring(1)}"
+                    textChange.text = "-ETH ${Utils.formatPrice(this.changeEth.toDouble()).substring(1)}"
                 } else {
                     context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "ETH ${Utils.formatPrice(this.changeEth)}"
+                    textChange.text = "ETH ${Utils.formatPrice(this.changeEth.toDouble())}"
                 }
             }
         }
@@ -244,7 +241,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, context)
+        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, this.chosenCurrency, context)
         recyclerView.adapter = holdingsAdapter
 
     }

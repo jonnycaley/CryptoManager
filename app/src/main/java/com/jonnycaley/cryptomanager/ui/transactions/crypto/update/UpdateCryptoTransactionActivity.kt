@@ -167,6 +167,7 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
                 if(checkFields()){
                     preventChanges()
                     Log.i(TAG, "Arg trans here:" + args.transaction.date.toString())
+
                     presenter.updateCryptoTransaction(args.transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), chosenDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
                 }
             }
