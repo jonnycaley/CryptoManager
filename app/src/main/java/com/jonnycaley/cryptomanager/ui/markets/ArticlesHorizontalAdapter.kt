@@ -14,7 +14,7 @@ import com.like.OnLikeListener
 import kotlinx.android.synthetic.main.item_news_horizontal.view.*
 
 
-class ArticlesHorizontalAdapter(val latestArticles : ArrayList<Article>?, val savedArticles : ArrayList<Article>?, val context: Context?, val presenter: MarketsContract.Presenter) : RecyclerView.Adapter<ArticlesHorizontalAdapter.ViewHolder>() {
+class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var savedArticles : ArrayList<Article>?, val context: Context?, val presenter: MarketsContract.Presenter) : RecyclerView.Adapter<ArticlesHorizontalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_horizontal, parent, false))

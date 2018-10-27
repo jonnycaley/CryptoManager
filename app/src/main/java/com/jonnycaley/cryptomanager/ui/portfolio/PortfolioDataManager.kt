@@ -5,6 +5,7 @@ import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
@@ -59,7 +60,10 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun readBaseFiat(): Single<Rate> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
+        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
     }
 
+    fun readFiats(): Single<ExchangeRates> {
+        return RxPaperBook.with().read(Constants.PAPER_ALL_RATES, ExchangeRates())
+    }
 }

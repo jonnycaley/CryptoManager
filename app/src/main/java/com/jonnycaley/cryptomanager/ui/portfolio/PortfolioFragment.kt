@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
@@ -66,6 +67,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         buttonAddFiat.setOnClickListener(this)
         swipeLayout.setOnRefreshListener(this)
         textBalance.setOnClickListener(this)
+        textChange.setOnClickListener(this)
         setUpPortfolioTimeChoices()
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
@@ -105,6 +107,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         return chosenCurrency
     }
 
+    var isPercentage = false
+
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddFiat.id -> {
@@ -121,11 +125,14 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 }
                 updateView()
             }
+            textChange.id -> {
+                isPercentage = !isPercentage
+                updateView()
+            }
         }
     }
 
     private fun updateView() {
-
         showHoldingsLayout()
         showHoldings()
         showBalance()
@@ -142,6 +149,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     var changeUsd = 0.toBigDecimal()
     var changeBtc = 0.toBigDecimal()
     var changeEth = 0.toBigDecimal()
+    var allFiats: ArrayList<Rate> = ArrayList()
 
     override fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balance: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
         this.holdings = holdingsSorted
@@ -153,6 +161,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         this.changeUsd = changeUsd
         this.changeBtc = changeBtc
         this.changeEth = changeEth
+    }
+
+    override fun saveFiats(rates: List<Rate>?) {
+        allFiats.clear()
+        rates?.forEach { allFiats.add(it) }
     }
 
     override fun hideRefreshing() {
@@ -198,30 +211,54 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
         when(this.chosenCurrency){ //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
-                if (this.changeUsd < 0.toBigDecimal()) {
-                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd*this.baseFiat.rate?.toBigDecimal()!!).toDouble()).substring(1)}"
+                if(!isPercentage) {
+                    if (this.changeUsd < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                        textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd * this.baseFiat.rate?.toBigDecimal()!!).toDouble()).substring(1)}"
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                        textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd * this.baseFiat.rate?.toBigDecimal()!!).toDouble())}"
+                    }
                 } else {
-                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd*this.baseFiat.rate?.toBigDecimal()!!).toDouble()!!)}"
+                    if(this.balance == this.changeUsd)
+                        textChange.text = "-"
+                    else{
+                        textChange.text = "${(Math.abs(this.changeUsd.toDouble())/Math.abs(this.balance.toDouble()))}%"
+                    }
                 }
             }
             CURRENCY_BTC -> {
-                if (this.changeBtc < 0.toBigDecimal()) {
-                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc.toDouble()).substring(1)}"
+                if(!isPercentage) {
+                    if (this.changeBtc < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                        textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc.toDouble()).substring(1)}"
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                        textChange.text = "BTC ${Utils.formatPrice(this.changeBtc.toDouble())}"
+                    }
                 } else {
-                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "BTC ${Utils.formatPrice(this.changeBtc.toDouble())}"
+                    if(this.balance == this.changeUsd)
+                        textChange.text = "-"
+                    else{
+                        textChange.text = "${(Math.abs(this.changeBtc.toDouble())/(this.balance / this.priceBtc.prices?.uSD?.toBigDecimal()!!).toDouble())}%"
+                    }
                 }
             }
             CURRENCY_ETH -> {
-                if (this.changeBtc < 0.toBigDecimal()) {
-                    context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                    textChange.text = "-ETH ${Utils.formatPrice(this.changeEth.toDouble()).substring(1)}"
+                if(!isPercentage) {
+                    if (this.changeEth < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                        textChange.text = "-ETH ${Utils.formatPrice(this.changeEth.toDouble()).substring(1)}"
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                        textChange.text = "ETH ${Utils.formatPrice(this.changeEth.toDouble())}"
+                    }
                 } else {
-                    context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                    textChange.text = "ETH ${Utils.formatPrice(this.changeEth.toDouble())}"
+                    if(this.balance == this.changeUsd)
+                        textChange.text = "-"
+                    else{
+                        textChange.text = "${(Math.abs(this.changeEth.toDouble())/(this.balance / this.priceEth.prices?.uSD?.toBigDecimal()!!).toDouble())}%"
+                    }
                 }
             }
         }
@@ -241,7 +278,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, this.chosenCurrency, context)
+        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, this.chosenCurrency, this.allFiats, this.isPercentage, context)
         recyclerView.adapter = holdingsAdapter
 
     }

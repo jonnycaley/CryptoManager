@@ -100,13 +100,23 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
         recyclerViewCurrencies.adapter = currenciesAdapter
     }
 
+    var layoutManager: LinearLayoutManager? = null
+
     override fun showLatestArticles(latestArticles: ArrayList<Article>, savedArticles: ArrayList<Article>) {
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        if(layoutManager == null) {
 
-        recyclerViewLatestNews.layoutManager = layoutManager
-        similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
-        recyclerViewLatestNews.adapter = similarArticlesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+            recyclerViewLatestNews.layoutManager = layoutManager
+            similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
+            recyclerViewLatestNews.adapter = similarArticlesAdapter
+        } else {
+
+            similarArticlesAdapter.latestArticles = latestArticles
+            similarArticlesAdapter.savedArticles = savedArticles
+            similarArticlesAdapter.notifyDataSetChanged()
+        }
 
     }
 
