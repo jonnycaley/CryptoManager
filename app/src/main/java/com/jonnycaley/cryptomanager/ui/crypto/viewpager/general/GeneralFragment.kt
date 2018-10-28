@@ -23,6 +23,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Hist
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
@@ -96,14 +97,14 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
     override fun show24High(hIGH24HOUR: String?, baseFiat: Rate) {
 
-        val high = hIGH24HOUR?.toDouble()?.times(baseFiat.rate!!)
+        val high = hIGH24HOUR?.toBigDecimal()?.times(baseFiat.rate!!)
         val formattedHigh = formatChange(high!!, baseFiat)
 
         text24hHigh.text = "$formattedHigh"
     }
 
     override fun show24Low(lOW24HOUR: String?, baseFiat: Rate) {
-        val low = lOW24HOUR?.toDouble()?.times(baseFiat.rate!!)
+        val low = lOW24HOUR?.toBigDecimal()?.times(baseFiat.rate!!)
         val formattedLow = formatChange(low!!, baseFiat)
 
         text24hLow.text = "$formattedLow"
@@ -135,20 +136,20 @@ class GeneralFragment : Fragment(), GeneralContract.View {
     }
 
 
-    override fun showCurrentPrice(close: Double?, baseFiat: Rate) {
+    override fun showCurrentPrice(close: BigDecimal?, baseFiat: Rate) {
         price.text = "${formatChange(close?.times(baseFiat.rate!!)!!, baseFiat)}"
     }
 
     override fun showMarketCap(marketCap: String?, baseFiat : Rate) {
 
-        val formattedMarketCap = marketCap?.toDouble()?.times(baseFiat.rate!!)
+        val formattedMarketCap = marketCap?.toBigDecimal()?.times(baseFiat.rate!!)
 
         val formattedString = formatPrice(formattedMarketCap)
 
         textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$formattedString"
     }
 
-    fun formatPrice(price : Double?) : String {
+    fun formatPrice(price : BigDecimal?) : String {
 
         val formatter = DecimalFormat("#,###,###")
         val formattedString = formatter.format(price)
@@ -156,7 +157,7 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         return formattedString
     }
 
-    override fun showPriceChange(open: Double?, close: Double?, baseFiat: Rate) {
+    override fun showPriceChange(open: BigDecimal?, close: BigDecimal?, baseFiat: Rate) {
         when{
             close!! > open!! -> {
                 change.setTextColor(context?.resources?.getColor(R.color.green)!!)
@@ -168,12 +169,12 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
         val priceChange = (close!! - open!!) * baseFiat.rate!!
         var priceText = ""
-        if(priceChange > 0)
-            priceText = "+${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.absoluteValue)
+        if(priceChange > 0.toBigDecimal())
+            priceText = "+${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.toDouble().absoluteValue)
         else
-            priceText = "-${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.absoluteValue)
+            priceText = "-${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.toDouble().absoluteValue)
 
-        change.text = priceText + " (" + Utils.formatPercentage((((close - open)/open)*100).toFloat()) + ")"
+        change.text = priceText + " (" + Utils.formatPercentage((((close - open)/open)*100.toBigDecimal())) + ")"
     }
 
     override fun showGeneralDataError() {
@@ -218,7 +219,7 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 //        return formatChange(priceChange?.toDouble()!!)
 //    }
 
-    fun formatChange(priceAsDouble: Double, baseFiat : Rate): String {
+    fun formatChange(priceAsDouble: BigDecimal, baseFiat : Rate): String {
 
         val price = Utils.toDecimals(priceAsDouble, 8).toDouble()
 

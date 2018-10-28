@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import java.math.BigDecimal
 
 class FiatActivity : AppCompatActivity() , FiatContract.View{
 
@@ -38,16 +39,16 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
 
     }
 
-    override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: Float) {
+    override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: BigDecimal) {
         textAvailable.text = "Available: $fiatSymbol$availableFiatCount"
     }
 
-    override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: Float) {
+    override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: BigDecimal) {
         textDeposited.text = "$fiatSymbol$depositedFiatCount"
     }
 
-    override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: Float) {
-        textWithdrawn.text = "$fiatSymbol${withdrawnFiatCount*-1}"
+    override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: BigDecimal) {
+        textWithdrawn.text = "$fiatSymbol${withdrawnFiatCount* (-1).toBigDecimal()}"
     }
 
 

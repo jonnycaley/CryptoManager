@@ -63,7 +63,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
     }
 
     private fun fillFields() {
-        if(args.transaction.quantity > 0 ){
+        if(args.transaction.quantity > 0.toBigDecimal() ){
                 radioButtonDeposit.isChecked = true
             } else {
                 radioButtonWithdrawl.isChecked = true

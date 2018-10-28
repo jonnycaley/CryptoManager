@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData
 import java.io.Serializable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.math.BigDecimal
 
 class Datum : Serializable {
 
@@ -11,16 +12,16 @@ class Datum : Serializable {
     var time: Long? = null
     @SerializedName("close")
     @Expose
-    var close: Double? = null
+    var close: BigDecimal? = null
     @SerializedName("high")
     @Expose
-    var high: Double? = null
+    var high: BigDecimal? = null
     @SerializedName("low")
     @Expose
-    var low: Double? = null
+    var low: BigDecimal? = null
     @SerializedName("open")
     @Expose
-    var open: Double? = null
+    var open: BigDecimal? = null
     @SerializedName("volumefrom")
     @Expose
     var volumefrom: Double? = null

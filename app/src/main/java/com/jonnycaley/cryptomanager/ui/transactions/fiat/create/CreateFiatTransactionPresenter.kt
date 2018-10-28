@@ -30,10 +30,10 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
 
     override fun saveFiatTransaction(exchange: String, currency: String, quantity: Float, date: Date, notes: String) {
 
-        var priceUsd = 1.toDouble()
+        var priceUsd = 1.toBigDecimal()
 
-        var btcPrice = 1.toDouble()
-        var ethPrice = 1.toDouble()
+        var btcPrice = 1.toBigDecimal()
+        var ethPrice = 1.toBigDecimal()
 
         if(dataManager.checkConnection()) {
 
@@ -73,7 +73,7 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
 
-                        val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null, ethPrice, btcPrice)
+                        val newTransaction = Transaction(exchange, currency, null, quantity.toBigDecimal(), priceUsd, priceUsd, date, notes, false, 1.toBigDecimal(), null, null, ethPrice, btcPrice)
 
                         //TODO: check the "false, 1.toDouble()" above
 

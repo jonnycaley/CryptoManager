@@ -9,6 +9,7 @@ import java.util.*
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import java.math.BigDecimal
 import java.text.NumberFormat
 
 object Utils {
@@ -63,18 +64,18 @@ object Utils {
         }
     }
 
-    fun formatPrice(priceAsDouble: Double): String {
+    fun formatPrice(priceAsDouble: BigDecimal): String {
 
-        if(priceAsDouble == 0.0)
+        if(priceAsDouble == 0.toBigDecimal())
             return "0"
 
         var absPrice = priceAsDouble
 
         var priceSubtractor = false
 
-        if(priceAsDouble < 0 ) {
+        if(priceAsDouble < 0.toBigDecimal() ) {
             priceSubtractor = true
-            absPrice = priceAsDouble * -1
+            absPrice = priceAsDouble * (-1).toBigDecimal()
         }
 
         val price = Utils.toDecimals(absPrice, 8).toDouble()
@@ -103,14 +104,16 @@ object Utils {
             return "1 min read • "
     }
 
-    fun toDecimals(number : Double, decimalPlaces : Int) : String{
+    fun toDecimals(number : BigDecimal, decimalPlaces : Int) : String{
         val df = DecimalFormat("#")
         df.maximumFractionDigits = decimalPlaces
         return df.format(number)
     }
 
-    fun formatPercentage(percentChange24h: Float?): String {
+    fun formatPercentage(percentChange24h: BigDecimal?): String {
         val percentage2DP = String.format("%.2f", percentChange24h)
+
+//        val percentage2DP = DecimalFormat("#0.00").format(percentChange24h)
 
         return when {
             percentage2DP == "0.00" -> {

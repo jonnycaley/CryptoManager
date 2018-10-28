@@ -73,7 +73,7 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice, baseFiat, context)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice?.toBigDecimal(), baseFiat, context)
         recyclerView.adapter = transactionsAdapter
     }
 

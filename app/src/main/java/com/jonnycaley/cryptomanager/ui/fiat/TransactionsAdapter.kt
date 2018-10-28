@@ -26,14 +26,14 @@ class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transa
         holder.setIsRecyclable(false)
 
         if(transaction?.symbol == fiat) {
-            holder.amount.text = "$fiatSymbol${Math.abs(transaction.quantity)}"
+            holder.amount.text = "$fiatSymbol${Math.abs(transaction.quantity.toDouble())}"
             holder.toText.text = "To"
             holder.to.text = transaction?.exchange
         }
         else {
-            holder.amount.text = "$fiatSymbol${Math.abs(transaction?.quantity?.times(transaction?.price!!)!!)}"
+            holder.amount.text = "$fiatSymbol${Math.abs(transaction?.quantity?.times(transaction?.price!!)!!.toDouble())}"
             holder.to.text = transaction?.symbol
-            if(transaction.quantity > 0)
+            if(transaction.quantity > 0.toBigDecimal())
                 holder.toText.text = "Due to buy of"
             else
                 holder.toText.text = "Due to sell of"

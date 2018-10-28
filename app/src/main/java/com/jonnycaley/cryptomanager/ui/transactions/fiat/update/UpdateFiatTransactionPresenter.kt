@@ -32,10 +32,10 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
 
     override fun updateFiatTransaction(oldTransaction: Transaction, exchange: String, currency: String, quantity: Float, date: Date, notes: String) {
 
-        var priceUsd = 1.toDouble()
+        var priceUsd = 1.toBigDecimal()
 
-        var btcPrice = 1.toDouble()
-        var ethPrice = 1.toDouble()
+        var btcPrice = 1.toBigDecimal()
+        var ethPrice = 1.toBigDecimal()
 
         if(dataManager.checkConnection()) {
 
@@ -74,7 +74,7 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
                     .flatMapSingle { dataManager.getTransactions() }
                     .map { transactions ->
 
-                        val newTransaction = Transaction(exchange, currency, null, quantity, priceUsd.toFloat(), priceUsd, date, notes, false, 1.toDouble(), null, null, btcPrice, ethPrice)
+                        val newTransaction = Transaction(exchange, currency, null, quantity.toBigDecimal(), priceUsd, priceUsd, date, notes, false, 1.toBigDecimal(), null, null, btcPrice, ethPrice)
 
                         //TODO: check the "false, 1.toDouble()" above
 

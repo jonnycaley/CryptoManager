@@ -64,7 +64,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
         if(dataManager.checkConnection()){
 
-            val rate = Rate(); rate.fiat = "USD"; rate.rate = 1.toDouble()
+            val rate = Rate(); rate.fiat = "USD"; rate.rate = 1.toBigDecimal()
 
             dataManager.getExchangeRateService().getExchangeRates()
                     .flatMapCompletable { json ->

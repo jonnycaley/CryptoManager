@@ -5,6 +5,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
+import java.math.BigDecimal
 
 interface GeneralContract {
 
@@ -13,8 +14,8 @@ interface GeneralContract {
         fun loadCandlestickChart(response: HistoricalData, timeUnit: String, aggregate: Int, baseFiat: Rate)
         fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>)
         fun getName(): String
-        fun showCurrentPrice(close: Double?, baseFiat: Rate)
-        fun showPriceChange(open: Double?, close: Double?, baseFiat: Rate)
+        fun showCurrentPrice(close: BigDecimal?, baseFiat: Rate)
+        fun showPriceChange(open: BigDecimal?, close: BigDecimal?, baseFiat: Rate)
         fun showMarketCap(marketCap: String?, baseFiat : Rate)
         fun showGeneralDataError()
         fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?, baseFiat: Rate)

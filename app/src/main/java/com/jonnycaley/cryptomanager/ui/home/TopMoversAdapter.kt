@@ -33,13 +33,13 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
 //                .centerCrop()
 //                .into(holder.image)
 
-        val price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!)
+        val price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!.toDouble())
 
-        val priceText = Utils.formatPrice(price!!)
+        val priceText = Utils.formatPrice(price!!.toBigDecimal())
 
         holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$priceText"
 
-        val percentage2DP = Utils.formatPercentage(item?.quote?.uSD?.percentChange24h)
+        val percentage2DP = Utils.formatPercentage(item?.quote?.uSD?.percentChange24h?.toBigDecimal())
 
         when {
             percentage2DP.substring(0,1) == "$" -> {

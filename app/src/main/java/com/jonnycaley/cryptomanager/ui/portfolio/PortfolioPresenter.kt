@@ -2,7 +2,6 @@ package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.util.Log
 import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.MultiPrices
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Prices
@@ -122,15 +121,17 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                     .observeOn(Schedulers.computation())
                     .map { json -> Gson().fromJson(JsonModifiers.jsonToMultiPrices(json), MultiPrices::class.java) }
                     .map { multiPrices -> newPrices = getPrices(multiPrices.prices, fiatPrices) }
-                    .map { holdingsSorted = ArrayList(holdings.sortedBy { holding -> newPrices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.toBigDecimal()?.times(holding.quantity) }.asReversed()) }
+                    .map { holdingsSorted = ArrayList(holdings.sortedBy { holding -> newPrices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) }.asReversed()) }
                     .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.readBaseFiat() }
                     .observeOn(Schedulers.computation())
                     .map { fiat -> baseFiat = fiat }
                     .map { change -> changeUsd = getChangeUsd(holdingsSorted, newPrices) }
-                    .map { getBalance(holdingsSorted, newPrices) }
+                    .map { getBalanceUsd(holdingsSorted, newPrices) }
                     .map { balance ->
-                        view.saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
+//                        Log.i(TAG, "BTC Price: ${newPrices.first { it.symbol?.toUpperCase() == "BTC" }}")
+//                        Log.i(TAG, "ETH Price: ${newPrices.first { it.symbol?.toUpperCase() == "ETH" }}")
+                        view.saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices), getBalanceEth(holdingsSorted, newPrices ), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -177,9 +178,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         val prices = ArrayList<com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price>()
 
-        var usdPrice = 1.toDouble()
-        var ethPrice = 1.toDouble()
-        var btcPrice = 1.toDouble()
+        var usdPrice = 1.toBigDecimal()
+        var ethPrice = 1.toBigDecimal()
+        var btcPrice = 1.toBigDecimal()
 
         if (dataManager.checkConnection()) {
 
@@ -251,7 +252,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         cryptoPrices.symbol = cryptoSymbol
 
-                        var newHoldingCost = 0.toDouble()
+                        var newHoldingCost = 0.toBigDecimal()
 
                         transactions.filter { it.symbol.toUpperCase() == cryptoSymbol?.toUpperCase() }
                                 .forEach { transaction ->
@@ -259,7 +260,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                                         if (cryptoPrices.uSD != null) //for fiat prices like usd/usd returns error with empty data
                                             newHoldingCost += (transaction.quantity * cryptoPrices.uSD!!)
                                         else
-                                            newHoldingCost += (transaction.quantity * 1.toDouble())
+                                            newHoldingCost += (transaction.quantity)
 
 //                                        Log.i(TAG, "Get price from before")
 //                                        Log.i(TAG, transaction.quantity)
@@ -279,7 +280,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                                         if (cryptoPrices.uSD != null) //for fiat prices like usd/usd returns error with empty data
                                             newHoldingCost -= (transaction.price * transaction.quantity * cryptoPrices.uSD!!)
                                         else
-                                            newHoldingCost -= (transaction.price * transaction.quantity * 1.toDouble())
+                                            newHoldingCost -= (transaction.price * transaction.quantity)
 //                                        Log.i(TAG, "Get price from before")
 //                                        print("Price: " + transaction.price)
 //                                        print("PriceUSD: " + transaction.priceUSD)
@@ -336,8 +337,8 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         holdings.forEach { holding ->
 
-            var newHoldingCostBtc = 0.toDouble()
-            var newHoldingCostEth = 0.toDouble()
+            var newHoldingCostBtc = 0.toBigDecimal()
+            var newHoldingCostEth = 0.toBigDecimal()
 
             transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
                     .forEach { transaction ->
@@ -345,7 +346,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                             Log.i(TAG, "Using selected timeframe btc price for ${transaction.symbol}")
 
-                            var price = 1.toDouble()
+                            var price = 1.toBigDecimal()
 
                             if(prices.first { it.symbol?.toUpperCase() == transaction.symbol.toUpperCase() }.uSD != null) {
                                 price = prices.first { it.symbol?.toUpperCase() == transaction.symbol.toUpperCase() }.uSD!!
@@ -395,7 +396,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                             Log.i(TAG, "Transaction 1")
 
-                            var price = 1.toDouble()
+                            var price = 1.toBigDecimal()
 
                             if(prices.first { it.symbol?.toUpperCase() == transaction.pairSymbol?.toUpperCase() }.uSD != null)
                                 price = prices.first { it.symbol?.toUpperCase() == transaction.pairSymbol?.toUpperCase() }.uSD!!
@@ -643,7 +644,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             val tempPrices = Prices()
 
-            tempPrices.uSD = 1 / fiatRate.rate!!
+            tempPrices.uSD = 1.toBigDecimal() / fiatRate.rate!!
             tempPrice.prices = tempPrices
 
             combinedPrices.add(tempPrice)
@@ -679,9 +680,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
 
-            val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD
-            val value = price?.toBigDecimal()?.times(holding.quantity)
-            change += value?.minus(holding.costUsd.toBigDecimal())!!
+            val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD?.times(baseFiat.rate!!)
+            val value = price?.times(holding.quantity)
+            change += value?.minus(holding.costUsd)!!
         }
 
         return change
@@ -694,25 +695,26 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
         holdings.filter { it.symbol.toUpperCase() != "BTC" && it.type != Variables.Transaction.Type.fiat }.forEach { holding ->
 
-            Log.i(TAG, "BTC calculation")
 
             Log.i(TAG, holding.symbol)
 
-            val costBtcHistorical = holding.costBtc.toBigDecimal() //this is what it was at time stamp
+            val costBtcHistorical = holding.costBtc //this is what it was at time stamp
             Log.i(TAG, costBtcHistorical.toString())
 
-            val costBtcNow = holding.quantity * combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.toBigDecimal()!! / combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.toBigDecimal()!!
+            val costBtcNow = holding.quantity * combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.times(baseFiat.rate!!)
             Log.i(TAG, costBtcNow.toString())
 
-
-            if(holding.quantity < 0.toBigDecimal() )
-                change += costBtcHistorical?.minus(costBtcNow!!)
-            else
-                change += costBtcNow - costBtcHistorical!!
-
+            change += costBtcNow - costBtcHistorical
+//
+//
+//
+//            if(holding.quantity < 0.toBigDecimal() )
+//                change += costBtcHistorical?.minus(costBtcNow!!)
+//            else
+//
 //            change += costBtcNow - costBtcHistorical
-            Log.i(TAG, change.toString())
-
+//            Log.i(TAG, change.toString())
+//
 //            Log.i(TAG, "Data for holding: ${holding.symbol}")
 //
 //            val btcPriceNow = combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD //get the price of btc now
@@ -726,9 +728,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //
 //            change += worthInBtcNow.minus(costInBtc)
 //            Log.i(TAG, "change: $change")
-
         }
-
         return change
 
 
@@ -763,19 +763,19 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             Log.i(TAG, "ETH calculation")
 
 
-            val costEthHistorical = holding.costEth.toBigDecimal() //this is what it was at time stamp
+            val costEthHistorical = holding.costEth //this is what it was at time stamp
             Log.i(TAG, costEthHistorical.toString())
 
-            val costEthNow = holding.quantity * combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.toBigDecimal()!! / combinedPrices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.toBigDecimal()!!
+            val costEthNow = holding.quantity * combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / combinedPrices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.times(baseFiat.rate!!)
             Log.i(TAG, costEthNow.toString())
 
             Log.i(TAG, "Adding ${costEthNow - costEthHistorical}")
+            change += costEthNow - costEthHistorical!!
 
 
-            if(holding.quantity < 0.toBigDecimal() )
-                change += costEthHistorical?.minus(costEthNow!!)
-            else
-                change += costEthNow - costEthHistorical!!
+//            if(holding.quantity < 0.toBigDecimal() )
+//                change += costEthHistorical?.minus(costEthNow!!)
+//            else
 
 //            change += costEthNow - costEthHistorical
             Log.i(TAG, change.toString())
@@ -822,18 +822,58 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
     }
 
 
-    private fun getBalance(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+    private fun getBalanceUsd(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
 
         var balance = 0.toBigDecimal()
 
-        holdings.forEach { transaction ->
+        holdings.forEach { holding ->
             //            Log.i(TAG, transaction.quantity)
 //            Log.i(TAG, prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD)
-            balance += prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD?.toBigDecimal()?.times(transaction.quantity)!!
+            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)!!
+
+            Log.i(TAG, "Holding ${holding.symbol}")
+            Log.i(TAG, "Added : ${prices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }?.get(0)?.prices?.uSD?.times(holding.quantity)!!}")
+            Log.i(TAG, "Balance Now $balance")
         }
 
         return balance
 
+    }
+
+    private fun getBalanceBtc(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+
+        var balance = 0.toBigDecimal()
+
+        prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD
+
+        holdings.forEach { holding ->
+            Log.i(TAG, holding.symbol)
+            Log.i(TAG, "${holding.symbol} price = ${prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(baseFiat.rate!!)}")
+            Log.i(TAG, "${holding.symbol} quantity = ${holding.quantity}")
+            Log.i(TAG, "${holding.symbol} price*quantity = ${(prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)!!)}")
+            Log.i(TAG, "btcPrice = ${prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!}")
+
+            Log.i(TAG, "Adding: ${(prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)!!).times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.times(baseFiat.rate!!)}")
+
+            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)!!).times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.times(baseFiat.rate!!)
+
+        }
+
+        return balance
+    }
+
+    private fun getBalanceEth(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+
+        var balance = 0.toBigDecimal()
+
+        holdings.forEach { holding ->
+            //            Log.i(TAG, transaction.quantity)
+//            Log.i(TAG, prices.filter { it.symbol?.toLowerCase() == transaction.symbol.toLowerCase() }?.get(0)?.prices?.uSD)
+            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)!!).times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.times(baseFiat.rate!!)
+
+        }
+
+        return balance
     }
 
     private fun combineTransactions(transactions: ArrayList<Transaction>): ArrayList<Holding> {
@@ -861,9 +901,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             var getCurrentHoldings = 0.toBigDecimal()
 
-            var getCostUsd = 0.toDouble()
-            var getCostBtc = 0.toDouble()
-            var getCostEth = 0.toDouble()
+            var getCostUsd = 0.toBigDecimal()
+            var getCostBtc = 0.toBigDecimal()
+            var getCostEth = 0.toBigDecimal()
 
             var imageUrl: String? = null
 
@@ -872,7 +912,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             getAllTransactionsFor.forEach {
                 imageUrl = it.baseImageUrl
                 Log.i(TAG, "Adding ${it.quantity}")
-                getCurrentHoldings += it.quantity.toBigDecimal()
+                getCurrentHoldings += it.quantity
                 getCostUsd += it.price * it.quantity * it.isDeductedPriceUsd
                 getCostBtc += (it.price * it.quantity * it.isDeductedPriceUsd / (it.btcPrice))
                 getCostEth += (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))
@@ -887,7 +927,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 Log.i(TAG, (it.quantity * it.price).toString())
 
                 imageUrl = it.pairImageUrl
-                getCurrentHoldings -= (it.price.toBigDecimal()* it.quantity.toBigDecimal())
+                getCurrentHoldings -= (it.price* it.quantity)
                 getCostUsd -= it.price * it.quantity * it.isDeductedPriceUsd
                 getCostBtc -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.btcPrice))
                 getCostEth -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))

@@ -22,7 +22,7 @@ class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val baseFiat : Rate
 
         val item = newsItems?.get(position)
 
-        val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!)
+        val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!.toDouble())
 
         holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(price)}"
 
@@ -64,14 +64,14 @@ class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val baseFiat : Rate
 
     private fun getPriceText(price: Double?): CharSequence? {
 
-        val roundedPrice = Utils.toDecimals(price!!, 8).toDouble()
+        val roundedPrice = Utils.toDecimals(price!!.toBigDecimal(), 8).toDouble()
 
         var priceText = ""
 
         priceText = if(roundedPrice > 1)
-            Utils.toDecimals(roundedPrice, 2)
+            Utils.toDecimals(roundedPrice.toBigDecimal(), 2)
         else
-            "0${Utils.toDecimals(roundedPrice!!, 6)}"
+            "0${Utils.toDecimals(roundedPrice!!.toBigDecimal(), 6)}"
 
         if(priceText.indexOf("") == priceText.length -1)
             priceText += "0"

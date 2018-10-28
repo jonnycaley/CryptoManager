@@ -32,10 +32,10 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
     override fun saveCryptoTransaction(isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, isDeducted: Boolean, notes: String) {
 
         var correctQuantity = quantity
-        var priceUsd = 1.toDouble()
-        var isDeductedPriceUsd = 1.toDouble()
-        var btcPrice = 1.toDouble()
-        var ethPrice = 1.toDouble()
+        var priceUsd = 1.toBigDecimal()
+        var isDeductedPriceUsd = 1.toBigDecimal()
+        var btcPrice = 1.toBigDecimal()
+        var ethPrice = 1.toBigDecimal()
 
         var allCryptos: Currencies? = null
 
@@ -92,7 +92,7 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
-                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
+                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity.toBigDecimal(), price.toBigDecimal(), priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.add(newTransaction)
                         return@map transactions
                     }

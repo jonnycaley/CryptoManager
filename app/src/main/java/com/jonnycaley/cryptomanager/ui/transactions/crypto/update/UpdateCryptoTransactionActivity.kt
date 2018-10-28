@@ -76,7 +76,7 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
     }
 
     private fun setupUpdate() {
-        if(args.transaction.quantity > 0 )
+        if(args.transaction.quantity > 0.toBigDecimal() )
             radioButtonDeposit.isChecked = true
         else
             radioButtonWithdrawl.isChecked = true
@@ -84,8 +84,8 @@ class UpdateCryptoTransactionActivity : AppCompatActivity(), UpdateCryptoTransac
         requiredExchange.text = args.transaction.exchange
         requiredPair.text = args.transaction.pairSymbol
         requiredPrice.setText(args.transaction.price.toString())
-        if(args.transaction.quantity < 0)
-            requiredQuantity.setText((args.transaction.quantity * (-1).toFloat()).toString())
+        if(args.transaction.quantity < 0.toBigDecimal())
+            requiredQuantity.setText((args.transaction.quantity * -1.toBigDecimal()).toString())
         else
             requiredQuantity.setText(args.transaction.quantity.toString())
         requiredDate.text = Utils.formatDate(args.transaction.date)
