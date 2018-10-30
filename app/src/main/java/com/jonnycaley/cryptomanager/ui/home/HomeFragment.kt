@@ -60,42 +60,42 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     val card1Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_1_layout) }
     val card1Name by lazy { mView.findViewById<TextView>(R.id.card_1_name) }
-    val card1Movement by lazy { mView.findViewById<TextView>(R.id.card_1_movement) }
+    val card1 by lazy { mView.findViewById<RelativeLayout>(R.id.card_1) }
     val card1Percentage by lazy { mView.findViewById<TextView>(R.id.card_1_percentage) }
 
     val card2Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_2_layout) }
     val card2Name by lazy { mView.findViewById<TextView>(R.id.card_2_name) }
-    val card2Movement by lazy { mView.findViewById<TextView>(R.id.card_2_movement) }
+    val card2 by lazy { mView.findViewById<RelativeLayout>(R.id.card_2) }
     val card2Percentage by lazy { mView.findViewById<TextView>(R.id.card_2_percentage) }
 
     val card3Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_3_layout) }
     val card3Name by lazy { mView.findViewById<TextView>(R.id.card_3_name) }
-    val card3Movement by lazy { mView.findViewById<TextView>(R.id.card_3_movement) }
+    val card3 by lazy { mView.findViewById<RelativeLayout>(R.id.card_3) }
     val card3Percentage by lazy { mView.findViewById<TextView>(R.id.card_3_percentage) }
 
     val card4Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_4_layout) }
     val card4Name by lazy { mView.findViewById<TextView>(R.id.card_4_name) }
-    val card4Movement by lazy { mView.findViewById<TextView>(R.id.card_4_movement) }
+    val card4 by lazy { mView.findViewById<RelativeLayout>(R.id.card_4) }
     val card4Percentage by lazy { mView.findViewById<TextView>(R.id.card_4_percentage) }
 
     val card5Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_5_layout) }
     val card5Name by lazy { mView.findViewById<TextView>(R.id.card_5_name) }
-    val card5Movement by lazy { mView.findViewById<TextView>(R.id.card_5_movement) }
+    val card5 by lazy { mView.findViewById<RelativeLayout>(R.id.card_5) }
     val card5Percentage by lazy { mView.findViewById<TextView>(R.id.card_5_percentage) }
 
     val card6Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_6_layout) }
     val card6Name by lazy { mView.findViewById<TextView>(R.id.card_6_name) }
-    val card6Movement by lazy { mView.findViewById<TextView>(R.id.card_6_movement) }
+    val card6 by lazy { mView.findViewById<RelativeLayout>(R.id.card_6) }
     val card6Percentage by lazy { mView.findViewById<TextView>(R.id.card_6_percentage) }
 
     val card7Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_7_layout) }
     val card7Name by lazy { mView.findViewById<TextView>(R.id.card_7_name) }
-    val card7Movement by lazy { mView.findViewById<TextView>(R.id.card_7_movement) }
+    val card7 by lazy { mView.findViewById<RelativeLayout>(R.id.card_7) }
     val card7Percentage by lazy { mView.findViewById<TextView>(R.id.card_7_percentage) }
 
     val card8Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_8_layout) }
     val card8Name by lazy { mView.findViewById<TextView>(R.id.card_8_name) }
-    val card8Movement by lazy { mView.findViewById<TextView>(R.id.card_8_movement) }
+    val card8 by lazy { mView.findViewById<RelativeLayout>(R.id.card_8) }
     val card8Percentage by lazy { mView.findViewById<TextView>(R.id.card_8_percentage) }
 
     override fun setPresenter(presenter: HomeContract.Presenter) {
@@ -225,55 +225,62 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         Log.i(TAG, sortedBy.size.toString())
 
-
-
         if (sortedBy.size > 7) {
             for (i in 0..7) {
                 val currency = sortedBy.filter { it.name != "Tether" }[i]
 
                 Log.i(TAG, currency.name)
 
+                var card = card1
                 var name = card1Name
                 var percentage = card1Percentage
                 var background = card1Layout
 
                 when (i) {
                     0 -> {
+                        card = card1
                         name = card1Name
                         percentage = card1Percentage
                         background = card1Layout
                     }
                     1 -> {
+                        card = card2
                         name = card2Name
                         percentage = card2Percentage
                         background = card2Layout
                     }
                     2 -> {
+                        card = card3
                         name = card3Name
                         percentage = card3Percentage
                         background = card3Layout
                     }
                     3 -> {
+                        card = card4
                         name = card4Name
                         percentage = card4Percentage
                         background = card4Layout
                     }
                     4 -> {
+                        card = card5
                         name = card5Name
                         percentage = card5Percentage
                         background = card5Layout
                     }
                     5 -> {
+                        card = card6
                         name = card6Name
                         percentage = card6Percentage
                         background = card6Layout
                     }
                     6 -> {
+                        card = card7
                         name = card7Name
                         percentage = card7Percentage
                         background = card7Layout
                     }
                     7 -> {
+                        card = card8
                         name = card8Name
                         percentage = card8Percentage
                         background = card8Layout
@@ -298,8 +305,9 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
                 when {
                     percentage2DP.substring(0, 1) == "+" -> {
+                        card.setBackgroundResource(R.drawable.border_green_large_round)
                         percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
-                        val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", Color.WHITE, Color.GREEN, Color.WHITE)
+                        val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", Color.TRANSPARENT, Color.GREEN, Color.TRANSPARENT)
 
                         if(Math.random() < 0.5){
 
@@ -311,8 +319,9 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                         }
                     }
                     else -> {
+                        card.setBackgroundResource(R.drawable.border_red_large_round)
                         percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
-                        val animRed = ObjectAnimator.ofInt(background, "backgroundColor", Color.WHITE, Color.RED, Color.WHITE)
+                        val animRed = ObjectAnimator.ofInt(background, "backgroundColor", Color.TRANSPARENT, Color.RED, Color.TRANSPARENT)
 
                         if(Math.random() < 0.5) {
 

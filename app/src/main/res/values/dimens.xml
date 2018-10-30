@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="card_margin">8dp</dimen>
+    <dimen name="card_margin">4dp</dimen>
     <dimen name="card_margin_small">2dp</dimen>
 
 
@@ -21,6 +21,7 @@
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="layout_empty">53dp</dimen>
     <dimen name="extra_small_margin">4dp</dimen>
+    <dimen name="card_margin_radius">6dp</dimen>
 
     <item name="normal_speed" type="dimen" format="float">100</item>
     <item name="high_speed" type="dimen" format="float">50</item>

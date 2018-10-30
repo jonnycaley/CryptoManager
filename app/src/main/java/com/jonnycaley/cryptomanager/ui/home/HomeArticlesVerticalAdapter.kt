@@ -25,18 +25,33 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val article = newsItems.keys.toTypedArray()[position]
-        var relatedCrypto = newsItems.values.toTypedArray()[position]
+        val relatedCrypto = newsItems.values.toTypedArray()[position]
 
         Log.i(TAG, "Item: $position")
 
-        if (article?.thumbnail == null) {
+        if((position + 1 ) % 3 == 0){
             holder.image.visibility = View.GONE
-        } else {
+            holder.imageEnlarged.visibility = View.VISIBLE
+
             Picasso.with(context)
-                    .load(article?.thumbnail)
+                    .load(article.originalImageUrl)
                     .fit()
                     .centerCrop()
-                    .into(holder.image)
+                    .into(holder.imageEnlarged)
+
+        } else {
+            holder.imageEnlarged.visibility = View.GONE
+            holder.image.visibility = View.VISIBLE
+
+            if (article?.thumbnail == null) {
+                holder.image.visibility = View.GONE
+            } else {
+                Picasso.with(context)
+                        .load(article?.thumbnail)
+                        .fit()
+                        .centerCrop()
+                        .into(holder.image)
+            }
         }
 
         Log.i(TAG, "1")
@@ -209,6 +224,9 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         val layoutStockRed = view.layout_stock_red
         val stockNameRed = view.stock_name_red
         val stockPercentageRed = view.stock_percentage_red
+
+        val imageEnlarged = view.image_enlarged
+
     }
 
     companion object {

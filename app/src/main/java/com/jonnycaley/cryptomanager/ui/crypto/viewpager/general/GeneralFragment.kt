@@ -174,7 +174,8 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         else
             priceText = "-${Utils.getFiatSymbol(baseFiat.fiat)}"+String.format("%.2f",priceChange.toDouble().absoluteValue)
 
-        change.text = priceText + " (" + Utils.formatPercentage((((close - open)/open)*100.toBigDecimal())) + ")"
+        if(open != 0.toBigDecimal())
+            change.text = priceText + " (" + Utils.formatPercentage((((close - open)/open)*100.toBigDecimal())) + ")"
     }
 
     override fun showGeneralDataError() {

@@ -37,7 +37,7 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
                         }
 
                         override fun onNext(info: GeneralInfo) {
-                            Log.i(TAG, "Loading Theme: ${info.data?.first()?.coinInfo?.imageUrl}")
+//                            Log.i(TAG, "Loading Theme: ${info.data?.first()?.coinInfo?.imageUrl}")
                             view.loadTheme(info)
                         }
 

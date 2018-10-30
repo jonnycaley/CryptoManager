@@ -57,6 +57,8 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
     }
 
     override fun getSymbol(): String {
+        if(args.currencySymbol == "MIOTA")
+            return "IOTA"
         return args.currencySymbol
     }
 
@@ -64,30 +66,33 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
         println("Loading theme")
 
-        Picasso.with(this)
-                .load("https://www.cryptocompare.com" + info.data?.first()?.coinInfo?.imageUrl)
-                .fit()
-                .centerCrop()
-                .transform(CircleTransform())
-                .placeholder(R.drawable.circle)
-                .into(image, object : Callback {
-                    override fun onSuccess() {
+        if(info.data?.isNotEmpty()!!) {
 
-                        val drawable = image.drawable as BitmapDrawable
-                        val bitmap = drawable.bitmap
+            Picasso.with(this)
+                    .load("https://www.cryptocompare.com" + info.data?.first()?.coinInfo?.imageUrl)
+                    .fit()
+                    .centerCrop()
+                    .transform(CircleTransform())
+                    .placeholder(R.drawable.circle)
+                    .into(image, object : Callback {
+                        override fun onSuccess() {
 
-                        tabLayout.setSelectedTabIndicatorColor(getDominantColor(bitmap))
-                        title.setTextColor(getDominantColor(bitmap))
+                            val drawable = image.drawable as BitmapDrawable
+                            val bitmap = drawable.bitmap
 
-                        toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
+                            tabLayout.setSelectedTabIndicatorColor(getDominantColor(bitmap))
+                            title.setTextColor(getDominantColor(bitmap))
 
-                    }
+                            toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
 
-                    override fun onError() {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                    }
+                        }
 
-                })
+                        override fun onError() {
+                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        }
+
+                    })
+        }
     }
 
     fun getDominantColor(bitmap: Bitmap): Int {
@@ -130,8 +135,8 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
         override fun getItem(position: Int): Fragment? {
             return when(position){
-                0 -> GeneralFragment.newInstance(args.currencySymbol)
-                else -> TransactionsFragment.newInstance(args.currencySymbol)
+                0 -> GeneralFragment.newInstance(getSymbol())
+                else -> TransactionsFragment.newInstance(getSymbol())
             }
         }
 
