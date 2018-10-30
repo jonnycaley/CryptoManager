@@ -113,12 +113,9 @@ object Utils {
     fun formatPercentage(percentChange24h: BigDecimal?): String {
         val percentage2DP = String.format("%.2f", percentChange24h)
 
-//        val percentage2DP = DecimalFormat("#0.00").format(percentChange24h)
-
         return when {
             percentage2DP == "0.00" -> {
                 "$percentage2DP%"
-//                holder.movement.text = "-"
             }
             percentage2DP.toDouble() > 0 -> {
                 "+$percentage2DP%"

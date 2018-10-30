@@ -1,5 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.home
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
@@ -12,6 +15,7 @@ import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
+import android.view.animation.Animation
 
 
 class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
@@ -39,7 +43,20 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
 
         holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$priceText"
 
-        val percentage2DP = Utils.formatPercentage(item?.quote?.uSD?.percentChange24h?.toBigDecimal())
+        val percentage2DP = Utils.formatPercentage(item.quote?.uSD?.percentChange24h?.toBigDecimal())
+
+        val animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
+                Color.WHITE)
+        val animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
+                Color.WHITE)
+
+        animRed.duration = 1000
+        animRed.setEvaluator(ArgbEvaluator())
+        animRed.repeatMode = ValueAnimator.REVERSE
+
+        animGreen.duration = 1000
+        animGreen.setEvaluator(ArgbEvaluator())
+        animGreen.repeatMode = ValueAnimator.REVERSE
 
         when {
             percentage2DP.substring(0,1) == "$" -> {
@@ -49,14 +66,14 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
             percentage2DP.substring(0,1) == "+" -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
                 holder.percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
-
+                animGreen.start()
 //                holder.movement.text = "▲"
                 holder.movement.setTextColor(Color.parseColor("#6600F900"))
             }
             else -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
                 holder.percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
-
+                animRed.start()
 //                holder.movement.text = "▼"
 //                holder.movement.setTextColor(Color.parseColor("#66FF2600"))
             }
@@ -65,7 +82,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
         holder.percentage.text = "$percentage2DP"
 
         holder.itemView.setOnClickListener {
-            CryptoArgs(item?.symbol!!).launch(context!!)
+            CryptoArgs(item.symbol!!).launch(context!!)
 
         }
     }
@@ -89,6 +106,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
         val price = view.price
         val movement = view.movement
         val percentage = view.percentage
+        val layout = view.layout
 
     }
 }

@@ -1,5 +1,9 @@
 package com.jonnycaley.cryptomanager.ui.home
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.graphics.Color
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
@@ -12,23 +16,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ScrollView
 import android.widget.TextView
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
-import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
-import android.os.Parcelable
+import android.support.v4.widget.SwipeRefreshLayout
+import android.widget.RelativeLayout
+import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 
 
-class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener {
+class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var mView: View
 
@@ -39,11 +42,11 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     lateinit var topArticle: Article
 
-    val scrollLayout by lazy { mView.findViewById<ScrollView>(R.id.scroll_layout) }
+    val scrollLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout >(R.id.swipelayout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
-    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
+//    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
 
     val cardTopArticle by lazy { mView.findViewById<CardView>(R.id.card_view) }
 
@@ -54,6 +57,46 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     val cardDate by lazy { mView.findViewById<TextView>(R.id.card_date) }
     val cardStar by lazy { mView.findViewById<LikeButton>(R.id.like_button_top_article) }
 
+
+    val card1Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_1_layout) }
+    val card1Name by lazy { mView.findViewById<TextView>(R.id.card_1_name) }
+    val card1Movement by lazy { mView.findViewById<TextView>(R.id.card_1_movement) }
+    val card1Percentage by lazy { mView.findViewById<TextView>(R.id.card_1_percentage) }
+
+    val card2Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_2_layout) }
+    val card2Name by lazy { mView.findViewById<TextView>(R.id.card_2_name) }
+    val card2Movement by lazy { mView.findViewById<TextView>(R.id.card_2_movement) }
+    val card2Percentage by lazy { mView.findViewById<TextView>(R.id.card_2_percentage) }
+
+    val card3Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_3_layout) }
+    val card3Name by lazy { mView.findViewById<TextView>(R.id.card_3_name) }
+    val card3Movement by lazy { mView.findViewById<TextView>(R.id.card_3_movement) }
+    val card3Percentage by lazy { mView.findViewById<TextView>(R.id.card_3_percentage) }
+
+    val card4Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_4_layout) }
+    val card4Name by lazy { mView.findViewById<TextView>(R.id.card_4_name) }
+    val card4Movement by lazy { mView.findViewById<TextView>(R.id.card_4_movement) }
+    val card4Percentage by lazy { mView.findViewById<TextView>(R.id.card_4_percentage) }
+
+    val card5Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_5_layout) }
+    val card5Name by lazy { mView.findViewById<TextView>(R.id.card_5_name) }
+    val card5Movement by lazy { mView.findViewById<TextView>(R.id.card_5_movement) }
+    val card5Percentage by lazy { mView.findViewById<TextView>(R.id.card_5_percentage) }
+
+    val card6Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_6_layout) }
+    val card6Name by lazy { mView.findViewById<TextView>(R.id.card_6_name) }
+    val card6Movement by lazy { mView.findViewById<TextView>(R.id.card_6_movement) }
+    val card6Percentage by lazy { mView.findViewById<TextView>(R.id.card_6_percentage) }
+
+    val card7Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_7_layout) }
+    val card7Name by lazy { mView.findViewById<TextView>(R.id.card_7_name) }
+    val card7Movement by lazy { mView.findViewById<TextView>(R.id.card_7_movement) }
+    val card7Percentage by lazy { mView.findViewById<TextView>(R.id.card_7_percentage) }
+
+    val card8Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_8_layout) }
+    val card8Name by lazy { mView.findViewById<TextView>(R.id.card_8_name) }
+    val card8Movement by lazy { mView.findViewById<TextView>(R.id.card_8_movement) }
+    val card8Percentage by lazy { mView.findViewById<TextView>(R.id.card_8_percentage) }
 
     override fun setPresenter(presenter: HomeContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -69,9 +112,14 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         super.onViewCreated(view, savedInstanceState)
 
         cardStar.setOnLikeListener(this)
+        scrollLayout.setOnRefreshListener(this)
 
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onRefresh() {
+        presenter.onResume()
     }
 
     override fun onTabClicked() {
@@ -102,6 +150,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     override fun hideProgressBar() {
         progressBarLayout.visibility = View.GONE
+        scrollLayout.isRefreshing = false
     }
 
     override fun showScrollLayout() {
@@ -112,15 +161,13 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         progressBarLayout.visibility = View.VISIBLE
     }
 
-    override fun showNews(news: ArrayList<Article>, savedArticles: ArrayList<Article>) {
+    var newsLayoutManager : LinearLayoutManager? = null
 
-        val newNews = ArrayList<Article>()
+    override fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
 
-        news.forEach { newNews.add(it) }
+        val headerArticle = news.keys.first()
 
-        val headerArticle = newNews.first { it.thumbnail != null }
-
-        newNews.remove(headerArticle)
+        news.remove(headerArticle)
 
         topArticle = headerArticle
 
@@ -128,10 +175,24 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         showTopNewsArticle(headerArticle)
 
-        val newsLayoutManager = LinearLayoutManager(context)
+        newsLayoutManager = LinearLayoutManager(context)
         recyclerViewShimmerNews.layoutManager = newsLayoutManager
-        articlesVerticalAdapter = HomeArticlesVerticalAdapter(newNews, savedArticles, context, presenter)
+        articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
         recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+
+//        if(newsLayoutManager == null) {
+//            Log.i(TAG, "1")
+//            newsLayoutManager = LinearLayoutManager(context)
+//            recyclerViewShimmerNews.layoutManager = newsLayoutManager
+//            articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
+//            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+//        } else {
+//            Log.i(TAG, "2")
+//            articlesVerticalAdapter.newsItems = news
+//            articlesVerticalAdapter.savedArticles = savedArticles
+//            articlesVerticalAdapter.notifyDataSetChanged()
+////            articlesVerticalAdapter.newsItems?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
+//        }
 
     }
 
@@ -155,29 +216,139 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     var layoutManager: LinearLayoutManager? = null
 
-    override fun showTop100Changes(sortedBy: List<Currency>?, baseCurrency: Rate) {
+    override fun showTop100Changes(sortedBy: ArrayList<Currency>) {
 
-        Log.i(TAG, "showTop100Changes")
-        Log.i(TAG, (baseCurrency.fiat == null).toString())
+//        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
+//                Color.WHITE)
+//        animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
+//                Color.WHITE)
 
-        val arrayList = ArrayList<Currency>()
+        Log.i(TAG, sortedBy.size.toString())
 
-        sortedBy?.forEach { arrayList.add(it) }
 
-        Log.i(TAG, baseCurrency.rate.toString())
 
-        if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            recyclerViewTopMovers.layoutManager = layoutManager
-            topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency, context)
-            recyclerViewTopMovers.adapter = topMoversAdapter
+        if (sortedBy.size > 7) {
+            for (i in 0..7) {
+                val currency = sortedBy.filter { it.name != "Tether" }[i]
 
-        } else {
+                Log.i(TAG, currency.name)
 
-            topMoversAdapter.articles = arrayList
-            topMoversAdapter.baseFiat = baseCurrency
-            topMoversAdapter.notifyDataSetChanged()
+                var name = card1Name
+                var percentage = card1Percentage
+                var background = card1Layout
+
+                when (i) {
+                    0 -> {
+                        name = card1Name
+                        percentage = card1Percentage
+                        background = card1Layout
+                    }
+                    1 -> {
+                        name = card2Name
+                        percentage = card2Percentage
+                        background = card2Layout
+                    }
+                    2 -> {
+                        name = card3Name
+                        percentage = card3Percentage
+                        background = card3Layout
+                    }
+                    3 -> {
+                        name = card4Name
+                        percentage = card4Percentage
+                        background = card4Layout
+                    }
+                    4 -> {
+                        name = card5Name
+                        percentage = card5Percentage
+                        background = card5Layout
+                    }
+                    5 -> {
+                        name = card6Name
+                        percentage = card6Percentage
+                        background = card6Layout
+                    }
+                    6 -> {
+                        name = card7Name
+                        percentage = card7Percentage
+                        background = card7Layout
+                    }
+                    7 -> {
+                        name = card8Name
+                        percentage = card8Percentage
+                        background = card8Layout
+                    }
+                }
+
+                Log.i(TAG, currency.quote?.uSD?.percentChange24h?.toBigDecimal().toString())
+
+                val percentage2DP = Utils.formatPercentage(currency.quote?.uSD?.percentChange24h?.toBigDecimal())
+
+//                if(currency.name?.length!! > 9)
+//                    name.text = currency.symbol
+//                else
+                name.text = currency.name
+                percentage.text = percentage2DP
+
+                background.setOnClickListener{
+                    CryptoArgs(currency.symbol!!).launch(context!!)
+                }
+
+                Log.i(TAG, percentage2DP.substring(0, 1))
+
+                when {
+                    percentage2DP.substring(0, 1) == "+" -> {
+                        percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                        val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", Color.WHITE, Color.GREEN, Color.WHITE)
+
+                        if(Math.random() < 0.5){
+
+                            animGreen.duration = 1000
+                            animGreen.setEvaluator(ArgbEvaluator())
+                            animGreen.repeatMode = ValueAnimator.REVERSE
+
+                            animGreen.start()
+                        }
+                    }
+                    else -> {
+                        percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                        val animRed = ObjectAnimator.ofInt(background, "backgroundColor", Color.WHITE, Color.RED, Color.WHITE)
+
+                        if(Math.random() < 0.5) {
+
+                            animRed.duration = 1000
+                            animRed.setEvaluator(ArgbEvaluator())
+                            animRed.repeatMode = ValueAnimator.REVERSE
+
+                            animRed.start()
+                        }
+                    }
+                }
+            }
         }
+        Log.i(TAG, "Done")
+
+//        Log.i(TAG, "showTop100Changes")
+//        Log.i(TAG, (baseCurrency.fiat == null).toString())
+//
+//        val arrayList = ArrayList<Currency>()
+//
+//        sortedBy?.forEach { arrayList.add(it) }
+//
+//        Log.i(TAG, baseCurrency.rate.toString())
+//
+//        if (layoutManager == null) {
+//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            recyclerViewTopMovers.layoutManager = layoutManager
+//            topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency, context)
+//            recyclerViewTopMovers.adapter = topMoversAdapter
+//
+//        } else {
+//
+//            topMoversAdapter.articles = arrayList
+//            topMoversAdapter.baseFiat = baseCurrency
+//            topMoversAdapter.notifyDataSetChanged()
+//        }
     }
 
     fun newInstance(headerStr: String): HomeFragment {

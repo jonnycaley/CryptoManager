@@ -28,7 +28,6 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
     val likeButton by lazy { findViewById<LikeButton>(R.id.like_button_top_article) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
