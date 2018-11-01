@@ -27,6 +27,10 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AppCompatDelegate
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 
@@ -149,15 +153,18 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     }
 
     override fun hideProgressBar() {
+        Log.i(TAG, "hideProgressBar")
         progressBarLayout.visibility = View.GONE
         scrollLayout.isRefreshing = false
     }
 
     override fun showScrollLayout() {
+        Log.i(TAG, "showScrollLayout")
         scrollLayout.visibility = View.VISIBLE
     }
 
     override fun showProgressBar() {
+        Log.i(TAG, "showProgressBar")
         progressBarLayout.visibility = View.VISIBLE
     }
 
@@ -287,13 +294,8 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                     }
                 }
 
-                Log.i(TAG, currency.quote?.uSD?.percentChange24h?.toBigDecimal().toString())
-
                 val percentage2DP = Utils.formatPercentage(currency.quote?.uSD?.percentChange24h?.toBigDecimal())
 
-//                if(currency.name?.length!! > 9)
-//                    name.text = currency.symbol
-//                else
                 name.text = currency.name
                 percentage.text = percentage2DP
 
@@ -301,17 +303,23 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                     CryptoArgs(currency.symbol!!).launch(context!!)
                 }
 
-                Log.i(TAG, percentage2DP.substring(0, 1))
-
                 when {
                     percentage2DP.substring(0, 1) == "+" -> {
                         card.setBackgroundResource(R.drawable.border_green_large_round)
                         percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
-                        val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", Color.TRANSPARENT, Color.GREEN, Color.TRANSPARENT)
 
-                        if(Math.random() < 0.5){
+                        if(Math.random() < 0.6){
 
-                            animGreen.duration = 1000
+                            var color = 0
+
+                            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                                color = context?.resources?.getColor(R.color.backgroundblack)!!
+                            else
+                                color = context?.resources?.getColor(R.color.backgroundwhite)!!
+
+                            val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.green)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
+
+                            animGreen.duration = 1500
                             animGreen.setEvaluator(ArgbEvaluator())
                             animGreen.repeatMode = ValueAnimator.REVERSE
 
@@ -321,11 +329,18 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                     else -> {
                         card.setBackgroundResource(R.drawable.border_red_large_round)
                         percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
-                        val animRed = ObjectAnimator.ofInt(background, "backgroundColor", Color.TRANSPARENT, Color.RED, Color.TRANSPARENT)
 
-                        if(Math.random() < 0.5) {
+                        var color = 0
 
-                            animRed.duration = 1000
+                        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                            color = context?.resources?.getColor(R.color.backgroundblack)!!
+                        else
+                            color = context?.resources?.getColor(R.color.backgroundwhite)!!
+
+                        if(Math.random() < 0.6) {
+                            val animRed = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.red)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
+
+                            animRed.duration = 1500
                             animRed.setEvaluator(ArgbEvaluator())
                             animRed.repeatMode = ValueAnimator.REVERSE
 
@@ -335,8 +350,6 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                 }
             }
         }
-        Log.i(TAG, "Done")
-
 //        Log.i(TAG, "showTop100Changes")
 //        Log.i(TAG, (baseCurrency.fiat == null).toString())
 //

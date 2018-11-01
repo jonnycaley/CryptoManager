@@ -1,17 +1,20 @@
 package com.jonnycaley.cryptomanager.ui.base
 
+import android.app.Application
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
+import com.jonnycaley.cryptomanager.utils.App
 import kotlinx.android.synthetic.main.content_home.*
 
 class BaseActivity : AppCompatActivity() {
@@ -38,6 +41,13 @@ class BaseActivity : AppCompatActivity() {
     private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
+        //TODO: UNDO ABOVE HIGHLIGHTS
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 

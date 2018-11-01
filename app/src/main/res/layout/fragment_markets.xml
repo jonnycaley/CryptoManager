@@ -8,21 +8,12 @@
 
     <include layout="@layout/layout_progress"/>
 
-    <com.reginald.swiperefresh.CustomSwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        swiperefresh:enable_top_progress_bar="true"
-        swiperefresh:keep_refresh_head="false"
-        swiperefresh:refresh_mode="pull_mode"
-        swiperefresh:return_to_header_duration="500"
-        swiperefresh:return_to_top_duration="500"
-        swiperefresh:time_out_refresh_complete="2000"
-        swiperefresh:time_out_return_to_top="1000"
-        swiperefresh:top_progress_bar_color_1="#000000"
-        swiperefresh:top_progress_bar_color_2="#ee5522"
-        swiperefresh:top_progress_bar_color_3="#ffa600"
-        swiperefresh:top_progress_bar_color_4="#ffffff"
+        android:layout_height="match_parent"
         android:visibility="gone">
 
         <android.support.v4.widget.NestedScrollView
@@ -194,6 +185,6 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-    </com.reginald.swiperefresh.CustomSwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

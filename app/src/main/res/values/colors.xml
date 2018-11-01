@@ -20,6 +20,9 @@
     <color name="red">#EE3E26</color>
     <color name="green">#74D671</color>
 
+    <color name="backgroundwhite">#fcfcfc</color>
+    <color name="backgroundblack">#000000</color>
+
     <color name="red_secondary">#87220F</color>
     <color name="green_secondary">#496824</color>
     <!--<color name="red">#FF2600</color>-->

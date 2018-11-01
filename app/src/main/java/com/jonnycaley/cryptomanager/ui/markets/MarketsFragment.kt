@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.markets
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -18,7 +19,7 @@ import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
 
 
-class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
+class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var root : View
 
@@ -35,7 +36,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
 
     val progressBarLayout by lazy { root.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
-    val swipeRefreshLayout : CustomSwipeRefreshLayout by lazy { root.findViewById<CustomSwipeRefreshLayout>(R.id.swipelayout) }
+    val scrollLayout : SwipeRefreshLayout by lazy { root.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
     override fun setPresenter(presenter: MarketsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -49,12 +50,14 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefreshLayout.setOnRefreshListener {
-            Toast.makeText(context, "Refreshing", Toast.LENGTH_SHORT).show()
-        }
+        scrollLayout.setOnRefreshListener(this)
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onRefresh() {
+        presenter.onResume()
     }
 
     override fun onResume() {
@@ -73,7 +76,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
     }
 
     override fun showContentLayout() {
-        swipeRefreshLayout.visibility = View.VISIBLE
+        scrollLayout.visibility = View.VISIBLE
     }
 
     override fun showProgressBarLayout() {
@@ -81,7 +84,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface{
     }
 
     override fun hideContentLayout() {
-        swipeRefreshLayout.visibility = View.GONE
+        scrollLayout.visibility = View.GONE
     }
 
     override fun getCurrencySearchView(): SearchView {
