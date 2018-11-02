@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import com.jonnycaley.cryptomanager.R
 import android.content.Intent
+import android.support.v7.app.AppCompatDelegate
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
@@ -46,6 +47,11 @@ class CreateFiatTransactionActivity : AppCompatActivity(), CreateFiatTransaction
     var chosenDate = Calendar.getInstance().time
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_fiat_transaction)
 

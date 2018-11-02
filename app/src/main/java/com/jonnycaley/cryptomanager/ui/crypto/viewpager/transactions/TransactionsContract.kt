@@ -12,6 +12,7 @@ interface TransactionsContract {
         fun getSymbol(): String?
         fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate)
         fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?)
+        fun hideRefreshing()
     }
 
     interface Presenter : BasePresenter {

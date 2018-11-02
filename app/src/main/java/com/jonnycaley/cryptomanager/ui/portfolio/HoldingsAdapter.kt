@@ -295,6 +295,8 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
         if(priceSubtractor) {
             context?.resources?.getColor(R.color.red)?.let { view.setTextColor(it) }
             priceText = "-$priceText"
+        } else {
+            context?.resources?.getColor(R.color.green)?.let { view.setTextColor(it) }
         }
         view.text = "$symbol$priceText"
     }

@@ -13,7 +13,6 @@ import android.widget.Switch
 import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
@@ -60,11 +59,15 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
-            BaseArgs(3).launch(context!! )
+            presenter.saveThemePreference(isChecked)
         }
 
         presenter = SettingsPresenter(SettingsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun updateTheme() {
+        BaseArgs(3).launch(context!!)
     }
 
     override fun onTabClicked() {

@@ -20,6 +20,8 @@ object Constants {
 
     val PAPER_BASE_RATE = "base_rate"
 
+    val PAPER_THEME = "theme"
+
     val PAPER_TRANSACTIONS = "all_transactions"
 
     val PAPER_HOME_TOP_NEWS = "home_top_news"

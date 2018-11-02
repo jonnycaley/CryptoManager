@@ -25,6 +25,28 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
         loadSettings()
     }
 
+    override fun saveThemePreference(checked: Boolean) {
+
+        dataManager.saveThemePreference(checked)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe (object : CompletableObserver{
+                    override fun onComplete() {
+                        view.updateTheme()
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        view.showPortfolioDeletedError()
+                    }
+
+                })
+
+    }
+
     override fun loadSettings() {
 
         dataManager.getBaseFiat()

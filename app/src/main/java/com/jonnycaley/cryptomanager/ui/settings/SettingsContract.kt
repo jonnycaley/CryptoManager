@@ -11,11 +11,13 @@ interface SettingsContract {
         fun showSavedArticlesDeleted()
         fun showSavedArticlesDeletedError()
         fun loadSettings(baseFiat: Rate)
+        fun updateTheme()
     }
 
     interface Presenter : BasePresenter {
         fun deletePortfolio()
         fun deleteSavedArticles()
         fun loadSettings()
+        fun saveThemePreference(checked: Boolean)
     }
 }

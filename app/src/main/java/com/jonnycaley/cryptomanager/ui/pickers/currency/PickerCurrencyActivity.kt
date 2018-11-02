@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.pickers.currency
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -21,6 +22,11 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View 
     lateinit var pickerAdapter : PickerCurrenciesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_currency)
 

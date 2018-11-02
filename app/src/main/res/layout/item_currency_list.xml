@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/cardbackground">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,41 +19,38 @@
             android:id="@+id/rank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1." />
+            android:textColor="?attr/textcolor"/>
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bitcoin"
-            android:layout_toRightOf="@id/rank"
-            android:layout_marginLeft="@dimen/default_margin"/>
+            android:layout_toEndOf="@id/rank"
+            android:layout_marginStart="@dimen/default_margin"
+            android:textColor="?attr/textcolor"/>
 
         <TextView
             android:id="@+id/symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/name"
-            android:text=" (BTC)"
             android:textColor="@color/light_grey" />
 
         <TextView
             android:id="@+id/price"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/movement"
+            android:layout_toStartOf="@id/movement"
             android:gravity="end"
-            android:text="£6,789"
             android:layout_marginEnd="@dimen/default_margin"
-            />
+            android:textColor="?attr/textcolor"/>
 
         <TextView
             android:id="@+id/movement"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/black"
-            android:layout_toLeftOf="@id/percentage"
+            android:textColor="?attr/textcolor"
+            android:layout_toStartOf="@id/percentage"
             android:visibility="gone"/>
 
         <TextView
@@ -62,11 +60,9 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="Percentage"
             android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:textColor="?attr/textcolor"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

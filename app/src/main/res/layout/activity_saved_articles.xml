@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.settings.savedArticles.SavedArticlesActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/backgroundcolor">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -35,7 +36,7 @@
             android:text="No saved articles :("
             android:textSize="@dimen/extra_large_text_size"
             android:gravity="center"
-            android:textColor="@color/text_grey"/>
+            android:textColor="?attr/textcolorsecondary"/>
 
     </RelativeLayout>
 

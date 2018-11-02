@@ -29,7 +29,9 @@
                 <SearchView
                     android:id="@+id/search_view_currencies"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp" />
+                    android:layout_height="50dp"
+                    android:background="?attr/cardbackground"
+                    android:visibility="gone"/>
                 <!--android:gravity="end"-->
                 <!--android:layout_gravity="end"-->
 
@@ -84,13 +86,15 @@
                             android:paddingLeft="@dimen/small_margin"
                             android:paddingTop="@dimen/small_margin"
                             android:paddingRight="@dimen/small_margin"
-                            android:paddingBottom="@dimen/small_margin">
+                            android:paddingBottom="@dimen/small_margin"
+                            android:background="?attr/cardbackground">
 
                             <TextView
                                 android:id="@+id/rank"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="#" />
+                                android:text="#"
+                                android:textColor="?attr/textcolor" />
 
                             <TextView
                                 android:id="@+id/name"
@@ -98,7 +102,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/default_margin"
                                 android:layout_toRightOf="@id/rank"
-                                android:text="Name (Symbol)" />
+                                android:text="Name (Symbol)"
+                                android:textColor="?attr/textcolor"/>
 
                             <TextView
                                 android:id="@+id/symbol"
@@ -115,7 +120,8 @@
                                 android:layout_marginEnd="@dimen/default_margin"
                                 android:layout_toLeftOf="@id/percentage"
                                 android:gravity="end"
-                                android:text="Price" />
+                                android:text="Price"
+                                android:textColor="?attr/textcolor" />
 
 
                             <TextView
@@ -129,7 +135,7 @@
                                 android:maxLines="1"
                                 android:text="Change"
                                 android:textAlignment="center"
-                                android:textColor="@color/black" />
+                                android:textColor="?attr/textcolor" />
 
                         </RelativeLayout>
 
@@ -152,13 +158,13 @@
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:text="Top 100"
-                                android:textColor="@color/text_grey" />
+                                android:textColor="?attr/textcolor" />
 
                             <TextView
                                 android:id="@+id/text_markets"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_toLeftOf="@id/text_gain"
+                                android:layout_toStartOf="@id/text_gain"
                                 android:text="USD" />
 
                             <TextView

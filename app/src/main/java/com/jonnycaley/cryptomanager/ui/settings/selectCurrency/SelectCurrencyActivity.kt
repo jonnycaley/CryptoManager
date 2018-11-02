@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -22,6 +23,11 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
     lateinit var currenciesAdapter : SelectCurrenciesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_currency)
 

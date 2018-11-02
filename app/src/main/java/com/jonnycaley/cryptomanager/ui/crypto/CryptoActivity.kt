@@ -27,6 +27,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import com.squareup.picasso.Callback
 import android.graphics.drawable.BitmapDrawable
+import android.support.v7.app.AppCompatDelegate
 import android.widget.TextView
 import java.util.*
 
@@ -44,6 +45,11 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
     val image : ImageView by lazy { findViewById<ImageView>(R.id.image) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
 

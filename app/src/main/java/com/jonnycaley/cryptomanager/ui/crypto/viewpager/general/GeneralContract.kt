@@ -23,6 +23,7 @@ interface GeneralContract {
         fun show24Low(lOW24HOUR: String?, baseFiat: Rate)
         fun show24Change(cHANGEPCT24HOUR: String?)
         fun showCirculatingSupply(sUPPLY: String?)
+        fun hideRefreshing()
     }
 
     interface Presenter : BasePresenter {

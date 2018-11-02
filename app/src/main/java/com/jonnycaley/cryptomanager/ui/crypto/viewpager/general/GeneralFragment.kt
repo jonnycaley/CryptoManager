@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,7 +29,7 @@ import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
-class GeneralFragment : Fragment(), GeneralContract.View {
+class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var presenter : GeneralContract.Presenter
 
@@ -40,6 +41,8 @@ class GeneralFragment : Fragment(), GeneralContract.View {
 
     val price : TextView by lazy { mView.findViewById<TextView>(R.id.price) }
     val change : TextView by lazy { mView.findViewById<TextView>(R.id.change) }
+
+    val scrollLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout >(R.id.swipelayout) }
 
     val recyclerViewNews : RecyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_news) }
 
@@ -74,8 +77,18 @@ class GeneralFragment : Fragment(), GeneralContract.View {
         setUpGraphTimeChoices()
         setUpCandleStick()
 
+        scrollLayout.setOnRefreshListener(this)
+
         presenter = GeneralPresenter(GeneralDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onRefresh() {
+        presenter.getData()
+    }
+
+    override fun hideRefreshing() {
+        scrollLayout.isRefreshing = false
     }
 
     override fun showDaysRange(lOW24HOUR: String?, hIGH24HOUR: String?, pRICE: String?, baseFiat: Rate) {

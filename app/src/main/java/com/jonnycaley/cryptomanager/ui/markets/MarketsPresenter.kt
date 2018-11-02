@@ -19,7 +19,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     var compositeDisposable: CompositeDisposable? = null
 
-    var news = ArrayList<Article>()
+//    var news = ArrayList<Article>()
 
     init {
         this.view.setPresenter(this)
@@ -29,57 +29,17 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-        setCurrencySearchListener(view.getCurrencySearchView())
+//        setCurrencySearchListener(view.getCurrencySearchView())
         getData()
     }
 
+    var top100 : Currencies? = null
+
     override fun refresh() {
-        if(news.isEmpty()){
-            getData()
-        } else {
-            var top100 : Currencies? = null
-            dataManager.getSavedArticles()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { savedArticles ->
-                        view.showLatestArticles(news, savedArticles)
-                    }
-                    .toObservable()
-                    .observeOn(Schedulers.io())
-//                    .filter { dataManager.checkConnection() }
-                    .flatMap {
-                        dataManager.getCoinMarketCapService().getTop100USD()
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { t100 ->
-                        top100 = t100
-                    }
-                    .observeOn(Schedulers.io())
-                    .flatMapSingle {
-                        dataManager.getBaseFiat()
-                    }
-                    //TODO: check connection and threading needing and skips frames :(
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<Rate> {
-                        override fun onComplete() {
-
-                        }
-
-                        override fun onNext(baseFiat: Rate) {
-                            view.showTop100Changes(top100?.data, baseFiat)
-                        }
-
-                        override fun onSubscribe(d: Disposable) {
-                            compositeDisposable?.add(d)
-                        }
-
-                        override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
-                        }
-
-                    })
+        if(top100 != null && baseFiat != null){
+            view.showTop100Changes(top100?.data, baseFiat!!)
         }
-
+        getData()
     }
 
     override fun onResume() {
@@ -135,28 +95,28 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                 })
     }
 
-    private fun setCurrencySearchListener(searchView: SearchView) {
+//    private fun setCurrencySearchListener(searchView: SearchView) {
+//
+//        RxSearchView.queryTextChanges(searchView)
+//                .debounce(750, TimeUnit.MILLISECONDS) // stream will go down after 1 second inactivity of user
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//
+//                    if (dataManager.checkConnection()) {
+//                        println(searchView.query)
+//                    } else {
+//
+//                    }
+//
+//                }
+//
+//    }
 
-        RxSearchView.queryTextChanges(searchView)
-                .debounce(750, TimeUnit.MILLISECONDS) // stream will go down after 1 second inactivity of user
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-
-                    if (dataManager.checkConnection()) {
-                        println(searchView.query)
-                    } else {
-
-                    }
-
-                }
-
-    }
+    var baseFiat : Rate? = null
 
     private fun getData() {
 
         if (dataManager.checkConnection()) {
-
-            var top100 : Currencies? = null
 
             dataManager.getCoinMarketCapService().getTop100USD()
                     .map { response ->
@@ -165,40 +125,23 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .flatMapSingle {
                         dataManager.getBaseFiat()
                     }
-                    .observeOn(AndroidSchedulers.mainThread())
                     .map { baseFiat ->
-                        view.showTop100Changes(top100?.data, baseFiat)
-                    }
-                    .observeOn(Schedulers.io())
-                    .flatMap {
-                        dataManager.getCryptoControlService().getLatestNews("10")
-                    }
-                    .map { news ->
-                        news.forEach { this.news.add(it) }
-                    }
-                    .flatMapSingle {
-                        dataManager.getSavedArticles()
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .map { savedArticles ->
-                        view.showLatestArticles(this.news, savedArticles)
+                        this.baseFiat = baseFiat
                     }
 //                    TODO: handle onErrors for each request in chain
                     .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
                         override fun onComplete() {
-
+                            view.showTop100Changes(top100?.data, baseFiat!!)
                             view.hideProgressBarLayout()
                             view.showContentLayout()
                         }
 
                         override fun onNext(t: Unit) {
-
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            view.showProgressBarLayout()
-                            view.hideContentLayout()
                             compositeDisposable?.add(d)
                         }
 

@@ -29,7 +29,30 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
             compositeDisposable = CompositeDisposable()
         }
 
-        checkForStorage()
+        checkTheme()
+    }
+
+    private fun checkTheme() {
+
+        dataManager.readTheme()
+                .subscribeOn(Schedulers.io()) //computation as this is a large data set and therefore will be cpu intensive
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Boolean> {
+                    override fun onSuccess(isDarkTheme: Boolean) {
+                        if(isDarkTheme)
+                            view.setDarkTheme()
+                        checkForStorage()
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+
+                })
     }
 
     private fun checkForStorage() {

@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -15,7 +16,7 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionArgs
 
-class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener {
+class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var presenter : TransactionsContract.Presenter
 
@@ -27,6 +28,8 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
     val buttonAddTransaction by lazy { mView.findViewById<Button>(R.id.button_add_transaction) }
     val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,9 +47,18 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
         super.onViewCreated(view, savedInstanceState)
 
         buttonAddTransaction.setOnClickListener(this)
-
+        swipeLayout.setOnRefreshListener(this)
+        
         presenter = TransactionsPresenter(TransactionsDataManager.getInstance(context!!), this)
         presenter.attachView()
+    }
+
+    override fun onRefresh() {
+        presenter.onResume()
+    }
+
+    override fun hideRefreshing() {
+        swipeLayout.isRefreshing = false
     }
 
     override fun onClick(v: View?) {

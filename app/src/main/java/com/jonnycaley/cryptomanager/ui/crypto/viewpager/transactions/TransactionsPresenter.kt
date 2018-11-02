@@ -105,6 +105,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                 .subscribe(object : SingleObserver<Rate> {
                     override fun onSuccess(baseFiat: Rate) {
                         view.loadTransactions(transactionz!!, basePrice, baseFiat)
+                        view.hideRefreshing()
                     }
 
                     override fun onSubscribe(d: Disposable) {

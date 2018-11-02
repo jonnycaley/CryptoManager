@@ -90,4 +90,9 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES)
     }
 
+
+    fun readTheme(): Single<Boolean> {
+        return RxPaperBook.with().read<Boolean>(Constants.PAPER_THEME, false)
+    }
+
 }

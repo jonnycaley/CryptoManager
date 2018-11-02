@@ -57,7 +57,8 @@
         android:id="@+id/layout_reveal"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="?attr/backgroundcolor">
 
         <com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
             android:id="@+id/recyclerview_snap"

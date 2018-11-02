@@ -46,8 +46,6 @@ class BaseActivity : AppCompatActivity() {
             setTheme(R.style.darktheme)
         }
 
-        //TODO: UNDO ABOVE HIGHLIGHTS
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 

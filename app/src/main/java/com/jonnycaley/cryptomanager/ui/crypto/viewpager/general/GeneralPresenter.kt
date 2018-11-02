@@ -66,7 +66,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Rate> {
                         override fun onComplete() {
-
+                            view.hideRefreshing()
                         }
 
                         override fun onNext(baseFiat: Rate) {

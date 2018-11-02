@@ -8,6 +8,7 @@ interface SplashContract {
         fun toBaseActivity()
         fun showInternetRequired()
         fun showUsingStorage()
+        fun setDarkTheme()
     }
 
     interface Presenter : BasePresenter {

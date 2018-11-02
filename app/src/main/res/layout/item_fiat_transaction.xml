@@ -7,7 +7,8 @@
     android:layout_marginTop="@dimen/card_margin"
     android:layout_marginBottom="@dimen/card_margin"
     app:cardElevation="@dimen/cardview_default_elevation"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="?attr/cardbackground">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/default_padding_bottom"
             android:text="12th match 2017 via Binance"
-            android:textColor="@color/text_grey" />
+            android:textColor="?attr/textcolorsecondary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Amount"
-                    android:textColor="@color/text_grey" />
+                    android:textColor="?attr/textcolorsecondary" />
 
                 <TextView
                     android:id="@+id/amount"
@@ -50,14 +51,10 @@
                     android:layout_below="@id/amount_text"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:text="$100" />
+                    android:text="$100"
+                    android:textColor="?attr/textcolor"/>
 
             </RelativeLayout>
-
-
-            <!--
-            TODO: BIND TO THE ADAPTER!!!
-            -->
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -71,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="To"
-                    android:textColor="@color/text_grey" />
+                    android:textColor="?attr/textcolorsecondary" />
 
                 <TextView
                     android:id="@+id/to"
@@ -80,7 +77,8 @@
                     android:layout_below="@id/to_text"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:text="Binance" />
+                    android:text="Binance"
+                    android:textColor="?attr/textcolor"/>
 
             </RelativeLayout>
 
@@ -96,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Currency"
-                    android:textColor="@color/text_grey" />
+                    android:textColor="?attr/textcolorsecondary" />
 
                 <TextView
                     android:id="@+id/currency"
@@ -105,7 +103,8 @@
                     android:layout_below="@id/currency_text"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:text="USD" />
+                    android:text="USD"
+                    android:textColor="?attr/textcolor"/>
 
             </RelativeLayout>
 

@@ -7,9 +7,13 @@
         <item name="colorPrimaryDark">#303F9F</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="primarycolor">#000000</item>
+        <item name="secondarycolor">#000000</item>
+
         <item name="backgroundcolor">#fcfcfc</item>
         <item name="cardbackground">#ffffff</item>
         <item name="textcolor">#000000</item>
+        <item name="textcolorsecondary">#807F7F</item>
         <item name="tintcolor">#ffffff</item>
         <item name="buttoncolor">#5E989F</item>
 
@@ -26,9 +30,13 @@
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="primarycolor">#000000</item>
+        <item name="secondarycolor">#000000</item>
+
         <item name="backgroundcolor">#000000</item>
         <item name="cardbackground">#424242</item>
         <item name="textcolor">#ffffff</item>
+        <item name="textcolorsecondary">#807F7F</item>
         <item name="tintcolor">#ffffff</item>
         <item name="buttoncolor">#2196f3</item>
 

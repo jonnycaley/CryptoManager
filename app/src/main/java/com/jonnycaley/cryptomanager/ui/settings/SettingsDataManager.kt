@@ -44,4 +44,9 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
     fun getBaseFiat(): Single<Rate> {
         return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
     }
+
+    fun saveThemePreference(isDark : Boolean): Completable {
+        return RxPaperBook.with().write(Constants.PAPER_THEME, isDark)
+    }
+
 }

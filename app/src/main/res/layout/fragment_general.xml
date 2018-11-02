@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.reginald.swiperefresh.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
-    xmlns:swiperefresh="http://schemas.android.com/apk/res-auto"
+
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipelayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:nestedScrollingEnabled="false"
-    app:ignore="NamespaceTypo"
-    swiperefresh:enable_top_progress_bar="true"
-    swiperefresh:keep_refresh_head="false"
-    swiperefresh:refresh_mode="pull_mode"
-    swiperefresh:return_to_header_duration="500"
-    swiperefresh:return_to_top_duration="500"
-    swiperefresh:time_out_refresh_complete="2000"
-    swiperefresh:time_out_return_to_top="1000"
-    swiperefresh:top_progress_bar_color_1="#000000"
-    swiperefresh:top_progress_bar_color_2="#ee5522"
-    swiperefresh:top_progress_bar_color_3="#ffa600"
-    swiperefresh:top_progress_bar_color_4="#ffffff">
+    android:layout_height="match_parent"
+    android:visibility="visible">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/backgroundcolor">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="@dimen/extra_large_text_size" />
-
+                android:textSize="@dimen/extra_large_text_size"
+                android:textColor="?attr/textcolor"/>
 
             <TextView
                 android:id="@+id/change"
@@ -52,7 +41,8 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="true"
+                app:cardBackgroundColor="?attr/cardbackground">
                 <!-- app:cardCornerRadius="@dimen/card_corner_radius" -->
 
                 <RelativeLayout
@@ -69,7 +59,7 @@
                         app:rrbg_animateTexts_textColorFrom="@color/text_grey"
                         app:rrbg_animateTexts_textColorTo="@color/black"
                         app:rrbg_animateTexts_textColor_duration="500"
-                        app:rrbg_borderColor="@color/white"
+                        app:rrbg_borderColor="?attr/cardbackground"
                         app:rrbg_borderSize="1dp"
                         app:rrbg_bottomLineRadius="2dp"
                         app:rrbg_bottomLineSize="1dp"
@@ -81,9 +71,10 @@
                         app:rrbg_radius="2dp"
                         app:rrbg_selectorAboveOfBottomLine="false"
                         app:rrbg_selectorAnimationType="translate_y"
-                        app:rrbg_selectorColor="@color/white"
+                        app:rrbg_selectorColor="?attr/textcolor"
                         app:rrbg_selectorRadius="0dp"
-                        app:rrbg_selectorSize="2dp">
+                        app:rrbg_selectorSize="2dp"
+                        app:rrbg_backgroundColor="?attr/cardbackground">
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -95,9 +86,10 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1H"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -108,9 +100,10 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1D"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -121,10 +114,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="3D"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -135,10 +129,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1W"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -150,10 +145,11 @@
                             app:rrb_rippleColor="@color/black"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1M"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -164,10 +160,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="3M"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -178,10 +175,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="6M"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -192,10 +190,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1Y"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -206,10 +205,11 @@
                             app:rrb_drawableWidth="36dp"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="All"
-                            app:rrb_textColor="@color/text_grey"
+                            app:rrb_textColor="?attr/textcolorsecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+                            app:rrb_textSize="10sp"
+                            app:rrb_textColorTo="?attr/textcolor" />
 
                     </co.ceryle.radiorealbutton.RadioRealButtonGroup>
 
@@ -225,11 +225,11 @@
 
             </android.support.v7.widget.CardView>
 
-
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="true"
+                app:cardBackgroundColor="?attr/cardbackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -255,7 +255,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Market Cap"
-                                android:textColor="@color/text_grey"
+                                android:textColor="?attr/textcolorsecondary"
                                 android:textSize="@dimen/small_text_size"/>
 
                             <TextView
@@ -263,6 +263,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_market_cap"
+                                android:textColor="?attr/textcolor"
                                 android:text=""
                                 android:textStyle="bold"/>
 
@@ -278,7 +279,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Change (24h)"
-                                android:textColor="@color/text_grey"
+                                android:textColor="?attr/textcolorsecondary"
                                 android:textSize="@dimen/small_text_size" />
 
                             <TextView
@@ -286,6 +287,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_change"
+                                android:textColor="?attr/textcolor"
                                 android:text="" />
 
                         </RelativeLayout>
@@ -310,7 +312,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Circulating Supply"
-                                android:textColor="@color/text_grey"
+                                android:textColor="?attr/textcolorsecondary"
                                 android:textSize="@dimen/small_text_size"/>
 
                             <TextView
@@ -318,6 +320,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_circulating_supply"
+                                android:textColor="?attr/textcolor"
                                 android:text="" />
 
                         </RelativeLayout>
@@ -341,7 +344,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Low (24h)"
-                                android:textColor="@color/text_grey"
+                                android:textColor="?attr/textcolorsecondary"
                                 android:textSize="@dimen/small_text_size" />
 
                             <TextView
@@ -349,6 +352,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_low"
+                                android:textColor="?attr/textcolor"
                                 android:text="" />
 
                         </RelativeLayout>
@@ -364,7 +368,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="High (24h)"
-                                android:textColor="@color/text_grey"
+                                android:textColor="?attr/textcolorsecondary"
                                 android:textSize="@dimen/small_text_size" />
 
                             <TextView
@@ -372,6 +376,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_high"
+                                android:textColor="?attr/textcolor"
                                 android:text="" />
 
                         </RelativeLayout>
@@ -402,4 +407,4 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-</com.reginald.swiperefresh.CustomSwipeRefreshLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

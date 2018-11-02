@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.search.SearchActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/backgroundcolor">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -26,7 +27,8 @@
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="?attr/cardbackground"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

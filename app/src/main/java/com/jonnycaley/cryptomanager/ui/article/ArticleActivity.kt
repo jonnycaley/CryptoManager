@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.article
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -29,6 +30,11 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
     val likeButton by lazy { findViewById<LikeButton>(R.id.like_button_top_article) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.darktheme)
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
 

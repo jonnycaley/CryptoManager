@@ -17,6 +17,11 @@ import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.reginald.swiperefresh.CustomSwipeRefreshLayout
+import android.R.attr.duration
+import android.os.Handler
+import android.os.Looper
+import android.support.v7.widget.LinearSmoothScroller
+import android.util.DisplayMetrics
 
 
 class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener {
@@ -56,6 +61,17 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         presenter.attachView()
     }
 
+    private val mHandler = Handler(Looper.getMainLooper())
+    val pixelsToMove = 30
+
+    private val SCROLLING_RUNNABLE = object : Runnable {
+
+        override fun run() {
+            recyclerViewLatestNews.smoothScrollBy(pixelsToMove, 0)
+            mHandler.postDelayed(this, duration.toLong())
+        }
+    }
+
     override fun onRefresh() {
         presenter.onResume()
     }
@@ -73,6 +89,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     override fun hideProgressBarLayout() {
         progressBarLayout.visibility = View.GONE
+        scrollLayout.isRefreshing = false
     }
 
     override fun showContentLayout() {
@@ -103,6 +120,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         recyclerViewCurrencies.adapter = currenciesAdapter
     }
 
+
     var layoutManager: LinearLayoutManager? = null
 
     override fun showLatestArticles(latestArticles: ArrayList<Article>, savedArticles: ArrayList<Article>) {
@@ -111,9 +129,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-            recyclerViewLatestNews.layoutManager = layoutManager
-            similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
-            recyclerViewLatestNews.adapter = similarArticlesAdapter
+        recyclerViewLatestNews.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
+        }
+        similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
+        recyclerViewLatestNews.adapter = similarArticlesAdapter
         } else {
 
             similarArticlesAdapter.latestArticles = latestArticles
@@ -122,6 +141,8 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         }
 
     }
+
+
 
 
     fun newInstance(headerStr: String): MarketsFragment {
