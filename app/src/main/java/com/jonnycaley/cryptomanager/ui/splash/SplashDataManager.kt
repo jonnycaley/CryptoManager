@@ -7,6 +7,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Curre
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -90,9 +91,8 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES)
     }
 
-
     fun readTheme(): Single<Boolean> {
-        return RxPaperBook.with().read<Boolean>(Constants.PAPER_THEME, false)
+        return RxPaperBook.with(Schedulers.io()).read<Boolean>(Constants.PAPER_THEME, false)
     }
 
 }

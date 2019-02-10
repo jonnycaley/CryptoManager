@@ -38,14 +38,14 @@ class SelectCurrencyDataManager private constructor(val UserPreferences: UserPre
     }
 
     fun getBaseFiat(): Single<Rate> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_BASE_RATE, Rate())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE, Rate())
     }
 
     fun getFiats(): Single<ExchangeRates> {
-        return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
 
     fun saveBaseCurrency(symbol: Rate?): Completable {
-        return RxPaperBook.with(Schedulers.newThread()).write(Constants.PAPER_BASE_RATE, symbol)
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_BASE_RATE, symbol)
     }
 }

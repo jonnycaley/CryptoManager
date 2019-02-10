@@ -132,6 +132,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     }
 
     override fun onResume() {
+        //This always runs on loading of the fragment (even at first time)
         super.onResume()
         presenter.onResume()
     }

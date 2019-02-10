@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.util.Log
+import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
@@ -41,6 +42,7 @@ class BaseActivity : AppCompatActivity() {
     private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Toast.makeText(this, "Base Activity", Toast.LENGTH_SHORT).show()
 
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.darktheme)
@@ -110,7 +112,6 @@ class BaseActivity : AppCompatActivity() {
 //        loadFragment(args.fragment)
     }
 
-
     private fun loadFragmentNew(fragment: Int) {
 
         var selectedItem = 0
@@ -159,32 +160,32 @@ class BaseActivity : AppCompatActivity() {
 //        }
 //    }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-
-        val fragmentManager: FragmentManager = supportFragmentManager
-
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_markets -> {
-                fragmentTransaction.replace(R.id.frame_placeholder, MarketsFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_portfolio -> {
-                fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_settings -> {
-                fragmentTransaction.replace(R.id.frame_placeholder, SettingsFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
+//    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+//
+//        val fragmentManager: FragmentManager = supportFragmentManager
+//
+//        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+//
+//        when (item.itemId) {
+//            R.id.navigation_home -> {
+//                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
+//                return@OnNavigationItemSelectedListener true
+//            }
+//            R.id.navigation_markets -> {
+//                fragmentTransaction.replace(R.id.frame_placeholder, MarketsFragment()).commit()
+//                return@OnNavigationItemSelectedListener true
+//            }
+//            R.id.navigation_portfolio -> {
+//                fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
+//                return@OnNavigationItemSelectedListener true
+//            }
+//            R.id.navigation_settings -> {
+//                fragmentTransaction.replace(R.id.frame_placeholder, SettingsFragment()).commit()
+//                return@OnNavigationItemSelectedListener true
+//            }
+//        }
+//        false
+//    }
 
 //    private fun loadFragment(fragment: Int) {
 //

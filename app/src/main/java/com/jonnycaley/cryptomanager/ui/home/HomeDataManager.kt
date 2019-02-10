@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.home
 
 import android.content.Context
+import android.util.Log
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
@@ -16,6 +17,7 @@ import com.pacoworks.rxpaper2.RxPaperBook
 import io.paperdb.Book
 import io.paperdb.Paper
 import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 
@@ -59,31 +61,31 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
     }
 
     fun getBaseFiat(): Single<Rate> {
-        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(articles: ArrayList<Article>): Completable {
-        return RxPaperBook.with().write(Constants.PAPER_SAVED_ARTICLES, articles)
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_SAVED_ARTICLES, articles)
     }
 
     fun saveTopNews(news: ArrayList<Article>): Completable {
-        return RxPaperBook.with().write(Constants.PAPER_HOME_TOP_NEWS, news)
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_HOME_TOP_NEWS, news)
     }
 
     fun saveTop100(currencies: Currencies): Completable {
-        return RxPaperBook.with().write(Constants.PAPER_HOME_TOP_100, currencies)
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_HOME_TOP_100, currencies)
     }
 
     fun readTop100(): Single<Currencies> {
-        return RxPaperBook.with().read(Constants.PAPER_HOME_TOP_100)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_HOME_TOP_100)
     }
 
     fun readTopNews(): Single<ArrayList<Article>> {
-        return RxPaperBook.with().read(Constants.PAPER_HOME_TOP_NEWS)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_HOME_TOP_NEWS)
     }
 
 }

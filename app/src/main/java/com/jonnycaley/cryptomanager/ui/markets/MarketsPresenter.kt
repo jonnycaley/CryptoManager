@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
+import android.util.Log
 import android.widget.SearchView
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
@@ -36,13 +37,14 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
     var top100 : Currencies? = null
 
     override fun refresh() {
-        if(top100 != null && baseFiat != null){
-            view.showTop100Changes(top100?.data, baseFiat!!)
-        }
+//        if(top100 != null && baseFiat != null){
+//            view.showTop100Changes(top100?.data, baseFiat!!)
+//        }
         getData()
     }
 
     override fun onResume() {
+        Log.i(TAG, "onResume")
         refresh()
     }
 
@@ -157,6 +159,10 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     override fun detachView() {
         compositeDisposable?.dispose()
+    }
+
+    companion object {
+        val TAG = "MarketsPresenter"
     }
 
 }

@@ -43,9 +43,9 @@ class SearchDataManager private constructor(val UserPreferences: UserPreferences
     }
 
     fun getFiats(): Single<ExchangeRates> {
-        return RxPaperBook.with().read(Constants.PAPER_ALL_RATES, ExchangeRates())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
     fun getAllCrypto(): Single<Currencies> {
-        return RxPaperBook.with().read(Constants.PAPER_ALL_CRYPTOS)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
     }
 }

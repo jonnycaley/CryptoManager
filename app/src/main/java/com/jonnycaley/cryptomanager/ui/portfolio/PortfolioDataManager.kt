@@ -60,10 +60,10 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun readBaseFiat(): Single<Rate> {
-        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
     fun readFiats(): Single<ExchangeRates> {
-        return RxPaperBook.with().read(Constants.PAPER_ALL_RATES, ExchangeRates())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
 }

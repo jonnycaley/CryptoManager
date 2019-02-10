@@ -110,13 +110,13 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     override fun showTop100Changes(currencies: List<Currency>?, baseFiat : Rate) {
 
-        val arrayList = ArrayList<Currency>()
-
-        currencies?.forEach { arrayList.add(it) }
+//        val arrayList = ArrayList<Currency>()
+//
+//        currencies?.forEach { arrayList.add(it) }
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerViewCurrencies.layoutManager = mLayoutManager
-        currenciesAdapter = CurrenciesAdapter(arrayList, baseFiat,  context)
+        currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat,  context)
         recyclerViewCurrencies.adapter = currenciesAdapter
     }
 

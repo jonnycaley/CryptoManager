@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.base
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.jonnycaley.cryptomanager.utils.interfaces.ActivityArgs
 
 data class BaseArgs(val fragment: Int) : ActivityArgs {

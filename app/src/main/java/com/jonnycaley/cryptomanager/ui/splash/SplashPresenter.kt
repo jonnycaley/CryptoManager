@@ -1,11 +1,14 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -63,11 +66,12 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                 .doOnError {
                     getCurrencies()
                 }
-                .subscribeOn(Schedulers.io()) //computation as this is a large data set and therefore will be cpu intensive
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Exchanges> {
                     override fun onSuccess(t: Exchanges) {
-                        view.showUsingStorage()
+//                        view.showUsingStorage()
+                        view.hideProgressBar()
                         view.toBaseActivity()
                     }
 
@@ -174,9 +178,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     override fun onError(e: Throwable) {
                         Log.i(TAG, "test: ${e.message}")
                     }
-
                 })
-
     }
 
     companion object {

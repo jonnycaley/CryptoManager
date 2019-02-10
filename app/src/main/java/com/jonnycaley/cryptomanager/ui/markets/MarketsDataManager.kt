@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
 import android.content.Context
+import android.util.Log
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
@@ -50,15 +51,15 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
     }
 
     fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with().read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
     fun saveArticles(savedArticles: ArrayList<Article>) : Completable {
-        return RxPaperBook.with().write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }
 
     fun getBaseFiat(): Single<Rate> {
-        return RxPaperBook.with().read(Constants.PAPER_BASE_RATE)
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
 }

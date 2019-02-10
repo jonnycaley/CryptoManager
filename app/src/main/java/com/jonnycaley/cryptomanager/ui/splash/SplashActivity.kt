@@ -1,17 +1,21 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 
-
 class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     private lateinit var presenter : SplashContract.Presenter
+
+    val progressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -36,11 +40,13 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         setTheme(R.style.darktheme)
     }
 
+    override fun hideProgressBar() {
+        progressBar.visibility = View.GONE
+    }
+
     override fun showUsingStorage() {
 //        Toast.makeText(this, R.string.using_offline_data, Toast.LENGTH_SHORT).show()
     }
-
-
 
     override fun toBaseActivity() {
         BaseArgs(0).launch(this)
