@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.markets
 
 import android.widget.SearchView
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
@@ -16,6 +17,7 @@ interface MarketsContract {
         fun showContentLayout()
         fun showProgressBarLayout()
         fun hideContentLayout()
+        fun showMarketData(marketData: Market?)
     }
 
     interface Presenter : BasePresenter {
@@ -23,5 +25,6 @@ interface MarketsContract {
         fun saveArticle(article: Article)
         fun removeArticle(article: Article)
         fun onResume()
+        fun loadMoreItems(currencies: ArrayList<Currency>?)
     }
 }

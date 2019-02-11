@@ -16,6 +16,9 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
+import android.R.attr.data
+
+
 
 class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, var savedArticles: ArrayList<Article>, var context: Context?, var presenter: HomeContract.Presenter?) : RecyclerView.Adapter<HomeArticlesVerticalAdapter.ViewHolder>() {
 
@@ -70,7 +73,6 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         if (relatedCrypto != null) {
 
             val percentage2DP = Utils.formatPercentage(relatedCrypto!!.quote?.uSD?.percentChange24h?.toBigDecimal())
-
 //                val animRed = ObjectAnimator.ofInt(holder.layoutStockRed, "backgroundColor", Color.WHITE, Color.RED,
 //                        Color.WHITE)
 //                val animGreen = ObjectAnimator.ofInt(holder.layoutStockGreen, "backgroundColor", Color.WHITE, Color.GREEN,
@@ -83,7 +85,6 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 //                animGreen.duration = 1000
 //                animGreen.setEvaluator(ArgbEvaluator())
 //                animGreen.repeatMode = ValueAnimator.REVERSE
-
             when {
                 percentage2DP.substring(0, 1) == "+" -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
@@ -91,13 +92,11 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
                     holder.layoutStockGreen.visibility = View.VISIBLE
                     holder.stockNameGreen.text = relatedCrypto!!.symbol?.toUpperCase()
                     holder.stockPercentageGreen.text = percentage2DP
-
 //                        animGreen.start()//does not work as changes background permanently :(
 //                holder.movement.text = "▲"
                 }
                 else -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
-
                     holder.layoutStockRed.visibility = View.VISIBLE
                     holder.stockNameRed.text = relatedCrypto!!.symbol?.toUpperCase()
                     holder.stockPercentageRed.text = percentage2DP
@@ -116,14 +115,14 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             }
     }
 
-//        top100.forEach { crypto ->
+//        topcurrencies.forEach { crypto ->
 //            var bool = false
 //            if((item?.title?.toUpperCase()?.contains(crypto.name!!.toUpperCase())!!   ||   item.title?.toUpperCase()?.contains(crypto.symbol!!.toUpperCase())!! )
 //                    && (item.coins!!.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() })){
 //
 //                if(position != 0){
-//                    if((!((newsItems?.get(position -1)?.title?.toUpperCase()?.contains(crypto.name!!.toUpperCase())!!   ||   newsItems?.get(position -1)?.title?.toUpperCase()?.contains(crypto.symbol!!.toUpperCase())!! )
-//                            && (newsItems?.get(position -1)?.coins!!.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() })))){
+//                    if((!((currencies?.get(position -1)?.title?.toUpperCase()?.contains(crypto.name!!.toUpperCase())!!   ||   currencies?.get(position -1)?.title?.toUpperCase()?.contains(crypto.symbol!!.toUpperCase())!! )
+//                            && (currencies?.get(position -1)?.coins!!.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() })))){
 //
 //                        bool = true
 //
@@ -203,9 +202,20 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         }
     }
 
+    fun swap(newsItems: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
+        this.newsItems.clear()
+        this.savedArticles.clear()
+        this.newsItems.putAll(newsItems)
+        this.savedArticles.addAll(savedArticles)
+
+        Log.i(TAG, this.newsItems.size.toString())
+        Log.i(TAG, this.savedArticles.size.toString())
+        this.notifyDataSetChanged()
+    }
+
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return newsItems?.size ?: 0
+        return newsItems.size
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

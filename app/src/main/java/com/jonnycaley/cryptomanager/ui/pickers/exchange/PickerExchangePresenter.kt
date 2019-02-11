@@ -28,19 +28,22 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
 
     private fun getExchanges(crypto: String?) {
 
+        var exchanges = ArrayList<Exchange>()
+
         dataManager.readAllExchanges()
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { gson ->
+                    if(crypto != null){
+                        gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ exchanges.add(exchange) } } }
+                    } else {
+                        exchanges = gson.exchanges as ArrayList<Exchange>
+                    }
+                }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Exchanges> {
-                    override fun onSuccess(gson: Exchanges) {
-                        if(crypto != null){
-                            val newExchanges = ArrayList<Exchange>()
-                            gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ newExchanges.add(exchange) } } }
-
-                            view.showExchanges(newExchanges)
-                        } else {
-                            view.showExchanges(gson.exchanges)
-                        }
+                .subscribe(object : SingleObserver<Unit?> {
+                    override fun onSuccess(gson: Unit) {
+                        view.showExchanges(exchanges)
                     }
 
                     override fun onSubscribe(d: Disposable) {

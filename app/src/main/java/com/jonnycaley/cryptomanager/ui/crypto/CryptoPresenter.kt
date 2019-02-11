@@ -30,7 +30,7 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
         if(dataManager.checkConnection()){
 
             dataManager.getCryptoCompareService().getGeneralInfo(view.getSymbol(), "USD")
-                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<GeneralInfo> {
                         override fun onComplete() {

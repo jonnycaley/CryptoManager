@@ -66,23 +66,28 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
+                .map { transactions ->
+                    view.stopRefreshing()
 
-                    override fun onSuccess(transactions: ArrayList<Transaction>) {
-                        view.stopRefreshing()
-
-                        if (transactions.isEmpty()) {
-                            view.showNoHoldingsLayout()
-                            view.hideRefreshing()
-                        } else {
+                    if (transactions.isEmpty()) {
+                        view.showNoHoldingsLayout()
+                        view.hideRefreshing()
+                    } else {
 //                            when (timePeriod) {
 //                                PortfolioFragment.TIME_PERIOD_ALL -> getLatestPrices(combineTransactions(transactions))
 //                                else -> getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
 //                            }
-                            transactions.forEach { Log.i(TAG, "Transaction(exchange = ${it.exchange}, symbol = ${it.symbol}, pairSymbol = ${it.pairSymbol}, quantity = ${it.quantity}, price = ${it.price}, priceUSD = ${it.priceUSD}, date = ${it.date}, notes = ${it.notes}, isDeducted = ${it.isDeducted}, isDeductedPriceUsd = ${it.isDeductedPriceUsd}, baseImageUrl = ${it.baseImageUrl}, pairImageUrl = ${it.pairImageUrl}, btcPrice = ${it.btcPrice}, ethPrice = ${it.ethPrice})") }
+                        transactions.forEach { Log.i(TAG, "Transaction(exchange = ${it.exchange}, symbol = ${it.symbol}, pairSymbol = ${it.pairSymbol}, quantity = ${it.quantity}, price = ${it.price}, priceUSD = ${it.priceUSD}, date = ${it.date}, notes = ${it.notes}, isDeducted = ${it.isDeducted}, isDeductedPriceUsd = ${it.isDeductedPriceUsd}, baseImageUrl = ${it.baseImageUrl}, pairImageUrl = ${it.pairImageUrl}, btcPrice = ${it.btcPrice}, ethPrice = ${it.ethPrice})") }
+                    }
+                    transactions
+                }
+                .observeOn(Schedulers.computation())
+                .map { transactions ->
+                    getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
+                }
+                .subscribe(object : SingleObserver<Unit> {
 
-                            getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
-                        }
+                    override fun onSuccess(transactions: Unit) {
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -114,9 +119,10 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             var changeUsd = 0.toBigDecimal()
 
             dataManager.getExchangeRateService().getExchangeRates()
+                    .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { fiats -> fiatPrices = Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java) }
-                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getMultiPrice(getCryptoQueryString(holdings), "USD") } // gets all crypto conversion rates for all time info
                     .observeOn(Schedulers.computation())
                     .map { json -> Gson().fromJson(JsonModifiers.jsonToMultiPrices(json), MultiPrices::class.java) }
@@ -133,7 +139,6 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //                        Log.i(TAG, "ETH Price: ${newPrices.first { it.symbol?.toUpperCase() == "ETH" }}")
                         view.saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices), getBalanceEth(holdingsSorted, newPrices ), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
                     }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
                         override fun onComplete() {
@@ -141,7 +146,6 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                         }
 
                         override fun onNext(baseFiat: Unit) {
-
                             view.hideRefreshing()
                         }
 
@@ -154,13 +158,10 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                             view.stopRefreshing()
                             view.showError()
                         }
-
                     })
-
         } else {
 
         }
-
     }
 
     private fun updateView() {
@@ -185,6 +186,8 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         if (dataManager.checkConnection()) {
 
             Observable.fromArray(holdings)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(Schedulers.computation())
                     .flatMapIterable { holding -> holding }
                     .flatMap { holding ->
                         //get the price at the time frame requested
@@ -245,7 +248,6 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         gson
                     }
-                    .subscribeOn(Schedulers.computation())
                     .map { cryptoPrices ->
 
                         Log.i(TAG, "Got data for cryptoSymbol: $cryptoSymbol")
@@ -305,7 +307,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         prices.add(cryptoPrices)
                     }
-                    .subscribeOn(Schedulers.io())
+//                    .map {
+//                        setHistoricalBtcEthHoldings(prices, transactions, holdings, timePeriod)
+//                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Boolean> {
 
@@ -429,7 +433,6 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
     }
 
-
     var priceBtcHistorical = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
     var priceEthHistorical = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
 
@@ -456,6 +459,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             }
 
             dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "BTC", "USD", aggregateStr)
+                    .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { btcResponse ->
 
@@ -585,12 +589,13 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //                            holding.costEth = newHoldingCostEth
 //                        }
                     }
-                    .subscribeOn(Schedulers.io())
+                    .map {
+                        getHistoricalPrices(holdings, transactions, timePeriod)
+                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
 
                         override fun onComplete() {
-                            getHistoricalPrices(holdings, transactions, timePeriod)
                         }
 
                         override fun onNext(cryptoPrices: Unit) {

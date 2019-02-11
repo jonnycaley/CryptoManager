@@ -47,17 +47,18 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
     override fun saveArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .map { savedArticles ->
                     if(savedArticles.none { it.url == topArticle.url })
                         savedArticles.add(topArticle)
                     return@map savedArticles
                 }
+                .observeOn(Schedulers.io())
                 .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -75,13 +76,14 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
     override fun removeArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
-                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
-                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
+                .observeOn(Schedulers.io())
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {

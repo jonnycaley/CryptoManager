@@ -63,11 +63,12 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         //checking for cryptos is long and if the exchanges is stored it is 99.9% likely the cryptos are as well as they are both done in the same stream
 
         dataManager.readAllExchanges()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .doOnError {
                     getCurrencies()
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Exchanges> {
                     override fun onSuccess(t: Exchanges) {
 //                        view.showUsingStorage()
@@ -94,6 +95,8 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
             val rate = Rate(); rate.fiat = "USD"; rate.rate = 1.toBigDecimal()
 
             dataManager.getExchangeRateService().getExchangeRates()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.io())
                     .flatMapCompletable { json ->
                         dataManager.saveAllRates(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java))
                     }
@@ -118,7 +121,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 //                    .flatMap { response ->
 //                        dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java)).toObservable<Any>()
 //                    }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object :  CompletableObserver {
 

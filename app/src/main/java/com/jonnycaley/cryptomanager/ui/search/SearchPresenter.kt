@@ -59,8 +59,9 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
     private fun getAllCurrencies() {
 
         dataManager.getAllCrypto()
-                .map { json -> allCurrencies = json }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { json -> allCurrencies = json }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {

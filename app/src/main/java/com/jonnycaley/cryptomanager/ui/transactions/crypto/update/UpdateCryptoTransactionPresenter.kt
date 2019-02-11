@@ -50,6 +50,8 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
         if (dataManager.checkConnection()) {
 
             dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
                     .map {
                         json ->
 
@@ -60,7 +62,9 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
 
                         println("btcPrice PRICE: $btcPrice")
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
@@ -69,9 +73,10 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                             ethPrice = gson.uSD!!
 
                         println("ethPrice PRICE: $ethPrice")
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(pair, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
@@ -79,35 +84,34 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                             isDeductedPriceUsd = gson.uSD!!
 
                         println("isDeductedPriceUsd PRICE: $isDeductedPriceUsd")
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(view.getSymbol(), "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
                         if(gson.uSD != null)
                             priceUsd = gson.uSD!!
                         println("priceUsd PRICE: $priceUsd ")
-
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getAllCryptos() }
+                    .observeOn(Schedulers.computation())
                     .map { cryptos -> allCryptos = cryptos }
+                    .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
-
                         val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price.toBigDecimal(), priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.remove(originalTransaction)
                         transactions.add(newTransaction)
                         return@map transactions
                     }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<java.util.ArrayList<Transaction>> {
 
                         override fun onComplete() {
-
                         }
 
                         override fun onNext(transactions: java.util.ArrayList<Transaction>) {

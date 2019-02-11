@@ -13,6 +13,8 @@ interface HomeContract {
         fun showScrollLayout()
         fun showProgressBar()
         fun showNoInternet()
+        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
+        fun setIsLoading(b: Boolean)
     }
 
     interface Presenter : BasePresenter {
@@ -20,5 +22,6 @@ interface HomeContract {
         fun saveArticle(topArticle: Article)
         fun removeArticle(topArticle: Article)
         fun onResume()
+        fun getMoreArticles(size: Int)
     }
 }

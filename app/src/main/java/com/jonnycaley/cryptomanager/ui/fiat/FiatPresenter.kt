@@ -28,18 +28,28 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
 
     override fun getTransactions(fiatSymbol: String) {
 
+        val filteredTrans = ArrayList<Transaction>()
+        var symbol = ""
+        var withdrawnFiatCount = 0.toBigDecimal()
+        var depositedFiatCount = 0.toBigDecimal()
+        var availableFiatCount = 0.toBigDecimal()
+
         dataManager.getTransactions()
-                .map { transactions -> transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) } }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { transactions -> filteredTrans.addAll(transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) }.sortedBy { it.date }.asReversed()) }
+                .map { symbol = Utils.getFiatSymbol(view.getFiatCode()) }
+                .map { withdrawnFiatCount = getWithdrawnFiatCount(filteredTrans, fiatSymbol) }
+                .map { depositedFiatCount = getDepositedFiatCount(filteredTrans, fiatSymbol) }
+                .map { availableFiatCount = getAvailableFiatCount(filteredTrans, fiatSymbol) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<List<Transaction>> {
+                .subscribe(object : SingleObserver<Unit> {
 
-                    override fun onSuccess(transactions: List<Transaction>) {
-
-                        view.showAvailableFiat(Utils.getFiatSymbol(view.getFiatCode()), getAvailableFiatCount(transactions, fiatSymbol))
-                        view.showDepositedFiat(Utils.getFiatSymbol(view.getFiatCode()), getDepositedFiatCount(transactions, fiatSymbol))
-                        view.showWithdrawnFiat(Utils.getFiatSymbol(view.getFiatCode()), getWithdrawnFiatCount(transactions, fiatSymbol))
-                        view.showTransactions(Utils.getFiatSymbol(view.getFiatCode()), transactions.sortedBy { it.date }.asReversed())
+                    override fun onSuccess(transactions: Unit) {
+                        view.showAvailableFiat(symbol, availableFiatCount)
+                        view.showDepositedFiat(symbol, depositedFiatCount)
+                        view.showWithdrawnFiat(symbol, withdrawnFiatCount)
+                        view.showTransactions(symbol, filteredTrans)
                     }
 
                     override fun onSubscribe(d: Disposable) {

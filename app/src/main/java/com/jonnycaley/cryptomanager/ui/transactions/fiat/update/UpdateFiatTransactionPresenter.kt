@@ -40,6 +40,8 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
         if(dataManager.checkConnection()) {
 
             dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
                     .map {
                         json ->
 
@@ -50,7 +52,9 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
 
                         println("btcPrice PRICE: $btcPrice")
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
@@ -61,7 +65,9 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
                         println("ethPrice PRICE: $ethPrice")
 
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
@@ -71,7 +77,9 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
 
 
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getTransactions() }
+                    .observeOn(Schedulers.computation())
                     .map { transactions ->
 
                         val newTransaction = Transaction(exchange, currency, null, quantity.toBigDecimal(), priceUsd, priceUsd, date, notes, false, 1.toBigDecimal(), null, null, btcPrice, ethPrice)
@@ -83,8 +91,8 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
 
                         return@map transactions
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
 

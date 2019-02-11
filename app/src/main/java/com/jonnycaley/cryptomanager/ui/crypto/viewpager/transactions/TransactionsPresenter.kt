@@ -41,7 +41,6 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Price> {
                         override fun onComplete() {
-
                         }
 
                         override fun onNext(response: Price) {
@@ -98,9 +97,11 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         var transactionz : List<Transaction>? = null
 
         dataManager.getTransactions()
-                .map { transactions -> transactionz = transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted)) } }
-                .flatMap { dataManager.getBaseFiat() }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { transactions -> transactionz = transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted)) } }
+                .observeOn(Schedulers.io())
+                .flatMap { dataManager.getBaseFiat() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Rate> {
                     override fun onSuccess(baseFiat: Rate) {

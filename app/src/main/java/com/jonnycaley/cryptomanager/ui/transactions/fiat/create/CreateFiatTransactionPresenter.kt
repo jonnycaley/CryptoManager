@@ -35,40 +35,45 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
         var btcPrice = 1.toBigDecimal()
         var ethPrice = 1.toBigDecimal()
 
-        if(dataManager.checkConnection()) {
+        if (dataManager.checkConnection()) {
 
-             dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
-                    .map {
-                        json ->
+            dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
+                    .map { json ->
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
-                        if(gson.uSD != null)
+                        if (gson.uSD != null)
                             btcPrice = gson.uSD!!
 
                         println("btcPrice PRICE: $btcPrice")
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
-                        if(gson.uSD != null)
+                        if (gson.uSD != null)
                             ethPrice = gson.uSD!!
 
                         println("ethPrice PRICE: $ethPrice")
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
-                        if(gson.uSD != null)
+                        if (gson.uSD != null)
                             priceUsd = gson.uSD!!
                         println("priceUsd PRICE: $priceUsd ")
 
 
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
@@ -82,13 +87,11 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
 
                         override fun onComplete() {
                             view.onTransactionComplete()
-
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -108,7 +111,7 @@ class CreateFiatTransactionPresenter(var dataManager: CreateFiatTransactionDataM
     }
 
     private fun saveTransactions(transactions: ArrayList<Transaction>) {
-        if(dataManager.checkConnection()){
+        if (dataManager.checkConnection()) {
 
             dataManager.saveTransactions(transactions)
                     .subscribeOn(Schedulers.io())

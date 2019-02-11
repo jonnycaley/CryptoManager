@@ -29,6 +29,7 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
     private fun getPairs(exchange: String?, crytpoSymbol: String?) {
 
         dataManager.getExchanges()
+                .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { exchanges ->
                     if(exchange != "" && exchange != null) {
@@ -51,7 +52,6 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
 
                     return@map converters
                 }
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ArrayList<String>> {
 

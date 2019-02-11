@@ -35,13 +35,15 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
     override fun saveArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .map { savedArticles ->
                     if (savedArticles.none { it.url == topArticle.url })
                         savedArticles.add(topArticle)
                     return@map savedArticles
                 }
+                .observeOn(Schedulers.io())
                 .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
@@ -62,13 +64,14 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
     override fun removeArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
-                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
-                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
+                .observeOn(Schedulers.io())
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -95,26 +98,25 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //                    .map { if(this.news.isNotEmpty())
 //                        view.showNews(this.news, savedArticles)
 //                    }
-            dataManager.getCryptoControlService().getTopNews(newsCount)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe {
-                        view.showProgressBar()
-                    }
+            dataManager.getCryptoControlService().getTopNews()
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { news ->
                         this.news.clear()
                         news.forEach { this.news.add(it) }
                     }
+                    .observeOn(Schedulers.io())
                     .flatMapCompletable {
                         dataManager.saveTopNews(this.news)
                     }
+                    .observeOn(Schedulers.computation())
                     .subscribe(object : CompletableObserver {
                         override fun onComplete() {
                             getTop100()
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBar()
                             compositeDisposable?.add(d)
                         }
 
@@ -134,6 +136,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //                    }
 //                    .flatMap {
 
+            var linkedCryptos : HashMap<Article, Currency?>? = null
+
             dataManager.readTopNews()
                     .toObservable()
                     .subscribeOn(Schedulers.io())
@@ -149,20 +153,24 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     .flatMapSingle {
                         dataManager.readTop100()
                     }
+                    .observeOn(Schedulers.computation())
                     .map { top100 ->
                         if (top100.data == null || top100.data?.isEmpty()!!) {
                             view.showNoInternet()
                         } else {
                             this.top100.clear()
                             top100.data!!.forEach { this.top100.add(it) }
-                            view.showNews(linkCryptoToArticles(this.news, this.top100), savedArticles)
+                            linkedCryptos = linkCryptoToArticles(this.news, this.top100)
+//                            view.showNews(linkCryptoToArticles(this.news, this.topcurrencies), savedArticles)
 //                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseFiat.toLowerCase() })
                         }
                     }
-                    .subscribeOn(Schedulers.io())
+                    .filter { this.top100.isEmpty() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Any> {
                         override fun onComplete() {
+                            if(linkedCryptos != null)
+                                view.showNews(linkedCryptos!!, savedArticles)
                             view.hideProgressBar()
                             view.showScrollLayout()
                         }
@@ -183,15 +191,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         }
     }
 
+    var linkedCrypto = HashMap<Article, Currency?>()
+
     fun getTop100() {
 
         if (dataManager.checkConnection()) {
-
-            var articles = HashMap<Article, Currency?>()
-
-            var linkedCrypto = HashMap<Article, Currency?>()
-
-            Log.i(TAG, "Runninz")
 
             dataManager.getCoinMarketCapService().getTop100()
                     .subscribeOn(Schedulers.io())
@@ -207,7 +211,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         dataManager.saveTop100(currencies)
                     }
 //                    .observeOn(Schedulers.computation())
-//                    .andThen { articles = linkCryptoToArticles(news, top100) }
+//                    .andThen { articles = linkCryptoToArticles(news, topcurrencies) }
 //                    .flatMapCompletable { currencies ->
 //                        savedCurrencies = currencies
 //                        dataManager.saveTop100(currencies)
@@ -240,7 +244,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         }
 
                         override fun onError(e: Throwable) {
-                            Log.i(TAG, "onError: getTop100: ${e.message}")
+                            Log.i(TAG, "onError: getTopcurrencies: ${e.message}")
 //                            view.showError()
                         }
 
@@ -248,7 +252,49 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         } else {
 
         }
+    }
 
+    override fun getMoreArticles(size: Int) {
+
+        if(dataManager.checkConnection()){
+
+            val moreNews = size+8
+
+            Log.i(TAG, "newsSizerequest: $moreNews")
+
+            dataManager.getCryptoControlService().getTopNews()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
+                    .map { news ->
+                        this.news.clear()
+                        news.forEach { this.news.add(it) }
+                        linkedCrypto = linkCryptoToArticles(this.news, top100)
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMapCompletable {
+                        dataManager.saveTopNews(this.news)
+                    }
+                    .observeOn(Schedulers.computation())
+                    .subscribe(object : CompletableObserver {
+                        override fun onComplete() {
+                            Log.i(TAG, "linkedCrypto: ${linkedCrypto.size}")
+                            Log.i(TAG, "savedArticles: ${savedArticles.size}")
+                            view.showNews(linkedCrypto, savedArticles)
+                            view.setIsLoading(false)
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            Log.i(TAG, "onErrorGetNews: ${e.message}")
+                        }
+                    })
+
+        } else {
+
+        }
     }
 
     override fun onResume() {
@@ -256,23 +302,27 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         //TODO: changing theme and then navigating to the home fragment forces a reload because the data held with the activity is overwritten. check storage if activity data is empty too?
         //TODO: clicking too and from quickly breaks at linkCryptoToArticles
 
-        Log.i(TAG, "Loading old news")
+        var linkedCryptos = HashMap<Article, Currency?>()
+
+//        Log.i(TAG, "Loading old news")
         dataManager.getSavedArticles()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { savedArticles ->
                     this.savedArticles = savedArticles
                 }
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.computation())
                 .map {
                     if(!news.isEmpty() && !top100.isEmpty())
-                        view.showNews(linkCryptoToArticles(news, top100), this@HomePresenter.savedArticles)
+                        linkedCryptos = linkCryptoToArticles(news, top100)
                 }
-                .observeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(savedArticles: Unit) {
+                        if(linkedCryptos.isNotEmpty())
+                            view.showNews(linkedCryptos, this@HomePresenter.savedArticles)
                         if (news.isEmpty() || top100.isEmpty()) {
-                            Log.i(TAG, "Getting news")
+//                            Log.i(TAG, "Getting news")
                             getNews()
                         } else {
                             getTop100()
@@ -321,9 +371,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     private fun linkCryptoToArticles(newsItems: ArrayList<Article>, top100: ArrayList<Currency>): HashMap<Article, Currency?> {
 
-        val map = HashMap<Article, Currency?>()//put in it
-
-        Log.i(TAG, "linking crypto's")
+        val map = HashMap<Article, Currency?>() //put in it
 
         for (i in 0 until newsItems.size) {
 
@@ -348,7 +396,6 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             }
             map[item] = cryptoOrNull
         }
-        Log.i(TAG, "crypto's linked!")
         return map
     }
 
@@ -359,8 +406,9 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     companion object {
         val TAG = "HomePresenter"
-
-        var newsCount = "10"
     }
-
 }
+
+//TODO: THINGS TO CONSIDER
+//TODO: CAN WE LOAD DATA BEFORE SAVING IT TO SAVE TIME
+//TODO: CAN WE MAKE REQUESTS AT THE SAME TIME INSTEAD OF IN A CHAIN

@@ -42,7 +42,6 @@ class BaseActivity : AppCompatActivity() {
     private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Toast.makeText(this, "Base Activity", Toast.LENGTH_SHORT).show()
 
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.darktheme)

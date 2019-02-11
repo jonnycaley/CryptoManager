@@ -30,10 +30,11 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
         if(dataManager.checkConnection()){
 
             dataManager.getExchangeRateService().getExchangeRates()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
                     .map { fiats ->
                         return@map Gson().fromJson(JsonModifiers.jsonToCurrencies(fiats), ExchangeRates::class.java)
                     }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<ExchangeRates> {
                         override fun onComplete() {

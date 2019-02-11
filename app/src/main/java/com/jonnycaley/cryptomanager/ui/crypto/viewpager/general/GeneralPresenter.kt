@@ -45,7 +45,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     override fun getData() {
         clearChartDisposable()
         clearDisposable()
-//      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be seperate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
+//      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be separate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
         getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H)
         getCurrencyGeneralData(view.getSymbol())
         getCurrencyNews(view.getSymbol())
@@ -57,12 +57,12 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
         if(dataManager.checkConnection()){
             dataManager.getCryptoCompareServiceWithScalars().getGeneralData(symbol, "USD")
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
                     .map { json -> JsonModifiers.jsonToGeneral(json) }
                     .map { json -> data = Gson().fromJson(json, Data::class.java) }
                     .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getBaseFiat() }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Rate> {
                         override fun onComplete() {

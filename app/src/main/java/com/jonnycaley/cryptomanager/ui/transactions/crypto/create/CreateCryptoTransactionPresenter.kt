@@ -45,6 +45,8 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
         if (dataManager.checkConnection()) {
 
             dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
                     .map {
                         json ->
 
@@ -55,7 +57,9 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
 
                         println("btcPrice PRICE: $btcPrice")
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
@@ -64,9 +68,10 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                             ethPrice = gson.uSD!!
 
                         println("ethPrice PRICE: $ethPrice")
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(pair, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
@@ -74,19 +79,20 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                             isDeductedPriceUsd = gson.uSD!!
 
                         println("isDeductedPriceUsd PRICE: $isDeductedPriceUsd")
-
                     }
+                    .observeOn(Schedulers.io())
                     .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(view.getSymbol(), "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
                     .map { json ->
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
 
                         if(gson.uSD != null)
                             priceUsd = gson.uSD!!
                         println("priceUsd PRICE: $priceUsd ")
-
-
                     } //TODO: CHECK THIS LMAO :((((((((
+                    .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getAllCryptos() }
+                    .observeOn(Schedulers.computation())
                     .map { currencies -> allCryptos = currencies }
                     .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getTransactions() }
@@ -98,7 +104,6 @@ class CreateCryptoTransactionPresenter(var dataManager: CreateCryptoTransactionD
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
-                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
                         override fun onComplete() {

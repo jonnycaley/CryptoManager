@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface CryptoControlService {
 
     @GET("news")
-    fun getTopNews(@Query("limit") limit: String): Observable<Array<Article>>
+    fun getTopNews(): Observable<Array<Article>>
 
 
     @GET("news?latest=true")

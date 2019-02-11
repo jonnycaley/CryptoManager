@@ -32,9 +32,11 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
         var baseFiat = Rate()
 
         dataManager.getBaseFiat()
-                .map { fiat -> baseFiat = fiat }
-                .flatMap { dataManager.getFiats() }
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { fiat -> baseFiat = fiat }
+                .observeOn(Schedulers.io())
+                .flatMap { dataManager.getFiats() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ExchangeRates> {
                     override fun onSuccess(fiats: ExchangeRates) {

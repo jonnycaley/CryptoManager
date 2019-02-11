@@ -3,11 +3,11 @@ package com.jonnycaley.cryptomanager.ui.home
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.graphics.Color
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -28,11 +28,11 @@ import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatDelegate
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
 import android.widget.RelativeLayout
+import com.bumptech.glide.Glide
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
+import com.jonnycaley.cryptomanager.utils.interfaces.PaginationScrollListener
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener {
@@ -46,7 +46,8 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     lateinit var topArticle: Article
 
-    val scrollLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout >(R.id.swipelayout) }
+    val scrollLayout by lazy { mView.findViewById<NestedScrollView>(R.id.scroll_layout) }
+    val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout >(R.id.swipelayout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
@@ -116,7 +117,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         super.onViewCreated(view, savedInstanceState)
 
         cardStar.setOnLikeListener(this)
-        scrollLayout.setOnRefreshListener(this)
+        swipeLayout.setOnRefreshListener(this)
 
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
         presenter.attachView()
@@ -156,12 +157,12 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     override fun hideProgressBar() {
         Log.i(TAG, "hideProgressBar")
         progressBarLayout.visibility = View.GONE
-        scrollLayout.isRefreshing = false
+        swipeLayout.isRefreshing = false
     }
 
     override fun showScrollLayout() {
         Log.i(TAG, "showScrollLayout")
-        scrollLayout.visibility = View.VISIBLE
+        swipeLayout.visibility = View.VISIBLE
     }
 
     override fun showProgressBar() {
@@ -170,6 +171,9 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     }
 
     var newsLayoutManager : LinearLayoutManager? = null
+
+    var isLastPage: Boolean = false
+    var isLoading: Boolean = false
 
     override fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
 
@@ -181,12 +185,41 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
 
-        showTopNewsArticle(headerArticle)
+//        if(newsLayoutManager == null){
 
-        newsLayoutManager = LinearLayoutManager(context)
-        recyclerViewShimmerNews.layoutManager = newsLayoutManager
-        articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
-        recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+            newsLayoutManager = LinearLayoutManager(context)
+
+            recyclerViewShimmerNews.layoutManager = newsLayoutManager
+            articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
+            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+
+//            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
+//                override fun isLastPage(): Boolean {
+//                    return isLastPage
+//                }
+//
+//                override fun isLoading(): Boolean {
+//                    return isLoading
+//                }
+//
+//                override fun loadMoreItems() {
+//                    isLoading = true
+//                    getMoreItems()
+//                }
+//
+//            })
+//        } else {
+//
+//            Log.i(TAG, "Loading old layout manager")
+//            Log.i(TAG, "news size: ${news.size}")
+//            Log.i(TAG, "savedArticles size: ${savedArticles.size}")
+//
+//            articlesVerticalAdapter.swap(news, savedArticles)
+//
+//            recyclerViewShimmerNews.adapter.notifyDataSetChanged()
+//        }
+
+        showTopNewsArticle(headerArticle)
 
 //        if(newsLayoutManager == null) {
 //            Log.i(TAG, "1")
@@ -196,12 +229,30 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 //            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
 //        } else {
 //            Log.i(TAG, "2")
-//            articlesVerticalAdapter.newsItems = news
+//            articlesVerticalAdapter.currencies = news
 //            articlesVerticalAdapter.savedArticles = savedArticles
 //            articlesVerticalAdapter.notifyDataSetChanged()
-////            articlesVerticalAdapter.newsItems?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
+////            articlesVerticalAdapter.currencies?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
 //        }
 
+    }
+
+    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
+
+        val headerArticle = news.keys.first()
+
+        news.remove(headerArticle)
+
+        topArticle = headerArticle
+
+        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
+
+        articlesVerticalAdapter.swap(news, savedArticles)
+
+    }
+
+    override fun setIsLoading(b: Boolean) {
+        isLoading = false
     }
 
     private fun showTopNewsArticle(article: Article) {
@@ -210,7 +261,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
             ArticleArgs(article).launch(context!!)
         }
 
-        Picasso.with(context)
+        Picasso.with(context!!)
                 .load(article.originalImageUrl)
                 .fit()
                 .centerCrop()

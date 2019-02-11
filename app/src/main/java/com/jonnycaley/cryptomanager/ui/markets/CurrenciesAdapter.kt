@@ -12,15 +12,25 @@ import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_currency_list.view.*
 
-class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
+class CurrenciesAdapter(val currencies: ArrayList<Currency>?, var baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_currency_list, parent, false))
     }
 
+
+
+    fun swap(currencies: ArrayList<Currency>?, baseFiat : Rate)
+    {
+        this.currencies?.clear()
+        this.currencies?.addAll(currencies!!)
+        this.baseFiat = baseFiat
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val item = newsItems?.get(position)
+        val item = currencies?.get(position)
 
         val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!.toDouble())
 
@@ -81,7 +91,7 @@ class CurrenciesAdapter(val newsItems: ArrayList<Currency>?, val baseFiat : Rate
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return newsItems?.size ?: 0
+        return currencies?.size ?: 0
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
