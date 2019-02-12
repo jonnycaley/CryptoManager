@@ -6,27 +6,23 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
-import android.R.attr.duration
-import android.os.Handler
-import android.os.Looper
 import android.support.v4.widget.NestedScrollView
+import android.util.Log
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.PaginationScrollListener
 import java.math.BigDecimal
 
 
-class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener {
+class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     lateinit var root: View
 
@@ -37,25 +33,25 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     lateinit var similarArticlesAdapter: ArticlesHorizontalAdapter
 
     val recyclerViewCurrencies by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_currencies) }
-    val recyclerViewLatestNews by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_latest_news) }
-
     val searchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
-
-    val progressBar by lazy { root.findViewById<ProgressBar>(R.id.progress_bar) }
-
+    val progressBar by lazy { root.findViewById<ProgressBar>(R.id.progress_bar_bottom) }
     val progressBarLayout by lazy { root.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
-
     val swipeRefreshLayout by lazy { root.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
-
     val nestedScrollView by lazy { root.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
+
+    val rank by lazy { root.findViewById<TextView>(R.id.rank) }
+    val name by lazy { root.findViewById<TextView>(R.id.name) }
+    val price by lazy { root.findViewById<TextView>(R.id.price) }
+    val change by lazy { root.findViewById<TextView>(R.id.change) }
 
     val textMarketCap by lazy { root.findViewById<TextView>(R.id.text_market_cap) }
     val textVolume by lazy { root.findViewById<TextView>(R.id.text_volume) }
     val textBTCDominance by lazy { root.findViewById<TextView>(R.id.text_btc_dominance) }
 
-    val textMarketCapPercentage by lazy { root.findViewById<TextView>(R.id.text_market_cap_percentage) }
-    val textVolumePercentage by lazy { root.findViewById<TextView>(R.id.text_volume_percentage) }
-    val textBTCDominancePercentage by lazy { root.findViewById<TextView>(R.id.text_btc_dominance_percentage) }
+    var isLastPage = false
+    var isLoading = false
+
+    var filter = "FILTER_NONE"
 
     override fun setPresenter(presenter: MarketsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -66,27 +62,97 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         return root
     }
 
-    var isLastPage = false
-    var isLoading = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
 
         swipeRefreshLayout.setOnRefreshListener(this)
 
+        rank.setOnClickListener(this)
+        name.setOnClickListener(this)
+        price.setOnClickListener(this)
+        change.setOnClickListener(this)
+
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
 
-    private val mHandler = Handler(Looper.getMainLooper())
-    val pixelsToMove = 30
+    override fun onClick(v: View?) {
+        when(v?.id){
+            rank.id -> {
+                if(filter == FILTER_RANK_DOWN)
+                    filter = FILTER_RANK_UP
+                else
+                    filter = FILTER_RANK_DOWN
 
-    private val SCROLLING_RUNNABLE = object : Runnable {
+                changeSortText()
+                notifyFilterChanged()
+            }
+            name.id -> {
+                if(filter == FILTER_NAME_DOWN)
+                    filter = FILTER_NAME_UP
+                else
+                    filter = FILTER_NAME_DOWN
 
-        override fun run() {
-            recyclerViewLatestNews.smoothScrollBy(pixelsToMove, 0)
-            mHandler.postDelayed(this, duration.toLong())
+                changeSortText()
+                notifyFilterChanged()
+            }
+            price.id -> {
+                if(filter == FILTER_PRICE_DOWN)
+                    filter = FILTER_PRICE_UP
+                else
+                    filter = FILTER_PRICE_DOWN
+
+                changeSortText()
+                notifyFilterChanged()
+            }
+            change.id -> {
+                if(filter == FILTER_CHANGE_DOWN)
+                    filter = FILTER_CHANGE_UP
+                else
+                    filter = FILTER_CHANGE_DOWN
+                changeSortText()
+                notifyFilterChanged()
+            }
         }
+    }
+
+    private fun changeSortText() {
+        rank.text = "#"
+        name.text = "Name (Symbol)"
+        price.text = "Price"
+        change.text = "Change"
+
+        when(filter){
+            FILTER_RANK_DOWN -> {
+                rank.text = "#▼"
+            }
+            FILTER_RANK_UP -> {
+                rank.text = "#▲"
+            }
+            FILTER_NAME_DOWN -> {
+                name.text = "Name (Symbol)▼"
+            }
+            FILTER_NAME_UP -> {
+                name.text = "Name (Symbol)▲"
+            }
+            FILTER_PRICE_DOWN -> {
+                price.text = "Price▼"
+            }
+            FILTER_PRICE_UP -> {
+                price.text = "Price▲"
+            }
+            FILTER_CHANGE_DOWN -> {
+                change.text = "Change▼"
+            }
+            FILTER_CHANGE_UP -> {
+                change.text = "Change▲"
+            }
+        }
+    }
+
+    private fun notifyFilterChanged() {
+        if(mLayoutManager != null)
+            currenciesAdapter.sort(filter)
     }
 
     override fun showMarketData(marketData: Market?) {
@@ -116,11 +182,15 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     var mLayoutManager : LinearLayoutManager? = null
 
-    override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate) {
+    override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int) {
 
 //        val arrayList = ArrayList<Currency>()
 //
 //        currencies?.forEach { arrayList.add(it) }
+
+
+        Log.i(TAG, "resultsCount: $resultsCount")
+        Log.i(TAG, "currencies size: ${currencies?.size}")
 
         if(mLayoutManager == null) {
 
@@ -140,12 +210,57 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
                 override fun loadMoreItems() {
                     isLoading = true
-                    presenter.loadMoreItems(currenciesAdapter.currencies)
+                    if(resultsCount > currenciesAdapter.currencies?.size!!){
+                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+                        progressBar.visibility = View.VISIBLE
+                    } else {
+                        progressBar.visibility = View.GONE
+                    }
                 }
             })
         } else {
 
-            currenciesAdapter.swap(currencies as ArrayList<Currency>?, baseFiat)
+            currenciesAdapter.swap(ArrayList(currencies), baseFiat)
+
+            if(currencies?.size!! < 100 || resultsCount <= currenciesAdapter.currencies?.size!!) {
+                println("1")
+                progressBar.visibility = View.GONE
+
+                nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
+                    override fun isLastPage(): Boolean {
+                        return false
+                    }
+
+                    override fun isLoading(): Boolean {
+                        return false
+                    }
+
+                    override fun loadMoreItems() {
+
+                    }
+                })
+            } else {
+                println("2")
+                nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
+                    override fun isLastPage(): Boolean {
+                        return isLastPage
+                    }
+
+                    override fun isLoading(): Boolean {
+                        return isLoading
+                    }
+
+                    override fun loadMoreItems() {
+                        isLoading = true
+                        if(resultsCount > currenciesAdapter.currencies?.size!!){
+                            presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+                            progressBar.visibility = View.VISIBLE
+                        } else {
+                            progressBar.visibility = View.GONE
+                        }
+                    }
+                })
+            }
 
         }
     }
@@ -153,24 +268,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     var layoutManager: LinearLayoutManager? = null
 
-    override fun showLatestArticles(latestArticles: ArrayList<Article>, savedArticles: ArrayList<Article>) {
-
-        if (layoutManager == null) {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            recyclerViewLatestNews.layoutManager = object : LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false) {
-            }
-            similarArticlesAdapter = ArticlesHorizontalAdapter(latestArticles, savedArticles, context, presenter)
-            recyclerViewLatestNews.adapter = similarArticlesAdapter
-        } else {
-            similarArticlesAdapter.latestArticles = latestArticles
-            similarArticlesAdapter.savedArticles = savedArticles
-            similarArticlesAdapter.notifyDataSetChanged()
-        }
-    }
-
 
     override fun onRefresh() {
-        presenter.loadMoreItems(null)
+        presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.currencies?.size!!, searchView.query.trim())
     }
 
     override fun onResume() {
@@ -184,6 +284,8 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     override fun hideProgressBarLayout() {
         progressBarLayout.visibility = View.GONE
         swipeRefreshLayout.isRefreshing = false
+        Log.i(TAG, "${swipeRefreshLayout.isRefreshing}")
+
     }
 
     override fun showContentLayout() {
@@ -212,5 +314,20 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     companion object {
         val TAG = "MarketsFragment"
+
+        val FILTER_NONE = "FILTER_NONE"
+
+        val FILTER_RANK_DOWN = "FILTER_RANK_DOWN"
+        val FILTER_RANK_UP = "FILTER_RANK_UP"
+
+        val FILTER_NAME_DOWN = "FILTER_NAME_DOWN"
+        val FILTER_NAME_UP = "FILTER_NAME_UP"
+
+        val FILTER_PRICE_DOWN = "FILTER_PRICE_DOWN"
+        val FILTER_PRICE_UP = "FILTER_PRICE_UP"
+
+        val FILTER_CHANGE_DOWN = "FILTER_CHANGE_DOWN"
+        val FILTER_CHANGE_UP = "FILTER_CHANGE_UP"
+
     }
 }

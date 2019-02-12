@@ -11,8 +11,9 @@ import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_currency_list.view.*
+import java.util.*
 
-class CurrenciesAdapter(val currencies: ArrayList<Currency>?, var baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
+class CurrenciesAdapter(var currencies: ArrayList<Currency>?, var baseFiat : Rate, val context: Context?) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_currency_list, parent, false))
@@ -28,9 +29,48 @@ class CurrenciesAdapter(val currencies: ArrayList<Currency>?, var baseFiat : Rat
         notifyDataSetChanged()
     }
 
+    fun sort(filter : String)
+    {
+        var tempCurrencies : List<Currency>? = null
+        when(filter){
+            MarketsFragment.FILTER_RANK_DOWN ->{
+                tempCurrencies = currencies?.sortedBy { it.cmcRank }
+            }
+            MarketsFragment.FILTER_RANK_UP ->{
+                tempCurrencies = currencies?.sortedBy { it.cmcRank }?.asReversed()
+            }
+            MarketsFragment.FILTER_NAME_DOWN ->{
+                tempCurrencies = currencies?.sortedBy { it.name }
+            }
+            MarketsFragment.FILTER_NAME_UP ->{
+                tempCurrencies = currencies?.sortedBy { it.name }?.asReversed()
+            }
+            MarketsFragment.FILTER_PRICE_DOWN ->{
+                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.price }
+            }
+            MarketsFragment.FILTER_PRICE_UP ->{
+                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.price }?.asReversed()
+            }
+            MarketsFragment.FILTER_CHANGE_DOWN ->{
+                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange24h }
+            }
+            MarketsFragment.FILTER_CHANGE_UP ->{
+                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
+            }
+            else -> {
+                tempCurrencies = currencies?.sortedBy { it.cmcRank }
+            }
+        }
+        this.currencies?.clear()
+        this.currencies?.addAll(tempCurrencies!!)
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = currencies?.get(position)
+
+        holder.setIsRecyclable(false)
 
         val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!.toDouble())
 
@@ -39,7 +79,7 @@ class CurrenciesAdapter(val currencies: ArrayList<Currency>?, var baseFiat : Rat
         val percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h)
 
         when {
-            percentage2DP == "0.00" -> {
+            (percentage2DP == "0.00" || percentage2DP == "nu") -> {
                 holder.percentage.text = "+$percentage2DP%"
 //                holder.movement.text = "-"
             }

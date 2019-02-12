@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
+import com.jonnycaley.cryptomanager.data.NomicsService
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -41,6 +43,11 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
         return retrofit.create(CoinMarketCapService::class.java)
     }
 
+    fun getNomicsService(): NomicsService {
+        val retrofit = RetrofitHelper().createRetrofit(Constants.NOMICS_URL, Constants.NOMICS_NAME, Constants.NOMICS_KEY)
+        return retrofit.create(NomicsService::class.java)
+    }
+
     fun getCryptoControlService(): CryptoControlService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCONTROL_URL, Constants.CRYPTOCONTROL_NAME, Constants.CRYPTOCONTROL_KEY)
         return retrofit.create(CryptoControlService::class.java)
@@ -60,6 +67,14 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
 
     fun getBaseFiat(): Single<Rate> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
+    }
+
+    fun saveCurrencies(currencies: Currencies) : Completable {
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_MARKETS_ALL_CURRENCIES, currencies)
+    }
+
+    fun getCurrencies() : Single<Currencies>{
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_MARKETS_ALL_CURRENCIES)
     }
 
 }

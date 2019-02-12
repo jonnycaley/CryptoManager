@@ -29,7 +29,6 @@ import com.squareup.picasso.Picasso
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatDelegate
 import android.widget.RelativeLayout
-import com.bumptech.glide.Glide
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.interfaces.PaginationScrollListener
 import kotlinx.android.synthetic.main.fragment_home.*

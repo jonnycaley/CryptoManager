@@ -10,8 +10,7 @@ import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
 interface MarketsContract {
     interface View : BaseView<Presenter> {
-        fun showTop100Changes(currencies: List<Currency>?, baseFiat : Rate)
-        fun showLatestArticles(latestArticles: ArrayList<Article>, savedArticles: ArrayList<Article>)
+        fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int)
         fun getCurrencySearchView(): SearchView
         fun hideProgressBarLayout()
         fun showContentLayout()
@@ -25,6 +24,7 @@ interface MarketsContract {
         fun saveArticle(article: Article)
         fun removeArticle(article: Article)
         fun onResume()
-        fun loadMoreItems(currencies: ArrayList<Currency>?)
+        fun loadMoreItems(currencies: ArrayList<Currency>?, moreItemsCount: Int, searchString: CharSequence)
+        fun getResultsCounter(): Int
     }
 }

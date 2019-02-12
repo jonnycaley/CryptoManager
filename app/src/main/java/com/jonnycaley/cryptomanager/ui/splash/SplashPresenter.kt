@@ -122,7 +122,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 //                        dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java)).toObservable<Any>()
 //                    }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object :  CompletableObserver {
+                    .subscribe(object : CompletableObserver {
 
                         override fun onComplete() {
 //                            test()

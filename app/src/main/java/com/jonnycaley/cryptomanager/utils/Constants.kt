@@ -12,6 +12,10 @@ object Constants {
 
     val CRYPTOCOMPARE_URL = "https://min-api.cryptocompare.com/data/"
 
+    val NOMICS_URL = "https://api.nomics.com/v1/"
+    val NOMICS_NAME = "key"
+    val NOMICS_KEY = "ffd09ddd8aa77c61c14fcf6876631a50"
+
     val EXCHANGERATES_URL = "https://api.exchangeratesapi.io/"
 
     val PAPER_ALL_CRYPTOS = "all_cryptos"
@@ -26,6 +30,8 @@ object Constants {
 
     val PAPER_HOME_TOP_NEWS = "home_top_news"
     val PAPER_HOME_TOP_100 = "home_top_100"
+
+    val PAPER_MARKETS_ALL_CURRENCIES = "markets_all_currencies"
 
     val PAPER_SAVED_ARTICLES = "saved_articles"
 
