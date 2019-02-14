@@ -55,12 +55,12 @@ class BaseActivity : AppCompatActivity() {
 //        fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
 //        fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
 
-        loadFragmentNew(args.fragment)
-
 //        if(fm.findFragmentByTag(fragment1TAG) == null)
 //            fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
 //        fm.beginTransaction().hide(active).show(fragment1).commit()
 //        active = fragment1
+
+        loadFragmentNew(args.fragment)
 
         navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {

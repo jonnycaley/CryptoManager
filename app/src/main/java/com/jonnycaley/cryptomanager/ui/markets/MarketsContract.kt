@@ -17,6 +17,9 @@ interface MarketsContract {
         fun showProgressBarLayout()
         fun hideContentLayout()
         fun showMarketData(marketData: Market?)
+        fun stopRefreshing()
+        fun getCurrenciesAdapterCount(): Int
+        fun getSort(): String
     }
 
     interface Presenter : BasePresenter {

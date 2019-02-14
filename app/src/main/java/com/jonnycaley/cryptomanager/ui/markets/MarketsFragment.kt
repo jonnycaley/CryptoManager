@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -30,8 +31,6 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     lateinit var currenciesAdapter: CurrenciesAdapter
 
-    lateinit var similarArticlesAdapter: ArticlesHorizontalAdapter
-
     val recyclerViewCurrencies by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_currencies) }
     val searchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
     val progressBar by lazy { root.findViewById<ProgressBar>(R.id.progress_bar_bottom) }
@@ -48,10 +47,16 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     val textVolume by lazy { root.findViewById<TextView>(R.id.text_volume) }
     val textBTCDominance by lazy { root.findViewById<TextView>(R.id.text_btc_dominance) }
 
+    val text1H by lazy { root.findViewById<TextView>(R.id.text_1H) }
+    val text1D by lazy { root.findViewById<TextView>(R.id.text_1D) }
+    val text1W by lazy { root.findViewById<TextView>(R.id.text_1W) }
+
     var isLastPage = false
     var isLoading = false
 
-    var filter = "FILTER_NONE"
+    var filter = FILTER_NONE
+
+    var timeframe = TIMEFRAME_1H
 
     override fun setPresenter(presenter: MarketsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -71,6 +76,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         name.setOnClickListener(this)
         price.setOnClickListener(this)
         change.setOnClickListener(this)
+
+        text1H.setOnClickListener(this)
+        text1D.setOnClickListener(this)
+        text1W.setOnClickListener(this)
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
@@ -113,6 +122,49 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 changeSortText()
                 notifyFilterChanged()
             }
+            text1H.id -> {
+                timeframe = TIMEFRAME_1H
+                changeTimeFrameText()
+                notifyTimeFrameChanged()
+            }
+            text1D.id -> {
+                timeframe = TIMEFRAME_1D
+                changeTimeFrameText()
+                notifyTimeFrameChanged()
+            }
+            text1W.id -> {
+                timeframe = TIMEFRAME_1W
+                changeTimeFrameText()
+                notifyTimeFrameChanged()
+            }
+        }
+    }
+
+    private fun changeTimeFrameText() {
+
+        text1H.setTypeface(null, Typeface.NORMAL)
+        text1D.setTypeface(null, Typeface.NORMAL)
+        text1W.setTypeface(null, Typeface.NORMAL)
+
+        when(timeframe) {
+            TIMEFRAME_1H -> {
+                text1H.setTypeface(text1H.typeface, Typeface.BOLD)
+            }
+            TIMEFRAME_1D -> {
+                text1D.setTypeface(text1D.typeface, Typeface.BOLD)
+            }
+            TIMEFRAME_1W -> {
+                text1W.setTypeface(text1W.typeface, Typeface.BOLD)
+            }
+        }
+    }
+
+    private fun notifyTimeFrameChanged() {
+        //change the percentage that shows
+        if(mLayoutManager != null) {
+            currenciesAdapter = CurrenciesAdapter(currenciesAdapter.currencies, currenciesAdapter.baseFiat, context, timeframe)
+            recyclerViewCurrencies.adapter = currenciesAdapter
+            currenciesAdapter.sort(filter)
         }
     }
 
@@ -161,42 +213,34 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
         textVolume.text = "$${truncateNumber(marketData.data?.quote?.uSD?.totalVolume24h!!)}"
 
-        textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance!!.toBigDecimal())
+        textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance!!.toBigDecimal()).substring(1)
 
-    }
-
-    val MILLION = 1000000L.toBigDecimal()
-    val BILLION = 1000000000L.toBigDecimal()
-    val TRILLION = 1000000000000.toBigDecimal()
-
-    fun truncateNumber(x: BigDecimal): String {
-        return if (x < MILLION)
-            x.toString()
-        else if (x < BILLION)
-            String.format("%.2f", (x / MILLION).toString()) + " M"
-        else if (x < TRILLION)
-            String.format("%.2f", x / BILLION)+ " B"
-        else
-            String.format("%.2f", x / TRILLION) + " T"
     }
 
     var mLayoutManager : LinearLayoutManager? = null
 
+    override fun getCurrenciesAdapterCount(): Int {
+        if(mLayoutManager == null)
+            return 100
+        else
+            return currenciesAdapter.currencies?.size ?: 100
+    }
+
+    override fun getSort(): String {
+        return filter
+    }
+
     override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int) {
 
-//        val arrayList = ArrayList<Currency>()
-//
-//        currencies?.forEach { arrayList.add(it) }
-
-
-        Log.i(TAG, "resultsCount: $resultsCount")
-        Log.i(TAG, "currencies size: ${currencies?.size}")
+        Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E1")
 
         if(mLayoutManager == null) {
 
+            Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E2")
+
             mLayoutManager = LinearLayoutManager(context)
             recyclerViewCurrencies.layoutManager = mLayoutManager
-            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context)
+            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context, timeframe)
             recyclerViewCurrencies.adapter = currenciesAdapter
 
             nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
@@ -219,6 +263,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 }
             })
         } else {
+
+            Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E3")
+            Log.i(MarketsPresenter.TAG, resultsCount.toString())
+            Log.i(MarketsPresenter.TAG, currenciesAdapter.currencies?.size.toString()!!)
 
             currenciesAdapter.swap(ArrayList(currencies), baseFiat)
 
@@ -261,16 +309,19 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                     }
                 })
             }
-
         }
+        currenciesAdapter.sort(filter)
     }
-
 
     var layoutManager: LinearLayoutManager? = null
 
 
     override fun onRefresh() {
         presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.currencies?.size!!, searchView.query.trim())
+    }
+
+    override fun stopRefreshing() {
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onResume() {
@@ -285,7 +336,21 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         progressBarLayout.visibility = View.GONE
         swipeRefreshLayout.isRefreshing = false
         Log.i(TAG, "${swipeRefreshLayout.isRefreshing}")
+    }
 
+    val MILLION = 1000000L.toBigDecimal()
+    val BILLION = 1000000000L.toBigDecimal()
+    val TRILLION = 1000000000000.toBigDecimal()
+
+    fun truncateNumber(x: BigDecimal): String {
+        return if (x < MILLION)
+            x.toString()
+        else if (x < BILLION)
+            String.format("%.2f", (x / MILLION).toString()) + " M"
+        else if (x < TRILLION)
+            String.format("%.2f", x / BILLION)+ " B"
+        else
+            String.format("%.2f", x / TRILLION) + " T"
     }
 
     override fun showContentLayout() {
@@ -328,6 +393,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
         val FILTER_CHANGE_DOWN = "FILTER_CHANGE_DOWN"
         val FILTER_CHANGE_UP = "FILTER_CHANGE_UP"
+
+        val TIMEFRAME_1H = "TIMEFRAME_1H"
+        val TIMEFRAME_1D = "TIMEFRAME_1D"
+        val TIMEFRAME_1W = "TIMEFRAME_1W"
 
     }
 }

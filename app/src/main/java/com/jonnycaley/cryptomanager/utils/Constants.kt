@@ -32,6 +32,8 @@ object Constants {
     val PAPER_HOME_TOP_100 = "home_top_100"
 
     val PAPER_MARKETS_ALL_CURRENCIES = "markets_all_currencies"
+    val PAPER_MARKETS_GENERAL_INFO = "markets_general_market"
+
 
     val PAPER_SAVED_ARTICLES = "saved_articles"
 

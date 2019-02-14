@@ -46,7 +46,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     lateinit var topArticle: Article
 
     val scrollLayout by lazy { mView.findViewById<NestedScrollView>(R.id.scroll_layout) }
-    val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout >(R.id.swipelayout) }
+    val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout>(R.id.swipelayout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
@@ -169,7 +169,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         progressBarLayout.visibility = View.VISIBLE
     }
 
-    var newsLayoutManager : LinearLayoutManager? = null
+    var newsLayoutManager: LinearLayoutManager? = null
 
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
@@ -186,11 +186,11 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
 //        if(newsLayoutManager == null){
 
-            newsLayoutManager = LinearLayoutManager(context)
+        newsLayoutManager = LinearLayoutManager(context)
 
-            recyclerViewShimmerNews.layoutManager = newsLayoutManager
-            articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
-            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+        recyclerViewShimmerNews.layoutManager = newsLayoutManager
+        articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
+        recyclerViewShimmerNews.adapter = articlesVerticalAdapter
 
 //            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
 //                override fun isLastPage(): Boolean {
@@ -274,7 +274,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     var layoutManager: LinearLayoutManager? = null
 
-    override fun showTop100Changes(sortedBy: ArrayList<Currency>) {
+    override fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
 
 //        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
 //                Color.WHITE)
@@ -350,7 +350,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                 name.text = currency.name
                 percentage.text = percentage2DP
 
-                background.setOnClickListener{
+                background.setOnClickListener {
                     CryptoArgs(currency.symbol!!).launch(context!!)
                 }
 
@@ -359,11 +359,11 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                         card.setBackgroundResource(R.drawable.border_green_large_round)
                         percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
 
-                        if(Math.random() < 0.6){
+                        if (Math.random() < 0.6) {
 
                             var color = 0
 
-                            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
                                 color = context?.resources?.getColor(R.color.backgroundblack)!!
                             else
                                 color = context?.resources?.getColor(R.color.backgroundwhite)!!
@@ -374,7 +374,9 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                             animGreen.setEvaluator(ArgbEvaluator())
                             animGreen.repeatMode = ValueAnimator.REVERSE
 
-                            animGreen.start()
+                            if (illuminate) {
+                                animGreen.start()
+                            }
                         }
                     }
                     else -> {
@@ -383,19 +385,21 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
                         var color = 0
 
-                        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
                             color = context?.resources?.getColor(R.color.backgroundblack)!!
                         else
                             color = context?.resources?.getColor(R.color.backgroundwhite)!!
 
-                        if(Math.random() < 0.6) {
+                        if (Math.random() < 0.6) {
                             val animRed = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.red)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
 
                             animRed.duration = 1500
                             animRed.setEvaluator(ArgbEvaluator())
                             animRed.repeatMode = ValueAnimator.REVERSE
 
-                            animRed.start()
+                            if (illuminate) {
+                                animRed.start()
+                            }
                         }
                     }
                 }

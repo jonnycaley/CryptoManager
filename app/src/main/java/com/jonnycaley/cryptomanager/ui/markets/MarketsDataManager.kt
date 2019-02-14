@@ -6,6 +6,8 @@ import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.NomicsService
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -69,12 +71,19 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
-    fun saveCurrencies(currencies: Currencies) : Completable {
+    fun saveCurrencies(currencies: List<Currency>?) : Completable {
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_MARKETS_ALL_CURRENCIES, currencies)
     }
 
-    fun getCurrencies() : Single<Currencies>{
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_MARKETS_ALL_CURRENCIES)
+    fun getCurrencies() : Single<List<Currency>>{
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_MARKETS_ALL_CURRENCIES, ArrayList())
     }
 
+    fun saveMarketInfo(currencies: Market) : Completable {
+        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_MARKETS_GENERAL_INFO, currencies)
+    }
+
+    fun getMarketInfo() : Single<Market> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_MARKETS_GENERAL_INFO, Market())
+    }
 }

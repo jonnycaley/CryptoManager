@@ -155,11 +155,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     }
                     .observeOn(Schedulers.computation())
                     .map { top100 ->
-                        if (top100.data == null || top100.data?.isEmpty()!!) {
+                        if (top100 == null || top100?.isEmpty()!!) {
                             view.showNoInternet()
                         } else {
                             this.top100.clear()
-                            top100.data!!.forEach { this.top100.add(it) }
+                            top100!!.forEach { this.top100.add(it) }
                             linkedCryptos = linkCryptoToArticles(this.news, this.top100)
 //                            view.showNews(linkCryptoToArticles(this.news, this.topcurrencies), savedArticles)
 //                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseFiat.toLowerCase() })
@@ -208,7 +208,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable { currencies ->
-                        dataManager.saveTop100(currencies)
+                        dataManager.saveTop100(currencies.data)
                     }
 //                    .observeOn(Schedulers.computation())
 //                    .andThen { articles = linkCryptoToArticles(news, topcurrencies) }
@@ -234,7 +234,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         override fun onComplete() {
                             Log.i(TAG, "onComplete1")
                             view.showNews(linkedCrypto, savedArticles)
-                            view.showTop100Changes(top100)
+                            view.showTop100Changes(top100, true)
                             view.showScrollLayout()
                             view.hideProgressBar()
                         }
@@ -311,16 +311,35 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                 .map { savedArticles ->
                     this.savedArticles = savedArticles
                 }
+                .observeOn(Schedulers.io())
+                .flatMap {
+                    dataManager.readTopNews()
+                }
                 .observeOn(Schedulers.computation())
-                .map {
-                    if(!news.isEmpty() && !top100.isEmpty())
-                        linkedCryptos = linkCryptoToArticles(news, top100)
+                .map{ news ->
+                    this.news = news
+                }
+                .observeOn(Schedulers.io())
+                .flatMap {
+                    dataManager.readTop100()
+                }
+                .observeOn(Schedulers.computation())
+                .map { t100 ->
+                    this.top100 = ArrayList(t100)
+
+                    if(!this.news.isEmpty() && !this.top100.isEmpty())
+                        linkedCryptos = linkCryptoToArticles(this.news, this.top100)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
-                    override fun onSuccess(savedArticles: Unit) {
-                        if(linkedCryptos.isNotEmpty())
-                            view.showNews(linkedCryptos, this@HomePresenter.savedArticles)
+                    override fun onSuccess(t: Unit) {
+                        if(linkedCryptos.isNotEmpty()) {
+                            view.showNews(linkedCryptos, savedArticles)
+                            view.showTop100Changes(top100, false)
+                            Log.i(TAG, "ShowingNewsssssss")
+                            view.hideProgressBar()
+                            view.showScrollLayout()
+                        }
                         if (news.isEmpty() || top100.isEmpty()) {
 //                            Log.i(TAG, "Getting news")
                             getNews()
