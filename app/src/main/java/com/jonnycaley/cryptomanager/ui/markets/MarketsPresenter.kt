@@ -125,7 +125,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .observeOn(Schedulers.computation())
                     .map { allCurrencies ->
                         Log.i(TAG, allCurrencies.size.toString())
-
+                        Log.i("ThreadShouldBe comp", Thread.currentThread().name)
                         val temp = allCurrencies?.filter { (it.name?.toLowerCase()?.contains(searchString)!!) || (it.symbol?.toLowerCase()?.contains(searchString)!!) }
                         this.topCurrencies = sort(temp?.take(newCount))
                         this.resultsCount = temp?.size!!
@@ -207,7 +207,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                 .debounce(750, TimeUnit.MILLISECONDS) // stream will go down after 1 second inactivity of user
                 .observeOn(Schedulers.io())
                 .flatMapSingle {
-                    Log.i(TAG, "runningm8")
+                    Log.i("ThreadShouldBe io", Thread.currentThread().name)
                     dataManager.getCurrencies()
                 }
                 .observeOn(Schedulers.computation())
@@ -216,7 +216,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     val temp = allCurrencies?.filter { (it.name?.toLowerCase()?.contains(searchView.query)!!) || (it.symbol?.toLowerCase()?.contains(searchView.query)!!) }
                     this.topCurrencies = sort(temp?.take(100))
                     this.resultsCount = temp?.size!!
-                    Log.i(TAG, "runningm8")
+                    Log.i("ThreadShouldBe comp", Thread.currentThread().name)
                     return@map this.topCurrencies
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -290,10 +290,11 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                 if (res2.data != null)
                     this.marketData = res2
                 this.baseFiat = res3
+                Log.i("ThreadShouldBe io", Thread.currentThread().name)
                 res1
             })
                     .map { res ->
-                        this.topCurrencies = sort(res?.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) }?.take(view.getCurrenciesAdapterCount()))!! //?.subList(0, 100)
+                        this.topCurrencies = sort(res.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) }?.take(view.getCurrenciesAdapterCount()))!! //?.subList(0, 100)
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
@@ -338,11 +339,13 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                 this.topCurrencies = sort(res1.data?.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) }?.take(view.getCurrenciesAdapterCount())) //?.subList(0, 100)
                 this.marketData = res2
                 this.baseFiat = res3
+                Log.i("ThreadShouldBe io", Thread.currentThread().name)
                 res1
             })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { res1 ->
+                        Log.i("ThreadShouldBe main", Thread.currentThread().name)
                         Log.i(TAG, "YOYOYOYO:   "+topCurrencies?.size)
                         view.showTop100Changes(this.topCurrencies, this.baseFiat!!, resultsCount)
                         view.showMarketData(marketData)
@@ -354,10 +357,12 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .observeOn(Schedulers.io())
                     .flatMapCompletable { allCurrencies ->
                         //IS THIS SAVING FUCK KNOWS
+                        Log.i("ThreadShouldBe io", Thread.currentThread().name)
                         Log.i(TAG, "Sehere: ${allCurrencies.data?.size}")
                         dataManager.saveCurrencies(allCurrencies.data)
                     }
                     .andThen {
+                        Log.i("ThreadShouldBe io", Thread.currentThread().name)
                         dataManager.saveMarketInfo(marketData!!)
                     }
                     .observeOn(AndroidSchedulers.mainThread())

@@ -13,19 +13,22 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone">
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:nestedScrollingEnabled="false"
+                android:descendantFocusability="blocksDescendants">
                 <!--blocksDescendants stops view from automatically scrolling to recyclerview ||| However, it prevents searchview from becoming clickable so i took it out-->
 
 

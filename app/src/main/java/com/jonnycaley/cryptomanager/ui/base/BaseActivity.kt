@@ -68,7 +68,7 @@ class BaseActivity : AppCompatActivity() {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
                     else
-                        (fragment1 as HomeFragment).onTabClicked()
+                        (fragment1 as HomeFragment).onTabClicked(active == fragment1)
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
                     return@OnNavigationItemSelectedListener true
@@ -78,7 +78,7 @@ class BaseActivity : AppCompatActivity() {
                     if(fm.findFragmentByTag(fragment2TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
                     else
-                        (fragment2 as MarketsFragment).onTabClicked()
+                        (fragment2 as MarketsFragment).onTabClicked(active == fragment2)
                     fm.beginTransaction().hide(active).show(fragment2).commit()
                     active = fragment2
                     return@OnNavigationItemSelectedListener true
@@ -88,7 +88,7 @@ class BaseActivity : AppCompatActivity() {
                     if(fm.findFragmentByTag(fragment3TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
                     else
-                        (fragment3 as PortfolioFragment).onTabClicked()
+                        (fragment3 as PortfolioFragment).onTabClicked(active == fragment3)
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
                     return@OnNavigationItemSelectedListener true
@@ -98,7 +98,7 @@ class BaseActivity : AppCompatActivity() {
                     if(fm.findFragmentByTag(fragment4TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment4, fragment4TAG).hide(fragment4).commit()
                     else
-                        (fragment4 as SettingsFragment).onTabClicked()
+                        (fragment4 as SettingsFragment).onTabClicked(active == fragment4)
                     fm.beginTransaction().hide(active).show(fragment4).commit()
                     active = fragment4
                     return@OnNavigationItemSelectedListener true

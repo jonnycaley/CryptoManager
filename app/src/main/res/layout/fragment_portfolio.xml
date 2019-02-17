@@ -8,8 +8,10 @@
     android:background="?attr/backgroundcolor">
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -202,7 +204,39 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin">
+
+                    <TextView
+                        android:id="@+id/text_sort_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:textColor="?attr/textcolor"
+                        android:paddingRight="@dimen/default_margin"/>
+
+
+                    <TextView
+                        android:id="@+id/text_sort_holdings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Holdings"
+                        android:textColor="?attr/textcolor"
+                        android:layout_toEndOf="@id/text_sort_name"/>
+
+                    <TextView
+                        android:id="@+id/text_sort_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Change"
+                        android:textColor="?attr/textcolor"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"

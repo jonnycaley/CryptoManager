@@ -71,7 +71,7 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
         BaseArgs(3).launch(context!!)
     }
 
-    override fun onTabClicked() {
+    override fun onTabClicked(isTabAlreadyClicked: Boolean) {
         Log.i(TAG, "onTabClicked()")
     }
 

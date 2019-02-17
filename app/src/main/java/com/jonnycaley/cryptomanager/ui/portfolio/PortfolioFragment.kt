@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.portfolio
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -35,6 +36,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
+    val nestedScrollView by lazy { mView.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
+
     val buttonAddCurrency by lazy { mView.findViewById<Button>(R.id.button_add_currency) }
     val buttonAddFiat by lazy { mView.findViewById<Button>(R.id.button_add_fiat) }
 
@@ -46,10 +49,15 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
     val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
 
+    val textSortName by lazy { mView.findViewById<TextView>(R.id.text_sort_name) }
+    val textSortHoldings by lazy { mView.findViewById<TextView>(R.id.text_sort_holdings) }
+    val textSortChange by lazy { mView.findViewById<TextView>(R.id.text_sort_change) }
+
     val radioGroup: RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
     var chosenPeriod = TIME_PERIOD_1H
     var chosenCurrency = CURRENCY_FIAT
+    var chosenSort = SORT_HOLDINGS_DESCENDING
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -69,13 +77,22 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         swipeLayout.setOnRefreshListener(this)
         textBalance.setOnClickListener(this)
         textChange.setOnClickListener(this)
+
+        textSortName.setOnClickListener(this)
+        textSortHoldings.setOnClickListener(this)
+        textSortChange.setOnClickListener(this)
+
         setUpPortfolioTimeChoices()
 
         presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
 
-    override fun onTabClicked() {
+    override fun onTabClicked(isTabAlreadyClicked: Boolean) {
+        if(isTabAlreadyClicked)
+            nestedScrollView.scrollTo(0,0)
+        else
+            presenter.getTransactions(chosenPeriod)
         Log.i(TAG, "onTabClicked()")
     }
 
@@ -130,7 +147,32 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 isPercentage = !isPercentage
                 updateView()
             }
+            textSortName.id -> {
+                if(chosenSort == SORT_NAME_DESCENDING)
+                    chosenSort = SORT_NAME_ASCENDING
+                else
+                    chosenSort = SORT_NAME_DESCENDING
+                onSortChanged()
+            }
+            textSortHoldings.id -> {
+                if(chosenSort == SORT_HOLDINGS_DESCENDING)
+                    chosenSort = SORT_HOLDINGS_ASCENDING
+                else
+                    chosenSort = SORT_HOLDINGS_DESCENDING
+                onSortChanged()
+            }
+            textSortChange.id -> {
+                if(chosenSort == SORT_CHANGE_DESCENDING)
+                    chosenSort = SORT_CHANGE_ASCENDING
+                else
+                    chosenSort = SORT_CHANGE_DESCENDING
+                onSortChanged()
+            }
         }
+    }
+
+    private fun onSortChanged() {
+        holdingsAdapter.onSortChanged(chosenSort)
     }
 
     private fun updateView() {
@@ -232,11 +274,13 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                     if(absBalance < 0.toBigDecimal())
                         absBalance = (absBalance * (-1).toBigDecimal())
 
-                    if((absBalance == 0.toBigDecimal()) || (change == 0.toBigDecimal())){
+                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
+
                         var changePct = change / absBalance
+                        //TODO: absBalance can still be 0 somehow lmao
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
 
@@ -271,7 +315,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                     val change = this.changeBtc
                     var absBalance = (this.balanceBtc - this.changeBtc).abs()
 
-                    if((absBalance == 0.toBigDecimal()) || (change == 0.toBigDecimal())){
+                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
@@ -312,7 +356,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                     val change = this.changeEth
                     var absBalance = (this.balanceEth - this.changeEth).abs()
 
-                    if((absBalance == 0.toBigDecimal()) || (change == 0.toBigDecimal())){
+                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
@@ -326,7 +370,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     fun formatPercentage(percentChange24h: BigDecimal?, view : TextView) {
 
-        if(percentChange24h == 0.toBigDecimal()) {
+        if(percentChange24h?.compareTo(0.toBigDecimal()) == 0) {
             context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
             view.text =  "-"
         } else {
@@ -415,6 +459,14 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         val CURRENCY_FIAT = "FIAT"
         val CURRENCY_BTC = "BTC"
         val CURRENCY_ETH = "ETH"
+
+        val SORT_HOLDINGS_ASCENDING = "HOLDINGS_ASCENDING"
+        val SORT_NAME_ASCENDING = "NAME_ASCENDING"
+        val SORT_CHANGE_ASCENDING = "CHANGE_ASCENDING"
+
+        val SORT_HOLDINGS_DESCENDING = "HOLDINGS_DESCENDING"
+        val SORT_NAME_DESCENDING = "NAME_DESCENDING"
+        val SORT_CHANGE_DESCENDING = "CHANGE_DESCENDING"
     }
 
 }

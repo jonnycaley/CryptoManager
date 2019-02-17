@@ -22,10 +22,119 @@ import kotlinx.android.synthetic.main.item_holding.view.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 
-class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
+class HoldingsAdapter(var holdings: ArrayList<Holding>?, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_holding, parent, false))
+    }
+
+    fun onSortChanged(sort : String){
+
+        val tempHoldings = ArrayList<Holding>()
+        tempHoldings.addAll(this.holdings!!)
+        this.holdings?.clear()
+
+        this.holdings?.addAll(tempHoldings?.sortedBy { holding ->
+
+            val price = prices.first { it.symbol?.toUpperCase() == holding?.symbol?.toUpperCase() }.prices?.uSD?.times(baseFiat.rate!!)
+            val value = price?.times(holding?.quantity!!)
+            val cost = holding?.costUsd?.times(baseFiat.rate!!)
+            val change = value?.minus(cost!!)
+
+            val costBtcHistorical = holding?.costBtc
+            val costBtcNow = holding?.quantity!! * prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.times(baseFiat.rate!!)
+
+            val costEthHistorical = holding?.costEth
+            val costEthNow = holding?.quantity!! * prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.times(baseFiat.rate!!)
+
+            var parameter = 0.toBigDecimal()
+
+            when (sort) {
+                PortfolioFragment.SORT_CHANGE_ASCENDING -> {
+                    if (isPercentage) {
+                        when (chosenCurrency) {
+                            PortfolioFragment.CURRENCY_BTC -> {
+                                Log.i(TAG, "BTC Percentage")
+                                var absBalanceBtc = holding.costBtc.abs()
+                                parameter = change?.div(absBalanceBtc)!!
+
+                            }
+                            PortfolioFragment.CURRENCY_ETH -> {
+                                Log.i(TAG, "ETH Percentage")
+                                var absBalanceEth = holding.costEth.abs()
+                                parameter = change?.div(absBalanceEth)!!
+                            }
+                            else -> { //FIAT
+                                Log.i(TAG, "FIAT Percentage")
+                                parameter = change
+                            }
+                        }
+                    } else {
+                        when (chosenCurrency) {
+                            PortfolioFragment.CURRENCY_BTC -> {
+                                parameter = costBtcNow - costBtcHistorical!!
+                            }
+                            PortfolioFragment.CURRENCY_ETH -> {
+                                parameter = costEthNow - costEthHistorical!!
+                            }
+                            PortfolioFragment.CURRENCY_FIAT -> {
+                                parameter = value?.minus(cost!!)!!
+                            }
+                        }
+                    }
+                }
+                PortfolioFragment.SORT_CHANGE_DESCENDING -> {
+                    if (isPercentage) {
+                        when (chosenCurrency) {
+                            PortfolioFragment.CURRENCY_BTC -> {
+                                Log.i(TAG, "BTC Percentage")
+                                val absBalanceBtc = holding.costBtc.abs()
+                                parameter = change?.div(absBalanceBtc)!! * (-1).toBigDecimal()
+
+                            }
+                            PortfolioFragment.CURRENCY_ETH -> {
+                                Log.i(TAG, "ETH Percentage")
+                                val absBalanceEth = holding.costEth.abs()
+                                parameter = change?.div(absBalanceEth)!! * (-1).toBigDecimal()
+                            }
+                            else -> { //FIAT
+                                Log.i(TAG, "FIAT Percentage")
+                                parameter = value?.minus(cost!!)!! * (-1).toBigDecimal()
+                            }
+                        }
+                    } else {
+                        when (chosenCurrency) {
+                            PortfolioFragment.CURRENCY_BTC -> {
+                                parameter = costBtcNow - costBtcHistorical!! * (-1).toBigDecimal()
+                            }
+                            PortfolioFragment.CURRENCY_ETH -> {
+                                parameter = costEthNow - costEthHistorical!! * (-1).toBigDecimal()
+                            }
+                            PortfolioFragment.CURRENCY_FIAT -> {
+                                value?.minus(cost!!)
+                            }
+                        }
+                    }
+                }
+                PortfolioFragment.SORT_NAME_ASCENDING -> {
+
+                }
+                PortfolioFragment.SORT_NAME_DESCENDING -> {
+
+                }
+                PortfolioFragment.SORT_HOLDINGS_ASCENDING -> {
+
+                }
+                PortfolioFragment.SORT_HOLDINGS_DESCENDING -> {
+
+                }
+                else -> {
+                }
+            }
+            parameter
+        })
+        notifyDataSetChanged()
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -54,8 +163,7 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
 
         var change = value?.minus(cost!!)
 
-
-        if (holding?.type == Variables.Transaction.Type.fiat) {
+        if (holding.type == Variables.Transaction.Type.fiat) {
 
             holder.price.visibility = View.GONE
             holder.change.text = "$symbol${Utils.formatPrice(value!!)}"
@@ -105,15 +213,15 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
                 }
                 PortfolioFragment.CURRENCY_ETH -> {
 
-                    val costBtcHistorical = holding?.costEth
-                    val costBtcNow = holding?.quantity!! * prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.times(baseFiat.rate!!)
+                    val costEthHistorical = holding?.costEth
+                    val costEthNow = holding?.quantity!! * prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD!!.times(baseFiat.rate!!) / prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD!!.times(baseFiat.rate!!)
 
                     symbol = "E"
 
 //                    if (holding.quantity < 0)
 //                        change = costBtcHistorical?.minus(costBtcNow!!)
 //                    else
-                    change = costBtcNow - costBtcHistorical!!
+                    change = costEthNow - costEthHistorical!!
 
                     if (holding.symbol == "ETH")
                         change = 0.toBigDecimal()
@@ -140,7 +248,7 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
 //                }
             }
 
-            var absBalanceBtc = holding.costEth.abs()
+            var absBalanceBtc = holding.costBtc.abs()
 
             var absBalanceEth = holding.costEth.abs()
 
@@ -171,8 +279,6 @@ class HoldingsAdapter(val holdings: ArrayList<Holding>?, val prices: ArrayList<P
             } else {
                 formatPrice(change!!, symbol, holder.change)
             }
-
-
 
 
             //TODO: GET THE CHANGE CORRECT & THINK ABOUT IT!!!!

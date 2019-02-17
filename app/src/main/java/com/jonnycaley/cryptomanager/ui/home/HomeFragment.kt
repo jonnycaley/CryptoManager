@@ -126,9 +126,15 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         presenter.onResume()
     }
 
-    override fun onTabClicked() {
+    override fun onTabClicked(isTabAlreadyClicked : Boolean) {
         Log.i(TAG, "onTabClicked()")
-        presenter.onResume()
+        if(isTabAlreadyClicked) {
+            scrollLayout.scrollTo(0, 0)
+            scrollLayout.fling(0)
+        }
+            //scroll to top
+        else
+            presenter.onResume()
     }
 
     override fun onResume() {

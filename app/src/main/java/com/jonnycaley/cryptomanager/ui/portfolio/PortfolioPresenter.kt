@@ -45,7 +45,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         dataManager.readFiats()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<ExchangeRates>{
+                .subscribe(object : SingleObserver<ExchangeRates> {
                     override fun onSuccess(exchangeRates: ExchangeRates) {
                         view.saveFiats(exchangeRates.rates)
                     }
@@ -135,9 +135,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                     .map { change -> changeUsd = getChangeUsd(holdingsSorted, newPrices) }
                     .map { getBalanceUsd(holdingsSorted, newPrices) }
                     .map { balance ->
-//                        Log.i(TAG, "BTC Price: ${newPrices.first { it.symbol?.toUpperCase() == "BTC" }}")
+                        //                        Log.i(TAG, "BTC Price: ${newPrices.first { it.symbol?.toUpperCase() == "BTC" }}")
 //                        Log.i(TAG, "ETH Price: ${newPrices.first { it.symbol?.toUpperCase() == "ETH" }}")
-                        view.saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices), getBalanceEth(holdingsSorted, newPrices ), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
+                        view.saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices), getBalanceEth(holdingsSorted, newPrices), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
@@ -231,17 +231,17 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                         val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price::class.java)
 
-                        if(gson.uSD != null)
+                        if (gson.uSD != null)
                             usdPrice = gson.uSD!!
 
                         println("usdPrice PRICE: $usdPrice")
 
-                        if(gson.eTh != null)
+                        if (gson.eTh != null)
                             ethPrice = gson.eTh!!
 
                         println("ethPrice PRICE: $ethPrice")
 
-                        if(gson.bTC != null)
+                        if (gson.bTC != null)
                             btcPrice = gson.bTC!!
 
                         println("btcPrice PRICE: $btcPrice")
@@ -352,7 +352,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                             var price = 1.toBigDecimal()
 
-                            if(prices.first { it.symbol?.toUpperCase() == transaction.symbol.toUpperCase() }.uSD != null) {
+                            if (prices.first { it.symbol?.toUpperCase() == transaction.symbol.toUpperCase() }.uSD != null) {
                                 price = prices.first { it.symbol?.toUpperCase() == transaction.symbol.toUpperCase() }.uSD!!
                                 Log.i(TAG, "Got price $price")
                             } else {
@@ -402,7 +402,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
                             var price = 1.toBigDecimal()
 
-                            if(prices.first { it.symbol?.toUpperCase() == transaction.pairSymbol?.toUpperCase() }.uSD != null)
+                            if (prices.first { it.symbol?.toUpperCase() == transaction.pairSymbol?.toUpperCase() }.uSD != null)
                                 price = prices.first { it.symbol?.toUpperCase() == transaction.pairSymbol?.toUpperCase() }.uSD!!
 
                             newHoldingCostBtc -= ((transaction.price * transaction.quantity * price) / priceBtcHistorical.prices?.uSD!!)
@@ -932,7 +932,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 Log.i(TAG, (it.quantity * it.price).toString())
 
                 imageUrl = it.pairImageUrl
-                getCurrentHoldings -= (it.price* it.quantity)
+                getCurrentHoldings -= (it.price * it.quantity)
                 getCostUsd -= it.price * it.quantity * it.isDeductedPriceUsd
                 getCostBtc -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.btcPrice))
                 getCostEth -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))

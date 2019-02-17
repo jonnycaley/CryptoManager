@@ -211,9 +211,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
         textMarketCap.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalMarketCap!!)}"
 
-        textVolume.text = "$${truncateNumber(marketData.data?.quote?.uSD?.totalVolume24h!!)}"
+        textVolume.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalVolume24h!!)}"
 
-        textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance!!.toBigDecimal()).substring(1)
+        textBTCDominance.text = Utils.formatPercentage(marketData?.data?.btcDominance!!.toBigDecimal()).substring(1)
 
     }
 
@@ -315,7 +315,6 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     var layoutManager: LinearLayoutManager? = null
 
-
     override fun onRefresh() {
         presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.currencies?.size!!, searchView.query.trim())
     }
@@ -328,8 +327,14 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         super.onResume()
         presenter.onResume()
     }
-    override fun onTabClicked() {
-        presenter.refresh()
+    override fun onTabClicked(isTabAlreadyClicked: Boolean) {
+        if(isTabAlreadyClicked) {
+            nestedScrollView.scrollTo(0, 0)
+            nestedScrollView.fling(0)
+        }
+        //scroll to top
+        else
+            presenter.refresh()
     }
 
     override fun hideProgressBarLayout() {
