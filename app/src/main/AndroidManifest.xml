@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jonnycaley.cryptomanager">
 
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
@@ -24,7 +25,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.splash.SplashActivity"
             android:alwaysRetainTaskState="true"
@@ -119,6 +121,11 @@
         <activity android:name=".ui.settings.selectCurrency.SelectCurrencyActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/select_currency_activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.settings.transactionHistory.TransactionHistoryActivity"
+            android:alwaysRetainTaskState="true"
+            android:label="@string/transaction_history_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

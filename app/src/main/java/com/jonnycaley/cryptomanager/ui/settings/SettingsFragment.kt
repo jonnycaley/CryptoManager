@@ -14,6 +14,7 @@ import android.widget.Switch
 import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
@@ -82,7 +83,7 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     override fun loadSettings(baseFiat: Rate) {
 
-        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})"))
+        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})", "Send Feedback", "Full transaction history"))
 
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
         val mLayoutManager = LinearLayoutManager(context)

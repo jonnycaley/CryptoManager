@@ -148,11 +148,12 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 updateView()
             }
             textSortName.id -> {
-                if(chosenSort == SORT_NAME_DESCENDING)
-                    chosenSort = SORT_NAME_ASCENDING
-                else
+                if(chosenSort == SORT_NAME_ASCENDING)
                     chosenSort = SORT_NAME_DESCENDING
+                else
+                    chosenSort = SORT_NAME_ASCENDING
                 onSortChanged()
+                notifySortTextChanged()
             }
             textSortHoldings.id -> {
                 if(chosenSort == SORT_HOLDINGS_DESCENDING)
@@ -160,6 +161,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 else
                     chosenSort = SORT_HOLDINGS_DESCENDING
                 onSortChanged()
+                notifySortTextChanged()
             }
             textSortChange.id -> {
                 if(chosenSort == SORT_CHANGE_DESCENDING)
@@ -167,6 +169,35 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 else
                     chosenSort = SORT_CHANGE_DESCENDING
                 onSortChanged()
+                notifySortTextChanged()
+            }
+        }
+    }
+
+    private fun notifySortTextChanged() {
+
+        textSortName.text = "Name"
+        textSortHoldings.text = "Holdings"
+        textSortChange.text = "Change"
+
+        when(chosenSort){
+            SORT_NAME_ASCENDING -> {
+                textSortName.text = "Name▼"
+            }
+            SORT_NAME_DESCENDING -> {
+                textSortName.text = "Name▲"
+            }
+            SORT_HOLDINGS_ASCENDING -> {
+                textSortHoldings.text = "Holdings▲"
+            }
+            SORT_HOLDINGS_DESCENDING -> {
+                textSortHoldings.text = "Holdings▼"
+            }
+            SORT_CHANGE_ASCENDING -> {
+                textSortChange.text = "Change▲"
+            }
+            SORT_CHANGE_DESCENDING -> {
+                textSortChange.text = "Change▼"
             }
         }
     }
@@ -424,6 +455,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, this.chosenCurrency, this.allFiats, this.isPercentage, context)
         recyclerView.adapter = holdingsAdapter
 
+        holdingsAdapter.onSortChanged(chosenSort)
     }
 
     fun newInstance(headerStr: String): MarketsFragment {

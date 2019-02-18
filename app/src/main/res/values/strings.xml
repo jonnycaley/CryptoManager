@@ -38,4 +38,5 @@
 
 
     <string name="bitcoin">\u20BF</string>
+    <string name="transaction_history_activity">Transaction History Activity</string>
 </resources>

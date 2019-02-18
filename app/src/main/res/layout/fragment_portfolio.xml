@@ -224,7 +224,7 @@
                         android:id="@+id/text_sort_holdings"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Holdings"
+                        android:text="Holdings▼"
                         android:textColor="?attr/textcolor"
                         android:layout_toEndOf="@id/text_sort_name"/>
 

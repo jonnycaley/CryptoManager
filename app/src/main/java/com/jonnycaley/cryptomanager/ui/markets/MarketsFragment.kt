@@ -209,11 +209,13 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     override fun showMarketData(marketData: Market?) {
 
-        textMarketCap.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalMarketCap!!)}"
+        //TODO: MARKET DATA COMES BACK NULL SOMETIMES WTF
 
-        textVolume.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalVolume24h!!)}"
-
-        textBTCDominance.text = Utils.formatPercentage(marketData?.data?.btcDominance!!.toBigDecimal()).substring(1)
+//        textMarketCap.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalMarketCap!!)}"
+//
+//        textVolume.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalVolume24h!!)}"
+//
+//        textBTCDominance.text = Utils.formatPercentage(marketData?.data?.btcDominance!!.toBigDecimal()).substring(1)
 
     }
 

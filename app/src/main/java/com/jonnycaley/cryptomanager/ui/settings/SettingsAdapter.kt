@@ -11,6 +11,9 @@ import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
 import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
+import android.support.v4.content.ContextCompat.startActivity
+import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity
+
 
 class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
@@ -39,6 +42,17 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
                 }
                 3 -> {
                     startActivity(context!!, Intent(context, SelectCurrencyActivity::class.java), null)
+                }
+                4 -> {
+                    val intent = Intent(Intent.ACTION_SEND)
+                    val recipients = arrayOf("jonathancaley@hotmail.co.uk")
+                    intent.putExtra(Intent.EXTRA_EMAIL, recipients)
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Crypot Manager Feedback")
+                    intent.type = "text/html"
+                    startActivity(context!!, Intent.createChooser(intent, "Send mail"), null)
+                }
+                5 -> {
+                    startActivity(context!!, Intent(context, TransactionHistoryActivity::class.java), null)
                 }
             }
         }
