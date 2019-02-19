@@ -10,7 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 
 class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
 import android.widget.Toast
+import com.jonnycaley.cryptomanager.BuildConfig
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.base.BaseActivity
@@ -83,7 +84,9 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     override fun loadSettings(baseFiat: Rate) {
 
-        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})", "Send Feedback", "Full transaction history"))
+        val versionName = BuildConfig.VERSION_NAME
+
+        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})", "Send Feedback", "Full transaction history", "Share this app", "Review this app", "Version $versionName"))
 
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
         val mLayoutManager = LinearLayoutManager(context)

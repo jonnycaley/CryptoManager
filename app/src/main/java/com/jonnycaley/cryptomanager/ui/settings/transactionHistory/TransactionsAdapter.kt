@@ -29,25 +29,29 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
             pairStr += "/${transaction?.pairSymbol}"
 
         holder.date.text = Utils.formatDate(transaction?.date!!)
-        holder.pair.text = pairStr
-        holder.exchange.text = transaction?.exchange
+        holder.pair.text = pairStr + " - " + transaction.exchange
 
-        var str = ""
+        var descriptionStart = ""
 
         if(transaction.pairSymbol == null) {
             if(transaction?.quantity!! > 0.toBigDecimal())
-                str = "Deposited "
+                descriptionStart = "Deposited "
             else if(transaction?.quantity!! < 0.toBigDecimal())
-                str = "Withdrew "
+                descriptionStart = "Withdrew "
 
         } else {
             if(transaction?.quantity!! > 0.toBigDecimal())
-                str = "Bought "
+                descriptionStart = "Bought "
             else if(transaction?.quantity!! < 0.toBigDecimal())
-                str = "Sold "
+                descriptionStart = "Sold "
         }
 
-        holder.description.text = str + transaction?.quantity.abs().toString() + " ${transaction.symbol} for ${transaction.price.abs() * transaction.quantity.abs()} ${transaction.pairSymbol}"
+        var descriptionEnd = ""
+
+        if(transaction.pairSymbol != null)
+            descriptionEnd += " for ${transaction.price.abs() * transaction.quantity.abs()} ${transaction.pairSymbol}"
+
+        holder.description.text = descriptionStart + transaction?.quantity.abs().toString() + " ${transaction.symbol} $descriptionEnd"
 
         holder.itemView.setOnClickListener {
             if(transaction.pairSymbol == null)
@@ -57,16 +61,13 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
         }
     }
 
-    // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return transactions?.size ?: 0
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        // Holds the TextView that will add each animal to
         val date = view.date
         val pair = view.pair
-        val exchange = view.exchange
         val description = view.description
 
     }

@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import kotlinx.android.synthetic.main.item_settings.view.*
 import android.content.Intent
+import android.net.Uri
 import android.support.v4.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
 import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
 import android.support.v4.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity
-
+import android.support.v4.content.ContextCompat.startActivity
+import android.support.v4.content.ContextCompat.startActivity
 
 class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
@@ -53,6 +55,18 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
                 }
                 5 -> {
                     startActivity(context!!, Intent(context, TransactionHistoryActivity::class.java), null)
+                }
+                6 -> {
+                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    sharingIntent.type = "text/plain"
+                    val shareBody = "Crypto Manager - Manager your protfolio, track live prices & follow the latest news all in one place! https://play.google.com/store/apps/details?id=com.instagram.android&hl=en_GB"
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+                    startActivity(context!!, Intent.createChooser(sharingIntent, "Share via"), null)
+                }
+                7 -> {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse("market://details?id=com.instagram.android")
+                    startActivity(context!!, intent, null)
                 }
             }
         }

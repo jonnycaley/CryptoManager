@@ -21,7 +21,7 @@ import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.math.BigDecimal
@@ -57,6 +57,8 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     val textCirculatingSupply : TextView by lazy { mView.findViewById<TextView>(R.id.text_circulating_supply) }
 
     val rangeBar : RangeBar by lazy { mView.findViewById<RangeBar>(R.id.rangebar) }
+
+    var selectedTimeFrame = timeFrame1h
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -254,6 +256,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         return priceText
     }
 
+
     private fun setUpGraphTimeChoices() {
         radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition ->
             presenter.clearChartDisposable()
@@ -298,12 +301,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
                     setChartMinimumZero(true)
                     presenter.getCurrencyChart(GeneralPresenter.timeMeasure1Y, getSymbol(), GeneralPresenter.conversionUSD, GeneralPresenter.numOfCandlesticks, GeneralPresenter.aggregate1Y)
                 }
-                8 -> {
-                    setChartBottomLabelCount(6, true)
-                    setChartMinimumZero(true)
-//                    presenter.getCurrencyGraph(GeneralPresenter.timeMeasure1H, getSymbol(), GeneralPresenter.conversionUSD, GeneralPresenter.numOfCandlesticks, GeneralPresenter.aggregate1H)
-                    //TODO: Determine how we are going to get the time scale to search over for new currencies
-                }
             }
         }
     }
@@ -326,10 +323,8 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         candleStickChart.setPinchZoom(false)
         candleStickChart.isDragEnabled = true
         candleStickChart.setScaleEnabled(true)
-        candleStickChart.setTouchEnabled(true)
-
+        candleStickChart.setTouchEnabled(false)
         candleStickChart.description.isEnabled = false
-
 
         val xAxis = candleStickChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -354,7 +349,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
         for(i in 0 until response.data?.size!!){
             val entry = response.data!![i]
-
             entries.add(CandleEntry(i.toFloat(), (entry.high?.times(baseFiat.rate!!))?.toFloat()!!, entry.low?.times(baseFiat.rate!!)?.toFloat()!!, entry.open?.times(baseFiat.rate!!)?.toFloat()!!, entry.close?.times(baseFiat.rate!!)?.toFloat()!!))
         }
 
@@ -365,7 +359,8 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
 //        dataSet.setDrawIcons(false)
         dataSet.axisDependency = YAxis.AxisDependency.LEFT
-        dataSet.shadowColor = Color.DKGRAY
+//        dataSet.shadowColor = Color.DKGRAY
+        dataSet.shadowColorSameAsCandle = true
         dataSet.decreasingColor = resources.getColor(R.color.red)
         dataSet.decreasingPaintStyle = Paint.Style.FILL
         dataSet.increasingColor = resources.getColor(R.color.green)
@@ -395,6 +390,15 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     }
 
     companion object {
+
+        val timeFrame1h = "1h"
+        val timeFrame1d = "1d"
+        val timeFrame3d = "3d"
+        val timeFrame1w = "1w"
+        val timeFrame1m = "1m"
+        val timeFrame3m = "3m"
+        val timeFrame6m = "6m"
+        val timeFrame1y = "1y"
 
         @JvmStatic
         fun newInstance(param1: String) =

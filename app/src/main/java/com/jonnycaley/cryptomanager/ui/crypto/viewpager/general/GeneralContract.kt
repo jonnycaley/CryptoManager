@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView

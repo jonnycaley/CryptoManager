@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.home
 
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
@@ -13,7 +13,7 @@ interface HomeContract {
         fun showScrollLayout()
         fun showProgressBar()
         fun showNoInternet()
-        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
+//        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
         fun setIsLoading(b: Boolean)
     }
 
@@ -21,7 +21,8 @@ interface HomeContract {
         fun getNews()
         fun saveArticle(topArticle: Article)
         fun removeArticle(topArticle: Article)
-        fun onResume()
+        fun onRefresh()
         fun getMoreArticles(size: Int)
+        fun onResume()
     }
 }

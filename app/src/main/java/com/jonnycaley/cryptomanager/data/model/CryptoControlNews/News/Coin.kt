@@ -1,10 +1,10 @@
-package com.jonnycaley.cryptomanager.data.model.CryptoControlNews
+package com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class Source : Serializable{
+class Coin : Serializable{
 
     @SerializedName("_id")
     @Expose
@@ -12,8 +12,11 @@ class Source : Serializable{
     @SerializedName("name")
     @Expose
     var name: String? = null
-    @SerializedName("url")
+    @SerializedName("slug")
     @Expose
-    var url: String? = null
+    var slug: String? = null
+    @SerializedName("tradingSymbol")
+    @Expose
+    var tradingSymbol: String? = null
 
 }

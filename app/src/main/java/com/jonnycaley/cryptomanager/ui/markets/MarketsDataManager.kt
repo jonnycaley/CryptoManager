@@ -1,21 +1,18 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
 import android.content.Context
-import android.util.Log
 import com.jonnycaley.cryptomanager.data.CoinMarketCapService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.NomicsService
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
-import io.paperdb.Paper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -71,11 +68,11 @@ class MarketsDataManager private constructor(val UserPreferences: UserPreference
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
-    fun saveCurrencies(currencies: List<Currency>?) : Completable {
+    fun saveCurrencies(currencies: ArrayList<Currency>) : Completable {
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_MARKETS_ALL_CURRENCIES, currencies)
     }
 
-    fun getCurrencies() : Single<List<Currency>>{
+    fun getCurrencies() : Single<ArrayList<Currency>>{
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_MARKETS_ALL_CURRENCIES, ArrayList())
     }
 

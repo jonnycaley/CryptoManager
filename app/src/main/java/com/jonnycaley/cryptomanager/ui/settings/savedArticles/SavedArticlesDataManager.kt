@@ -1,12 +1,11 @@
 package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.content.Context
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
-import io.paperdb.Paper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers

@@ -111,12 +111,13 @@ object Utils {
     }
 
     fun formatPercentage(percentChange24h: BigDecimal?): String {
+
+        if(percentChange24h == null)
+            return "0.00%"
+
         val percentage2DP = String.format("%.2f", percentChange24h)
 
         return when {
-            percentage2DP == "0.00" -> {
-                "$percentage2DP%"
-            }
             percentage2DP.toDouble() > 0 -> {
                 "+$percentage2DP%"
             }
@@ -124,6 +125,25 @@ object Utils {
                 "$percentage2DP%"
             }
         }
+    }
+
+
+    fun getPriceText(price: Double?): CharSequence? {
+
+        var text = ""
+
+        if (price != null) {
+            when {
+                price < 0.000001 -> text =  "0.000001"
+                price < 1 -> text =  String.format("%.6f", price)
+                else -> text = String.format("%.2f", price)
+            }
+        } else {
+            text = "?"
+        }
+
+        return text
+
     }
 
     fun hideKeyboardFromActivity(activity: Activity) {

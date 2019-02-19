@@ -5,7 +5,7 @@ import android.widget.SearchView
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import io.reactivex.CompletableObserver
 import io.reactivex.Observable
@@ -24,6 +24,8 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     var compositeDisposable: CompositeDisposable? = null
 
+    var moreItemsDisposable: CompositeDisposable? = null
+
     var searchCompositeDisposable: CompositeDisposable? = null
 
 //    var news = ArrayList<Article>()
@@ -41,11 +43,15 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
             searchCompositeDisposable = CompositeDisposable()
         }
 
-//        getOfflineData()
+        if (moreItemsDisposable == null || (moreItemsDisposable as CompositeDisposable).isDisposed) {
+            moreItemsDisposable = CompositeDisposable()
+        }
+
+        getOnlineData()
     }
 
-    var topCurrencies: List<Currency>? = null
-    var marketData: Market? = null
+    var topCurrencies : ArrayList<Currency>? = null
+    var marketData : Market? = null
 
     override fun refresh() {
 //        if(topcurrencies != null && baseFiat != null){
@@ -124,19 +130,15 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { allCurrencies ->
-                        Log.i(TAG, allCurrencies.size.toString())
-                        Log.i("ThreadShouldBe comp", Thread.currentThread().name)
-                        val temp = allCurrencies?.filter { (it.name?.toLowerCase()?.contains(searchString)!!) || (it.symbol?.toLowerCase()?.contains(searchString)!!) }
-                        this.topCurrencies = sort(temp?.take(newCount))
-                        this.resultsCount = temp?.size!!
+                        val temp = allCurrencies.filter { (it.name?.toLowerCase()?.contains(searchString) ?: false) || (it.symbol?.toLowerCase()?.contains(searchString) ?: false) }
+                        this.topCurrencies = sort(temp.take(newCount))
+                        this.resultsCount = temp.size
                         return@map this.topCurrencies
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : SingleObserver<List<Currency>?> {
-                        override fun onSuccess(t: List<Currency>) {
-                            Log.i(TAG, "Se1")
-                            Log.i(TAG, t.size.toString())
-                            view.showTop100Changes(t, baseFiat!!, resultsCount)
+                    .subscribe(object : SingleObserver<ArrayList<Currency>?> {
+                        override fun onSuccess(t100: ArrayList<Currency>) {
+                            view.showTop100Changes(t100, baseFiat ?: Rate(), resultsCount)
                             view.stopRefreshing()
                         }
 
@@ -193,7 +195,6 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     }
 
-    var query = ""
     var resultsCount = 100
 
     private fun setCurrencySearchListener(searchView: SearchView) {
@@ -207,23 +208,21 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                 .debounce(750, TimeUnit.MILLISECONDS) // stream will go down after 1 second inactivity of user
                 .observeOn(Schedulers.io())
                 .flatMapSingle {
-                    Log.i("ThreadShouldBe io", Thread.currentThread().name)
                     dataManager.getCurrencies()
                 }
                 .observeOn(Schedulers.computation())
                 .map { allCurrencies ->
                     Log.i(TAG, "${allCurrencies.size}")
-                    val temp = allCurrencies?.filter { (it.name?.toLowerCase()?.contains(searchView.query)!!) || (it.symbol?.toLowerCase()?.contains(searchView.query)!!) }
-                    this.topCurrencies = sort(temp?.take(100))
-                    this.resultsCount = temp?.size!!
-                    Log.i("ThreadShouldBe comp", Thread.currentThread().name)
+                    val temp = allCurrencies.filter { (it.name?.toLowerCase()?.contains(searchView.query) ?: false) || (it.symbol?.toLowerCase()?.contains(searchView.query) ?: false) }
+                    this.topCurrencies = sort(temp.take(100))
+                    this.resultsCount = temp.size
                     return@map this.topCurrencies
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<List<Currency>?> {
-                    override fun onNext(currencies: List<Currency>) {
+                .subscribe(object : Observer<ArrayList<Currency>?> {
+                    override fun onNext(currencies: ArrayList<Currency>) {
                         Log.i(TAG, "Se2")
-                        view.showTop100Changes(currencies, baseFiat!!, resultsCount)
+                        view.showTop100Changes(currencies, baseFiat ?: Rate(), resultsCount)
                     }
 
                     override fun onComplete() {
@@ -241,7 +240,6 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
 
                 })
-
 //        dataManager.getCurrencies()
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(Schedulers.computation())
@@ -262,8 +260,6 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                        println("onError: ${e.message}")
 //                    }
 //                })
-
-
     }
 
     override fun getResultsCounter(): Int {
@@ -279,22 +275,26 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     private fun getOfflineData() {
 
-        if (topCurrencies != null && baseFiat != null) {
-            Log.i(TAG, "Se3")
-            view.showTop100Changes(topCurrencies, baseFiat!!, resultsCount)
-            Log.i(TAG, "offline loaded from activity")
-            getOnlineData()
-        } else {
+
+//        view.showTop100Changes(topCurrencies, baseFiat, resultsCount)
+
+//        if (topCurrencies != null && baseFiat != null) {
+//            Log.i(TAG, "Se3")
+//            view.showTop100Changes(topCurrencies, baseFiat!!, resultsCount)
+//            Log.i(TAG, "offline loaded from activity")
+
+//        } else {
+
+//            getOnlineData()
 
             Observable.zip(dataManager.getCurrencies().toObservable(), dataManager.getMarketInfo().toObservable(), GETbaseFiat, Function3<List<Currency>, Market, Rate, List<Currency>> { res1, res2, res3 ->
-                if (res2.data != null)
-                    this.marketData = res2
+                this.marketData = res2
                 this.baseFiat = res3
                 Log.i("ThreadShouldBe io", Thread.currentThread().name)
                 res1
             })
                     .map { res ->
-                        this.topCurrencies = sort(res.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) }?.take(view.getCurrenciesAdapterCount()))!! //?.subList(0, 100)
+                        this.topCurrencies = sort(res.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim()) ?: false) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim()) ?: false) }.take(view.getCurrenciesAdapterCount()))//?.subList(0, 100)
                     }
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
@@ -302,14 +302,14 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .subscribe(object : Observer<Unit> {
                         override fun onComplete() {
                             Log.i(TAG, "offline loaded from storage")
-                            getOnlineData()
+//                            getOnlineData()
                         }
 
                         override fun onNext(currencies: Unit) {
-                            if (topCurrencies?.isNotEmpty()!!) {
+                            if (topCurrencies?.isNotEmpty() == true) {
                                 Log.i(TAG, "Se4")
-                                view.showTop100Changes(topCurrencies, baseFiat!!, resultsCount)
-                                view.showMarketData(marketData)
+                                view.showTop100Changes(topCurrencies ?: ArrayList(), baseFiat ?: Rate(), resultsCount)
+                                marketData?.let { view.showMarketData(it) }
                                 view.hideProgressBarLayout()
                                 view.showContentLayout()
                                 setCurrencySearchListener(view.getCurrencySearchView())
@@ -326,7 +326,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                             println("onError2: ${e.message}")
                         }
                     })
-        }
+//        }
 
     }
 
@@ -336,19 +336,16 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
             Observable.zip(GETtopCryptos, GETmarketInfo, GETbaseFiat, Function3<Currencies, Market, Rate, Currencies> { res1, res2, res3 ->
                 //TODO: THINK I NEED TO PUT THIS BACK IN SOMEHOW BUT INITIALLY LOADS ALL 5000 AS resultsCount IS SET TO IT AT THE START
-                this.topCurrencies = sort(res1.data?.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim())!!) }?.take(view.getCurrenciesAdapterCount())) //?.subList(0, 100)
+                this.topCurrencies = ArrayList(sort(res1.data?.filter { (it.name?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim()) ?: false) || (it.symbol?.toLowerCase()?.contains(view.getCurrencySearchView().query.toString().toLowerCase().trim()) ?: false) }?.take(view.getCurrenciesAdapterCount()))) //?.subList(0, 100)
                 this.marketData = res2
                 this.baseFiat = res3
-                Log.i("ThreadShouldBe io", Thread.currentThread().name)
                 res1
             })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { res1 ->
-                        Log.i("ThreadShouldBe main", Thread.currentThread().name)
-                        Log.i(TAG, "YOYOYOYO:   "+topCurrencies?.size)
-                        view.showTop100Changes(this.topCurrencies, this.baseFiat!!, resultsCount)
-                        view.showMarketData(marketData)
+                        view.showTop100Changes(this.topCurrencies ?: ArrayList(), this.baseFiat ?: Rate(), resultsCount)
+                        marketData?.let { view.showMarketData(it) }
                         view.hideProgressBarLayout()
                         view.showContentLayout()
                         setCurrencySearchListener(view.getCurrencySearchView())
@@ -359,11 +356,10 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                         //IS THIS SAVING FUCK KNOWS
                         Log.i("ThreadShouldBe io", Thread.currentThread().name)
                         Log.i(TAG, "Sehere: ${allCurrencies.data?.size}")
-                        dataManager.saveCurrencies(allCurrencies.data)
+                        dataManager.saveCurrencies(ArrayList(allCurrencies.data ?: ArrayList()))
                     }
                     .andThen {
-                        Log.i("ThreadShouldBe io", Thread.currentThread().name)
-                        dataManager.saveMarketInfo(marketData!!)
+                        marketData?.let { it1 -> dataManager.saveMarketInfo(it1) }
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
@@ -383,39 +379,39 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                         }
                     })
         } else {
-
+            getOfflineData()
         }
 
     }
 
-    private fun sort(topCurrencies: List<Currency>?): List<Currency>? {
+    private fun sort(topCurrencies: List<Currency>?): ArrayList<Currency> {
         when (view.getSort()) {
             MarketsFragment.FILTER_RANK_DOWN -> {
-                return topCurrencies?.sortedBy { it.cmcRank }
+                return ArrayList(topCurrencies?.sortedBy { it.cmcRank } ?: ArrayList())
             }
             MarketsFragment.FILTER_RANK_UP -> {
-                return topCurrencies?.sortedBy { it.cmcRank }?.asReversed()
+                return ArrayList(topCurrencies?.sortedBy { it.cmcRank }?.asReversed() ?: ArrayList())
             }
             MarketsFragment.FILTER_NAME_DOWN -> {
-                return topCurrencies?.sortedBy { it.name }
+                return ArrayList(topCurrencies?.sortedBy { it.name } ?: ArrayList())
             }
             MarketsFragment.FILTER_NAME_UP -> {
-                return topCurrencies?.sortedBy { it.name }?.asReversed()
+                return ArrayList(topCurrencies?.sortedBy { it.name }?.asReversed() ?: ArrayList())
             }
             MarketsFragment.FILTER_PRICE_DOWN -> {
-                return topCurrencies?.sortedBy { it.quote?.uSD?.price }?.asReversed()
+                return ArrayList(topCurrencies?.sortedBy { it.quote?.uSD?.price }?.asReversed() ?: ArrayList())
             }
             MarketsFragment.FILTER_PRICE_UP -> {
-                return topCurrencies?.sortedBy { it.quote?.uSD?.price }
+                return ArrayList(topCurrencies?.sortedBy { it.quote?.uSD?.price } ?: ArrayList())
             }
             MarketsFragment.FILTER_CHANGE_DOWN -> {
-                return topCurrencies?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
+                return ArrayList(topCurrencies?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed() ?: ArrayList())
             }
             MarketsFragment.FILTER_CHANGE_UP -> {
-                return topCurrencies?.sortedBy { it.quote?.uSD?.percentChange24h }
+                return ArrayList(topCurrencies?.sortedBy { it.quote?.uSD?.percentChange24h } ?: ArrayList())
             }
             else -> {
-                return topCurrencies?.sortedBy { it.cmcRank }
+                return ArrayList(topCurrencies?.sortedBy { it.cmcRank } ?: ArrayList())
             }
         }
     }

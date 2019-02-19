@@ -19,7 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
@@ -30,8 +30,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatDelegate
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
-import com.jonnycaley.cryptomanager.utils.interfaces.PaginationScrollListener
-import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener {
@@ -119,15 +117,15 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
         swipeLayout.setOnRefreshListener(this)
 
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
-        presenter.attachView()
+        presenter.attachView() //runs on first creation of fragment
     }
 
     override fun onRefresh() {
-        presenter.onResume()
+        presenter.onRefresh()
     }
 
     override fun onTabClicked(isTabAlreadyClicked : Boolean) {
-        Log.i(TAG, "onTabClicked()")
+
         if(isTabAlreadyClicked) {
             scrollLayout.scrollTo(0, 0)
             scrollLayout.fling(0)
@@ -138,7 +136,6 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     }
 
     override fun onResume() {
-        //This always runs on loading of the fragment (even at first time)
         super.onResume()
         presenter.onResume()
     }
@@ -184,19 +181,27 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
         val headerArticle = news.keys.first()
 
-        news.remove(headerArticle)
+        val templist = HashMap<Article, Currency?>()
+
+        news.forEach { templist[it.key] = it.value }
+
+        templist.remove(headerArticle)
 
         topArticle = headerArticle
 
         cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
 
-//        if(newsLayoutManager == null){
+        if(newsLayoutManager == null) {
 
-        newsLayoutManager = LinearLayoutManager(context)
+            newsLayoutManager = LinearLayoutManager(context)
 
-        recyclerViewShimmerNews.layoutManager = newsLayoutManager
-        articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
-        recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+            recyclerViewShimmerNews.layoutManager = newsLayoutManager
+            articlesVerticalAdapter = HomeArticlesVerticalAdapter(templist, savedArticles, context, presenter)
+            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
+
+        } else {
+            articlesVerticalAdapter.swap(templist, savedArticles)
+        }
 
 //            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
 //                override fun isLastPage(): Boolean {
@@ -242,19 +247,19 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     }
 
-    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
-
-        val headerArticle = news.keys.first()
-
-        news.remove(headerArticle)
-
-        topArticle = headerArticle
-
-        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
-
-        articlesVerticalAdapter.swap(news, savedArticles)
-
-    }
+//    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
+//
+//        val headerArticle = news.keys.first()
+//
+//        news.remove(headerArticle)
+//
+//        topArticle = headerArticle
+//
+//        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
+//
+//        articlesVerticalAdapter.swap(news, savedArticles)
+//
+//    }
 
     override fun setIsLoading(b: Boolean) {
         isLoading = false
@@ -263,10 +268,10 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     private fun showTopNewsArticle(article: Article) {
 
         cardTopArticle.setOnClickListener {
-            ArticleArgs(article).launch(context!!)
+            context?.let { it1 -> ArticleArgs(article).launch(it1) }
         }
 
-        Picasso.with(context!!)
+        Picasso.with(context)
                 .load(article.originalImageUrl)
                 .fit()
                 .centerCrop()
@@ -357,22 +362,22 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                 percentage.text = percentage2DP
 
                 background.setOnClickListener {
-                    CryptoArgs(currency.symbol!!).launch(context!!)
+                    context?.let { it1 -> currency.symbol?.let { it2 -> CryptoArgs(it2).launch(it1) } }
                 }
 
                 when {
                     percentage2DP.substring(0, 1) == "+" -> {
                         card.setBackgroundResource(R.drawable.border_green_large_round)
-                        percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                        context?.resources?.getColor(R.color.green)?.let { percentage.setTextColor(it) }
 
                         if (Math.random() < 0.6) {
 
-                            var color = 0
+                            var color: Int
 
-                            if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-                                color = context?.resources?.getColor(R.color.backgroundblack)!!
+                            color = if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                                context?.resources?.getColor(R.color.backgroundblack)!!
                             else
-                                color = context?.resources?.getColor(R.color.backgroundwhite)!!
+                                context?.resources?.getColor(R.color.backgroundwhite)!!
 
                             val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.green)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
 
@@ -387,7 +392,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                     }
                     else -> {
                         card.setBackgroundResource(R.drawable.border_red_large_round)
-                        percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                        context?.resources?.getColor(R.color.red)?.let { percentage.setTextColor(it) }
 
                         var color = 0
 

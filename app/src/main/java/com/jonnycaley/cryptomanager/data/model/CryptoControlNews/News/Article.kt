@@ -1,8 +1,7 @@
-package com.jonnycaley.cryptomanager.data.model.CryptoControlNews
+package com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import java.io.Serializable
 
 class Article : Serializable{

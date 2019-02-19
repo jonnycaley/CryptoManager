@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,32 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
-import io.reactivex.CompletableObserver
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.item_currency_list.view.*
 import java.util.*
+import kotlin.collections.ArrayList
 
-class CurrenciesAdapter(var currencies: ArrayList<Currency>?, var baseFiat: Rate, val context: Context?, var timeFrame: String) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
+class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate, val context: Context?, var timeFrame: String) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_currency_list, parent, false))
     }
 
 
-    fun swap(currencies: ArrayList<Currency>?, baseFiat: Rate) {
+    fun swap(currencies: ArrayList<Currency>, baseFiat: Rate) {
 
-        this.currencies?.clear()
-        this.currencies?.addAll(currencies!!)
+        this.currencies.clear()
+        this.currencies.addAll(currencies)
         this.baseFiat = baseFiat
+
         notifyDataSetChanged()
 
     }
@@ -42,132 +35,129 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>?, var baseFiat: Rate
 
         //TODO: IDEALLY THIS NEEDS TO BE DONE ON COMPUTATION THREAD (MAYBE IN PRESENTER) BUT LOOOOOOOOONG
 
-        var tempCurrencies: List<Currency>? = null
+        var tempCurrencies : List<Currency>? = null
 
         when (filter) {
             MarketsFragment.FILTER_RANK_UP -> {
-                tempCurrencies = currencies?.sortedBy { it.cmcRank }?.asReversed()
+                tempCurrencies = currencies.sortedBy { it.cmcRank }.asReversed()
             }
             MarketsFragment.FILTER_NAME_DOWN -> {
-                tempCurrencies = currencies?.sortedBy { it.name }
+                tempCurrencies = currencies.sortedBy { it.name }
             }
             MarketsFragment.FILTER_NAME_UP -> {
-                tempCurrencies = currencies?.sortedBy { it.name }?.asReversed()
+                tempCurrencies = currencies.sortedBy { it.name }.asReversed()
             }
             MarketsFragment.FILTER_PRICE_DOWN -> {
-                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.price }?.asReversed()
+                tempCurrencies = currencies.sortedBy { it.quote?.uSD?.price }.asReversed()
             }
             MarketsFragment.FILTER_PRICE_UP -> {
-                tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.price }
+                tempCurrencies = currencies.sortedBy { it.quote?.uSD?.price }
             }
             MarketsFragment.FILTER_CHANGE_DOWN -> {
                 when (timeFrame) {
                     MarketsFragment.TIMEFRAME_1H -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange1h }?.asReversed()
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange1h }.asReversed()
                     }
                     MarketsFragment.TIMEFRAME_1D -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange24h }.asReversed()
                     }
                     MarketsFragment.TIMEFRAME_1W -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange7d }?.asReversed()
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange7d }.asReversed()
                     }
                 }
             }
             MarketsFragment.FILTER_CHANGE_UP -> {
                 when (timeFrame) {
                     MarketsFragment.TIMEFRAME_1H -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange1h }
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange1h }
                     }
                     MarketsFragment.TIMEFRAME_1D -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange24h }
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange24h }
                     }
                     MarketsFragment.TIMEFRAME_1W -> {
-                        tempCurrencies = currencies?.sortedBy { it.quote?.uSD?.percentChange7d }
+                        tempCurrencies = currencies.sortedBy { it.quote?.uSD?.percentChange7d }
                     }
                 }
             }
             else -> {
-                tempCurrencies = currencies?.sortedBy { it.cmcRank }
+                tempCurrencies = currencies.sortedBy { it.cmcRank }
             }
         }
-        this.currencies?.clear()
-        this.currencies?.addAll(tempCurrencies!!)
+        this.currencies.clear()
+        tempCurrencies?.let { this.currencies.addAll(it) }
         notifyDataSetChanged()
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val item = currencies?.get(position)
+        val item = currencies.get(position)
 
         holder.setIsRecyclable(false)
 
-        val price = item?.quote?.uSD?.price?.times(baseFiat.rate!!.toDouble())
+        val price = item.quote?.uSD?.price?.times(baseFiat.rate?.toDouble() ?: 1.toDouble())
 
-        holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(price)}"
+        holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.getPriceText(price)}"
 
         var percentage2DP = ""
 
+
         when (timeFrame) {
-            MarketsFragment.TIMEFRAME_1H -> percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange1h)
-            MarketsFragment.TIMEFRAME_1D -> percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h)
-            MarketsFragment.TIMEFRAME_1W -> percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange7d)
+            MarketsFragment.TIMEFRAME_1H -> {
+                if (item.quote?.uSD?.percentChange1h == null)
+                    percentage2DP = "0.00"
+                else
+                    percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange1h)
+            }
+            MarketsFragment.TIMEFRAME_1D -> {
+                if (item.quote?.uSD?.percentChange24h == null)
+                    percentage2DP = "0.00"
+                else
+                    percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h)
+            }
+            MarketsFragment.TIMEFRAME_1W -> {
+                if (item.quote?.uSD?.percentChange7d == null)
+                    percentage2DP = "0.00"
+                else
+                    percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange7d)
+            }
         }
 
         when {
-            (percentage2DP == "0.00" || percentage2DP == "nu") -> {
-                holder.percentage.text = "$percentage2DP%"
-//                holder.movement.text = "-"
-            }
             percentage2DP.toDouble() > 0 -> {
                 holder.percentage.text = "+$percentage2DP%"
-                holder.percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                context?.resources?.getColor(R.color.green)?.let { holder.percentage.setTextColor(it) }
 //                holder.percentage.setBackgroundColor(context?.resources?.getColor(R.color.stock_green)!!)
 
 //                holder.movement.text = "▲"
-                holder.movement.setTextColor(context?.resources?.getColor(R.color.arrow_green)!!)
+                context?.resources?.getColor(R.color.arrow_green)?.let { holder.movement.setTextColor(it) }
             }
-            else -> {
+            percentage2DP.toDouble() < 0 -> {
                 holder.percentage.text = "$percentage2DP%"
-                holder.percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                context?.resources?.getColor(R.color.red)?.let { holder.percentage.setTextColor(it) }
 //                holder.percentage.setBackgroundColor(context?.resources?.getColor(R.color.stock_red)!!)
 
 //                holder.movement.text = "▼"
-                holder.movement.setTextColor(context?.resources?.getColor(R.color.arrow_red)!!)
+                context?.resources?.getColor(R.color.arrow_red)?.let { holder.movement.setTextColor(it) }
+            }
+            else -> {
+                holder.percentage.text = "0.00%"
             }
         }
 
-        holder.rank.text = item?.cmcRank.toString()
-        holder.name.text = item?.name.toString()
+        holder.rank.text = item.cmcRank.toString()
+        holder.name.text = item.name.toString()
         holder.symbol.text = " (${item?.symbol.toString()})"
 
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            CryptoArgs(item?.symbol!!).launch(context!!)
+            item.symbol?.let { it1 -> CryptoArgs(it1).launch(context!!) }
         }
     }
 
-    private fun getPriceText(price: Double?): CharSequence? {
-
-        val roundedPrice = Utils.toDecimals(price!!.toBigDecimal(), 8).toDouble()
-
-        var priceText = ""
-
-        priceText = if (roundedPrice > 1)
-            Utils.toDecimals(roundedPrice.toBigDecimal(), 2)
-        else
-            "0${Utils.toDecimals(roundedPrice!!.toBigDecimal(), 6)}"
-
-        if (priceText.indexOf("") == priceText.length - 1)
-            priceText += "0"
-
-        return priceText
-    }
-
-    // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return currencies?.size ?: 0
+        return currencies.size ?: 0
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

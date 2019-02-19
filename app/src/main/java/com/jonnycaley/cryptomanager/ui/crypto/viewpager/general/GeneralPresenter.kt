@@ -4,13 +4,11 @@ import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
-import io.reactivex.Completable
 import io.reactivex.CompletableObserver
 import io.reactivex.Observer
-import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -46,9 +44,24 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         clearChartDisposable()
         clearDisposable()
 //      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be separate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
-        getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H)
+        getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H) //TODO: needs to be refactored
         getCurrencyGeneralData(view.getSymbol())
         getCurrencyNews(view.getSymbol())
+        getCurrencySocial(transformName(view.getName()))
+    }
+
+    private fun getCurrencySocial(transformName: String) {
+        if(dataManager.checkConnection()) {
+
+//            dataManager.getCryptoControlNewsService().getCurrencyNews()
+
+        } else {
+
+        }
+    }
+
+    private fun transformName(name: String): String {
+        return name.replace(" ", "-")
     }
 
     private fun getCurrencyGeneralData(symbol: String) {
@@ -92,7 +105,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
-    override fun getCurrencyChart(timeString : String, symbol: String, conversion : String, limit : Int, aggregate : Int) {
+    override fun getCurrencyChart(timeString : String, symbol: String, conversion : String, limit : Int, aggregate : Int) { //TODO: needs to be refactored - SAVE THE TIMEFRAME STRING IN ACTIVITY AND CALL IT FROM PRESENTER
 
         if (dataManager.checkConnection()) {
 
@@ -277,11 +290,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         val limit1Y = 30
         val aggregate1Y = 12
         val timeMeasure1Y = dayString
-
-        val limitAll = 30
-        val aggregateAll = "?"
-        val timeMeasureAll = "?"
-
 
         val numOfCandlesticks = 30
 

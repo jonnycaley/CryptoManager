@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton

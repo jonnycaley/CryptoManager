@@ -1,27 +1,30 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ProgressBar
+import android.widget.ScrollView
+import android.widget.SearchView
+import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
-import android.support.v4.widget.NestedScrollView
-import android.util.Log
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
-import com.jonnycaley.cryptomanager.utils.interfaces.PaginationScrollListener
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
-
 
 class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
@@ -36,7 +39,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     val progressBar by lazy { root.findViewById<ProgressBar>(R.id.progress_bar_bottom) }
     val progressBarLayout by lazy { root.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
     val swipeRefreshLayout by lazy { root.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
-    val nestedScrollView by lazy { root.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
+    val nestedScrollView by lazy { root.findViewById<ScrollView>(R.id.nested_scroll_view) }
 
     val rank by lazy { root.findViewById<TextView>(R.id.rank) }
     val name by lazy { root.findViewById<TextView>(R.id.name) }
@@ -51,7 +54,6 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     val text1D by lazy { root.findViewById<TextView>(R.id.text_1D) }
     val text1W by lazy { root.findViewById<TextView>(R.id.text_1W) }
 
-    var isLastPage = false
     var isLoading = false
 
     var filter = FILTER_NONE
@@ -86,9 +88,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             rank.id -> {
-                if(filter == FILTER_RANK_DOWN)
+                if (filter == FILTER_RANK_DOWN)
                     filter = FILTER_RANK_UP
                 else
                     filter = FILTER_RANK_DOWN
@@ -97,7 +99,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 notifyFilterChanged()
             }
             name.id -> {
-                if(filter == FILTER_NAME_DOWN)
+                if (filter == FILTER_NAME_DOWN)
                     filter = FILTER_NAME_UP
                 else
                     filter = FILTER_NAME_DOWN
@@ -106,7 +108,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 notifyFilterChanged()
             }
             price.id -> {
-                if(filter == FILTER_PRICE_DOWN)
+                if (filter == FILTER_PRICE_DOWN)
                     filter = FILTER_PRICE_UP
                 else
                     filter = FILTER_PRICE_DOWN
@@ -115,7 +117,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 notifyFilterChanged()
             }
             change.id -> {
-                if(filter == FILTER_CHANGE_DOWN)
+                if (filter == FILTER_CHANGE_DOWN)
                     filter = FILTER_CHANGE_UP
                 else
                     filter = FILTER_CHANGE_DOWN
@@ -146,7 +148,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         text1D.setTypeface(null, Typeface.NORMAL)
         text1W.setTypeface(null, Typeface.NORMAL)
 
-        when(timeframe) {
+        when (timeframe) {
             TIMEFRAME_1H -> {
                 text1H.setTypeface(text1H.typeface, Typeface.BOLD)
             }
@@ -161,7 +163,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     private fun notifyTimeFrameChanged() {
         //change the percentage that shows
-        if(mLayoutManager != null) {
+        if (mLayoutManager != null) {
             currenciesAdapter = CurrenciesAdapter(currenciesAdapter.currencies, currenciesAdapter.baseFiat, context, timeframe)
             recyclerViewCurrencies.adapter = currenciesAdapter
             currenciesAdapter.sort(filter)
@@ -174,7 +176,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         price.text = "Price"
         change.text = "Change"
 
-        when(filter){
+        when (filter) {
             FILTER_RANK_DOWN -> {
                 rank.text = "#▼"
             }
@@ -203,140 +205,230 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     }
 
     private fun notifyFilterChanged() {
-        if(mLayoutManager != null)
+        if (mLayoutManager != null)
             currenciesAdapter.sort(filter)
     }
 
-    override fun showMarketData(marketData: Market?) {
+    @SuppressLint("SetTextI18n")
+    override fun showMarketData(marketData: Market) {
 
         //TODO: MARKET DATA COMES BACK NULL SOMETIMES WTF
 
-//        textMarketCap.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalMarketCap!!)}"
-//
-//        textVolume.text = "$${truncateNumber(marketData?.data?.quote?.uSD?.totalVolume24h!!)}"
-//
-//        textBTCDominance.text = Utils.formatPercentage(marketData?.data?.btcDominance!!.toBigDecimal()).substring(1)
+        println("See here")
+
+        println(marketData.data?.quote?.uSD?.totalMarketCap)
+        println(marketData.data?.quote?.uSD?.totalVolume24h)
+        println(marketData.data?.btcDominance)
+
+        textMarketCap.text = "$${marketData.data?.quote?.uSD?.totalMarketCap?.let { truncateNumber(it) }}"
+
+        textVolume.text = "$${marketData.data?.quote?.uSD?.totalVolume24h?.let { truncateNumber(it) }}"
+
+        textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance?.toBigDecimal()).substring(1)
 
     }
 
-    var mLayoutManager : LinearLayoutManager? = null
+    var mLayoutManager: LinearLayoutManager? = null
 
     override fun getCurrenciesAdapterCount(): Int {
-        if(mLayoutManager == null)
+        if (mLayoutManager == null)
             return 100
         else
-            return currenciesAdapter.currencies?.size ?: 100
+            return currenciesAdapter.itemCount
     }
 
     override fun getSort(): String {
         return filter
     }
 
-    override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int) {
 
-        Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E1")
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun showTop100Changes(currencies: ArrayList<Currency>, baseFiat: Rate, resultsCount: Int) {
 
-        if(mLayoutManager == null) {
+        isLoading = false
 
-            Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E2")
+        if (mLayoutManager == null) {
+
+            Log.i(MarketsPresenter.TAG, currencies.size.toString() + " S E E  H E R E2")
 
             mLayoutManager = LinearLayoutManager(context)
             recyclerViewCurrencies.layoutManager = mLayoutManager
             currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context, timeframe)
             recyclerViewCurrencies.adapter = currenciesAdapter
 
-            nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
-                override fun isLastPage(): Boolean {
-                    return isLastPage
-                }
+            nestedScrollView.isFocusableInTouchMode = true
+            nestedScrollView.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
-                override fun isLoading(): Boolean {
-                    return isLoading
-                }
+            nestedScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
+                val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
 
-                override fun loadMoreItems() {
+
+                if ((diff < 10) && !isLoading) {
                     isLoading = true
-                    if(resultsCount > currenciesAdapter.currencies?.size!!){
-                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+                    if (resultsCount > currenciesAdapter.itemCount) {
+                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.itemCount, searchView.query.trim())
                         progressBar.visibility = View.VISIBLE
                     } else {
                         progressBar.visibility = View.GONE
                     }
                 }
-            })
+            }
+
         } else {
 
-            Log.i(MarketsPresenter.TAG, currencies?.size.toString() + " S E E  H E R E3")
+            Log.i(MarketsPresenter.TAG, currencies.size.toString() + " S E E  H E R E3")
             Log.i(MarketsPresenter.TAG, resultsCount.toString())
-            Log.i(MarketsPresenter.TAG, currenciesAdapter.currencies?.size.toString()!!)
+            Log.i(MarketsPresenter.TAG, currenciesAdapter.currencies.size.toString())
 
             currenciesAdapter.swap(ArrayList(currencies), baseFiat)
 
-            if(currencies?.size!! < 100 || resultsCount <= currenciesAdapter.currencies?.size!!) {
-                println("1")
+            if (currencies.size < 100 || resultsCount <= currenciesAdapter.currencies.size) {
+
                 progressBar.visibility = View.GONE
 
-                nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
-                    override fun isLastPage(): Boolean {
-                        return false
-                    }
+                nestedScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
 
-                    override fun isLoading(): Boolean {
-                        return false
-                    }
+                }
 
-                    override fun loadMoreItems() {
-
-                    }
-                })
             } else {
-                println("2")
-                nestedScrollView.setOnScrollChangeListener(object : PaginationScrollListener(mLayoutManager!!) {
-                    override fun isLastPage(): Boolean {
-                        return isLastPage
-                    }
 
-                    override fun isLoading(): Boolean {
-                        return isLoading
-                    }
+                nestedScrollView.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                    val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
+                    val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
 
-                    override fun loadMoreItems() {
+
+                    if ((diff < 10) && !isLoading) {
                         isLoading = true
-                        if(resultsCount > currenciesAdapter.currencies?.size!!){
-                            presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+                        if (resultsCount > currenciesAdapter.itemCount) {
+                            presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.itemCount, searchView.query.trim())
                             progressBar.visibility = View.VISIBLE
                         } else {
                             progressBar.visibility = View.GONE
                         }
                     }
-                })
+                }
+
             }
         }
         currenciesAdapter.sort(filter)
     }
 
+
+//    override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int) {
+//
+//        isLoading = false
+//
+//        Log.i(TAG, currencies?.size.toString() + " S E E  H E R E1")
+//        Log.i(TAG, "$resultsCount results")
+//
+//        if (mLayoutManager == null) {
+//
+//            Log.i(TAG, currencies?.size.toString() + " S E E  H E R E2")
+//
+//            mLayoutManager = LinearLayoutManager(context)
+//            recyclerViewCurrencies.layoutManager = mLayoutManager
+//            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context, timeframe)
+//            recyclerViewCurrencies.adapter = currenciesAdapter
+//
+//            nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
+//
+//                val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
+//                val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
+//
+//                if ((diff == 0) && !isLoading) {
+//
+//
+//
+//                    isLoading = true
+//                    if(resultsCount > currenciesAdapter.currencies?.size!!){
+//                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+//                        progressBar.visibility = View.VISIBLE
+//                    } else {
+//                        progressBar.visibility = View.GONE
+//                    }
+//
+//                    println("1")
+//                    println(resultsCount)
+//                    println(currenciesAdapter.currencies?.size!!)
+//                    isLoading = true
+//                    if (resultsCount > currenciesAdapter.currencies?.size!!) {
+//                        println("2")
+//                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+//                        progressBar.visibility = View.VISIBLE
+//                    } else {
+//                        println("3")
+//                        progressBar.visibility = View.GONE
+//                    }
+//                }
+//
+//            }
+//        } else {
+//
+//            Log.i(TAG, currencies?.size.toString() + " S E E  H E R E3")
+//            Log.i(TAG, resultsCount.toString())
+//            Log.i(TAG, currenciesAdapter.currencies?.size.toString()!!)
+//
+//            currenciesAdapter.swap(ArrayList(currencies), baseFiat)
+//
+//            if (currencies?.size!! < 100 || resultsCount <= currenciesAdapter.currencies?.size!!) {
+//                progressBar.visibility = View.GONE
+//
+//                nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
+//                    //                var scrollY = nestedScrollView.scrollY
+//                }
+//
+//            } else {
+//
+//                nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
+//
+//                    val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
+//                    val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
+//
+//
+//
+//
+//                    if ((diff == 0) && !isLoading) {
+//                        isLoading = true
+//                        if(resultsCount > currenciesAdapter.currencies?.size!!){
+//                            presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
+//                            progressBar.visibility = View.VISIBLE
+//                        } else {
+//                            progressBar.visibility = View.GONE
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//        }
+//        currenciesAdapter.sort(filter)
+//    }
+
+
     var layoutManager: LinearLayoutManager? = null
 
     override fun onRefresh() {
-        presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.currencies?.size!!, searchView.query.trim())
+        presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.itemCount, searchView.query.trim())
     }
 
     override fun stopRefreshing() {
         swipeRefreshLayout.isRefreshing = false
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.onResume()
-    }
+//    override fun onResume() {
+//        super.onResume()
+////        presenter.onResume()
+//    }
+
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
-        if(isTabAlreadyClicked) {
+        if (isTabAlreadyClicked) {
             nestedScrollView.scrollTo(0, 0)
             nestedScrollView.fling(0)
         }
         //scroll to top
-        else
-            presenter.refresh()
+//        else
+//            presenter.refresh()
     }
 
     override fun hideProgressBarLayout() {
@@ -355,7 +447,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         else if (x < BILLION)
             String.format("%.2f", (x / MILLION).toString()) + " M"
         else if (x < TRILLION)
-            String.format("%.2f", x / BILLION)+ " B"
+            String.format("%.2f", x / BILLION) + " B"
         else
             String.format("%.2f", x / TRILLION) + " T"
     }

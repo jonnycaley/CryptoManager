@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -16,9 +16,9 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
-import android.R.attr.data
-
-
+import android.content.Intent
+import android.net.Uri
+import android.support.v4.content.ContextCompat.startActivity
 
 class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, var savedArticles: ArrayList<Article>, var context: Context?, var presenter: HomeContract.Presenter?) : RecyclerView.Adapter<HomeArticlesVerticalAdapter.ViewHolder>() {
 
@@ -27,12 +27,12 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         val article = newsItems.keys.toTypedArray()[position]
         val relatedCrypto = newsItems.values.toTypedArray()[position]
 
-        Log.i(TAG, "Item: $position")
+        if(((position + 1 ) % 3 == 0 ) && (article.originalImageUrl != null)){
 
-        if((position + 1 ) % 3 == 0){
             holder.image.visibility = View.GONE
             holder.imageEnlarged.visibility = View.VISIBLE
 
@@ -46,33 +46,29 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             holder.imageEnlarged.visibility = View.GONE
             holder.image.visibility = View.VISIBLE
 
-            if (article?.thumbnail == null) {
+            if (article.thumbnail == null) {
                 holder.image.visibility = View.GONE
             } else {
                 Picasso.with(context)
-                        .load(article?.thumbnail)
+                        .load(article.thumbnail)
                         .fit()
                         .centerCrop()
                         .into(holder.image)
             }
         }
 
-        Log.i(TAG, "1")
-
-        holder.title.text = article?.title.toString()
-        holder.category.text = article?.primaryCategory.toString()
+        holder.title.text = article.title.toString()
+        holder.category.text = article.primaryCategory.toString()
         holder.image.alpha = Float.MAX_VALUE
-        if (article?.publishedAt != null)
+        if (article.publishedAt != null)
             holder.date.text = Utils.getTimeFrom(article.publishedAt)
-        holder.length.text = Utils.getReadTime(article?.words)
+        holder.length.text = Utils.getReadTime(article.words)
 
-        holder.likeButton.isLiked = savedArticles.any { it.url == article?.url }
-
-        Log.i(TAG, "2")
+        holder.likeButton.isLiked = savedArticles.any { it.url == article.url }
 
         if (relatedCrypto != null) {
 
-            val percentage2DP = Utils.formatPercentage(relatedCrypto!!.quote?.uSD?.percentChange24h?.toBigDecimal())
+            val percentage2DP = Utils.formatPercentage(relatedCrypto.quote?.uSD?.percentChange24h?.toBigDecimal())
 //                val animRed = ObjectAnimator.ofInt(holder.layoutStockRed, "backgroundColor", Color.WHITE, Color.RED,
 //                        Color.WHITE)
 //                val animGreen = ObjectAnimator.ofInt(holder.layoutStockGreen, "backgroundColor", Color.WHITE, Color.GREEN,
@@ -90,7 +86,7 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 //                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
 
                     holder.layoutStockGreen.visibility = View.VISIBLE
-                    holder.stockNameGreen.text = relatedCrypto!!.symbol?.toUpperCase()
+                    holder.stockNameGreen.text = relatedCrypto.symbol?.toUpperCase()
                     holder.stockPercentageGreen.text = percentage2DP
 //                        animGreen.start()//does not work as changes background permanently :(
 //                holder.movement.text = "▲"
@@ -98,7 +94,7 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
                 else -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
                     holder.layoutStockRed.visibility = View.VISIBLE
-                    holder.stockNameRed.text = relatedCrypto!!.symbol?.toUpperCase()
+                    holder.stockNameRed.text = relatedCrypto.symbol?.toUpperCase()
                     holder.stockPercentageRed.text = percentage2DP
 
 //                        animRed.start()
@@ -108,10 +104,10 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             }
 
             holder.layoutStockGreen.setOnClickListener {
-                CryptoArgs(relatedCrypto!!.symbol!!).launch(context!!)
+                context?.let { context -> relatedCrypto.symbol?.let { symbol -> CryptoArgs(symbol).launch(context) } }
             }
             holder.layoutStockRed.setOnClickListener {
-                CryptoArgs(relatedCrypto!!.symbol!!).launch(context!!)
+                context?.let { context -> relatedCrypto.symbol?.let { symbol -> CryptoArgs(symbol).launch(context) } }
             }
     }
 
@@ -187,30 +183,44 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         holder.likeButton.setOnLikeListener(object : OnLikeListener {
 
             override fun liked(p0: LikeButton?) {
-                presenter?.saveArticle(article!!)
+                presenter?.saveArticle(article)
             }
 
             override fun unLiked(p0: LikeButton?) {
-                presenter?.removeArticle(article!!)
+                presenter?.removeArticle(article)
             }
         })
 
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            ArticleArgs(article!!).launch(context!!)
+            context?.let { context -> ArticleArgs(article).launch(context) }
         }
     }
 
     fun swap(newsItems: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
-        this.newsItems.clear()
-        this.savedArticles.clear()
-        this.newsItems.putAll(newsItems)
-        this.savedArticles.addAll(savedArticles)
 
-        Log.i(TAG, this.newsItems.size.toString())
-        Log.i(TAG, this.savedArticles.size.toString())
-        this.notifyDataSetChanged()
+        val newUrls = ArrayList<String>()
+        newUrls.clear()
+        savedArticles.sortedBy { it.url }.forEach { newUrls.add(it.url.toString()) }
+
+        val oldUrls = ArrayList<String>()
+        oldUrls.clear()
+        this.savedArticles.sortedBy { it.url }.forEach { oldUrls.add(it.url.toString()) }
+
+        if((newsItems != this.newsItems) || (newUrls.sorted() != oldUrls.sorted())) {
+
+            Log.i(TAG, "Updating")
+
+            this.newsItems.clear()
+            this.savedArticles.clear()
+            this.newsItems.putAll(newsItems)
+            this.savedArticles.addAll(savedArticles)
+
+            this.notifyDataSetChanged()
+        } else {
+            Log.i(TAG, "Not updating")
+        }
     }
 
     // Gets the number of animals in the list

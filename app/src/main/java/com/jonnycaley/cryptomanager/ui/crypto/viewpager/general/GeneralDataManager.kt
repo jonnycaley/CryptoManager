@@ -4,14 +4,13 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.CryptoControlService
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
-import io.paperdb.Paper
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers

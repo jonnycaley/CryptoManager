@@ -18,18 +18,18 @@ import kotlinx.android.synthetic.main.item_top_mover.view.*
 import android.view.animation.Animation
 
 
-class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
+class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_top_mover, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = articles?.get(position)
+        val item = articles.get(position)
 
         holder.setIsRecyclable(false)
 
-        holder.name.text = item?.name.toString()
+        holder.name.text = item.name.toString()
 
 //        Picasso.with(context)
 //                .load(item?.thumbnail)
@@ -37,9 +37,9 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
 //                .centerCrop()
 //                .into(holder.image)
 
-        val price = item?.quote?.uSD?.price?.toDouble()?.times(baseFiat.rate!!.toDouble())
+        val price = baseFiat.rate?.toDouble()?.let { item.quote?.uSD?.price?.toDouble()?.times(it) }
 
-        val priceText = Utils.formatPrice(price!!.toBigDecimal())
+        val priceText = price?.toBigDecimal()?.let { Utils.formatPrice(it) }
 
         holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$priceText"
 
@@ -65,14 +65,14 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
             }
             percentage2DP.substring(0,1) == "+" -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
-                holder.percentage.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                context?.resources?.getColor(R.color.green)?.let { holder.percentage.setTextColor(it) }
                 animGreen.start()
 //                holder.movement.text = "▲"
                 holder.movement.setTextColor(Color.parseColor("#6600F900"))
             }
             else -> {
 //                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
-                holder.percentage.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                context?.resources?.getColor(R.color.red)?.let { holder.percentage.setTextColor(it) }
                 animRed.start()
 //                holder.movement.text = "▼"
 //                holder.movement.setTextColor(Color.parseColor("#66FF2600"))
@@ -82,14 +82,14 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
         holder.percentage.text = "$percentage2DP"
 
         holder.itemView.setOnClickListener {
-            CryptoArgs(item.symbol!!).launch(context!!)
+            context?.let { it1 -> item.symbol?.let { it2 -> CryptoArgs(it2).launch(it1) } }
 
         }
     }
 
     override fun getItemId(position: Int): Long {
         //Return the stable ID for the item at position
-        return articles?.get(position)?.id!!
+        return articles[position].id ?: 0
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -97,7 +97,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>?, var baseFiat : Rate, 
     }
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return articles?.size ?: 0
+        return articles.size
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

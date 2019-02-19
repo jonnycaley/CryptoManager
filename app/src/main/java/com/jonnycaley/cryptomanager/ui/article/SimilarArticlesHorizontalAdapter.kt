@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.Article
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.SimilarArticle
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.SimilarArticle
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_related_news_horizontal.view.*
 
