@@ -17,7 +17,7 @@ import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHi
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.content.ContextCompat.startActivity
 
-class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
+class SettingsAdapter(val settings: ArrayList<String>, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_settings, parent, false))
@@ -25,7 +25,7 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val setting = settings?.get(position)
+        val setting = settings.get(position)
 
         holder.setIsRecyclable(false)
 
@@ -34,7 +34,7 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
         holder.itemView.setOnClickListener {
             when(position){
                 0 -> {
-                    startActivity(context!!, Intent(context, SavedArticlesActivity::class.java), null)
+                    context?.let { context -> startActivity(context, Intent(context, SavedArticlesActivity::class.java), null) }
                 }
                 1 ->{
                     presenter.deleteSavedArticles()
@@ -43,7 +43,7 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
                     presenter.deletePortfolio()
                 }
                 3 -> {
-                    startActivity(context!!, Intent(context, SelectCurrencyActivity::class.java), null)
+                    context?.let { context -> startActivity(context, Intent(context, SelectCurrencyActivity::class.java), null) }
                 }
                 4 -> {
                     val intent = Intent(Intent.ACTION_SEND)
@@ -51,29 +51,29 @@ class SettingsAdapter(val settings: ArrayList<String>?, val presenter: SettingsC
                     intent.putExtra(Intent.EXTRA_EMAIL, recipients)
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Crypot Manager Feedback")
                     intent.type = "text/html"
-                    startActivity(context!!, Intent.createChooser(intent, "Send mail"), null)
+                    context?.let { context -> startActivity(context, Intent.createChooser(intent, "Send mail"), null) }
                 }
                 5 -> {
-                    startActivity(context!!, Intent(context, TransactionHistoryActivity::class.java), null)
+                    context?.let { context -> startActivity(context, Intent(context, TransactionHistoryActivity::class.java), null) }
                 }
                 6 -> {
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     val shareBody = "Crypto Manager - Manager your protfolio, track live prices & follow the latest news all in one place! https://play.google.com/store/apps/details?id=com.instagram.android&hl=en_GB"
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
-                    startActivity(context!!, Intent.createChooser(sharingIntent, "Share via"), null)
+                    context?.let { context -> startActivity(context, Intent.createChooser(sharingIntent, "Share via"), null) }
                 }
                 7 -> {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse("market://details?id=com.instagram.android")
-                    startActivity(context!!, intent, null)
+                    context?.let { context -> startActivity(context, intent, null) }
                 }
             }
         }
     }
 
     override fun getItemCount(): Int {
-        return settings?.size ?: 0
+        return settings.size
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
