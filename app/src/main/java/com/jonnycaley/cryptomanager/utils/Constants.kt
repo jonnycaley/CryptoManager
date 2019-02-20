@@ -41,4 +41,6 @@ object Constants {
 
     val dateFormat = "EEE, dd MMM yyyy HH:mm"
 
+    val baseRate = 1.toBigDecimal()
+
 }

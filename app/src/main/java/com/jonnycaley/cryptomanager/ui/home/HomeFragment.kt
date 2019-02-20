@@ -434,7 +434,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 //        } else {
 //
 //            topMoversAdapter.articles = arrayList
-//            topMoversAdapter.baseFiat = baseCurrency
+//            topMoversAdapter.baseRate = baseCurrency
 //            topMoversAdapter.notifyDataSetChanged()
 //        }
     }

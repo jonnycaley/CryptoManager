@@ -54,8 +54,8 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
     var marketData : Market? = null
 
     override fun refresh() {
-//        if(topcurrencies != null && baseFiat != null){
-//            view.showTop100Changes(topcurrencies?.data, baseFiat!!)
+//        if(topcurrencies != null && baseRate != null){
+//            view.showTop100Changes(topcurrencies?.data, baseRate!!)
 //        }
         getOfflineData()
     }
@@ -162,17 +162,17 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                    }
 //                    .observeOn(Schedulers.io())
 //                    .flatMapSingle {
-//                        dataManager.getBaseFiat()
+//                        dataManager.getBaseRate()
 //                    }
 //                    .observeOn(Schedulers.computation())
-//                    .map { baseFiat ->
-//                        this.baseFiat = baseFiat
+//                    .map { baseRate ->
+//                        this.baseRate = baseRate
 //                    }
 ////                    TODO: handle onErrors for each request in chain
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .subscribe(object : Observer<Unit> {
 //                        override fun onComplete() {
-//                            view.showTop100Changes(topCurrencies, baseFiat!!)
+//                            view.showTop100Changes(topCurrencies, baseRate!!)
 //                            view.hideProgressBarLayout()
 //                            view.showContentLayout()
 //                        }
@@ -249,7 +249,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(object : SingleObserver<List<Currency>?> {
 //                    override fun onSuccess(t: List<Currency>) {
-//                        view.showTop100Changes(t, baseFiat!!, resultsCount)
+//                        view.showTop100Changes(t, baseRate!!, resultsCount)
 //                    }
 //
 //                    override fun onSubscribe(d: Disposable) {
@@ -276,11 +276,11 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
     private fun getOfflineData() {
 
 
-//        view.showTop100Changes(topCurrencies, baseFiat, resultsCount)
+//        view.showTop100Changes(topCurrencies, baseRate, resultsCount)
 
-//        if (topCurrencies != null && baseFiat != null) {
+//        if (topCurrencies != null && baseRate != null) {
 //            Log.i(TAG, "Se3")
-//            view.showTop100Changes(topCurrencies, baseFiat!!, resultsCount)
+//            view.showTop100Changes(topCurrencies, baseRate!!, resultsCount)
 //            Log.i(TAG, "offline loaded from activity")
 
 //        } else {
@@ -425,11 +425,11 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                }
 //                .observeOn(Schedulers.io())
 //                .flatMapSingle {
-//                    dataManager.getBaseFiat()
+//                    dataManager.getBaseRate()
 //                }
 //                .observeOn(Schedulers.computation())
-//                .map { baseFiat ->
-//                    this.baseFiat = baseFiat
+//                .map { baseRate ->
+//                    this.baseRate = baseRate
 //                }
 //                .observeOn(Schedulers.io())
 //                .flatMap {
@@ -443,7 +443,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                .observeOn(AndroidSchedulers.mainThread())
 //                .subscribe(object : Observer<Unit> {
 //                    override fun onComplete() {
-//                        view.showTop100Changes(topCurrencies?.data, baseFiat!!)
+//                        view.showTop100Changes(topCurrencies?.data, baseRate!!)
 //                        view.hideProgressBarLayout()
 //                        view.showContentLayout()
 //                        Log.i(TAG, "TimeDone2")

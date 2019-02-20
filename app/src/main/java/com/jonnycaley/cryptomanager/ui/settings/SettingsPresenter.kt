@@ -67,7 +67,7 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
 
                 })
 
-//        view.loadSettings(dataManager.getBaseFiat())
+//        view.loadSettings(dataManager.getBaseRate())
 //                .map { json ->
 //                    Gson().fromJson(json, Rate::class.java) }
 //                .subscribeOn(Schedulers.io())

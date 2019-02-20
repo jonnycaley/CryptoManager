@@ -13,18 +13,17 @@ interface PortfolioContract {
         fun stopRefreshing()
         fun showNoHoldingsLayout()
         fun showHoldingsLayout()
-        fun showHoldings()
+        fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>, baseFiat: Rate, allFiats: ArrayList<Rate>)
         fun showError()
-        fun showBalance()
-        fun showChange()
+        fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal)
+        fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal)
         fun hideRefreshing()
         fun getToggledCurrency() : String
-        fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, currenteBtcPrice: Price, currentEthPrice: Price, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, historicalBtcPrice: BigDecimal, historicalEthPrice: BigDecimal)
-        fun saveFiats(rates: List<Rate>?)
     }
 
     interface Presenter : BasePresenter {
         fun getTransactions(timePeriod : String)
         fun clearDisposable()
+        fun updateView()
     }
 }

@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
@@ -89,8 +88,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     }
 
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
-        if(isTabAlreadyClicked)
-            nestedScrollView.scrollTo(0,0)
+        if (isTabAlreadyClicked)
+            nestedScrollView.scrollTo(0, 0)
         else
             presenter.getTransactions(chosenPeriod)
         Log.i(TAG, "onTabClicked()")
@@ -130,10 +129,10 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     override fun onClick(v: View?) {
         when (v?.id) {
             buttonAddFiat.id -> {
-                SearchArgs(FIAT_STRING).launch(context!!)
+                context?.let { SearchArgs(FIAT_STRING).launch(it) }
             }
             buttonAddCurrency.id -> {
-                SearchArgs(CURRENCY_STRING).launch(context!!)
+                context?.let { SearchArgs(CURRENCY_STRING).launch(it) }
             }
             textBalance.id -> {
                 when (chosenCurrency) {
@@ -141,14 +140,14 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                     CURRENCY_BTC -> chosenCurrency = CURRENCY_ETH
                     CURRENCY_ETH -> chosenCurrency = CURRENCY_FIAT
                 }
-                updateView()
+                presenter.updateView()
             }
             textChange.id -> {
                 isPercentage = !isPercentage
-                updateView()
+                presenter.updateView()
             }
             textSortName.id -> {
-                if(chosenSort == SORT_NAME_ASCENDING)
+                if (chosenSort == SORT_NAME_ASCENDING)
                     chosenSort = SORT_NAME_DESCENDING
                 else
                     chosenSort = SORT_NAME_ASCENDING
@@ -156,7 +155,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 notifySortTextChanged()
             }
             textSortHoldings.id -> {
-                if(chosenSort == SORT_HOLDINGS_DESCENDING)
+                if (chosenSort == SORT_HOLDINGS_DESCENDING)
                     chosenSort = SORT_HOLDINGS_ASCENDING
                 else
                     chosenSort = SORT_HOLDINGS_DESCENDING
@@ -164,7 +163,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                 notifySortTextChanged()
             }
             textSortChange.id -> {
-                if(chosenSort == SORT_CHANGE_DESCENDING)
+                if (chosenSort == SORT_CHANGE_DESCENDING)
                     chosenSort = SORT_CHANGE_ASCENDING
                 else
                     chosenSort = SORT_CHANGE_DESCENDING
@@ -180,7 +179,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         textSortHoldings.text = "Holdings"
         textSortChange.text = "Change"
 
-        when(chosenSort){
+        when (chosenSort) {
             SORT_NAME_ASCENDING -> {
                 textSortName.text = "Name▼"
             }
@@ -204,46 +203,6 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     private fun onSortChanged() {
         holdingsAdapter.onSortChanged(chosenSort)
-    }
-
-    private fun updateView() {
-        showHoldingsLayout()
-        showHoldings()
-        showBalance()
-        showChange()
-    }
-
-
-    var holdings: ArrayList<Holding> = ArrayList()
-    var prices: ArrayList<Price> = ArrayList()
-    var baseFiat: Rate = Rate()
-    var priceBtc = Price()
-    var priceEth = Price()
-    var balanceUsd = 0.toBigDecimal()
-    var balanceBtc = 0.toBigDecimal()
-    var balanceEth = 0.toBigDecimal()
-    var changeUsd = 0.toBigDecimal()
-    var changeBtc = 0.toBigDecimal()
-    var changeEth = 0.toBigDecimal()
-    var allFiats: ArrayList<Rate> = ArrayList()
-
-    override fun saveData(holdingsSorted: ArrayList<Holding>, newPrices: ArrayList<Price>, baseFiat: Rate, priceBtc: Price, priceEth: Price, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
-        this.holdings = holdingsSorted
-        this.prices = newPrices
-        this.baseFiat = baseFiat
-        this.priceBtc = priceBtc
-        this.priceEth = priceEth
-        this.balanceUsd = balanceUsd
-        this.balanceBtc = balanceBtc
-        this.balanceEth = balanceEth
-        this.changeUsd = changeUsd
-        this.changeBtc = changeBtc
-        this.changeEth = changeEth
-    }
-
-    override fun saveFiats(rates: List<Rate>?) {
-        allFiats.clear()
-        rates?.forEach { allFiats.add(it) }
     }
 
     override fun hideRefreshing() {
@@ -271,46 +230,47 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //        swipeLayout.isRefreshing = false
     }
 
-    override fun showBalance() {
+    @SuppressLint("SetTextI18n")
+    override fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal) {
         when (this.chosenCurrency) { //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
-                textBalance.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.balanceUsd * this.baseFiat.rate!!))}"
+                textBalance.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())))}"
             }
             CURRENCY_BTC -> {
-                textBalance.text = "BTC ${this.balanceBtc}"//₿
+                textBalance.text = "BTC $balanceBtc"//₿
             }
             CURRENCY_ETH -> {
-                textBalance.text = "ETH ${this.balanceEth}"//Ξ
+                textBalance.text = "ETH $balanceEth"//Ξ
             }
         }
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showChange() {
+    override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
 
         when (this.chosenCurrency) {
             CURRENCY_FIAT -> {
                 if (!isPercentage) {
-                    if (this.changeUsd < 0.toBigDecimal()) {
+                    if (changeUsd < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd * this.baseFiat.rate!!)).substring(1)}"
+                        textChange.text = "-${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((changeUsd * (baseFiat.rate ?: 1.toBigDecimal()))).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "${Utils.getFiatSymbol(this.baseFiat.fiat)}${Utils.formatPrice((this.changeUsd * this.baseFiat.rate!!))}"
+                        textChange.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((changeUsd * (baseFiat.rate?: 1.toBigDecimal())))}"
                     }
                 } else {
 
-                    val change = this.changeUsd
-                    var absBalance = this.balanceUsd - this.changeUsd
-                    if(absBalance < 0.toBigDecimal())
+                    val change = changeUsd
+                    var absBalance = balanceUsd - changeUsd
+                    if (absBalance < 0.toBigDecimal())
                         absBalance = (absBalance * (-1).toBigDecimal())
 
-                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
 
-                        var changePct = change / absBalance
+                        val changePct = change / absBalance
                         //TODO: absBalance can still be 0 somehow lmao
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
@@ -334,23 +294,23 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             }
             CURRENCY_BTC -> {
                 if (!isPercentage) {
-                    if (this.changeBtc < 0.toBigDecimal()) {
+                    if (changeBtc < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-BTC ${Utils.formatPrice(this.changeBtc).substring(1)}"
+                        textChange.text = "-BTC ${Utils.formatPrice(changeBtc).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "BTC ${Utils.formatPrice(this.changeBtc)}"
+                        textChange.text = "BTC ${Utils.formatPrice(changeBtc)}"
                     }
                 } else {
 
-                    val change = this.changeBtc
-                    var absBalance = (this.balanceBtc - this.changeBtc).abs()
+                    val change = changeBtc
+                    val absBalance = (balanceBtc - changeBtc).abs()
 
-                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
-                        var changePct = change / absBalance
+                        val changePct = change / absBalance
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
 
@@ -367,12 +327,12 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             }
             CURRENCY_ETH -> {
                 if (!isPercentage) {
-                    if (this.changeEth < 0.toBigDecimal()) {
+                    if (changeEth < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-ETH ${Utils.formatPrice(this.changeEth).substring(1)}"
+                        textChange.text = "-ETH ${Utils.formatPrice(changeEth).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "ETH ${Utils.formatPrice(this.changeEth)}"
+                        textChange.text = "ETH ${Utils.formatPrice(changeEth)}"
                     }
                 } else {
 //                    if ((this.balanceEth) == (this.changeEth)) {
@@ -384,14 +344,14 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //                        textChange.text = Utils.formatPercentage((this.changeEth) / (this.balanceEth))
 //                    }
 
-                    val change = this.changeEth
-                    var absBalance = (this.balanceEth - this.changeEth).abs()
+                    val change = changeEth
+                    val absBalance = (balanceEth - changeEth).abs()
 
-                    if((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)){
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
                         textChange.text = "-"
                         context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
                     } else {
-                        var changePct = change / absBalance
+                        val changePct = change / absBalance
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
                 }
@@ -399,18 +359,18 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         }
     }
 
-    fun formatPercentage(percentChange24h: BigDecimal?, view : TextView) {
+    fun formatPercentage(percentChange24h: BigDecimal, view: TextView) {
 
-        if(percentChange24h?.compareTo(0.toBigDecimal()) == 0) {
+        if (percentChange24h?.compareTo(0.toBigDecimal()) == 0) {
             context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
-            view.text =  "-"
+            view.text = "-"
         } else {
 
             val percentage2dp = percentChange24h?.setScale(2, BigDecimal.ROUND_HALF_UP)
             println(percentage2dp)
 
             return when {
-                percentage2dp!! > 0.toBigDecimal() -> {
+                percentage2dp > 0.toBigDecimal() -> {
                     context?.resources?.getColor(R.color.green)?.let { view.setTextColor(it) }
                     view.text = "+$percentage2dp%"
                 }
@@ -438,6 +398,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 //            }
 //        }
     }
+
     override fun showNoHoldingsLayout() {
         layoutEmpty.visibility = View.VISIBLE
         layoutNotEmty.visibility = View.GONE
@@ -448,14 +409,22 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
         layoutNotEmty.visibility = View.VISIBLE
     }
 
-    override fun showHoldings() {
+    override fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>, baseFiat: Rate, allFiats: ArrayList<Rate>) {
 
-        val mLayoutManager = LinearLayoutManager(context)
-        recyclerView.layoutManager = mLayoutManager
-        holdingsAdapter = HoldingsAdapter(this.holdings, this.prices, this.baseFiat, this.chosenCurrency, this.allFiats, this.isPercentage, context)
-        recyclerView.adapter = holdingsAdapter
+        if(holdings.isEmpty())
+            showNoHoldingsLayout()
+        else {
 
-        holdingsAdapter.onSortChanged(chosenSort)
+            showHoldingsLayout()
+
+            val mLayoutManager = LinearLayoutManager(context)
+
+            recyclerView.layoutManager = mLayoutManager
+            holdingsAdapter = HoldingsAdapter(holdings, prices, baseFiat, this.chosenCurrency, allFiats, this.isPercentage, context)
+            recyclerView.adapter = holdingsAdapter
+
+            holdingsAdapter.onSortChanged(chosenSort)
+        }
     }
 
     fun newInstance(headerStr: String): MarketsFragment {

@@ -162,7 +162,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             top100.forEach { this.top100.add(it) }
                             linkedCryptos = linkCryptoToArticles(this.news, this.top100)
 //                            view.showNews(linkCryptoToArticles(this.news, this.topcurrencies), savedArticles)
-//                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseFiat.toLowerCase() })
+//                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseRate.toLowerCase() })
                         }
                     }
                     .filter { this.top100.isEmpty() }
@@ -221,11 +221,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //                        exchangeRates = Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java)
 //                    }
 //                    .flatMapSingle {
-//                        dataManager.getBaseFiat()
+//                        dataManager.getBaseRate()
 //                    }
 //                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { baseFiat ->
-//                        view.showTop100Changes(savedCurrencies?.data, baseFiat) //?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
+//                    .map { baseRate ->
+//                        view.showTop100Changes(savedCurrencies?.data, baseRate) //?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
 //                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {

@@ -315,7 +315,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     }
 
 
-//    override fun showTop100Changes(currencies: List<Currency>?, baseFiat: Rate, resultsCount: Int) {
+//    override fun showTop100Changes(currencies: List<Currency>?, baseRate: Rate, resultsCount: Int) {
 //
 //        isLoading = false
 //
@@ -328,7 +328,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 //
 //            mLayoutManager = LinearLayoutManager(context)
 //            recyclerViewCurrencies.layoutManager = mLayoutManager
-//            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context, timeframe)
+//            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseRate, context, timeframe)
 //            recyclerViewCurrencies.adapter = currenciesAdapter
 //
 //            nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
@@ -369,7 +369,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 //            Log.i(TAG, resultsCount.toString())
 //            Log.i(TAG, currenciesAdapter.currencies?.size.toString()!!)
 //
-//            currenciesAdapter.swap(ArrayList(currencies), baseFiat)
+//            currenciesAdapter.swap(ArrayList(currencies), baseRate)
 //
 //            if (currencies?.size!! < 100 || resultsCount <= currenciesAdapter.currencies?.size!!) {
 //                progressBar.visibility = View.GONE
