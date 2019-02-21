@@ -15,7 +15,7 @@ import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 
-class GeneralArticlesVerticalAdapter(val newsItems: ArrayList<Article>?, val savedArticles: ArrayList<Article>, val context: Context?, val generalPresenter : GeneralContract.Presenter?) : RecyclerView.Adapter<GeneralArticlesVerticalAdapter.ViewHolder>() {
+class GeneralArticlesVerticalAdapter(var newsItems: ArrayList<Article>, var savedArticles: ArrayList<Article>, val context: Context?, val generalPresenter : GeneralContract.Presenter?) : RecyclerView.Adapter<GeneralArticlesVerticalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))
@@ -46,19 +46,19 @@ class GeneralArticlesVerticalAdapter(val newsItems: ArrayList<Article>?, val sav
 
             override fun liked(p0: LikeButton?) {
                 Log.i(TAG, "liked")
-                generalPresenter?.saveArticle(item!!)
+                item?.let { generalPresenter?.saveArticle(it) }
             }
 
             override fun unLiked(p0: LikeButton?) {
                 Log.i(TAG, "unLiked")
-                generalPresenter?.removeArticle(item!!)
+                item?.let { generalPresenter?.removeArticle(it) }
             }
         })
 
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            ArticleArgs(item!!).launch(context!!)
+            item?.let { article -> context?.let { context -> ArticleArgs(article).launch(context) } }
         }
     }
 

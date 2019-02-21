@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.article
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
@@ -13,6 +14,8 @@ import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.takusemba.multisnaprecyclerview.OnSnapListener
 import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
+import android.webkit.WebSettings
+import android.widget.Toast
 import com.like.LikeButton
 import com.like.OnLikeListener
 
@@ -24,6 +27,8 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
     private val webview by lazy { findViewById<WebView>(R.id.webview) }
     private val recyclerviewSnap by lazy { findViewById<MultiSnapRecyclerView>(R.id.recyclerview_snap) }
+    val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
+
 
     private val adapter by lazy { SimilarArticlesHorizontalAdapter(args.article.similarArticles, this) }
 
@@ -40,22 +45,29 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
         setupToolbar()
 
-        webview.webViewClient = WebViewClient()
+        webview.webViewClient =  object : WebViewClient() {
+
+            override fun onPageFinished(view: WebView, url: String) {
+                webview.visibility = View.VISIBLE
+                progressBarLayout.visibility = View.GONE
+            }
+            //TODO: HANDLE ERROR HERE WITH OVERRIDE METHOD
+        }
+//        webview.webViewClient = obj
         webview.loadUrl(args.article.url)
+        webview.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
 
         likeButton.setOnLikeListener(this)
-
-        if(args.article.similarArticles == null || args.article.similarArticles?.isEmpty()!!){
-            recyclerviewSnap.visibility = View.GONE
-
-            val params = webview.layoutParams as ViewGroup.MarginLayoutParams
-            params.bottomMargin = 0
-            webview.layoutParams = params
-
-        } else {
-            setupRelated()
-        }
-
+//        if(args.article.similarArticles == null || args.article.similarArticles?.isEmpty()!!){
+//            recyclerviewSnap.visibility = View.GONE
+//
+//            val params = webview.layoutParams as ViewGroup.MarginLayoutParams
+//            params.bottomMargin = 0
+//            webview.layoutParams = params
+//
+//        } else {
+//            setupRelated()
+//        }
         presenter = ArticlePresenter(ArticleDataManager.getInstance(this), this)
         presenter.attachView()
     }

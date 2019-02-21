@@ -71,6 +71,10 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     override fun updateTheme() {
         BaseArgs(3).launch(context!!)
+
+        //TODO: RESTART ACTIVITY OF RE-LOAD ALL VIEWS IN FRAGMENT? :S
+//        (activity as BaseActivity).updateThemeChanged()
+//        presenter.loadSettings()
     }
 
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {

@@ -215,7 +215,8 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     override fun onResume() {
         super.onResume()
-        presenter.getTransactions(chosenPeriod)
+        //TODO: UNCOMMENT BELOW
+//        presenter.getTransactions(chosenPeriod)
     }
 
     override fun showError() {

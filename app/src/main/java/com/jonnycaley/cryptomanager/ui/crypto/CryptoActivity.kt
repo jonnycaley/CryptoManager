@@ -70,9 +70,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     override fun loadTheme(info: GeneralInfo) {
 
-        println("Loading theme")
-
-        if(info.data?.isNotEmpty()!!) {
+        if(info.data?.isNotEmpty() == true) {
 
             Picasso.with(this)
                     .load("https://www.cryptocompare.com" + info.data?.first()?.coinInfo?.imageUrl)
@@ -90,11 +88,10 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
                             title.setTextColor(getDominantColor(bitmap))
 
                             toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
-
                         }
 
                         override fun onError() {
-                            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            TODO("not implemented")
                         }
 
                     })

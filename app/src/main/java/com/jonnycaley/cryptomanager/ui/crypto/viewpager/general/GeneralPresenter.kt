@@ -2,16 +2,21 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.util.Log
 import com.google.gson.Gson
+import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.data.model.Utils.Chart
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.CompletableObserver
+import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 
 
@@ -44,7 +49,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         clearChartDisposable()
         clearDisposable()
 //      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be separate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
-        getCurrencyChart(minuteString, view.getSymbol(), conversionUSD, numOfCandlesticks, aggregate1H) //TODO: needs to be refactored
+        getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD) //TODO: needs to be refactored
         getCurrencyGeneralData(view.getSymbol())
         getCurrencyNews(view.getSymbol())
         getCurrencySocial(transformName(view.getName()))
@@ -83,12 +88,8 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onNext(baseFiat: Rate) {
-                            view.showMarketCap(data?.uSD?.mKTCAP, baseFiat)
-                            view.showDaysRange(data?.uSD?.lOW24HOUR, data?.uSD?.hIGH24HOUR, data?.uSD?.pRICE, baseFiat)
-                            view.showCirculatingSupply(data?.uSD?.sUPPLY)
-                            view.show24High(data?.uSD?.hIGH24HOUR, baseFiat)
-                            view.show24Low(data?.uSD?.lOW24HOUR, baseFiat)
-                            view.show24Change(data?.uSD?.cHANGEPCT24HOUR)
+
+                            view.showGlobalData(data, baseFiat)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -105,37 +106,55 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
-    override fun getCurrencyChart(timeString : String, symbol: String, conversion : String, limit : Int, aggregate : Int) { //TODO: needs to be refactored - SAVE THE TIMEFRAME STRING IN ACTIVITY AND CALL IT FROM PRESENTER
+    override fun onResume() {
+
+        dataManager.getSavedArticles()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<ArrayList<Article>> {
+                    override fun onSuccess(articles: ArrayList<Article>) {
+                        view.updateSavedArticles(articles)
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        Log.i(TAG, "onError: ${e.message}")
+                    }
+
+                })
+    }
+
+    override fun getCurrencyChart(chart : Chart, symbol: String, conversion : String) { //TODO: needs to be refactored - SAVE THE TIMEFRAME STRING IN ACTIVITY AND CALL IT FROM PRESENTER
 
         if (dataManager.checkConnection()) {
 
-            var graphData : HistoricalData? = null
+            val getGraph : Observable<HistoricalData> = dataManager.getCryptoCompareService().getCurrencyGraph(chart.measure, symbol, conversion, chart.limit.toString(), chart.aggregate.toString())
+            val getBaseFiat : Observable<Rate> = dataManager.getBaseFiat().toObservable()
 
-            dataManager.getCryptoCompareService().getCurrencyGraph(timeString, symbol, conversion, limit.toString(), aggregate.toString())
-                    .map { response -> graphData = response }
-                    .flatMapSingle { dataManager.getBaseFiat() }
+            Observable.zip(getGraph, getBaseFiat, BiFunction<HistoricalData, Rate, Any> { graphData, baseFiat ->
+                if(graphData.data?.isEmpty() == true) {
+                    //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
+                } else {
+
+                    graphData.data?.first()?.open?.let { open -> graphData?.data?.last()?.close?.let { close -> view.showPriceChange(open, close, baseFiat) } }
+
+                    if (isLatestPrice)
+                        view.showCurrentPrice(graphData?.data?.last()?.close, baseFiat)
+                    isLatestPrice = false
+                    graphData.let { view.loadCandlestickChart(it, chart, chart.aggregate, baseFiat) }
+                }
+            })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<Rate> {
+                    .subscribe(object : Observer<Any> {
                         override fun onComplete() {
                         }
 
-                        override fun onNext(baseFiat: Rate) {
-
-                            if(graphData?.data?.isEmpty()!!) {
-                                //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
-                            } else {
-
-                                view.showPriceChange(graphData?.data?.first()?.open, graphData?.data?.last()?.close, baseFiat)
-
-                                if (isLatestPrice)
-                                    view.showCurrentPrice(graphData?.data?.last()?.close, baseFiat)
-                                isLatestPrice = false
-
-                                graphData!!.data?.forEach { println(it.close) }
-
-                                view.loadCandlestickChart(graphData!!, timeString, aggregate, baseFiat)
-                            }
+                        override fun onNext(baseFiat: Any) {
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -154,19 +173,21 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     private fun getCurrencyNews(symbol: String) {
 
         if (dataManager.checkConnection()) {
+
+            val getSavedArticles : Observable<ArrayList<Article>> = dataManager.getSavedArticles().toObservable()
+            val getAllCrypto : Observable<com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies> = dataManager.getAllCryptos().toObservable()
+
             var savedArticles = ArrayList<Article>()
 
-            dataManager.getSavedArticles()
-                    .map { articles -> savedArticles = articles }
-                    .flatMap { dataManager.getAllCryptos() }
-                    .map { currencies -> currencies.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase()}?.get(0) }
-                    .toObservable()
-                    .flatMap { currency -> dataManager.getCryptoControlNewsService().getCurrencyNews(currency.coinName!!.toLowerCase().replace(" ", "-")) }
+            Observable.zip(getSavedArticles, getAllCrypto, BiFunction<ArrayList<Article>, com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies, String> { articles, allCrypto ->
+                savedArticles = articles
+                allCrypto.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase()}?.get(0)?.coinName?.toLowerCase()?.replace(" ", "-").toString()
+            })
+                    .flatMap { cryptoName -> dataManager.getCryptoControlNewsService().getCurrencyNews(cryptoName) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Array<Article>> {
                         override fun onComplete() {
-
                         }
 
                         override fun onNext(articles: Array<Article>) {
@@ -174,13 +195,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            compositeDisposable?.add(d)
+                            chartDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
                             println("onError: ${e.message}")
                         }
                     })
+
         } else {
 
         }
@@ -196,7 +218,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -249,49 +270,10 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     companion object {
         val TAG = "GeneralPresenter"
 
-        val minuteString = "minute"
-        val hourString = "hour"
-        val dayString = "day"
 
         val conversionUSD = "USD"
         val conversionGBP = "GBP"
         val conversionBTC = "BTC"
-
-
-
-        val limit1H = 30
-        val aggregate1H = 2
-        val timeMeasure1H = minuteString
-
-        val limit1D = 30
-        val aggregate1D = 1
-        val timeMeasure1D = hourString
-
-        val limit3D = 30
-        val aggregate3D = 3
-        val timeMeasure3D = hourString
-
-        val limit1W = 30
-        val aggregate1W = 6
-        val timeMeasure1W = hourString
-
-        val limit1M = 30
-        val aggregate1M = 1
-        val timeMeasure1M = dayString
-
-        val limit3M = 30
-        val aggregate3M = 3
-        val timeMeasur3M = dayString
-
-        val limit6M = 30
-        val aggregate6M = 6
-        val timeMeasure6M = dayString
-
-        val limit1Y = 30
-        val aggregate1Y = 12
-        val timeMeasure1Y = dayString
-
-        val numOfCandlesticks = 30
 
     }
 

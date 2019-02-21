@@ -2,10 +2,11 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.IAxisValueFormatter
+import com.jonnycaley.cryptomanager.data.model.Utils.Chart
 import java.text.SimpleDateFormat
 import java.util.*
 
-class XAxisValueFormatter(private val timeUnit : String, private val aggregate : Int) : IAxisValueFormatter {
+class XAxisValueFormatter(private val chart : Chart, private val aggregate : Int) : IAxisValueFormatter {
 
     override fun getFormattedValue(value: Float, axis: AxisBase): String {
 
@@ -20,12 +21,12 @@ class XAxisValueFormatter(private val timeUnit : String, private val aggregate :
 //      then have to subtract THAT from 30 to give us index's from the current time stamp.
 //      then multiple by aggregate to
 
-        val newIndex = GeneralPresenter.numOfCandlesticks - index
+        val newIndex = GeneralFragment.numOfCandlesticks - index
 
         val tsSeconds = System.currentTimeMillis() / 1000
 
-        when(timeUnit) {
-            GeneralPresenter.minuteString -> {
+        when(chart.measure) {
+            GeneralFragment.minuteString -> {
 
                 val rounded = tsSeconds - (tsSeconds % 60) //gets us seconds rounded down to the nearest minute
 
@@ -34,13 +35,13 @@ class XAxisValueFormatter(private val timeUnit : String, private val aggregate :
                 val timeStamp = rounded - minutesToSubtract
 
                 when(aggregate){
-                    GeneralPresenter.aggregate1H -> {
+                    GeneralFragment.aggregate1H -> {
                         return epoch2DateString(timeStamp, "HH:mm")
                     }
                 }
 
             }
-            GeneralPresenter.hourString -> {
+            GeneralFragment.hourString -> {
                 val rounded = tsSeconds - (tsSeconds % (60 * 60)) //gets us seconds rounded down to the nearest minute
 
                 val minutesToSubtract = newIndex * (60 * 60) * aggregate
@@ -48,18 +49,18 @@ class XAxisValueFormatter(private val timeUnit : String, private val aggregate :
                 val timeStamp = rounded - minutesToSubtract
 
                 when(aggregate){
-                    GeneralPresenter.aggregate1D -> {
+                    GeneralFragment.aggregate1D -> {
                         return epoch2DateString(timeStamp, "HH:mm")
                     }
-                    GeneralPresenter.aggregate3D -> {
+                    GeneralFragment.aggregate3D -> {
                         return epoch2DateString(timeStamp, "dd MMM")
                     }
-                    GeneralPresenter.aggregate1W -> {
+                    GeneralFragment.aggregate1W -> {
                         return epoch2DateString(timeStamp, "dd MMM")
                     }
                 }
             }
-            GeneralPresenter.dayString -> {
+            GeneralFragment.dayString -> {
 
                 val rounded = tsSeconds - (tsSeconds % (60 * 60 * 24)) //gets us seconds rounded down to the nearest minute
 
@@ -68,16 +69,16 @@ class XAxisValueFormatter(private val timeUnit : String, private val aggregate :
                 val timeStamp = rounded - minutesToSubtract
 
                 when(aggregate){
-                    GeneralPresenter.aggregate1M -> {
+                    GeneralFragment.aggregate1M -> {
                         return epoch2DateString(timeStamp, "dd MMM")
                     }
-                    GeneralPresenter.aggregate3M -> {
+                    GeneralFragment.aggregate3M -> {
                         return epoch2DateString(timeStamp, "MMM")
                     }
-                    GeneralPresenter.aggregate6M -> {
+                    GeneralFragment.aggregate6M -> {
                         return epoch2DateString(timeStamp, "MMM")
                     }
-                    GeneralPresenter.aggregate1Y -> {
+                    GeneralFragment.aggregate1Y -> {
                         return epoch2DateString(timeStamp, "MMM yyyy")
                     }
 //                    GeneralPresenter.aggregateAll -> {

@@ -52,7 +52,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError1: ${e.message}")
                     }
 
                 })
@@ -81,7 +81,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError2: ${e.message}")
                     }
 
                 })
@@ -90,6 +90,8 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
     override fun getCurrencies() {
 
+        //TODO: FINISH ERROR HANDLING
+
         if(dataManager.checkConnection()){
 
             val rate = Rate(); rate.fiat = "USD"; rate.rate = 1.toBigDecimal()
@@ -97,7 +99,11 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
             dataManager.getExchangeRateService().getExchangeRates()
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.io())
+                    .doOnError {
+                        dataManager.saveBaseRate(rate)
+                    }
                     .flatMapCompletable { json ->
+                        println("flatMapCompletable")
                         dataManager.saveAllRates(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java))
                     }
                     .andThen(dataManager.saveBaseRate(rate))
@@ -134,53 +140,12 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
+                            println("onError3: ${e.message}")
                         }
                     })
         } else {
             view.showInternetRequired()
         }
-    }
-
-    private fun test() {
-        dataManager.readBaseRate()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<Rate> {
-                    override fun onSuccess(t: Rate) {
-                        Log.i(TAG, "test readBaseRate onSuccess")
-                        println(t.fiat)
-                    }
-
-
-                    override fun onSubscribe(d: Disposable) {
-                        compositeDisposable?.add(d)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.i(TAG, "test: ${e.message}")
-                    }
-
-                })
-
-        dataManager.readAllRates()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<ExchangeRates> {
-                    override fun onSuccess(t: ExchangeRates) {
-                        Log.i(TAG, "test readAllRates onSuccess")
-                        println(t.rates?.size.toString())
-                    }
-
-
-                    override fun onSubscribe(d: Disposable) {
-                        compositeDisposable?.add(d)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Log.i(TAG, "test: ${e.message}")
-                    }
-                })
     }
 
     companion object {

@@ -7,6 +7,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import java.lang.Math.round
+import java.math.BigDecimal
 import java.text.DecimalFormat
 
 /**
@@ -40,5 +41,38 @@ class ExampleUnitTest {
         assertEquals("111.12", getPriceText((111.11500000).toDouble()))
         assertEquals("1111.11", getPriceText((1111.1100000).toDouble()))
     }
+
+
+
+    @Test
+    fun roundToLowest10(){
+        assertEquals(3980F, roundToLowest10(3980F))
+    }
+
+    private fun roundToLowest10(lowest: Float): Float {
+        var lowest10 = ((lowest.toInt()+5)/10)*10; // if num is int
+        if(lowest10 > lowest.toInt())
+            lowest10 -= 10
+        return lowest10.toFloat()
+    }
+
+    @Test
+    fun roundToHighest(){
+        assertEquals(3935F, roundToHighest(3930.86F, 5))
+    }
+
+    private fun roundToHighest(highest: Float, multiplesOf: Int): Float {
+
+        var highestInt = round(highest)
+
+        var highest10 = ((highestInt+(multiplesOf/2))/multiplesOf)*multiplesOf
+
+
+        if(highest10 < highestInt)
+            highest10 += multiplesOf
+
+        return highest10.toFloat()
+    }
+
 
 }

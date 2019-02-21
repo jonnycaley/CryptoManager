@@ -142,7 +142,6 @@
                             app:rrb_drawableHeight="36dp"
                             app:rrb_drawablePadding="4dp"
                             app:rrb_drawableWidth="36dp"
-                            app:rrb_rippleColor="@color/black"
                             app:rrb_selectorColor="@color/black"
                             app:rrb_text="1M"
                             app:rrb_textColor="?attr/textcolorsecondary"
@@ -305,6 +304,29 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_circulating_supply"
+                                android:textColor="?attr/textcolor"
+                                android:text="" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/title_24h_volume"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Volume (24h)"
+                                android:textColor="?attr/textcolorsecondary"
+                                android:textSize="@dimen/small_text_size"/>
+
+                            <TextView
+                                android:id="@+id/text_24h_volume"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/title_24h_volume"
                                 android:textColor="?attr/textcolor"
                                 android:text="" />
 

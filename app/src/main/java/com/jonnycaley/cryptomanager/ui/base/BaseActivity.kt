@@ -16,9 +16,10 @@ import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
 import com.jonnycaley.cryptomanager.utils.App
+import com.jonnycaley.cryptomanager.utils.interfaces.OnThemeChangedListener
 import kotlinx.android.synthetic.main.content_home.*
 
-class BaseActivity : AppCompatActivity() {
+class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     lateinit var fragment: Fragment
 
@@ -40,6 +41,13 @@ class BaseActivity : AppCompatActivity() {
     var TAG = this.javaClass.simpleName
 
     private var currentFragment: Fragment? = null
+
+    override fun updateThemeChanged() {
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+            navigation.background = resources.getDrawable(R.color.red)
+        else
+            navigation.background = resources.getDrawable(R.color.white)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

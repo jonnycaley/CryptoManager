@@ -72,6 +72,14 @@ class SettingsAdapter(val settings: ArrayList<String>, val presenter: SettingsCo
         }
     }
 
+    fun refresh(){
+        var temSettings = ArrayList<String>()
+        settings.forEach { temSettings.add(it) }
+        settings.clear()
+        settings.addAll(temSettings)
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return settings.size
     }
