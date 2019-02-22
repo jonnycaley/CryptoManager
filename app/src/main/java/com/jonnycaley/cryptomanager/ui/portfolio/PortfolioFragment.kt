@@ -56,7 +56,7 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     var chosenPeriod = TIME_PERIOD_1H
     var chosenCurrency = CURRENCY_FIAT
-    var chosenSort = SORT_HOLDINGS_DESCENDING
+    var chosenSort = ""
 
     override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -233,9 +233,12 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     @SuppressLint("SetTextI18n")
     override fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal) {
+
+        val fiat = Utils.getFiatSymbol(baseFiat.fiat)
+
         when (this.chosenCurrency) { //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
-                textBalance.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())))}"
+                textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
             }
             CURRENCY_BTC -> {
                 textBalance.text = "BTC $balanceBtc"//₿
@@ -249,15 +252,16 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
     @SuppressLint("SetTextI18n")
     override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
 
+        val fiat = Utils.getFiatSymbol(baseFiat.fiat)
+
         when (this.chosenCurrency) {
             CURRENCY_FIAT -> {
                 if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs((changeUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
                     if (changeUsd < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((changeUsd * (baseFiat.rate ?: 1.toBigDecimal()))).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.formatPrice((changeUsd * (baseFiat.rate?: 1.toBigDecimal())))}"
                     }
                 } else {
 
@@ -295,12 +299,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             }
             CURRENCY_BTC -> {
                 if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "BTC")
                     if (changeBtc < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-BTC ${Utils.formatPrice(changeBtc).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "BTC ${Utils.formatPrice(changeBtc)}"
                     }
                 } else {
 
@@ -314,7 +317,6 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
                         val changePct = change / absBalance
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
-
 //                    if ((this.balanceBtc.toDouble()) == (this.changeBtc.toDouble())) {
 //                        textChange.text = "-"
 //                    } else {
@@ -328,12 +330,11 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
             }
             CURRENCY_ETH -> {
                 if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "ETH")
                     if (changeEth < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
-                        textChange.text = "-ETH ${Utils.formatPrice(changeEth).substring(1)}"
                     } else {
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
-                        textChange.text = "ETH ${Utils.formatPrice(changeEth)}"
                     }
                 } else {
 //                    if ((this.balanceEth) == (this.changeEth)) {
@@ -344,7 +345,6 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 ////                            multiplier = (-1).toBigDecimal()
 //                        textChange.text = Utils.formatPercentage((this.changeEth) / (this.balanceEth))
 //                    }
-
                     val change = changeEth
                     val absBalance = (balanceEth - changeEth).abs()
 
@@ -362,13 +362,12 @@ class PortfolioFragment : Fragment(), PortfolioContract.View, View.OnClickListen
 
     fun formatPercentage(percentChange24h: BigDecimal, view: TextView) {
 
-        if (percentChange24h?.compareTo(0.toBigDecimal()) == 0) {
+        if (percentChange24h.compareTo(0.toBigDecimal()) == 0) {
             context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
             view.text = "-"
         } else {
 
-            val percentage2dp = percentChange24h?.setScale(2, BigDecimal.ROUND_HALF_UP)
-            println(percentage2dp)
+            val percentage2dp = percentChange24h.setScale(2, BigDecimal.ROUND_HALF_UP)
 
             return when {
                 percentage2dp > 0.toBigDecimal() -> {

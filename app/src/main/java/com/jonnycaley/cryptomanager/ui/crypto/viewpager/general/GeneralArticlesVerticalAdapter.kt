@@ -22,49 +22,49 @@ class GeneralArticlesVerticalAdapter(var newsItems: ArrayList<Article>, var save
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = newsItems?.get(position)
+        val item = newsItems[position]
 
-        if(item?.thumbnail == null){
+        if(item.thumbnail == null){
             holder.image.visibility = View.GONE
         } else {
             Picasso.with(context)
-                    .load(item?.thumbnail)
+                    .load(item.thumbnail)
                     .fit()
                     .centerCrop()
                     .into(holder.image)
         }
 
-        holder.title.text = item?.title.toString()
-        holder.category.text = item?.primaryCategory.toString()
+        holder.title.text = item.title.toString()
+        holder.category.text = item.primaryCategory.toString()
         holder.image.alpha = Float.MAX_VALUE
-        holder.date.text = Utils.getTimeFrom(item?.publishedAt)
-        holder.length.text = Utils.getReadTime(item?.words)
+        holder.date.text = Utils.getTimeFrom(item.publishedAt)
+        holder.length.text = Utils.getReadTime(item.words)
 
-        holder.likeButton.isLiked = savedArticles.any { it.url == item?.url }
+        holder.likeButton.isLiked = savedArticles.any { it.url == item.url }
 
         holder.likeButton.setOnLikeListener(object : OnLikeListener {
 
             override fun liked(p0: LikeButton?) {
                 Log.i(TAG, "liked")
-                item?.let { generalPresenter?.saveArticle(it) }
+                item.let { generalPresenter?.saveArticle(it) }
             }
 
             override fun unLiked(p0: LikeButton?) {
                 Log.i(TAG, "unLiked")
-                item?.let { generalPresenter?.removeArticle(it) }
+                item.let { generalPresenter?.removeArticle(it) }
             }
         })
 
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            item?.let { article -> context?.let { context -> ArticleArgs(article).launch(context) } }
+            item.let { article -> context?.let { context -> ArticleArgs(article).launch(context) } }
         }
     }
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return newsItems?.size ?: 0
+        return newsItems.size
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {

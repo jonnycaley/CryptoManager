@@ -39,7 +39,9 @@ class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, v
 
         val price = baseFiat.rate?.toDouble()?.let { item.quote?.uSD?.price?.toDouble()?.times(it) }
 
-        val priceText = price?.toBigDecimal()?.let { Utils.formatPrice(it) }
+        val symbol = Utils.getFiatSymbol(baseFiat.fiat)
+
+        val priceText = price?.toBigDecimal()?.let { Utils.getPriceTextAbs(it.toDouble(), symbol) }
 
         holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$priceText"
 

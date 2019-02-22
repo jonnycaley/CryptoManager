@@ -7,10 +7,12 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import java.math.BigDecimal
 import java.text.NumberFormat
+import kotlin.math.absoluteValue
 
 object Utils {
 
@@ -41,22 +43,22 @@ object Utils {
         val days = hours / 24
 
         when {
-            seconds < 60 -> return if(seconds.toInt() == 1){
+            seconds < 60 -> return if (seconds.toInt() == 1) {
                 "$seconds second ago"
             } else {
                 "$seconds seconds ago"
             }
-            minutes < 60 -> return if(minutes.toInt() == 1){
+            minutes < 60 -> return if (minutes.toInt() == 1) {
                 "$minutes minute ago"
             } else {
                 "$minutes minutes ago"
             }
-            hours < 24 -> return if(hours.toInt() == 1){
+            hours < 24 -> return if (hours.toInt() == 1) {
                 "$hours hour ago"
             } else {
                 "$hours hours ago"
             }
-            else -> return if(days.toInt() == 1){
+            else -> return if (days.toInt() == 1) {
                 "$days day ago"
             } else {
                 "$days days ago"
@@ -64,47 +66,50 @@ object Utils {
         }
     }
 
-    fun formatPrice(priceAsDouble: BigDecimal): String {
-
-        if(priceAsDouble == 0.toBigDecimal())
-            return "0"
-
-        var absPrice = priceAsDouble
-
-        var priceSubtractor = false
-
-        if(priceAsDouble < 0.toBigDecimal() ) {
-            priceSubtractor = true
-            absPrice = priceAsDouble * (-1).toBigDecimal()
-        }
-
-        val price = Utils.toDecimals(absPrice, 8).toDouble()
-
-        var priceText: String
-
-        priceText = if(price > 1)
-            Utils.toDecimals(absPrice, 2)
-        else
-            "0${Utils.toDecimals(absPrice, 6)}"
-
-        if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
-            priceText += "0"
-
-        if(priceSubtractor)
-            priceText = "-$priceText"
-
-        return priceText
-    }
+//    fun formatPrice(priceAsDouble: BigDecimal, symbol: String): String {
+//
+//        if (priceAsDouble.toString() == "0" || priceAsDouble.toString() == "0.0" || priceAsDouble.toString() == "0.00") {
+//            return "${symbol}0"
+//        }
+//
+//        var absPrice = priceAsDouble
+//
+//        var priceSubtractor = false
+//
+//        if (priceAsDouble < 0.toBigDecimal()) {
+//            priceSubtractor = true
+//            absPrice = priceAsDouble * (-1).toBigDecimal()
+//        }
+//
+//        val price = Utils.toDecimals(absPrice, 8).toDouble()
+//
+//        var priceText: String
+//
+//        priceText = if (price > 1)
+//            Utils.toDecimals(absPrice, 2)
+//        else
+//            "0${Utils.toDecimals(absPrice, 6)}"
+//
+//        if (priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length - 1))
+//            priceText += "0"
+//
+//        priceText = symbol + priceText
+//
+//        if (priceSubtractor)
+//            priceText = "-$priceText"
+//
+//        return priceText
+//    }
 
 
     fun getReadTime(words: Int?): String {
-        if(words != null)
+        if (words != null)
             return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read  •  "
         else
             return "1 min read  •  "
     }
 
-    fun toDecimals(number : BigDecimal, decimalPlaces : Int) : String{
+    fun toDecimals(number: BigDecimal, decimalPlaces: Int): String {
         val df = DecimalFormat("#")
         df.maximumFractionDigits = decimalPlaces
         return df.format(number)
@@ -112,7 +117,7 @@ object Utils {
 
     fun formatPercentage(percentChange24h: BigDecimal?): String {
 
-        if(percentChange24h == null)
+        if (percentChange24h == null)
             return "0.00%"
 
         val percentage2DP = String.format("%.2f", percentChange24h)
@@ -128,22 +133,48 @@ object Utils {
     }
 
 
-    fun getPriceText(price: Double?): CharSequence? {
+    fun getPriceTextAbs(prices: Double?, symbol: String): String {
+
+        var absPrice = prices
+
+        var isNegative = false
 
         var text = ""
 
-        if (price != null) {
-            when {
-                price < 0.000001 -> text =  "0.000001"
-                price < 1 -> text =  String.format("%.6f", price)
-                else -> text = String.format("%.2f", price)
-            }
+        if (prices == null) {
+            text =  symbol + "0.00"
         } else {
-            text = "?"
+
+            if (prices < 0) {
+                isNegative = true
+                absPrice = prices.absoluteValue
+            }
+
+
+            val formatter = DecimalFormat("#,###,###.##")
+
+            when {
+                absPrice!! < 0.000001 -> return "${symbol}0"
+                absPrice < 1 -> text = String.format("%.6f", absPrice)
+                else -> {
+                    text = formatter.format(absPrice)
+                }
+            }
+
+            text = symbol + text
+
+            if(isNegative)
+                text = "-$text"
+
         }
 
-        return text
+        println(text)
+        println("|"+text[text.length - 1]+"|")
 
+        if(text[text.length - 2].toString()  == ".")
+            text += "0"
+
+        return text
     }
 
     fun hideKeyboardFromActivity(activity: Activity) {
@@ -164,81 +195,215 @@ object Utils {
 
 
     fun getFiatName(fiat: String?): String? {
-        when(fiat){
-            "AUD" ->{return "Australian Dollar"}
-            "BGN" ->{return "Bulgarian Lev"}
-            "BRL" ->{return "Brazilian Real"}
-            "CAD" ->{return "Canadian Dollar"}
-            "CHF" ->{return "Swiss Franc"}
-            "CNY" ->{return "Chinese Yuan"}
-            "CZK" ->{return "Czech Koruna"}
-            "DKK" ->{return "Danish Krone"}
-            "GBP" ->{return "Pound sterling"}
-            "HKD" ->{return "Hong Kong Dollar"}
-            "HRK" ->{return "Croatian Kuna"}
-            "HUF" ->{return "Hungarian Forint"}
-            "IDR" ->{return "Indonesian Rupiah"}
-            "ILS" ->{return "Israeli New Shekel"}
-            "INR" ->{return "Indian Rupee"}
-            "ISK" ->{return "Icelandic Króna"}
-            "JPY" ->{return "Japanese Yen"}
-            "KRW" ->{return "South Korean won"}
-            "MXN" ->{return "Mexican Peso"}
-            "MYR" ->{return "Malaysian Ringgit"}
-            "NOK" ->{return "Norwegian Krone"}
-            "NZD" ->{return "New Zealand Dollar"}
-            "PHP" ->{return "Philippine Piso"}
-            "PLN" ->{return "Poland złoty"}
-            "RON" ->{return "Romanian Leu"}
-            "RUB" ->{return "Russian Ruble"}
-            "SEK" ->{return "Swedish Krona"}
-            "SGD" ->{return "Singapore Dollar"}
-            "THB" ->{return "Thai Baht"}
-            "TRY" ->{return "Turkish lira"}
-            "ZAR" ->{return "South African Rand"}
-            "USD" ->{return "United States Dollar"}
-            "EUR" ->{return "Euro"}
+        when (fiat) {
+            "AUD" -> {
+                return "Australian Dollar"
+            }
+            "BGN" -> {
+                return "Bulgarian Lev"
+            }
+            "BRL" -> {
+                return "Brazilian Real"
+            }
+            "CAD" -> {
+                return "Canadian Dollar"
+            }
+            "CHF" -> {
+                return "Swiss Franc"
+            }
+            "CNY" -> {
+                return "Chinese Yuan"
+            }
+            "CZK" -> {
+                return "Czech Koruna"
+            }
+            "DKK" -> {
+                return "Danish Krone"
+            }
+            "GBP" -> {
+                return "Pound sterling"
+            }
+            "HKD" -> {
+                return "Hong Kong Dollar"
+            }
+            "HRK" -> {
+                return "Croatian Kuna"
+            }
+            "HUF" -> {
+                return "Hungarian Forint"
+            }
+            "IDR" -> {
+                return "Indonesian Rupiah"
+            }
+            "ILS" -> {
+                return "Israeli New Shekel"
+            }
+            "INR" -> {
+                return "Indian Rupee"
+            }
+            "ISK" -> {
+                return "Icelandic Króna"
+            }
+            "JPY" -> {
+                return "Japanese Yen"
+            }
+            "KRW" -> {
+                return "South Korean won"
+            }
+            "MXN" -> {
+                return "Mexican Peso"
+            }
+            "MYR" -> {
+                return "Malaysian Ringgit"
+            }
+            "NOK" -> {
+                return "Norwegian Krone"
+            }
+            "NZD" -> {
+                return "New Zealand Dollar"
+            }
+            "PHP" -> {
+                return "Philippine Piso"
+            }
+            "PLN" -> {
+                return "Poland złoty"
+            }
+            "RON" -> {
+                return "Romanian Leu"
+            }
+            "RUB" -> {
+                return "Russian Ruble"
+            }
+            "SEK" -> {
+                return "Swedish Krona"
+            }
+            "SGD" -> {
+                return "Singapore Dollar"
+            }
+            "THB" -> {
+                return "Thai Baht"
+            }
+            "TRY" -> {
+                return "Turkish lira"
+            }
+            "ZAR" -> {
+                return "South African Rand"
+            }
+            "USD" -> {
+                return "United States Dollar"
+            }
+            "EUR" -> {
+                return "Euro"
+            }
         }
         return ""
     }
 
     fun getFiatSymbol(fiat: String?): String {
-        when(fiat){
-            "AUD" ->{return "A$"}
-            "BGN" ->{return "Лв."}
-            "BRL" ->{return "R$"}
-            "CAD" ->{return "C$"}
-            "CHF" ->{return "CHF"}
-            "CNY" ->{return "¥"}
-            "CZK" ->{return "Kč"}
-            "DKK" ->{return "Kr."}
-            "GBP" ->{return "£"}
-            "HKD" ->{return "HK$"}
-            "HRK" ->{return "kn"}
-            "HUF" ->{return "Ft"}
-            "IDR" ->{return "Rp"}
-            "ILS" ->{return "₪"}
-            "INR" ->{return "₹"}
-            "ISK" ->{return "ISK"}
-            "JPY" ->{return "¥"}
-            "KRW" ->{return "₩"}
-            "MXN" ->{return "Mex$"}
-            "MYR" ->{return "RM"}
-            "NOK" ->{return "kr"}
-            "NZD" ->{return "NZ$"}
-            "PHP" ->{return "₱"}
-            "PLN" ->{return "zł"}
-            "RON" ->{return "lei"}
-            "RUB" ->{return "₽"}
-            "SEK" ->{return "kr"}
-            "SGD" ->{return "SG$"}
-            "THB" ->{return "฿"}
-            "TRY" ->{return "₺"}
-            "ZAR" ->{return "R"}
-            "EUR" ->{return "€"}
-            "USD" ->{return "$"}
+        when (fiat) {
+            "AUD" -> {
+                return "A$"
+            }
+            "BGN" -> {
+                return "Лв."
+            }
+            "BRL" -> {
+                return "R$"
+            }
+            "CAD" -> {
+                return "C$"
+            }
+            "CHF" -> {
+                return "CHF"
+            }
+            "CNY" -> {
+                return "¥"
+            }
+            "CZK" -> {
+                return "Kč"
+            }
+            "DKK" -> {
+                return "Kr."
+            }
+            "GBP" -> {
+                return "£"
+            }
+            "HKD" -> {
+                return "HK$"
+            }
+            "HRK" -> {
+                return "kn"
+            }
+            "HUF" -> {
+                return "Ft"
+            }
+            "IDR" -> {
+                return "Rp"
+            }
+            "ILS" -> {
+                return "₪"
+            }
+            "INR" -> {
+                return "₹"
+            }
+            "ISK" -> {
+                return "ISK"
+            }
+            "JPY" -> {
+                return "¥"
+            }
+            "KRW" -> {
+                return "₩"
+            }
+            "MXN" -> {
+                return "Mex$"
+            }
+            "MYR" -> {
+                return "RM"
+            }
+            "NOK" -> {
+                return "kr"
+            }
+            "NZD" -> {
+                return "NZ$"
+            }
+            "PHP" -> {
+                return "₱"
+            }
+            "PLN" -> {
+                return "zł"
+            }
+            "RON" -> {
+                return "lei"
+            }
+            "RUB" -> {
+                return "₽"
+            }
+            "SEK" -> {
+                return "kr"
+            }
+            "SGD" -> {
+                return "SG$"
+            }
+            "THB" -> {
+                return "฿"
+            }
+            "TRY" -> {
+                return "₺"
+            }
+            "ZAR" -> {
+                return "R"
+            }
+            "EUR" -> {
+                return "€"
+            }
+            "USD" -> {
+                return "$"
+            }
+            else -> {
+                return fiat.toString()
+            }
         }
-        return ""
     }
 
 
@@ -248,4 +413,6 @@ object Utils {
 
         return format.format(date)
     }
+
+    val TAG = "Utils"
 }

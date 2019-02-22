@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,29 +14,30 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_detail.view.*
 import java.math.BigDecimal
 
-class TransactionsAdapter(val transactions: List<Transaction>?, val currency: String, val currentUSDPrice: BigDecimal?, val baseFiat: Rate, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val transactions: List<Transaction>, val currency: String, val currentUSDPrice: BigDecimal?, val baseFiat: Rate, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_transaction_detail, parent, false))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val transaction = transactions?.get(position)
+        val transaction = transactions.get(position)
 
         holder.setIsRecyclable(false)
 
-        val convertedPrice = transaction?.price!!.times(baseFiat.rate!!)
+        val convertedPrice = transaction.price.times(baseFiat.rate?: 1.toBigDecimal())
 
-        var symbol = Utils.getFiatSymbol(baseFiat.fiat)
+        val symbol = Utils.getFiatSymbol(baseFiat.fiat)
 
         if(transaction.symbol == currency){
 
-            holder.textPrice.text = symbol + Utils.formatPrice(transaction.isDeductedPriceUsd.times(convertedPrice))
+            holder.textPrice.text =  Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times(convertedPrice).toDouble(), symbol)
             holder.titlePair.text = "Trading Pair"
             holder.textPair.text = "${transaction.symbol}/${transaction.pairSymbol}"
 
-            holder.textCost.text = symbol + Utils.formatPrice(transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity)))
+            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity)).toDouble(), symbol)
 
             var multiplier = 1.toBigDecimal()
 
@@ -49,7 +51,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
                 multiplier = (-1).toBigDecimal()
                 holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
                 holder.titleAmount.text = "Amount Sold"
-                holder.textProceeds.text = symbol + Utils.formatPrice(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)))
+                holder.textProceeds.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)).toDouble(), symbol)
                 holder.layoutBottomSell.visibility = View.VISIBLE
             }
             holder.textAmount.text = (transaction.quantity * multiplier).toString()
@@ -57,13 +59,13 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
             if (currentUSDPrice != null) {
                 holder.textWorth.text = symbol + (currentUSDPrice * (transaction.quantity * multiplier)).toString()
 
-                val change = ((((transaction.isDeductedPriceUsd?.times((convertedPrice * transaction.quantity))).minus((currentUSDPrice * (transaction.quantity * multiplier)))).div((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))))).times((-100).toBigDecimal()))
+                val change = ((((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))).minus((currentUSDPrice * (transaction.quantity * multiplier)))).div((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))))).times((-100).toBigDecimal()))
                 holder.textChange.text = Utils.formatPercentage(change)
 
                 if(change > 0.toBigDecimal())
-                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
                 else
-                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
 
             } else {
                 holder.textWorth.visibility = View.GONE
@@ -77,7 +79,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
 
             holder.textPair.text = "${transaction.symbol}"
 
-            holder.textPrice.text = symbol + Utils.formatPrice(transaction.isDeductedPriceUsd)
+            holder.textPrice.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.toDouble(), symbol)
 
             var multiplier = 1.toBigDecimal()
 
@@ -101,20 +103,20 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
             }
 
 
-            holder.textProceeds.text = symbol + Utils.formatPrice((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))))
-            holder.textAmount.text = Utils.formatPrice(((transaction.quantity * transaction.price * multiplier)))
-            holder.textCost.text = symbol + Utils.formatPrice(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)))
+            holder.textProceeds.text = Utils.getPriceTextAbs((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).toDouble(), symbol)
+            holder.textAmount.text = Utils.getPriceTextAbs(((transaction.quantity * transaction.price * multiplier)).toDouble(), "")
+            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
 
             if (currentUSDPrice != null) {
-                holder.textWorth.text = symbol + Utils.formatPrice((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)))
+                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
 
                 val change = (((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).minus((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)))).div((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))))).times(-100.toBigDecimal())
                 holder.textChange.text = Utils.formatPercentage(change)
 
                 if(change > 0.toBigDecimal())
-                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.green)!!)
+                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
                 else
-                    holder.textChange.setTextColor(context?.resources?.getColor(R.color.red)!!)
+                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
             } else {
                 holder.textWorth.visibility = View.GONE
                 holder.titleWorth.visibility = View.GONE
@@ -125,13 +127,13 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val currency: St
         }
 
         holder.itemView.setOnClickListener {
-            UpdateCryptoTransactionArgs(transaction!!).launch(context!!)
+            context?.let { it1 -> UpdateCryptoTransactionArgs(transaction).launch(it1) }
         }
     }
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
-        return transactions?.size ?: 0
+        return transactions.size
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {

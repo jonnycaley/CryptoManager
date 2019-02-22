@@ -11,7 +11,6 @@ import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_currency_list.view.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate, val context: Context?, var timeFrame: String) : RecyclerView.Adapter<CurrenciesAdapter.ViewHolder>() {
@@ -97,7 +96,7 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
 
         val price = item.quote?.uSD?.price?.times(baseFiat.rate?.toDouble() ?: 1.toDouble())
 
-        holder.price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${Utils.getPriceText(price)}"
+        holder.price.text = "${Utils.getPriceTextAbs(price, Utils.getFiatSymbol(baseFiat.fiat))}"
 
         var percentage2DP = ""
 

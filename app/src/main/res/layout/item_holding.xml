@@ -52,39 +52,30 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/layout_left">
 
-            <TextView
-                android:id="@+id/symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/holding"
-                android:paddingStart="@dimen/extra_small_margin"
-                android:text="BTC"
-                android:textColor="?attr/textcolor" />
-
 
             <TextView
                 android:id="@+id/value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/symbol"
-                android:paddingStart="@dimen/extra_small_margin"
-                android:text="($7000)"
-                android:textColor="?attr/textcolorsecondary" />
-
+                android:paddingEnd="@dimen/extra_small_margin"
+                android:text="$7000"
+                android:textColor="?attr/textcolor" />
 
             <TextView
                 android:id="@+id/holding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.9650000"
-                android:textColor="?attr/textcolor" />
+                android:layout_toEndOf="@id/value"
+                android:text="(0.9650000 BTC)"
+                android:textColor="?attr/textcolorsecondary" />
 
-            <LinearLayout
+
+            <RelativeLayout
+                android:id="@+id/layout_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:gravity="end"
                 android:orientation="vertical">
 
                 <TextView
@@ -92,9 +83,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text=""
-                    android:visibility="visible" />
+                    android:text="sfdfsdf"
+                    android:visibility="visible"
+                    android:textColor="?attr/textcolor" />
 
 
                 <TextView
@@ -102,11 +93,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text=""
-                    android:textColor="?attr/textcolor" />
+                    android:text="$"
+                    android:textColor="?attr/textcolor"
+                    android:layout_below="@id/change"/>
 
-            </LinearLayout>
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 

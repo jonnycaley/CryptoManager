@@ -227,9 +227,9 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         val priceChange = (close - open) * rate
         var priceText = ""
         if (priceChange > 0.toBigDecimal())
-            priceText = "+${Utils.getFiatSymbol(baseFiat.fiat)}" + Utils.formatPrice(priceChange.toDouble().absoluteValue.toBigDecimal()) + " ("
+            priceText = Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " ("
         else
-            priceText = "-${Utils.getFiatSymbol(baseFiat.fiat)}" + Utils.formatPrice(priceChange.toDouble().absoluteValue.toBigDecimal()) + " (-"
+            priceText = Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " (-"
 
         if (open != 0.toBigDecimal()) {
             change.text = priceText + formatPercentage((((close - open) / open) * 100.toBigDecimal())) + ")"

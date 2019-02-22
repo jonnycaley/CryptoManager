@@ -22,6 +22,20 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_holding.view.*
 import java.math.BigDecimal
+import android.R.attr.data
+import android.support.annotation.ColorInt
+import android.R.attr
+import android.content.res.Resources.Theme
+import android.util.TypedValue
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.R.attr.button
+import android.R.id
+
+
+
+
+
 
 class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
@@ -94,39 +108,38 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
                 parameter
             })
         }
-        if(sort == PortfolioFragment.SORT_CHANGE_DESCENDING) {
-            Log.i(TAG, "Descending")
-            tempHoldings.asReversed().forEach{
-                println(it.symbol)
-            }
-            this.holdings.addAll(tempHoldings.asReversed())
-        }
         if(sort == PortfolioFragment.SORT_CHANGE_ASCENDING) {
             Log.i(TAG, "Ascending")
             tempHoldings.forEach{
                 println(it.symbol)
             }
+            this.holdings.addAll(tempHoldings.asReversed())
+        }
+        else if(sort == PortfolioFragment.SORT_NAME_DESCENDING) {
+            this.holdings.addAll(tempHoldings.sortedBy { holding ->
+                holding.symbol
+            }.asReversed())
+        }
+        else if(sort == PortfolioFragment.SORT_NAME_ASCENDING) {
+            this.holdings.addAll(tempHoldings.sortedBy { holding ->
+                holding.symbol
+            })
+        }
+        else if(sort == PortfolioFragment.SORT_HOLDINGS_DESCENDING) {
+            this.holdings.addAll(tempHoldings.sortedBy { holding ->
+                holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 0.toBigDecimal())
+            }.asReversed())
+        }
+        else if(sort == PortfolioFragment.SORT_HOLDINGS_ASCENDING) {
+            this.holdings.addAll(tempHoldings.sortedBy { holding ->
+                holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 0.toBigDecimal())
+            })
+        } else {
+            Log.i(TAG, "Descending")
+            tempHoldings.asReversed().forEach{
+                println(it.symbol)
+            }
             this.holdings.addAll(tempHoldings)
-        }
-        if(sort == PortfolioFragment.SORT_NAME_DESCENDING) {
-            this.holdings.addAll(tempHoldings.sortedBy { holding ->
-                holding.symbol
-            }.asReversed())
-        }
-        if(sort == PortfolioFragment.SORT_NAME_ASCENDING) {
-            this.holdings.addAll(tempHoldings.sortedBy { holding ->
-                holding.symbol
-            })
-        }
-        if(sort == PortfolioFragment.SORT_HOLDINGS_DESCENDING) {
-            this.holdings.addAll(tempHoldings.sortedBy { holding ->
-                holding.quantity
-            }.asReversed())
-        }
-        if(sort == PortfolioFragment.SORT_HOLDINGS_ASCENDING) {
-            this.holdings.addAll(tempHoldings.sortedBy { holding ->
-                holding.quantity
-            })
         }
         notifyDataSetChanged()
     }
@@ -148,9 +161,9 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
         Log.i(TAG, "-------------")
 
-        Log.i(TAG, "holding ${holding?.symbol}")
+        Log.i(TAG, "holding ${holding.symbol}")
         Log.i(TAG, "price = $price")
-        Log.i(TAG, "quantity = ${holding?.quantity!!}")
+        Log.i(TAG, "quantity = ${holding.quantity}")
         Log.i(TAG, "value = $value")
         Log.i(TAG, "btcPrice: ${prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!}")
         Log.i(TAG, "valueBtc: ${value?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD!!.times(baseRate))}")
@@ -162,22 +175,26 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
         if (holding.type == Variables.Transaction.Type.fiat) {
 
             holder.price.visibility = View.GONE
-            holder.change.text = "$symbol${value?.let { Utils.formatPrice(it) }}"
-            context?.resources?.getColor(R.color.text_grey)?.let { holder.change.setTextColor(it) }
+            holder.change.text = value?.let { Utils.getPriceTextAbs(it.toDouble(), symbol) }
+
+            val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, 0)
+
+            holder.change.layoutParams = layoutParams
+
             holder.currency.text = holding.symbol
-            holder.symbol.visibility = View.GONE
             holder.value.visibility = View.GONE
             holder.holding.visibility = View.GONE
 
             when (chosenCurrency) {
                 PortfolioFragment.CURRENCY_BTC -> {
                     symbol = "B"
-                    holder.change.text = "$symbol${Utils.formatPrice(value?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal())}"
+                    holder.change.text = Utils.getPriceTextAbs(value?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()))?.toDouble() ?: 0.toDouble(), symbol)
                 }
                 PortfolioFragment.CURRENCY_ETH -> {
                     symbol = "E"
 
-                    holder.change.text = "$symbol${Utils.formatPrice(value?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal())}"
+                    holder.change.text = Utils.getPriceTextAbs(value?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()))?.toDouble() ?: 0.toDouble(), symbol)
                 }
             }
         } else {
@@ -185,13 +202,8 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
             when (chosenCurrency) {
                 PortfolioFragment.CURRENCY_BTC -> {
                     symbol = "B"
-
-                    Log.i(TAG, holding.symbol)
                     val costBtcHistorical = holding.costBtc
                     val costBtcNow = holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 0.toBigDecimal()) / (prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
-                    Log.i(TAG, "costBtcHistorical: $costBtcHistorical")
-                    Log.i(TAG, "costBtcNow: $costBtcNow")
-
 //                    if (holding.quantity < 0)
 //                        change = costBtcHistorical?.minus(costBtcNow!!)
 //                    else
@@ -202,17 +214,12 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
                     price = price?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
                     value = value?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
-
-                    Log.i(TAG, "ValueBtc = $value")
-
                 }
                 PortfolioFragment.CURRENCY_ETH -> {
 
                     val costEthHistorical = holding.costEth
                     val costEthNow = holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()) / (prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
-
                     symbol = "E"
-
 //                    if (holding.quantity < 0)
 //                        change = costBtcHistorical?.minus(costBtcNow!!)
 //                    else
@@ -250,18 +257,18 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
             if(isPercentage) {
                 when (chosenCurrency) {
                     PortfolioFragment.CURRENCY_BTC -> {
-                        if((absBalanceBtc == 0.toBigDecimal()) || (change == 0.toBigDecimal())){
+                        if((absBalanceBtc == 0.0.toBigDecimal()) || (change == 0.0.toBigDecimal())){
                             holder.change.text = "-"
                             context?.resources?.getColor(R.color.text_grey)?.let { holder.change.setTextColor(it) }
                         } else {
                             Log.i(TAG, "$change")
                             Log.i(TAG, "$absBalanceBtc")
-                            val changePct = change?.div(absBalanceBtc)
+                            val changePct = change?.div(absBalanceBtc) //TODO: IF DIV BY 0 (WHEN PRESSED QUICKLY BETWEEN SORTS)
                             formatPercentage(changePct?.times(100.toBigDecimal()), holder.change)
                         }
                     }
                     PortfolioFragment.CURRENCY_ETH -> {
-                        if((absBalanceEth == 0.toBigDecimal()) || (change == 0.toBigDecimal())){
+                        if((absBalanceEth == 0.0.toBigDecimal()) || (change == 0.0.toBigDecimal())){
                             holder.change.text = "-"
                             context?.resources?.getColor(R.color.text_grey)?.let { holder.change.setTextColor(it) }
                         } else {
@@ -274,12 +281,18 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
                     }
                 }
             } else {
-                change?.let { formatPrice(it, symbol, holder.change) }
+                change?.let { mChange ->
+
+                    if(change < 0.toBigDecimal())
+                        context?.resources?.getColor(R.color.red)?.let { holder.change.setTextColor(it) }
+                    else if (change > 0.toBigDecimal())
+                        context?.resources?.getColor(R.color.green)?.let { holder.change.setTextColor(it) }
+                    else
+                        context?.resources?.getColor(R.color.text_grey)?.let { holder.change.setTextColor(it) }
+                    holder.change.text = Utils.getPriceTextAbs(mChange.toDouble(), symbol)
+                }
             }
-
-
             //TODO: GET THE CHANGE CORRECT & THINK ABOUT IT!!!!
-
 //            if (change != null && change < 0.toBigDecimal()) {
 //                holder.change.setTextColor(context?.resources?.getColor(R.color.red)!!)
 //                if (isPercentage) {
@@ -309,12 +322,10 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 //                holder.change.setTextColor(context?.resources?.getColor(R.color.text_grey)!!)
 //                holder.change.text = "-"
 //            }
-
-            holder.holding.text = holding.quantity.toString()
-            holder.currency.text = holding.symbol.toString()
-            holder.symbol.text = holding.symbol.toString()
-            holder.value.text = "($symbol${value})"
-            holder.price.text = "$symbol${Utils.formatPrice(price ?: 0.toBigDecimal())}"
+            holder.holding.text = "(${Utils.getPriceTextAbs(holding.quantity.toDouble(), "")} ${holding.symbol})"
+            holder.currency.text = holding.symbol
+            holder.value.text = "${value?.let { priceDecimal -> Utils.getPriceTextAbs(priceDecimal.toDouble(), symbol) }}"
+            holder.price.text = Utils.getPriceTextAbs(price?.toDouble(), symbol)
 
         }
 
@@ -368,42 +379,42 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
     }
 
 
-    fun formatPrice(priceAsDouble: BigDecimal, symbol : String, view : TextView) {
-
-        if(priceAsDouble == 0.toBigDecimal()){
-            context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
-            view.text = "${symbol}0"
-        }
-
-        var absPrice = priceAsDouble
-
-        var priceSubtractor = false
-
-        if(priceAsDouble < 0.toBigDecimal() ) {
-            priceSubtractor = true
-            absPrice = priceAsDouble * (-1).toBigDecimal()
-        }
-
-        val price = Utils.toDecimals(absPrice, 8).toDouble()
-
-        var priceText: String
-
-        priceText = if(price > 1)
-            Utils.toDecimals(absPrice, 2)
-        else
-            "0${Utils.toDecimals(absPrice, 6)}"
-
-        if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
-            priceText += "0"
-
-        if(priceSubtractor) {
-            context?.resources?.getColor(R.color.red)?.let { view.setTextColor(it) }
-            priceText = "-$priceText"
-        } else {
-            context?.resources?.getColor(R.color.green)?.let { view.setTextColor(it) }
-        }
-        view.text = "$symbol$priceText"
-    }
+//    fun formatPrice(priceAsDouble: BigDecimal, symbol : String, view : TextView) {
+//
+//        if(priceAsDouble == 0.toBigDecimal()){
+//            context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
+//            view.text = "${symbol}0"
+//        }
+//
+//        var absPrice = priceAsDouble
+//
+//        var priceSubtractor = false
+//
+//        if(priceAsDouble < 0.toBigDecimal() ) {
+//            priceSubtractor = true
+//            absPrice = priceAsDouble * (-1).toBigDecimal()
+//        }
+//
+//        val price = Utils.toDecimals(absPrice, 8).toDouble()
+//
+//        var priceText: String
+//
+//        priceText = if(price > 1)
+//            Utils.toDecimals(absPrice, 2)
+//        else
+//            "0${Utils.toDecimals(absPrice, 6)}"
+//
+//        if(priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length -1))
+//            priceText += "0"
+//
+//        if(priceSubtractor) {
+//            context?.resources?.getColor(R.color.red)?.let { view.setTextColor(it) }
+//            priceText = "-$priceText"
+//        } else {
+//            context?.resources?.getColor(R.color.green)?.let { view.setTextColor(it) }
+//        }
+//        view.text = "$symbol$priceText"
+//    }
 
 
     override fun getItemCount(): Int {
@@ -413,13 +424,13 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val currency = view.currency
-        val symbol = view.symbol
         //        val textFiat = view.text_fiat
         val holding = view.holding
         val change = view.change
         val value = view.value
         val price = view.price
         val image = view.image
+        val layoutChange = view.layout_change
     }
 
     companion object {

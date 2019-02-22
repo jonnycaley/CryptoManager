@@ -36,7 +36,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
     private fun getCryptoPrice() {
         if (dataManager.checkConnection()) {
 
-            dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol()!!, "USD")
+            dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol(), "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Price> {
@@ -105,7 +105,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Rate> {
                     override fun onSuccess(baseFiat: Rate) {
-                        view.loadTransactions(transactionz!!, basePrice, baseFiat)
+                        transactionz?.let { view.loadTransactions(it, basePrice, baseFiat) }
                         view.hideRefreshing()
                     }
 

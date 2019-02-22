@@ -30,7 +30,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             compositeDisposable = CompositeDisposable()
         }
 //        getNews()
-        onRefresh()
+        //TODO: UNCOMMENT BELOW
+//        onRefresh()
     }
 
     override fun saveArticle(topArticle: Article) {

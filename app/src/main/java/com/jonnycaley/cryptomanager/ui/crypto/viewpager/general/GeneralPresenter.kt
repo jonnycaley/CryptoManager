@@ -128,33 +128,36 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 })
     }
 
-    override fun getCurrencyChart(chart : Chart, symbol: String, conversion : String) { //TODO: needs to be refactored - SAVE THE TIMEFRAME STRING IN ACTIVITY AND CALL IT FROM PRESENTER
+    override fun getCurrencyChart(chart : Chart, symbol: String, conversion : String) {
 
         if (dataManager.checkConnection()) {
 
             val getGraph : Observable<HistoricalData> = dataManager.getCryptoCompareService().getCurrencyGraph(chart.measure, symbol, conversion, chart.limit.toString(), chart.aggregate.toString())
             val getBaseFiat : Observable<Rate> = dataManager.getBaseFiat().toObservable()
 
-            Observable.zip(getGraph, getBaseFiat, BiFunction<HistoricalData, Rate, Any> { graphData, baseFiat ->
-                if(graphData.data?.isEmpty() == true) {
-                    //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
-                } else {
+            var mBaseFiat : Rate? = null
 
-                    graphData.data?.first()?.open?.let { open -> graphData?.data?.last()?.close?.let { close -> view.showPriceChange(open, close, baseFiat) } }
-
-                    if (isLatestPrice)
-                        view.showCurrentPrice(graphData?.data?.last()?.close, baseFiat)
-                    isLatestPrice = false
-                    graphData.let { view.loadCandlestickChart(it, chart, chart.aggregate, baseFiat) }
-                }
+            Observable.zip(getGraph, getBaseFiat, BiFunction<HistoricalData, Rate, HistoricalData> { graphData, baseFiat ->
+                mBaseFiat = baseFiat
+                graphData
             })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<Any> {
+                    .subscribe(object : Observer<HistoricalData> {
                         override fun onComplete() {
                         }
+                        override fun onNext(graphData: HistoricalData) {
+                            if(graphData.data?.isEmpty() == true) {
+                                //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
+                            } else {
 
-                        override fun onNext(baseFiat: Any) {
+                                graphData.data?.first()?.open?.let { open -> graphData.data?.last()?.close?.let { close -> mBaseFiat?.let { baseFiat -> view.showPriceChange(open, close, baseFiat) } } }
+
+                                if (isLatestPrice)
+                                    mBaseFiat?.let { baseFiat -> view.showCurrentPrice(graphData.data?.last()?.close, baseFiat) }
+                                isLatestPrice = false
+                                graphData.let { graphData -> mBaseFiat?.let { baseFiat -> view.loadCandlestickChart(graphData, chart, chart.aggregate, baseFiat) } }
+                            }
                         }
 
                         override fun onSubscribe(d: Disposable) {

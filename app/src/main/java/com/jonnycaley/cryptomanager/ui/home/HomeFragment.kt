@@ -59,7 +59,6 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     val cardDate by lazy { mView.findViewById<TextView>(R.id.card_date) }
     val cardStar by lazy { mView.findViewById<LikeButton>(R.id.like_button_top_article) }
 
-
     val card1Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_1_layout) }
     val card1Name by lazy { mView.findViewById<TextView>(R.id.card_1_name) }
     val card1 by lazy { mView.findViewById<RelativeLayout>(R.id.card_1) }

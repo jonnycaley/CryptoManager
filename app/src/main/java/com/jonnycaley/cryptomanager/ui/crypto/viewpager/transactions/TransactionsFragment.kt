@@ -20,7 +20,7 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
     private lateinit var presenter : TransactionsContract.Presenter
 
-    private var currencySymbol: String? = null
+    private var currencySymbol = ""
 
     lateinit var transactionsAdapter : TransactionsAdapter
 
@@ -76,20 +76,20 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
     }
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
-        Log.i(TAG, baseImageUrl)
-        Log.i(TAG, (currency == null).toString())
-        CreateCryptoTransactionArgs(currency!!, baseImageUrl, baseLinkUrl).launch(context!!)
+//        Log.i(TAG, baseImageUrl)
+//        Log.i(TAG, (currency == null).toString())
+        currency?.let { CreateCryptoTransactionArgs(it, baseImageUrl, baseLinkUrl).launch(context!!) }
     }
 
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {
 
         val mLayoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol!!, currentUsdPrice?.toBigDecimal(), baseFiat, context)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol, currentUsdPrice?.toBigDecimal(), baseFiat, context)
         recyclerView.adapter = transactionsAdapter
     }
 
-    override fun getSymbol(): String? {
+    override fun getSymbol(): String {
         return currencySymbol
     }
 
