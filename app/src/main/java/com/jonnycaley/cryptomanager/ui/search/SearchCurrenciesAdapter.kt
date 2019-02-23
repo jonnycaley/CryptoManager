@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.update.CryptoTransactionArgs
-import com.jonnycaley.cryptomanager.ui.transactions.fiat.create.CreateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.UpdateFiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*
@@ -45,7 +45,7 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
 
         if (baseUrl == null) {
             holder.itemView.setOnClickListener {
-                CreateFiatTransactionArgs(item?.symbol!!, true).launch(context!!)
+                UpdateFiatTransactionArgs(null, item?.symbol!!, true).launch(context!!)
             }
 
         } else {

@@ -15,7 +15,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.update.CryptoTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
 
 class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 

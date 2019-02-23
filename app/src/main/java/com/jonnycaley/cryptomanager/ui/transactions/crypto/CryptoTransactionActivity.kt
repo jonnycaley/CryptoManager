@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
+package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import android.app.Activity
 import android.content.Intent
@@ -93,6 +93,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             requiredDate.text = transaction.date.let { Utils.formatDate(it) }
         }
 
+        Utils.hideKeyboardFromActivity(this)
+
         args.notTransactions?.let { transaction ->
 //                transactionPairImageUrl = transaction.imageUrl
             backPressToPortfolio = transaction.backpressToPortfolio
@@ -104,8 +106,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         }
 
         setupBody()
-
-        Utils.hideKeyboardFromActivity(this)
 
         presenter = CryptoTransactionPresenter(CryptoTransactionDataManager.getInstance(this), this)
         presenter.attachView()
@@ -277,14 +277,14 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CryptoTransactionActivity.REQUEST_CODE_EXCHANGE) {
+        if (requestCode == REQUEST_CODE_EXCHANGE) {
             if (resultCode == Activity.RESULT_OK) {
                 val exchange = data?.getStringExtra("data")
                 showExchange(exchange)
                 resetTradingPair()
             }
         }
-        if (requestCode == CryptoTransactionActivity.REQUEST_CODE_PAIR) {
+        if (requestCode == REQUEST_CODE_PAIR) {
             if (resultCode == Activity.RESULT_OK) {
                 val pair = data?.getStringExtra("data")
                 showPair(pair)

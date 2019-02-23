@@ -12,7 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionActivity
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
 
 class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View {
 
@@ -24,7 +24,7 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
 
     val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
-    val args by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.CRYPTO_KEY) }
+    val args by lazy { this.intent.getSerializableExtra(CryptoTransactionActivity.CRYPTO_KEY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

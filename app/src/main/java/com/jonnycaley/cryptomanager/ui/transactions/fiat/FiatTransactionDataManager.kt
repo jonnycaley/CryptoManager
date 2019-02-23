@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiat.update
+package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
@@ -13,21 +13,21 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 
-class UpdateFiatTransactionDataManager private constructor(val UserPreferences: UserPreferences) {
+class FiatTransactionDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: UpdateFiatTransactionDataManager? = null
+        private var INSTANCE: FiatTransactionDataManager? = null
 
         private lateinit var context: Context
 
         private val TAG = "UpdateCryptoTransactionData"
 
         @JvmStatic
-        fun getInstance(context: Context): UpdateFiatTransactionDataManager {
+        fun getInstance(context: Context): FiatTransactionDataManager {
             if (INSTANCE == null) {
-                INSTANCE = UpdateFiatTransactionDataManager(UserPreferences.getInstance(context))
-                this.context = context
+                INSTANCE = FiatTransactionDataManager(UserPreferences.getInstance(context))
+                Companion.context = context
             }
             return INSTANCE!!
         }

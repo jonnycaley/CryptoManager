@@ -9,6 +9,7 @@ import java.util.*
 import android.app.Activity
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import java.math.BigDecimal
 import java.text.NumberFormat
@@ -189,6 +190,8 @@ object Utils {
             view = View(activity)
         }
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     fun hideKeyboardFromFragment(context: Context, view: View) {

@@ -11,14 +11,14 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionActivity
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
 
 class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
 
     private lateinit var presenter: PickerPairContract.Presenter
 
-    val exchangeArg by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.EXCHANGE_KEY) as String? }
-    val crypto by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.CRYPTO_KEY) as String? }
+    val exchangeArg by lazy { this.intent.getSerializableExtra(CryptoTransactionActivity.EXCHANGE_KEY) as String? }
+    val crypto by lazy { this.intent.getSerializableExtra(CryptoTransactionActivity.CRYPTO_KEY) as String? }
 
     val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 

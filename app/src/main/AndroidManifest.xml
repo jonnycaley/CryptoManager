@@ -103,13 +103,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.transactions.fiat.update.UpdateFiatTransactionActivity"
+            android:name=".ui.transactions.fiat.FiatTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/update_fiat_transaction_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.transactions.crypto.update.CryptoTransactionActivity"
+            android:name=".ui.transactions.crypto.CryptoTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/update_crypto_transaction_activity"
             android:screenOrientation="portrait"

@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
+package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import android.content.Context
 import android.content.Intent

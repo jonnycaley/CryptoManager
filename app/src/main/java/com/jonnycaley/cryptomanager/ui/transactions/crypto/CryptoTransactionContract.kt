@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
+package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter

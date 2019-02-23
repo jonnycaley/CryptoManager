@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.update.CryptoTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_detail.view.*
 import java.math.BigDecimal

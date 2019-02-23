@@ -41,6 +41,11 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/crypto/create/CreateCryptoTransactionContract.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/crypto/create/CreateCryptoTransactionDataManager.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/crypto/create/CreateCryptoTransactionPresenter.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/fiat/create/CreateFiatTransactionActivity.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/fiat/create/CreateFiatTransactionArgs.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/fiat/create/CreateFiatTransactionContract.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/fiat/create/CreateFiatTransactionDataManager.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/jonnycaley/cryptomanager/ui/transactions/fiat/create/CreateFiatTransactionPresenter.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

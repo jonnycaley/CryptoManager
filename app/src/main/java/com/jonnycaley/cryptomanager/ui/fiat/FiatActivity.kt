@@ -12,7 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.ui.transactions.fiat.create.CreateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.UpdateFiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
@@ -53,7 +53,7 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddTransaction.id -> {
-                CreateFiatTransactionArgs(args.fiat, false).launch(this)
+                UpdateFiatTransactionArgs(null, args.fiat, false).launch(this)
             }
         }
     }

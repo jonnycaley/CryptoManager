@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
+package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
@@ -27,7 +27,7 @@ class CryptoTransactionDataManager private constructor(val UserPreferences: User
         fun getInstance(context: Context): CryptoTransactionDataManager {
             if (INSTANCE == null) {
                 INSTANCE = CryptoTransactionDataManager(UserPreferences.getInstance(context))
-                this.context = context
+                Companion.context = context
             }
             return INSTANCE!!
         }

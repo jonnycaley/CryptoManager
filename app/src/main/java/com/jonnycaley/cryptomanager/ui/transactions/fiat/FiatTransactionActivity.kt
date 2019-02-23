@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.fiat.update
+package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.utils.Constants
@@ -20,9 +21,9 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
 import java.text.SimpleDateFormat
 import java.util.*
 
-class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private lateinit var presenter: UpdateFiatTransactionContract.Presenter
+    private lateinit var presenter: FiatTransactionContract.Presenter
 
     val args by lazy { UpdateFiatTransactionArgs.deserializeFrom(intent) }
 
@@ -64,31 +65,47 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         setContentView(R.layout.activity_update_fiat_transaction)
 
         fillFields()
+        setupUpdate()
+        setupCreate()
 
-        setupToolbar()
-
-        presenter = UpdateFiatTransactionPresenter(UpdateFiatTransactionDataManager.getInstance(this), this)
+        presenter = FiatTransactionPresenter(FiatTransactionDataManager.getInstance(this), this)
         presenter.attachView()
     }
 
-    private fun fillFields() {
-        if(args.transaction.quantity > 0.toBigDecimal() ){
+    private fun setupCreate() {
+        args.currency?.let { currency ->
+            setupToolbarCreate(currency)
+            requiredDate.text = formatDate(transactionDate)
+            textViewSubmit.text = "Create"
+            requiredCurrency.text = currency
+        }
+    }
+
+    private fun setupUpdate() {
+
+        args.transaction?.let { transaction ->
+            if(transaction.quantity > 0.toBigDecimal() ){
                 radioButtonDeposit.isChecked = true
             } else {
                 radioButtonWithdrawl.isChecked = true
             }
 
-        layoutExchangeEmpty.visibility = View.GONE
-        layoutExchangeFilled.visibility = View.VISIBLE
-        requiredExchange.text = args.transaction.exchange
+            layoutExchangeEmpty.visibility = View.GONE
+            layoutExchangeFilled.visibility = View.VISIBLE
 
-        layoutCurrencyEmpty.visibility = View.GONE
-        layoutCurrencyFilled.visibility = View.VISIBLE
-        requiredCurrency.text = args.transaction.symbol
+            layoutCurrencyEmpty.visibility = View.GONE
+            layoutCurrencyFilled.visibility = View.VISIBLE
 
-        requiredQuantity.setText(args.transaction.quantity.toString())
+            requiredExchange.text = transaction.exchange
+            requiredCurrency.text = transaction.symbol
+            requiredQuantity.setText(String.format(transaction.quantity.abs().toString()))
+            requiredDate.text = formatDate(transaction.date)
+            buttonDelete.visibility = View.VISIBLE
+            setupToolbarUpdate(transaction)
+        }
+    }
 
-        requiredDate.text = formatDate(args.transaction.date)
+    private fun fillFields() {
 
         layoutExchangeFilled.setOnClickListener(this)
         layoutExchangeEmpty.setOnClickListener(this)
@@ -96,7 +113,6 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         layoutCurrencyEmpty.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
         buttonDelete.setOnClickListener(this)
-
         textViewSubmit.setOnClickListener(this)
     }
 
@@ -124,7 +140,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
 
         when (v?.id) {
             buttonDelete.id -> {
-                presenter.deleteTransaction(args.transaction)
+                args.transaction?.let { presenter.deleteTransaction(it) }
             }
             layoutExchangeFilled.id -> {
                 i = Intent(this, PickerExchangeActivity::class.java)
@@ -148,22 +164,28 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
             textViewSubmit.id -> {
                 if (checkFields()) {
                     preventFieldChanges()
-                    var correctQuantity: Float
+                    val correctQuantity: Float
 
                     if (radioButtonWithdrawl.isChecked)
                         correctQuantity = (requiredQuantity.text.toString().toFloat() * (-1).toFloat())
                     else
                         correctQuantity = requiredQuantity.text.toString().toFloat()
 
+                    if(transactionDate > Calendar.getInstance().time)
+                        transactionDate = Calendar.getInstance().time
 
                     val tempDate : Date
+
                     if(isDateChanged)
                         tempDate = transactionDate
+
                     else
-                        tempDate = args.transaction?.date!!
+                        tempDate = args.transaction?.date ?: transactionDate
 
-
-                    presenter.updateFiatTransaction(getTransaction(), requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
+                    if(args.transaction != null)
+                        presenter.updateFiatTransaction(args.transaction!!, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
+                    else
+                        presenter.saveFiatTransaction(requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
                 }
             }
         }
@@ -173,6 +195,25 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         super.onBackPressed()
     }
 
+    override fun onTransactionCreated() {
+        if(args.backpressToPortfolio == true)
+            loadBaseActivityWithoutRestart()
+        else
+            super.onBackPressed()
+    }
+
+
+
+    private fun loadBaseActivityWithoutRestart() {
+
+        val bundle = Bundle()
+        bundle.putInt("fragment_key", 2)
+        val intent = Intent(this, BaseActivity::class.java)
+        intent.putExtras(bundle)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+
+    }
 
     private fun checkFields(): Boolean {
 
@@ -252,15 +293,20 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         return format.format(date)
     }
 
-    override fun getTransaction(): Transaction {
-        return args.transaction
-    }
-
-    private fun setupToolbar() {
+    private fun setupToolbarUpdate(transaction: Transaction) {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = args.transaction.symbol
+        supportActionBar?.title = transaction.symbol
+    }
+
+
+    private fun setupToolbarCreate(currency: String) {
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = currency
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -274,7 +320,7 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         return false
     }
 
-    override fun setPresenter(presenter: UpdateFiatTransactionContract.Presenter) {
+    override fun setPresenter(presenter: FiatTransactionContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
 

@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
+package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import android.util.Log
 import com.google.gson.Gson

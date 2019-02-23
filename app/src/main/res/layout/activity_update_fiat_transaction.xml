@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.transactions.fiat.update.UpdateFiatTransactionActivity"
+    tools:context=".ui.transactions.fiat.FiatTransactionActivity"
     android:background="?attr/backgroundcolor">
 
     <android.support.design.widget.AppBarLayout
@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/app_bar_layout"
         android:layout_alignParentEnd="true"
-        android:text="Delete" />
+        android:text="Delete"
+        android:visibility="gone"/>
 
     <include
         layout="@layout/content_fiat_transaction"
