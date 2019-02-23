@@ -39,6 +39,9 @@ interface CryptoCompareService {
     @GET("price")
     fun getCurrentPrice(@Query("fsym") symbol: String, @Query("tsyms") conversion: String): Observable<Price>
 
+    @GET("price")
+    fun getCurrentPriceScalar(@Query("fsym") symbol: String, @Query("tsyms") conversion: String): Observable<String>
+
     @GET("pricemulti")
     fun getMultiPrice(@Query("fsyms") symbol: String, @Query("tsyms") conversion: String): Observable<String>
 

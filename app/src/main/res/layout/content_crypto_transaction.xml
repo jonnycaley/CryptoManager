@@ -35,13 +35,6 @@
 
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text=" - "
-                    android:textColor="?attr/textcolor"/>
-
-
-                <TextView
                     android:id="@+id/header_text_symbol"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

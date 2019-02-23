@@ -99,4 +99,13 @@ object JsonModifiers {
 
         return jsonAddStart
     }
+
+    fun jsonToSinglePrice(json : String) : String {
+
+        return if(json.contains(":")){
+            json.substring(json.indexOf(":") + 1, json.length - 1)
+        } else {
+            ""
+        }
+    }
 }

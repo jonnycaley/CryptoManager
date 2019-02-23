@@ -109,7 +109,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.transactions.crypto.update.UpdateCryptoTransactionActivity"
+            android:name=".ui.transactions.crypto.update.CryptoTransactionActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/update_crypto_transaction_activity"
             android:screenOrientation="portrait"

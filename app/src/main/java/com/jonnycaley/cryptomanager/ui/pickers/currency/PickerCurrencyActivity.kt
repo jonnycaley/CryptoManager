@@ -2,12 +2,14 @@ package com.jonnycaley.cryptomanager.ui.pickers.currency
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
@@ -18,6 +20,8 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View 
     private lateinit var presenter: PickerCurrencyContract.Presenter
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     lateinit var pickerAdapter : PickerCurrenciesAdapter
 
@@ -54,6 +58,9 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View 
         recyclerView.layoutManager = mLayoutManager
         pickerAdapter = PickerCurrenciesAdapter(data, this, this)
         recyclerView.adapter = pickerAdapter
+
+        progressBarLayout.visibility = View.GONE
+
     }
 
     override fun onPickerChosen(symbol: String?) {

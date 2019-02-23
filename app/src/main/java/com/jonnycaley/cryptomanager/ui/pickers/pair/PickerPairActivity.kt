@@ -3,11 +3,13 @@ package com.jonnycaley.cryptomanager.ui.pickers.pair
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionActivity
 
@@ -17,6 +19,8 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
 
     val exchangeArg by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.EXCHANGE_KEY) as String? }
     val crypto by lazy { this.intent.getSerializableExtra(CreateCryptoTransactionActivity.CRYPTO_KEY) as String? }
+
+    val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
     lateinit var pairAdapter : PairAdapter
@@ -37,6 +41,8 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
     }
 
     override fun showPairs(pairs: List<String>?) {
+
+        progressBarLayout.visibility = View.GONE
 
         val mLayoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager

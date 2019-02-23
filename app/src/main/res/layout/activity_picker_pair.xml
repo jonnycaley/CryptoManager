@@ -23,6 +23,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/layout_progress" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

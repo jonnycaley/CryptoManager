@@ -9,10 +9,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
@@ -46,9 +43,15 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
     val textViewSubmit by lazy { findViewById<TextView>(R.id.text_view_submit) }
     val requiredDate by lazy { findViewById<TextView>(R.id.date) }
 
+    val buttonDelete by lazy { findViewById<Button>(R.id.button_delete)}
+
     val layoutDate by lazy { findViewById<RelativeLayout>(R.id.layout_date) }
 
-    val chosenDate by lazy { args.transaction.date }
+//    val chosenDate by lazy { args.transaction.date }
+
+    var transactionDate = Calendar.getInstance().time
+
+    var isDateChanged = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,13 +88,14 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
 
         requiredQuantity.setText(args.transaction.quantity.toString())
 
-        requiredDate.text = formatDate(chosenDate)
+        requiredDate.text = formatDate(args.transaction.date)
 
         layoutExchangeFilled.setOnClickListener(this)
         layoutExchangeEmpty.setOnClickListener(this)
         layoutCurrencyFilled.setOnClickListener(this)
         layoutCurrencyEmpty.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
+        buttonDelete.setOnClickListener(this)
 
         textViewSubmit.setOnClickListener(this)
     }
@@ -119,6 +123,9 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
         lateinit var i: Intent
 
         when (v?.id) {
+            buttonDelete.id -> {
+                presenter.deleteTransaction(args.transaction)
+            }
             layoutExchangeFilled.id -> {
                 i = Intent(this, PickerExchangeActivity::class.java)
                 startActivityForResult(i, REQUEST_CODE_EXCHANGE)
@@ -148,7 +155,15 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
                     else
                         correctQuantity = requiredQuantity.text.toString().toFloat()
 
-                    presenter.updateFiatTransaction(getTransaction(), requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, chosenDate, notes.text.trim().toString())
+
+                    val tempDate : Date
+                    if(isDateChanged)
+                        tempDate = transactionDate
+                    else
+                        tempDate = args.transaction?.date!!
+
+
+                    presenter.updateFiatTransaction(getTransaction(), requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
                 }
             }
         }
@@ -188,22 +203,23 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
     }
 
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-        chosenDate.year = year - 1900
-        chosenDate.month = monthOfYear
-        chosenDate.date = dayOfMonth
+
+        transactionDate.year = year - 1900
+        transactionDate.month = monthOfYear
+        transactionDate.date = dayOfMonth
 
         showTimePicker()
     }
 
     override fun onTimeSet(view: TimePickerDialog?, hourOfDay: Int, minute: Int, second: Int) {
 
-        chosenDate.hours = hourOfDay
-        chosenDate.minutes = minute
-        chosenDate.seconds = second
-        requiredDate.text = formatDate(chosenDate)
+        transactionDate.hours = hourOfDay
+        transactionDate.minutes = minute
+        transactionDate.seconds = second
+        requiredDate.text = formatDate(transactionDate)
+
+        isDateChanged = true
     }
-
-
 
     private fun showDatePicker() {
 
@@ -214,6 +230,8 @@ class UpdateFiatTransactionActivity : AppCompatActivity(), UpdateFiatTransaction
                 now.get(Calendar.MONTH), // Initial month selection
                 now.get(Calendar.DAY_OF_MONTH) // Inital day selection
         )
+        dpd.maxDate = Calendar.getInstance()
+
         dpd.show(fragmentManager, "Datepickerdialog")
     }
 

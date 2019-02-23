@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor"
     android:orientation="vertical"
-    tools:context=".ui.fiat.FiatActivity"
-    android:background="?attr/backgroundcolor">
+    tools:context=".ui.fiat.FiatActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -27,106 +27,112 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@+id/app_bar_layout"
+        android:orientation="vertical"
         android:padding="@dimen/default_margin">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_summary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="@dimen/cardview_default_elevation"
-        app:cardBackgroundColor="?attr/cardbackground">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/default_margin"
-        android:background="?attr/cardbackground">
-
-        <TextView
-            android:id="@+id/text_available"
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Available:"
-            android:paddingTop="@dimen/default_padding_top"
-            android:paddingBottom="@dimen/default_padding_bottom"
-            android:textColor="?attr/textcolor"/>
+            app:cardBackgroundColor="?attr/cardbackground"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:cardUseCompatPadding="true">
 
-        <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/cardbackground"
+                android:orientation="vertical"
+                android:padding="@dimen/default_margin">
+
+                <TextView
+                    android:id="@+id/text_available"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="@dimen/default_padding_top"
+                    android:paddingBottom="@dimen/default_padding_bottom"
+                    android:text="Available:"
+                    android:textColor="?attr/textcolor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/default_padding_top"
+                    android:paddingBottom="@dimen/default_padding_bottom"
+                    android:weightSum="2">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/total_deposited"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Total Deposited"
+                            android:textColor="?attr/textcolorsecondary" />
+
+                        <TextView
+                            android:id="@+id/text_total_deposited"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/total_deposited"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="?attr/textcolor" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/total_withdrawn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Total Withdrawn"
+                            android:textColor="?attr/textcolorsecondary" />
+
+                        <TextView
+                            android:id="@+id/text_total_withdrawn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/total_withdrawn"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="?attr/textcolor" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <Button
+            android:id="@+id/button_add_transaction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:paddingTop="@dimen/default_padding_top"
-            android:paddingBottom="@dimen/default_padding_bottom">
+            android:text="Add Transaction" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/total_deposited"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Total Deposited"
-                    android:textColor="?attr/textcolorsecondary" />
-
-                <TextView
-                    android:id="@+id/text_total_deposited"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/total_deposited"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="?attr/textcolor"/>
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/total_withdrawn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Total Withdrawn"
-                    android:textColor="?attr/textcolorsecondary" />
-
-                <TextView
-                    android:id="@+id/text_total_withdrawn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/total_withdrawn"
-                    android:gravity="center"
-                    android:text=""
-                    android:textColor="?attr/textcolor"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/card_summary"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_summary" />
 
     </LinearLayout>
 

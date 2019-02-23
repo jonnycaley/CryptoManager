@@ -15,6 +15,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import java.util.*
 import android.view.animation.AnimationUtils
 import android.widget.*
+import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
@@ -67,7 +68,28 @@ class CreateFiatTransactionActivity : AppCompatActivity(), CreateFiatTransaction
     }
 
     override fun onTransactionComplete() {
-        BaseArgs(2).launch(this)
+        if(args.backpressToPortfolio) {
+            loadBaseActivityWithoutRestart()
+        } else {
+            super.onBackPressed()
+        }
+
+//            backToHomeActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//
+//        BaseArgs(2).launch(this)
+//        else
+//            super.onBackPressed()
+    }
+
+    private fun loadBaseActivityWithoutRestart() {
+
+        val bundle = Bundle()
+        bundle.putInt("fragment_key", 2)
+        val intent = Intent(this, BaseActivity::class.java)
+        intent.putExtras(bundle)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+
     }
 
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {

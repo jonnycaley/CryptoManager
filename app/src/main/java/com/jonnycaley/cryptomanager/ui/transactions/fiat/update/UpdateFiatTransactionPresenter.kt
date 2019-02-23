@@ -115,31 +115,54 @@ class UpdateFiatTransactionPresenter(var dataManager: UpdateFiatTransactionDataM
     }
 
 
-//    private fun saveTransactions(transactions: ArrayList<Transaction>) {
-//        if(dataManager.checkConnection()){
-//
-//            dataManager.saveTransactions(transactions)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : CompletableObserver {
-//                        override fun onComplete() {
-//                            view.onTransactionUpdated()
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            println("onError: ${e.message}")
-//                        }
-//
-//                    })
-//
-//        } else {
-//            //TODO
-//        }
-//    }
+    override fun deleteTransaction(transaction: Transaction) {
+
+        dataManager.getTransactions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
+                    override fun onSuccess(transactions: ArrayList<Transaction>) {
+                        saveTransactions(ArrayList(transactions.filter { it != transaction }))
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+
+                })
+
+    }
+
+
+    private fun saveTransactions(transactions: ArrayList<Transaction>) {
+        if(dataManager.checkConnection()){
+
+            dataManager.saveTransactions(transactions)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : CompletableObserver {
+                        override fun onComplete() {
+                            view.onTransactionUpdated()
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+
+                    })
+
+        } else {
+            //TODO
+        }
+    }
 
     override fun detachView() {
         compositeDisposable?.dispose()

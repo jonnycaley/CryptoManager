@@ -7,12 +7,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.create.CreateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.utils.Utils
 import java.math.BigDecimal
+import kotlin.math.absoluteValue
 
-class FiatActivity : AppCompatActivity() , FiatContract.View{
+class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListener {
 
     private lateinit var presenter : FiatContract.Presenter
 
@@ -26,6 +31,8 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
 
     lateinit var holdingsAdapter : TransactionsAdapter
 
+    val buttonAddTransaction by lazy { findViewById<Button>(R.id.button_add_transaction) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -35,10 +42,20 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat)
 
+        buttonAddTransaction.setOnClickListener(this)
+
         setupToolbar()
 
         presenter = FiatPresenter(FiatDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            buttonAddTransaction.id -> {
+                CreateFiatTransactionArgs(args.fiat, false).launch(this)
+            }
+        }
     }
 
     override fun showProgressBar() {
@@ -46,15 +63,15 @@ class FiatActivity : AppCompatActivity() , FiatContract.View{
     }
 
     override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: BigDecimal) {
-        textAvailable.text = "Available: $fiatSymbol$availableFiatCount"
+        textAvailable.text = "Available: ${Utils.getPriceTextAbs(availableFiatCount.toDouble(), fiatSymbol)}"
     }
 
     override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: BigDecimal) {
-        textDeposited.text = "$fiatSymbol$depositedFiatCount"
+        textDeposited.text = "${Utils.getPriceTextAbs(depositedFiatCount.toDouble(), fiatSymbol)}"
     }
 
     override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: BigDecimal) {
-        textWithdrawn.text = "$fiatSymbol${withdrawnFiatCount* (-1).toBigDecimal()}"
+        textWithdrawn.text = "${Utils.getPriceTextAbs(withdrawnFiatCount.toDouble().absoluteValue, fiatSymbol)}"
     }
 
 

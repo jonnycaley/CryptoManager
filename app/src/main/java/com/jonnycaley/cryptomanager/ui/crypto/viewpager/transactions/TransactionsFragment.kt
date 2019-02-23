@@ -12,9 +12,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
+import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.update.CryptoTransactionArgs
 
 class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -76,9 +77,15 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
     }
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
-//        Log.i(TAG, baseImageUrl)
-//        Log.i(TAG, (currency == null).toString())
-        currency?.let { CreateCryptoTransactionArgs(it, baseImageUrl, baseLinkUrl).launch(context!!) }
+
+//        Log.i("ImageUrl", currency?.imageUrl)
+//        Log.i("ImageUrl", baseLinkUrl)
+//
+//        currency.imageUrl
+
+        val notTransaction= currency?.let { NotTransaction(it, currency.imageUrl, baseImageUrl, false) }
+
+        CryptoTransactionArgs(null, notTransaction, true).launch(context!!)
     }
 
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {

@@ -9,6 +9,7 @@ import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.transactions.fiat.update.UpdateFiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Constants
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_fiat_transaction.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,12 +27,13 @@ class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transa
         holder.setIsRecyclable(false)
 
         if(transaction?.symbol == fiat) {
-            holder.amount.text = "$fiatSymbol${Math.abs(transaction.quantity.toDouble())}"
+            holder.amount.text = "${Utils.getPriceTextAbs(transaction.quantity.toDouble(), fiatSymbol)}"
             holder.toText.text = "To"
             holder.to.text = transaction?.exchange
         }
         else {
-            holder.amount.text = "$fiatSymbol${Math.abs(transaction?.quantity?.times(transaction?.price!!)!!.toDouble())}"
+            holder.amount.text = "${Utils.getPriceTextAbs(Math.abs(transaction?.quantity?.times(transaction?.price!!)!!.toDouble()), fiatSymbol)}"
+
             holder.to.text = transaction?.symbol
             if(transaction.quantity > 0.toBigDecimal())
                 holder.toText.text = "Due to buy of"

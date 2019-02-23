@@ -171,8 +171,11 @@ object Utils {
         println(text)
         println("|"+text[text.length - 1]+"|")
 
-        if(text[text.length - 2].toString()  == ".")
-            text += "0"
+        if(text.contains(".") && text.length > 2)
+            if(text[text.length - 2].toString()  ==  ".")
+                text += "0"
+
+        //TODO: MAYBE REDUCE $0.330000 TO $0.33
 
         return text
     }

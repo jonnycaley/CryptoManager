@@ -4,7 +4,6 @@ import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.ui.transactions.crypto.create.CreateCryptoTransactionDataManager
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -14,20 +13,20 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class UpdateCryptoTransactionDataManager private constructor(val UserPreferences: UserPreferences) {
+class CryptoTransactionDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: UpdateCryptoTransactionDataManager? = null
+        private var INSTANCE: CryptoTransactionDataManager? = null
 
         private lateinit var context: Context
 
         private val TAG = "UpdateCryptoTransData"
 
         @JvmStatic
-        fun getInstance(context: Context): UpdateCryptoTransactionDataManager {
+        fun getInstance(context: Context): CryptoTransactionDataManager {
             if (INSTANCE == null) {
-                INSTANCE = UpdateCryptoTransactionDataManager(UserPreferences.getInstance(context))
+                INSTANCE = CryptoTransactionDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!

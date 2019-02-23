@@ -14,5 +14,6 @@ interface UpdateFiatTransactionContract {
 
     interface Presenter : BasePresenter {
         fun updateFiatTransaction(oldTransaction : Transaction, exchange: String, currency: String, quantity: Float, chosenDate: Date, notes: String)
+        fun deleteTransaction(transaction: Transaction)
     }
 }

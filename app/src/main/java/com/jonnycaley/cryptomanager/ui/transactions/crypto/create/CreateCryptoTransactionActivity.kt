@@ -11,6 +11,8 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
+import com.jonnycaley.cryptomanager.ui.base.BaseActivity
+import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.ui.pickers.pair.PickerPairActivity
 import com.jonnycaley.cryptomanager.utils.CircleTransform
@@ -151,9 +153,22 @@ class CreateCryptoTransactionActivity : AppCompatActivity(), CreateCryptoTransac
     }
 
     override fun onTransactionComplete() {
-        super.onBackPressed()
+        if(args.backpressToPortfolio)
+            loadBaseActivityWithoutRestart()
+        else
+            super.onBackPressed()
     }
 
+    private fun loadBaseActivityWithoutRestart() {
+
+        val bundle = Bundle()
+        bundle.putInt("fragment_key", 2)
+        val intent = Intent(this, BaseActivity::class.java)
+        intent.putExtras(bundle)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+
+    }
 
     private fun checkFields(): Boolean {
 

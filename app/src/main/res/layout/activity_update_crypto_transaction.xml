@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.transactions.crypto.update.UpdateCryptoTransactionActivity"
+    tools:context=".ui.transactions.crypto.update.CryptoTransactionActivity"
     android:background="?attr/backgroundcolor">
 
     <android.support.design.widget.AppBarLayout

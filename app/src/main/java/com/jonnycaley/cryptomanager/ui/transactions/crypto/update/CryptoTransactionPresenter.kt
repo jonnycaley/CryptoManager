@@ -1,7 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.transactions.crypto.update
 
 import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price
@@ -14,10 +13,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.ArrayList
 
-class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionDataManager, var view: UpdateCryptoTransactionContract.View) : UpdateCryptoTransactionContract.Presenter {
+class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, var view: CryptoTransactionContract.View) : CryptoTransactionContract.Presenter {
 
     var compositeDisposable: CompositeDisposable? = null
 
@@ -35,7 +35,7 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
         compositeDisposable?.dispose()
     }
 
-    override fun updateCryptoTransaction(originalTransaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, isDeducted: Boolean, notes: String) {
+    override fun updateCryptoTransaction(transaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, isDeducted: Boolean, notes: String) {
 
         var correctQuantity = quantity.toBigDecimal()
         var priceUsd = 1.toBigDecimal()
@@ -103,9 +103,14 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                     .flatMapSingle { dataManager.getTransactions() }
                     .observeOn(Schedulers.computation())
                     .map { transactions ->
+
+                        transactions.forEach { Log.i(TAG, it.date.time.toString()) }
+
                         val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price.toBigDecimal(), priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
-                        transactions.remove(originalTransaction)
+                        transactions.remove(transaction)
+
                         transactions.add(newTransaction)
+
                         return@map transactions
                     }
                     .observeOn(AndroidSchedulers.mainThread())
@@ -128,6 +133,39 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
                     })
         } else {
 //                view.showNoInternet()
+        }
+    }
+
+    override fun getCurrentPrice(transactionSymbol: String?, pair: String?) {
+
+        if(dataManager.checkConnection()){
+
+            dataManager.getCryptoCompareServiceWithScalars().getCurrentPriceScalar(transactionSymbol!!, pair!!)
+                    .subscribeOn(Schedulers.io())
+                    .map { json ->
+                        JsonModifiers.jsonToSinglePrice(json)
+                    }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : Observer<String> {
+
+                        override fun onComplete() {
+                        }
+
+                        override fun onNext(price: String) {
+                            view.showCurrentPrice(price)
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
+
+        } else {
+
         }
     }
 
@@ -192,6 +230,101 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
 
     }
 
+
+    override fun createCryptoTransaction(isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date, isDeducted: Boolean, notes: String) {
+
+        var correctQuantity = quantity
+        var priceUsd = 1.toBigDecimal()
+        var isDeductedPriceUsd = 1.toBigDecimal()
+        var btcPrice = 1.toBigDecimal()
+        var ethPrice = 1.toBigDecimal()
+
+        var allCryptos: Currencies? = null
+
+        if (!isBuy)
+            correctQuantity *= -1
+
+        if (dataManager.checkConnection()) {
+
+            dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(Schedulers.computation())
+                    .map {
+                        json ->
+
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            btcPrice = gson.uSD!!
+
+                        println("btcPrice PRICE: $btcPrice")
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
+                    .map { json ->
+
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            ethPrice = gson.uSD!!
+
+                        println("ethPrice PRICE: $ethPrice")
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(pair, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
+                    .map { json ->
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            isDeductedPriceUsd = gson.uSD!!
+
+                        println("isDeductedPriceUsd PRICE: $isDeductedPriceUsd")
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(view.getSymbol(), "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
+                    .observeOn(Schedulers.computation())
+                    .map { json ->
+                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
+
+                        if(gson.uSD != null)
+                            priceUsd = gson.uSD!!
+                        println("priceUsd PRICE: $priceUsd ")
+                    } //TODO: CHECK THIS LMAO :((((((((
+                    .observeOn(Schedulers.io())
+                    .flatMapSingle { dataManager.getAllCryptos() }
+                    .observeOn(Schedulers.computation())
+                    .map { currencies -> allCryptos = currencies }
+                    .observeOn(Schedulers.io())
+                    .flatMapSingle { dataManager.getTransactions() }
+                    .observeOn(Schedulers.computation())
+                    .map { transactions ->
+                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity.toBigDecimal(), price.toBigDecimal(), priceUsd, date!!, notes, isDeducted, isDeductedPriceUsd, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos!!.baseImageUrl + allCryptos!!.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
+                        transactions.add(newTransaction)
+                        return@map transactions
+                    }
+                    .observeOn(Schedulers.io())
+                    .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(object : CompletableObserver {
+                        override fun onComplete() {
+                            view.onTransactionComplete()
+                        }
+
+                        override fun onSubscribe(d: Disposable) {
+                            compositeDisposable?.add(d)
+                        }
+
+                        override fun onError(e: Throwable) {
+                            println("onError: ${e.message}")
+                        }
+                    })
+        } else {
+
+        }
+    }
+
     private fun saveTransactions(transactions: ArrayList<Transaction>) {
         dataManager.saveTransactions(transactions)
                 .subscribeOn(Schedulers.io())
@@ -213,29 +346,44 @@ class UpdateCryptoTransactionPresenter(var dataManager: UpdateCryptoTransactionD
     }
 
 
-    override fun getAllHoldings(symbol: String?): Long {
-//        dataManager.getHoldings()
-//                .map { holdings -> holdings.filter { it.symbol == symbol || it.pairSymbol == symbol } }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(object : SingleObserver<List<Transaction>?> {
-//                    override fun onSuccess(holdings: List<Transaction>) {
-//                        var maxQuantity = 0.toLong()
-//                        holdings.forEach { if(it.symbol == symbol) maxQuantity += it. }
-//                    }
-//
-//                    override fun onSubscribe(d: Disposable) {
-//                        compositeDisposable?.add(d)
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        println("onError")
-//                    }
-//
-//                })
+    override fun getAllHoldings(symbol: String) {
 
-        return 0.toLong()
+        val transactionz : List<Transaction>? = null
+
+        dataManager.getTransactions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map { transactions -> transactions.filter { it.symbol == symbol || ((it.pairSymbol == symbol) && (it.isDeducted)) } }
+                .map { trans ->
+                    getAvailableCryptoCount(trans, symbol)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<BigDecimal> {
+                    override fun onSuccess(amount: BigDecimal) {
+                        view.showSellAllAmount(amount)
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError")
+                    }
+
+                })
     }
+
+
+    private fun getAvailableCryptoCount(transactions: List<Transaction>, symbol : String): BigDecimal {
+        var availableFiat = 0.toBigDecimal()
+
+        transactions.filter { it.symbol == symbol }.forEach { availableFiat += it.quantity }
+        transactions.filter { (it.pairSymbol == symbol) && (it.isDeducted) }.forEach{ availableFiat -= (it.price * it.quantity) }
+
+        return availableFiat
+    }
+
 
     companion object {
         val TAG = "UpdateCryptoTransPres"
