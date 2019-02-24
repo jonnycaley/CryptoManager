@@ -14,6 +14,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
     var compositeDisposable: CompositeDisposable? = null
 
     var allCurrencies: Currencies? = null
+    var allFiats: ExchangeRates? = null
 
     init {
         this.view.setPresenter(this)
@@ -41,7 +42,8 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ExchangeRates> {
                     override fun onSuccess(fiats: ExchangeRates) {
-                        view.showFiats(fiats)
+                        allFiats = fiats
+                        fiats.rates?.let { view.showFiats(it, true) }
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -88,7 +90,20 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
     }
 
     override fun showCurrencies(filter: String?) {
-        view.showCurrencies(allCurrencies!!.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter?.toLowerCase()!!) }, allCurrencies!!.baseImageUrl, allCurrencies!!.baseLinkUrl)
+        allCurrencies?.let { currencies ->
+            view.showCurrencies(currencies!!.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter?.toLowerCase()!!) }, currencies!!.baseImageUrl, currencies!!.baseLinkUrl)
+        }
+    }
+
+    override fun showFiats(filter: String?) {
+        if(filter?.trim() == ""){
+            allFiats?.rates?.let { view.showFiats(it, true) }
+        }
+        else {
+            allFiats?.rates?.let { fiats ->
+                view.showFiats(fiats.filter { it.fiat?.toLowerCase()?.trim()?.contains(filter?.toLowerCase().toString())!! }, false)
+            }
+        }
     }
 
     override fun detachView() {

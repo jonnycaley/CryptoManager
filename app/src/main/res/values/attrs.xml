@@ -11,5 +11,6 @@
         <attr name="textcolorsecondary" format="color"/>
         <attr name="tintcolor" format="color"/>
         <attr name="buttoncolor" format="color"/>
+
     </declare-styleable>
 </resources>

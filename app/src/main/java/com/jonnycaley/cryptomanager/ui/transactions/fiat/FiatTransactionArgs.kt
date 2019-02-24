@@ -6,7 +6,7 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.interfaces.ActivityArgs
 
 
-data class UpdateFiatTransactionArgs(val transaction: Transaction?, val currency: String?, val backpressToPortfolio : Boolean?) : ActivityArgs {
+data class FiatTransactionArgs(val transaction: Transaction?, val currency: String?, val backpressToPortfolio : Boolean) : ActivityArgs {
 
     override fun intent(activity: Context): Intent = Intent(activity, FiatTransactionActivity::class.java).apply {
         putExtra(TRANSACTION_KEY, transaction)
@@ -15,8 +15,8 @@ data class UpdateFiatTransactionArgs(val transaction: Transaction?, val currency
     }
 
     companion object {
-        fun deserializeFrom(intent: Intent): UpdateFiatTransactionArgs {
-            return UpdateFiatTransactionArgs(
+        fun deserializeFrom(intent: Intent): FiatTransactionArgs {
+            return FiatTransactionArgs(
                     transaction = intent.getSerializableExtra(TRANSACTION_KEY) as Transaction?,
                     currency = intent.getSerializableExtra(FIAT_KEY) as String?,
                     backpressToPortfolio = intent.getBooleanExtra(IS_FROM_PORTFOLIO, false)

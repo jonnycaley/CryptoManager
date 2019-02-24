@@ -14,13 +14,14 @@ interface CryptoTransactionContract {
         fun onTransactionDeleted()
         fun showCurrentPrice(price: String)
         fun showSellAllAmount(amount: BigDecimal)
+        fun getName(): String
     }
 
     interface Presenter : BasePresenter {
         fun getAllHoldings(symbol: String)
-        fun updateCryptoTransaction(transaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, deductFromHoldings: Boolean, notes: String)
+        fun updateCryptoTransaction(transaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date, deductFromHoldings: Boolean, notes: String)
         fun deleteTransaction(transaction: Transaction)
-        fun createCryptoTransaction(checked: Boolean, toString: String, toString1: String, parseFloat: Float, parseFloat1: Float, chosenDate: Date, checked1: Boolean, toString2: String)
-        fun getCurrentPrice(transactionSymbol: String?, pair: String?)
+        fun createCryptoTransaction(isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date, isDeducted: Boolean, notes: String)
+        fun getCurrentPrice(transactionSymbol: String, pair: String)
     }
 }

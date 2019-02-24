@@ -14,6 +14,7 @@ import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.Utils
+import kotlinx.android.synthetic.main.activity_picker_currency.*
 
 class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View {
 
@@ -33,6 +34,10 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View 
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_currency)
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
 
         setupToolbar()
 

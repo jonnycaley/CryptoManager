@@ -22,12 +22,10 @@ import io.reactivex.*
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.functions.BiFunction
-import io.reactivex.functions.Function
-import io.reactivex.internal.operators.observable.ObservableToList
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import kotlin.collections.ArrayList
-import java.util.Arrays.asList
 
 
 class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: PortfolioContract.View) : PortfolioContract.Presenter {
@@ -93,22 +91,16 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { transactions ->
-                    view.stopRefreshing()
+                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
 
-                    if (transactions.isEmpty()) {
-                        view.showNoHoldingsLayout()
-                        view.hideRefreshing()
-                    }
-                    transactions
-                }
-                .observeOn(Schedulers.computation())
-                .map { transactions ->
-                    getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
-                }
-                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(transactions: ArrayList<Transaction>) {
+                        if (transactions.isEmpty()) {
+                            view.showNoHoldingsLayout()
+                            view.hideRefreshing()
 
-                    override fun onSuccess(transactions: Unit) {
+                        } else {
+                            getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
+                        }
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -170,6 +162,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 priceEthHistorical = tempPriceEth
 
             })
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
 
@@ -187,6 +180,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                         override fun onError(e: Throwable) {
                             Log.i(TAG, "onError4: ${e.message}")
                             view.stopRefreshing()
+
                             view.showError()
                         }
 
@@ -364,7 +358,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
             val oneHourBack = cal.time
             val timeStamp = oneHourBack.time / 100
 
-            var observables : ArrayList<Observable<String>> = ArrayList()
+            val observables : ArrayList<Observable<String>> = ArrayList()
 
             holdings.forEach {
                 observables.add(dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(it.symbol, "USD,BTC,ETH", timeStamp.toString()))
@@ -559,9 +553,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                     .observeOn(Schedulers.computation())
                     .map { fiat -> baseFiat = fiat }
                     .map { change -> changeUsd = getChangeUsd(holdingsSorted, newPrices) }
-                    .map { getBalanceUsd(holdingsSorted, newPrices) }
+                    .map { getBalanceUsd(holdingsSorted, newPrices, fiatPrices) }
                     .map { balance ->
-                        saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices), getBalanceEth(holdingsSorted, newPrices), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
+                        saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices, fiatPrices), getBalanceEth(holdingsSorted, newPrices, fiatPrices), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Unit> {
@@ -816,43 +810,64 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
     }
 
 
-    private fun getBalanceUsd(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+    private fun getBalanceUsd(holdings: ArrayList<Holding>, prices: ArrayList<Price>, fiatPrices: ExchangeRates): BigDecimal {
 
         var balance = 0.toBigDecimal()
 
-        holdings.forEach { holding ->
-            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)
-                    ?: 0.toBigDecimal()
+        holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
+            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) ?: 0.toBigDecimal()
+        }
+
+        holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP)
+//            balance += fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate?.divide(holding.quantity, 8, RoundingMode.HALF_UP)!!
         }
 
         return balance
 
     }
 
-    private fun getBalanceBtc(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+    private fun getBalanceBtc(holdings: ArrayList<Holding>, prices: ArrayList<Price>, fiatPrices: ExchangeRates): BigDecimal {
 
         var balance = 0.toBigDecimal()
 
         prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD
 
-        holdings.forEach { holding ->
+        //current usd price
+        //times  by quantity
+        //times by basefiat
+
+        //divide by current btc price
+        ////times by basefiat
+
+        holdings.filter { it.type ==  Variables.Transaction.Type.crypto}.forEach { holding ->
             balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
                     ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
                     ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
 
         }
+        holdings.filter { it.type ==  Variables.Transaction.Type.fiat}.forEach { holding ->
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
+                    ?: Constants.baseRate) ?: 1.toBigDecimal() , 6, RoundingMode.HALF_UP)
+        }
+
 
         return balance
     }
 
-    private fun getBalanceEth(holdings: ArrayList<Holding>, prices: ArrayList<Price>): BigDecimal {
+    private fun getBalanceEth(holdings: ArrayList<Holding>, prices: ArrayList<Price>, fiatPrices: ExchangeRates): BigDecimal {
 
         var balance = 0.toBigDecimal()
 
-        holdings.forEach { holding ->
+        holdings.filter { it.type ==  Variables.Transaction.Type.crypto}.forEach { holding ->
             balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
                     ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
                     ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
+        }
+
+        holdings.filter { it.type ==  Variables.Transaction.Type.fiat}.forEach { holding ->
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
+                    ?: Constants.baseRate) ?: 1.toBigDecimal() , 6, RoundingMode.HALF_UP)
         }
 
         return balance
@@ -908,10 +923,12 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 getCostEth -= (it.price * it.quantity * it.isDeductedPriceUsd / (it.ethPrice))
             }
 
+            val getName = transactions.filter { (it.symbol == key) }.firstOrNull()?.name ?: ""
+
             if ((getAllTransactionsFor.isNotEmpty() && getAllTransactionsFor[0].pairSymbol == null) || ((getAllTransactionsAgainst.isNotEmpty() && getAllTransactionsAgainst[0].pairSymbol == null)))
-                holdings.add(Holding(key, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.fiat, imageUrl))
+                holdings.add(Holding(key, getName, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.fiat, imageUrl))
             else
-                holdings.add(Holding(key, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.crypto, imageUrl))
+                holdings.add(Holding(key, getName, getCurrentHoldings, getCostUsd, getCostBtc, getCostEth, Variables.Transaction.Type.crypto, imageUrl))
         }
         return holdings
     }

@@ -151,7 +151,7 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            item.symbol?.let { it1 -> CryptoArgs(it1).launch(context!!) }
+            item.symbol?.let { symbol -> item.name?.let { name -> CryptoArgs(symbol, name).launch(context!!) } }
         }
     }
 

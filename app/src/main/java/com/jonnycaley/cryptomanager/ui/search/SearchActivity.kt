@@ -10,8 +10,10 @@ import android.view.MenuItem
 import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
-import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.utils.Utils
+import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQueryTextListener {
 
@@ -33,6 +35,9 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
         setupToolbar()
         setupSearchBar()
 
@@ -53,18 +58,21 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         return args.transactionString
     }
 
-    override fun showFiats(exchangeRates: ExchangeRates) {
+    override fun showFiats(rates: List<Rate>, withUsdTop: Boolean) {
 
         val data = ArrayList<Datum>()
 
-        val datum = Datum()
+        if(withUsdTop){
 
-        datum.coinName = "United States Dollar"
-        datum.symbol = "USD"
+            val datum = Datum()
 
-        data.add(datum)
+            datum.coinName = "United States Dollar"
+            datum.symbol = "USD"
 
-        exchangeRates.rates?.forEach {
+            data.add(datum)
+        }
+
+        rates.forEach {
             val datum = Datum()
 
             datum.coinName = Utils.getFiatName(it.fiat)
@@ -90,7 +98,14 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
     }
 
     override fun onQueryTextChange(query: String?): Boolean {
-        presenter.showCurrencies(query)
+        when(args.transactionString){
+            PortfolioFragment.CURRENCY_STRING -> {
+                presenter.showCurrencies(query?.trim())
+            }
+            PortfolioFragment.FIAT_STRING -> {
+                presenter.showFiats(query?.trim())
+            }
+        }
         return true
     }
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
-import com.jonnycaley.cryptomanager.ui.transactions.fiat.UpdateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_history.view.*
 
@@ -55,9 +55,9 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
 
         holder.itemView.setOnClickListener {
             if(transaction.pairSymbol == null)
-                UpdateFiatTransactionArgs(transaction, null, null).launch(context!!)
+                FiatTransactionArgs(transaction, null, false).launch(context!!)
             else
-                CryptoTransactionArgs(transaction, null, true).launch(context!!)
+                CryptoTransactionArgs(transaction, null, false).launch(context!!)
         }
     }
 

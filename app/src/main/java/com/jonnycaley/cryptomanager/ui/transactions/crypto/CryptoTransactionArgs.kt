@@ -6,12 +6,12 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.interfaces.ActivityArgs
 
-data class CryptoTransactionArgs(val transaction: Transaction? , val notTransactions: NotTransaction?, val backPressOnEnd : Boolean) : ActivityArgs {
+data class CryptoTransactionArgs(val transaction: Transaction? , val notTransactions: NotTransaction?, val backpressToPortfolio : Boolean) : ActivityArgs {
 
     override fun intent(activity: Context): Intent = Intent(activity, CryptoTransactionActivity::class.java).apply {
         putExtra(TRANSACTION_KEY, transaction)
         putExtra(NOT_TRANSACTION_KEY, notTransactions)
-        putExtra(BACKPRESS_KEY, backPressOnEnd)
+        putExtra(BACKPRESS_KEY, backpressToPortfolio)
     }
 
     companion object {
@@ -19,7 +19,7 @@ data class CryptoTransactionArgs(val transaction: Transaction? , val notTransact
             return CryptoTransactionArgs(
                     transaction = intent.getSerializableExtra(TRANSACTION_KEY) as Transaction?,
                     notTransactions = intent.getSerializableExtra(NOT_TRANSACTION_KEY) as NotTransaction?,
-                    backPressOnEnd = intent.getBooleanExtra(BACKPRESS_KEY, false)
+                    backpressToPortfolio = intent.getBooleanExtra(BACKPRESS_KEY, false)
             )
         }
     }

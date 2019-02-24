@@ -361,7 +361,7 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
                 percentage.text = percentage2DP
 
                 background.setOnClickListener {
-                    context?.let { it1 -> currency.symbol?.let { it2 -> CryptoArgs(it2).launch(it1) } }
+                    context?.let { context -> currency.symbol?.let { symbol -> currency.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
                 }
 
                 when {

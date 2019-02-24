@@ -12,27 +12,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:id="@+id/app_bar_layout">
+        android:id="@+id/app_bar_layout"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="?android:attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            tools:targetApi="lollipop" />
+            app:titleTextColor="?attr/textcolor"
+            tools:targetApi="lollipop"
+            android:background="?attr/backgroundcolor" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="@dimen/default_margin">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="?attr/textcolor"
+                    android:text=""
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:id="@+id/button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_delete_white_24"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
-
-    <Button
-        android:id="@+id/button_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/app_bar_layout"
-        android:layout_alignParentEnd="true"
-        android:text="Delete"
-        android:visibility="gone"/>
 
     <include
         layout="@layout/content_fiat_transaction"

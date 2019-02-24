@@ -200,7 +200,7 @@ object Utils {
     }
 
 
-    fun getFiatName(fiat: String?): String? {
+    fun getFiatName(fiat: String?): String {
         when (fiat) {
             "AUD" -> {
                 return "Australian Dollar"
@@ -301,8 +301,10 @@ object Utils {
             "EUR" -> {
                 return "Euro"
             }
+            else -> {
+                return fiat ?: ""
+            }
         }
-        return ""
     }
 
     fun getFiatSymbol(fiat: String?): String {

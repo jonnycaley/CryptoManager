@@ -1,346 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto">-->
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--xmlns:app="http://schemas.android.com/apk/res-auto">-->
 
-    <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:padding="@dimen/default_margin"
+        android:visibility="gone">
 
-        <RelativeLayout
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/header_image"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:id="@+id/header_text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=""
+                android:textColor="?attr/textcolor" />
+
+
+            <TextView
+                android:id="@+id/header_text_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=""
+                android:textColor="?attr/textcolor" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_transaction_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_margin">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RadioButton
+                android:id="@+id/radio_button_deposit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/buy"
+                android:textColor="?attr/textcolor" />
+
+            <RadioButton
+                android:id="@+id/radio_button_withdrawl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sell"
+                android:textColor="?attr/textcolor" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+    <RelativeLayout
+        android:id="@+id/layout_filled_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Exchange"
+            android:textColor="?attr/textcolorsecondary" />
+
+        <TextView
+            android:id="@+id/exchange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_exchange"
+            android:layout_alignParentStart="true"
+            android:text=""
+            android:textColor="?attr/textcolor" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_empty_exchange"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:gravity="center|start"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Exchange"
+            android:textColor="?attr/textcolorsecondary" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+    <RelativeLayout
+        android:id="@+id/layout_filled_trading_pair"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_trading_pair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Trading Pair"
+            android:textColor="?attr/textcolorsecondary" />
+
+        <TextView
+            android:id="@+id/trading_pair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_trading_pair"
+            android:layout_alignParentStart="true"
+            android:text=""
+            android:textColor="?attr/textcolor" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_empty_trading_pair"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:gravity="center|start"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Trading Pair"
+            android:textColor="?attr/textcolorsecondary" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <EditText
+            android:id="@+id/edit_text_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Price"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/textcolor"
+            android:textColorHint="?attr/textcolorsecondary" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <EditText
+            android:id="@+id/edit_text_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Quantity"
+            android:inputType="numberDecimal"
+            android:textColor="?attr/textcolor"
+            android:textColorHint="?attr/textcolorsecondary" />
+
+        <TextView
+            android:id="@+id/text_sell_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Sell All"
+            android:textColor="?attr/textcolorsecondary"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+
+    <RelativeLayout
+        android:id="@+id/layout_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Date"
+            android:textColor="?attr/textcolorsecondary" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_date"
+            android:layout_alignParentStart="true"
+            android:text="Sun, 06 Sep 2018 16:55"
+            android:textColor="?attr/textcolor" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:gravity="center|start"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:id="@+id/text_deducation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:gravity="center"
-            android:padding="@dimen/default_margin">
+            android:text="Deduct from holdings"
+            android:textColor="?attr/textcolor" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        <Switch
+            android:id="@+id/switch_deduct"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/text_grey" />
 
-                <ImageView
-                    android:id="@+id/header_image"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp" />
+    </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/header_text_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:textColor="?attr/textcolor"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
 
-                <TextView
-                    android:id="@+id/header_text_symbol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:textColor="?attr/textcolor" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_transaction_type"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/edit_text_notes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_margin">
+            android:hint="Notes"
+            android:inputType="number"
+            android:textColor="?attr/textcolor"
+            android:textColorHint="?attr/textcolorsecondary" />
 
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+    </RelativeLayout>
 
-                <RadioButton
-                    android:id="@+id/radio_button_deposit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="@string/buy"
-                    android:textColor="?attr/textcolor" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/text_grey" />
 
-                <RadioButton
-                    android:id="@+id/radio_button_withdrawl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/sell"
-                    android:textColor="?attr/textcolor" />
-            </RadioGroup>
+</LinearLayout>
 
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-        <RelativeLayout
-            android:id="@+id/layout_filled_exchange"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/text_exchange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Exchange"
-                android:textColor="?attr/textcolorsecondary" />
-
-            <TextView
-                android:id="@+id/exchange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/text_exchange"
-                android:layout_alignParentStart="true"
-                android:text=""
-                android:textColor="?attr/textcolor"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_empty_exchange"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_empty"
-            android:gravity="center|start"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Exchange"
-                android:textColor="?attr/textcolorsecondary" />
-
-        </RelativeLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-        <RelativeLayout
-            android:id="@+id/layout_filled_trading_pair"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/text_trading_pair"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Trading Pair"
-                android:textColor="?attr/textcolorsecondary" />
-
-            <TextView
-                android:id="@+id/trading_pair"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/text_trading_pair"
-                android:layout_alignParentStart="true"
-                android:text=""
-                android:textColor="?attr/textcolor"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_empty_trading_pair"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_empty"
-            android:gravity="center|start"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Trading Pair"
-                android:textColor="?attr/textcolorsecondary" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin"
-            android:focusableInTouchMode="true">
-
-            <EditText
-                android:id="@+id/edit_text_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Price"
-                android:inputType="numberDecimal"
-                android:textColorHint="?attr/textcolorsecondary"
-                android:textColor="?attr/textcolor"/>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <EditText
-                android:id="@+id/edit_text_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Quantity"
-                android:inputType="numberDecimal"
-                android:textColorHint="?attr/textcolorsecondary"
-                android:textColor="?attr/textcolor"/>
-
-            <TextView
-                android:id="@+id/text_sell_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:text="Sell All"
-                android:visibility="gone"
-                android:textColor="?attr/textcolorsecondary" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-
-        <RelativeLayout
-            android:id="@+id/layout_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <TextView
-                android:id="@+id/text_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Date"
-                android:textColor="?attr/textcolorsecondary" />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/text_date"
-                android:layout_alignParentStart="true"
-                android:text="Sun, 06 Sep 2018 16:55"
-                android:textColor="?attr/textcolor" />
-
-        </RelativeLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_empty"
-            android:gravity="center|start"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <TextView
-                android:id="@+id/text_deducation"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="Deduct from holdings"
-                android:textColor="?attr/textcolor" />
-
-            <Switch
-                android:id="@+id/switch_deduct"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/text_grey" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_margin"
-            android:paddingTop="@dimen/small_margin"
-            android:paddingRight="@dimen/default_margin"
-            android:paddingBottom="@dimen/small_margin">
-
-            <EditText
-                android:id="@+id/edit_text_notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Notes"
-                android:inputType="number"
-                android:textColor="?attr/textcolor"
-                android:textColorHint="?attr/textcolorsecondary" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/text_grey" />
-
-    </LinearLayout>
-
-<!--</ScrollView>-->
+    <!--</ScrollView>-->

@@ -104,10 +104,10 @@ class HomeArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             }
 
             holder.layoutStockGreen.setOnClickListener {
-                context?.let { context -> relatedCrypto.symbol?.let { symbol -> CryptoArgs(symbol).launch(context) } }
+                context?.let { context -> relatedCrypto.symbol?.let { symbol -> relatedCrypto.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
             }
             holder.layoutStockRed.setOnClickListener {
-                context?.let { context -> relatedCrypto.symbol?.let { symbol -> CryptoArgs(symbol).launch(context) } }
+                context?.let { context -> relatedCrypto.symbol?.let { symbol -> relatedCrypto.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
             }
     }
 

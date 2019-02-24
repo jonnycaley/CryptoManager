@@ -12,8 +12,9 @@ import android.widget.Button
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
-import com.jonnycaley.cryptomanager.ui.transactions.fiat.UpdateFiatTransactionArgs
+import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
+import kotlinx.android.synthetic.main.activity_fiat.*
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
 
@@ -42,6 +43,10 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat)
 
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
+
         buttonAddTransaction.setOnClickListener(this)
 
         setupToolbar()
@@ -53,7 +58,7 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddTransaction.id -> {
-                UpdateFiatTransactionArgs(null, args.fiat, false).launch(this)
+                FiatTransactionArgs(null, args.fiat, false).launch(this)
             }
         }
     }

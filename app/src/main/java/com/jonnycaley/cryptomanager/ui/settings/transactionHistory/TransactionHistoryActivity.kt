@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import kotlinx.android.synthetic.main.activity_transaction_history.*
 
 class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContract.View {
 
@@ -27,6 +28,10 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_history)
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
 
         setupToolbar()
 

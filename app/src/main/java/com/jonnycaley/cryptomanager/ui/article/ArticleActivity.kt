@@ -18,6 +18,7 @@ import android.webkit.WebSettings
 import android.widget.Toast
 import com.like.LikeButton
 import com.like.OnLikeListener
+import kotlinx.android.synthetic.main.activity_article_detail.*
 
 class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListener {
 
@@ -28,7 +29,6 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
     private val webview by lazy { findViewById<WebView>(R.id.webview) }
     private val recyclerviewSnap by lazy { findViewById<MultiSnapRecyclerView>(R.id.recyclerview_snap) }
     val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
-
 
     private val adapter by lazy { SimilarArticlesHorizontalAdapter(args.article.similarArticles, this) }
 
@@ -42,6 +42,10 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
 
         setupToolbar()
 
@@ -106,7 +110,6 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ""
 //        supportActionBar?.title = args.article.title
     }
 

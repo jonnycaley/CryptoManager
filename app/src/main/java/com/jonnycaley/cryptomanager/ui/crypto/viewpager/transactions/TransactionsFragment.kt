@@ -78,14 +78,8 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
 
-//        Log.i("ImageUrl", currency?.imageUrl)
-//        Log.i("ImageUrl", baseLinkUrl)
-//
-//        currency.imageUrl
-
-        val notTransaction= currency?.let { NotTransaction(it, currency.imageUrl, baseImageUrl, false) }
-
-        CryptoTransactionArgs(null, notTransaction, true).launch(context!!)
+        val notTransaction = currency?.let { NotTransaction(it, currency.imageUrl, baseImageUrl, false) }
+        CryptoTransactionArgs(null, notTransaction, false).launch(context!!)
     }
 
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {

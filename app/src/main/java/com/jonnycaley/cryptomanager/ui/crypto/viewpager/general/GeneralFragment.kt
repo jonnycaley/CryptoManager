@@ -30,6 +30,7 @@ import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.data.model.Utils.Chart
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
@@ -225,33 +226,47 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         val rate = baseFiat.rate ?: 1.toBigDecimal()
 
         val priceChange = (close - open) * rate
+
         var priceText = ""
         if (priceChange > 0.toBigDecimal())
             priceText = Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " ("
         else
-            priceText = Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " (-"
+            priceText = "-" + Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " (-"
+
+        priceChange
+
+        Log.i(TAG + "HERE: ", "${close}")
+        Log.i(TAG + "HERE: ", "${open}")
+        Log.i(TAG + "HERE: ", "${((close - open))}")
+
+
+
+        var dec = ((close - open).divide(open, 4, RoundingMode.HALF_UP))
+
+
+        Log.i(TAG + "H: ", dec.toString())
 
         if (open != 0.toBigDecimal()) {
-            change.text = priceText + formatPercentage((((close - open) / open) * 100.toBigDecimal())) + ")"
+            change.text = priceText + formatPercentage(((close - open).divide(open, 8, RoundingMode.HALF_UP) * 100.toBigDecimal())) + ")"
         }
     }
 
     fun formatPercentage(percentChange24h: BigDecimal?): String {
 
         if(percentChange24h == null || percentChange24h == 0.toBigDecimal())
-            return "0.00%"
+            return "0.01%"
 
         val percentage2DP = String.format("%.2f", percentChange24h)
 
         return when {
-            percentage2DP.toDouble() == 0.toDouble() -> {
+            (percentage2DP.toDouble() == 0.toDouble()) -> {
                 "0.01%"
             }
             percentage2DP.toDouble() > 0 -> {
                 "+$percentage2DP%"
             }
             else -> {
-                "$percentage2DP%"
+                "${percentage2DP.substring(1)}%"
             }
         }
     }
@@ -375,14 +390,19 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(true)
         xAxis.gridLineWidth = 0.5F
-        xAxis.gridColor = R.color.light_grey
+        xAxis.gridColor = R.attr.textcolor
         xAxis.setLabelCount(6, false)
+        xAxis.textColor = R.attr.textcolor
+//        xAxis.axisLineColor = R.color.red
+//        xAxis.setDrawAxisLine(false)
 
         val yAxisLeft = candleStickChart.axisLeft
         yAxisLeft.setDrawGridLines(true)
         yAxisLeft.gridLineWidth = 0.5F
-        yAxisLeft.gridColor = R.color.light_grey
+        yAxisLeft.gridColor = R.attr.textcolor
         yAxisLeft.setLabelCount(4, true)
+        yAxisLeft.textColor = R.attr.textcolor
+        yAxisLeft.setDrawAxisLine(false)
 
         val yAxisRight = candleStickChart.axisRight
         yAxisRight.isEnabled = false
@@ -459,7 +479,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         Log.i(TAG, "difference: $difference")
 
 
-        val a = 35F
+        val a = 30F
         val b = 5
 
         val multiplesOf = when {

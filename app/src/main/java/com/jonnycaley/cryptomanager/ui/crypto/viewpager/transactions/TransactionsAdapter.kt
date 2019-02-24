@@ -127,7 +127,7 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
 
         holder.itemView.setOnClickListener {
-            context?.let { context -> CryptoTransactionArgs(transaction, null, true).launch(context) }
+            context?.let { context -> CryptoTransactionArgs(transaction, null, false).launch(context) }
         }
     }
 

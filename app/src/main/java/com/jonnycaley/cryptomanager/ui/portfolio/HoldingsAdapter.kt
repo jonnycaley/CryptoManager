@@ -31,11 +31,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.R.attr.button
 import android.R.id
-
-
-
-
-
+import java.math.RoundingMode
 
 class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
@@ -174,8 +170,12 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
         if (holding.type == Variables.Transaction.Type.fiat) {
 
+            value = holding.quantity.divide(allFiats.firstOrNull { it.fiat == holding.symbol }?.rate, 2, RoundingMode.HALF_UP)
+            Log.i(TAG, "newPrice = $value")
+
+
             holder.price.visibility = View.GONE
-            holder.change.text = value?.let { Utils.getPriceTextAbs(it.toDouble(), symbol) }
+            holder.change.text = value?.let { Utils.getPriceTextAbs(it.times(baseRate).toDouble(), symbol) }
 
             val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, 0)
@@ -189,12 +189,11 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
             when (chosenCurrency) {
                 PortfolioFragment.CURRENCY_BTC -> {
                     symbol = "B"
-                    holder.change.text = Utils.getPriceTextAbs(value?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()))?.toDouble() ?: 0.toDouble(), symbol)
+                    holder.change.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
                 PortfolioFragment.CURRENCY_ETH -> {
                     symbol = "E"
-
-                    holder.change.text = Utils.getPriceTextAbs(value?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()))?.toDouble() ?: 0.toDouble(), symbol)
+                    holder.change.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
             }
         } else {
@@ -348,7 +347,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
             } else if (allFiats.any { it.fiat?.toUpperCase() == holding.symbol }) {
                 context?.let { it1 -> FiatArgs(holding.symbol).launch(it1) }
             } else {
-                context?.let { it1 -> CryptoArgs(holding.symbol).launch(it1) }
+                context?.let { context -> CryptoArgs(holding.symbol, holding.name).launch(context) }
             }
         }
     }

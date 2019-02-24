@@ -84,7 +84,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, v
         holder.percentage.text = "$percentage2DP"
 
         holder.itemView.setOnClickListener {
-            context?.let { it1 -> item.symbol?.let { it2 -> CryptoArgs(it2).launch(it1) } }
+            context?.let { context -> item.symbol?.let { symbol -> item.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
 
         }
     }

@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
+import kotlinx.android.synthetic.main.activity_saved_articles.*
 
 class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
@@ -29,6 +30,10 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_articles)
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
 
         setupToolbar()
 

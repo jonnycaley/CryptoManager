@@ -31,7 +31,6 @@ import android.support.v7.app.AppCompatDelegate
 import android.widget.TextView
 import java.util.*
 
-
 class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     private lateinit var presenter: CryptoContract.Presenter
@@ -52,6 +51,10 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
+
+        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
 
         setupToolbar()
         setupViewPager()
@@ -81,13 +84,14 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
                     .into(image, object : Callback {
                         override fun onSuccess() {
 
-                            val drawable = image.drawable as BitmapDrawable
-                            val bitmap = drawable.bitmap
-
-                            tabLayout.setSelectedTabIndicatorColor(getDominantColor(bitmap))
-                            title.setTextColor(getDominantColor(bitmap))
-
-                            toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
+//                            TODO: RETHINK THEME AS IT CHANGES THE TOOLBAR COLOR GLOBALLY
+//                            val drawable = image.drawable as BitmapDrawable
+//                            val bitmap = drawable.bitmap
+//
+//                            tabLayout.setSelectedTabIndicatorColor(getDominantColor(bitmap))
+//                            title.setTextColor(getDominantColor(bitmap))
+//
+//                            toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
                         }
 
                         override fun onError() {
@@ -117,7 +121,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 //        supportActionBar?.title = args.currencySymbol
 
-        title.text = args.currencySymbol
+        title.text = args.currencyName
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
