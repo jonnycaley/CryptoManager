@@ -30,7 +30,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             compositeDisposable = CompositeDisposable()
         }
 //        getNews()
-        //TODO: UNCOMMENT BELOW
+//        TODO: UNCOMMENT BELOW
 //        onRefresh()
     }
 

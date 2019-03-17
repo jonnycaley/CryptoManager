@@ -11,6 +11,9 @@ object Constants {
     val COINMARKETCAP_KEY = "a17fe7b8-33e3-4a80-a1ee-7e4ffce2078f"
 
     val CRYPTOCOMPARE_URL = "https://min-api.cryptocompare.com/data/"
+    val CRYPTOCOMPARE_NAME = "api_key"
+    val CRYPTOCOMPARE_KEY = "a5df989c3d35841e7434d865f1a818d6b9de1491aae9895022c984833bbfcf00"
+
 
     val NOMICS_URL = "https://api.nomics.com/v1/"
     val NOMICS_NAME = "key"

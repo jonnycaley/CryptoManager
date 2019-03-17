@@ -39,7 +39,7 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
     }
 
     fun getCryptoCompareService(): CryptoCompareService {
-        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 

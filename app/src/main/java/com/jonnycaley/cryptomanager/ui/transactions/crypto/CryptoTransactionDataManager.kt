@@ -45,13 +45,13 @@ class CryptoTransactionDataManager private constructor(val UserPreferences: User
     }
 
     fun getCryptoCompareService(): CryptoCompareService {
-        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 
 
     fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
-        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 

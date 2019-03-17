@@ -44,7 +44,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     override fun updateThemeChanged() {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-            navigation.background = resources.getDrawable(R.color.red)
+            navigation.background = resources.getDrawable(R.color.black)
         else
             navigation.background = resources.getDrawable(R.color.white)
     }
@@ -70,7 +70,9 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
         loadFragmentNew(args.fragment)
 
-        navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        navigation.enableItemShiftingMode(false)
+
+        navigation.onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
@@ -113,7 +115,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
                 }
             }
             false
-        })
+        }
 
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 //        loadFragment(args.fragment)

@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_progress" />
+    <include layout="@layout/layout_progress"
+        android:visibility="gone"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +16,7 @@
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:descendantFocusability="blocksDescendants">
 
         <android.support.v4.widget.NestedScrollView

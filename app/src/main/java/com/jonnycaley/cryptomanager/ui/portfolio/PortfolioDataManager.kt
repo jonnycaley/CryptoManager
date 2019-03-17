@@ -37,12 +37,12 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
-        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 
     fun getCryptoCompareService(): CryptoCompareService {
-        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 
@@ -51,7 +51,7 @@ class PortfolioDataManager private constructor(val UserPreferences: UserPreferen
     }
 
     fun getExchangeRateService(): ExchangeRatesService {
-        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.EXCHANGERATES_URL, null, null)
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(ExchangeRatesService::class.java)
     }
 

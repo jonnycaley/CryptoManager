@@ -5,17 +5,20 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#5E989F</item>
         <item name="colorPrimaryDark">#303F9F</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="primarycolor">#000000</item>
         <item name="secondarycolor">#000000</item>
 
         <item name="backgroundcolor">#fcfcfc</item>
-        <item name="cardbackground">#D6D6D6</item>
+        <item name="cardbackground">#ffffff</item>
         <item name="textcolor">#000000</item>
         <item name="textcolorsecondary">#424242</item>
         <item name="tintcolor">#ffffff</item>
         <item name="buttoncolor">#5E989F</item>
+
+
+        <item name="navigationBorder">#5E989F</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#fcfcfc</item>
 
@@ -34,17 +37,19 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#5E989F</item>
         <item name="colorPrimaryDark">#000000</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="primarycolor">#000000</item>
         <item name="secondarycolor">#000000</item>
 
         <item name="backgroundcolor">#000000</item>
-        <item name="cardbackground">#424242</item>
+        <item name="cardbackground">#000000</item>
         <item name="textcolor">#ffffff</item>
         <item name="textcolorsecondary">#C9C8C9</item>
         <item name="tintcolor">#ffffff</item>
         <item name="buttoncolor">#2196f3</item>
+
+        <item name="navigationBorder">#5E989F</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
