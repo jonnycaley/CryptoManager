@@ -30,7 +30,7 @@
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
     <string name="update_fiat_transaction_activity">UpdateFiatTransactionActivity</string>
-    <string name="splash_internet_required">No internet connection</string>
+    <string name="internet_required">No internet connection</string>
     <string name="retry">Retry</string>
     <string name="using_offline_data">Using offline data</string>
     <string name="saved_articles_activity">Saved Articles</string>
@@ -39,4 +39,5 @@
 
     <string name="bitcoin">\u20BF</string>
     <string name="transaction_history_activity">Transaction History Activity</string>
+    <string name="error_occurred">An error occurred</string>
 </resources>

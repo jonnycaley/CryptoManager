@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.news
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
@@ -15,7 +15,6 @@ import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
-import android.view.animation.Animation
 
 
 class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {

@@ -1,20 +1,21 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
+import com.jonnycaley.cryptomanager.utils.Utils
 
 class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     private lateinit var presenter : SplashContract.Presenter
 
+    val coordinatorLayout by lazy { findViewById<RelativeLayout>(R.id.coordinator) }
     val progressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +23,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             setTheme(R.style.darktheme)
         }
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -31,13 +33,24 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
     }
 
     override fun showInternetRequired() {
-        Snackbar.make(findViewById(R.id.coordinator), R.string.splash_internet_required, Snackbar.LENGTH_INDEFINITE)
+        showSnackBar(resources.getString(R.string.internet_required))
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    fun showSnackBar(message: String) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) { presenter.getCurrencies() }
                 .show()
     }
 
+
     override fun setDarkTheme() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         setTheme(R.style.darktheme)
+        coordinatorLayout.setBackgroundColor(resources.getColor(R.color.black))
     }
 
     override fun hideProgressBar() {

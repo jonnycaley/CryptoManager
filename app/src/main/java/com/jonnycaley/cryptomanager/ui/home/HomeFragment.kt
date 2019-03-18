@@ -1,103 +1,62 @@
 package com.jonnycaley.cryptomanager.ui.home
 
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.CardView
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
-import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
+import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
+import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
+import com.jonnycaley.cryptomanager.ui.search.SearchArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
-import com.like.LikeButton
-import com.like.OnLikeListener
-import com.squareup.picasso.Picasso
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatDelegate
-import android.widget.RelativeLayout
-import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
+import java.math.BigDecimal
 
-
-class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener {
+class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TabInterface {
 
     lateinit var mView: View
 
     private lateinit var presenter: HomeContract.Presenter
 
-    lateinit var articlesVerticalAdapter: HomeArticlesVerticalAdapter
-    lateinit var topMoversAdapter: TopMoversAdapter
+    lateinit var holdingsAdapter: HoldingsAdapter
 
-    lateinit var topArticle: Article
+    val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
-    val scrollLayout by lazy { mView.findViewById<NestedScrollView>(R.id.scroll_layout) }
-    val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout>(R.id.swipelayout) }
-    val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
+    val nestedScrollView by lazy { mView.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
 
-    val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
-//    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
+    val buttonAddCurrency by lazy { mView.findViewById<Button>(R.id.button_add_currency) }
+    val buttonAddFiat by lazy { mView.findViewById<Button>(R.id.button_add_fiat) }
 
-    val cardTopArticle by lazy { mView.findViewById<CardView>(R.id.card_view) }
+    val layoutEmpty by lazy { mView.findViewById<LinearLayout>(R.id.layout_portfolio_empty) }
+    val layoutNotEmty by lazy { mView.findViewById<LinearLayout>(R.id.layout_portfolio_not_empty) }
 
-    val cardImage by lazy { mView.findViewById<ImageView>(R.id.card_image) }
-    val cardTitle by lazy { mView.findViewById<TextView>(R.id.card_title) }
-    val cardDescription by lazy { mView.findViewById<TextView>(R.id.card_description) }
-    val cardLength by lazy { mView.findViewById<TextView>(R.id.card_length) }
-    val cardDate by lazy { mView.findViewById<TextView>(R.id.card_date) }
-    val cardStar by lazy { mView.findViewById<LikeButton>(R.id.like_button_top_article) }
+    val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
 
-    val card1Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_1_layout) }
-    val card1Name by lazy { mView.findViewById<TextView>(R.id.card_1_name) }
-    val card1 by lazy { mView.findViewById<RelativeLayout>(R.id.card_1) }
-    val card1Percentage by lazy { mView.findViewById<TextView>(R.id.card_1_percentage) }
+    val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
+    val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
 
-    val card2Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_2_layout) }
-    val card2Name by lazy { mView.findViewById<TextView>(R.id.card_2_name) }
-    val card2 by lazy { mView.findViewById<RelativeLayout>(R.id.card_2) }
-    val card2Percentage by lazy { mView.findViewById<TextView>(R.id.card_2_percentage) }
+    val textSortName by lazy { mView.findViewById<TextView>(R.id.text_sort_name) }
+    val textSortHoldings by lazy { mView.findViewById<TextView>(R.id.text_sort_holdings) }
+    val textSortChange by lazy { mView.findViewById<TextView>(R.id.text_sort_change) }
 
-    val card3Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_3_layout) }
-    val card3Name by lazy { mView.findViewById<TextView>(R.id.card_3_name) }
-    val card3 by lazy { mView.findViewById<RelativeLayout>(R.id.card_3) }
-    val card3Percentage by lazy { mView.findViewById<TextView>(R.id.card_3_percentage) }
+    val radioGroup: RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
-    val card4Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_4_layout) }
-    val card4Name by lazy { mView.findViewById<TextView>(R.id.card_4_name) }
-    val card4 by lazy { mView.findViewById<RelativeLayout>(R.id.card_4) }
-    val card4Percentage by lazy { mView.findViewById<TextView>(R.id.card_4_percentage) }
-
-    val card5Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_5_layout) }
-    val card5Name by lazy { mView.findViewById<TextView>(R.id.card_5_name) }
-    val card5 by lazy { mView.findViewById<RelativeLayout>(R.id.card_5) }
-    val card5Percentage by lazy { mView.findViewById<TextView>(R.id.card_5_percentage) }
-
-    val card6Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_6_layout) }
-    val card6Name by lazy { mView.findViewById<TextView>(R.id.card_6_name) }
-    val card6 by lazy { mView.findViewById<RelativeLayout>(R.id.card_6) }
-    val card6Percentage by lazy { mView.findViewById<TextView>(R.id.card_6_percentage) }
-
-    val card7Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_7_layout) }
-    val card7Name by lazy { mView.findViewById<TextView>(R.id.card_7_name) }
-    val card7 by lazy { mView.findViewById<RelativeLayout>(R.id.card_7) }
-    val card7Percentage by lazy { mView.findViewById<TextView>(R.id.card_7_percentage) }
-
-    val card8Layout by lazy { mView.findViewById<RelativeLayout>(R.id.card_8_layout) }
-    val card8Name by lazy { mView.findViewById<TextView>(R.id.card_8_name) }
-    val card8 by lazy { mView.findViewById<RelativeLayout>(R.id.card_8) }
-    val card8Percentage by lazy { mView.findViewById<TextView>(R.id.card_8_percentage) }
+    var chosenPeriod = TIME_PERIOD_1H
+    var chosenCurrency = CURRENCY_FIAT
+    var chosenSort = ""
 
     override fun setPresenter(presenter: HomeContract.Presenter) {
         this.presenter = checkNotNull(presenter)
@@ -105,341 +64,377 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_home, container, false)
-
         return mView
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
+        //view setup should occur here
 
-        cardStar.setOnLikeListener(this)
+        buttonAddCurrency.setOnClickListener(this)
+        buttonAddFiat.setOnClickListener(this)
         swipeLayout.setOnRefreshListener(this)
+        textBalance.setOnClickListener(this)
+        textChange.setOnClickListener(this)
+
+        textSortName.setOnClickListener(this)
+        textSortHoldings.setOnClickListener(this)
+        textSortChange.setOnClickListener(this)
+
+        setUpPortfolioTimeChoices()
 
         presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
-        presenter.attachView() //runs on first creation of fragment
+        presenter.attachView()
+    }
+
+    override fun onTabClicked(isTabAlreadyClicked: Boolean) {
+        if (isTabAlreadyClicked)
+            nestedScrollView.scrollTo(0, 0)
+        else
+            presenter.getTransactions(chosenPeriod)
+        Log.i(TAG, "onTabClicked()")
+    }
+
+    private fun setUpPortfolioTimeChoices() {
+
+        radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition ->
+            presenter.clearDisposable()
+            when (currentPosition) {
+                0 -> {
+                    chosenPeriod = TIME_PERIOD_1H
+                }
+                1 -> {
+                    chosenPeriod = TIME_PERIOD_1D
+                }
+                2 -> {
+                    chosenPeriod = TIME_PERIOD_1W
+                }
+                3 -> {
+                    chosenPeriod = TIME_PERIOD_1M
+                }
+                4 -> {
+                    chosenPeriod = TIME_PERIOD_ALL
+                }
+            }
+            presenter.getTransactions(chosenPeriod)
+        }
+    }
+
+    override fun getToggledCurrency(): String {
+        return chosenCurrency
+    }
+
+    var isPercentage = false
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            buttonAddFiat.id -> {
+                context?.let { SearchArgs(FIAT_STRING).launch(it) }
+            }
+            buttonAddCurrency.id -> {
+                context?.let { SearchArgs(CURRENCY_STRING).launch(it) }
+            }
+            textBalance.id -> {
+                when (chosenCurrency) {
+                    CURRENCY_FIAT -> chosenCurrency = CURRENCY_BTC
+                    CURRENCY_BTC -> chosenCurrency = CURRENCY_ETH
+                    CURRENCY_ETH -> chosenCurrency = CURRENCY_FIAT
+                }
+                presenter.updateView()
+            }
+            textChange.id -> {
+                isPercentage = !isPercentage
+                presenter.updateView()
+            }
+            textSortName.id -> {
+                if (chosenSort == SORT_NAME_ASCENDING)
+                    chosenSort = SORT_NAME_DESCENDING
+                else
+                    chosenSort = SORT_NAME_ASCENDING
+                onSortChanged()
+                notifySortTextChanged()
+            }
+            textSortHoldings.id -> {
+                if (chosenSort == SORT_HOLDINGS_DESCENDING)
+                    chosenSort = SORT_HOLDINGS_ASCENDING
+                else
+                    chosenSort = SORT_HOLDINGS_DESCENDING
+                onSortChanged()
+                notifySortTextChanged()
+            }
+            textSortChange.id -> {
+                if (chosenSort == SORT_CHANGE_DESCENDING)
+                    chosenSort = SORT_CHANGE_ASCENDING
+                else
+                    chosenSort = SORT_CHANGE_DESCENDING
+                onSortChanged()
+                notifySortTextChanged()
+            }
+        }
+    }
+
+    private fun notifySortTextChanged() {
+
+        textSortName.text = "Name"
+        textSortHoldings.text = "Holdings"
+        textSortChange.text = "Change"
+
+        when (chosenSort) {
+            SORT_NAME_ASCENDING -> {
+                textSortName.text = "Name▼"
+            }
+            SORT_NAME_DESCENDING -> {
+                textSortName.text = "Name▲"
+            }
+            SORT_HOLDINGS_ASCENDING -> {
+                textSortHoldings.text = "Holdings▲"
+            }
+            SORT_HOLDINGS_DESCENDING -> {
+                textSortHoldings.text = "Holdings▼"
+            }
+            SORT_CHANGE_ASCENDING -> {
+                textSortChange.text = "Change▲"
+            }
+            SORT_CHANGE_DESCENDING -> {
+                textSortChange.text = "Change▼"
+            }
+        }
+    }
+
+    private fun onSortChanged() {
+        holdingsAdapter.onSortChanged(chosenSort)
+    }
+
+    override fun hideRefreshing() {
+        swipeLayout.isRefreshing = false
     }
 
     override fun onRefresh() {
-        presenter.onRefresh()
-    }
-
-    override fun onTabClicked(isTabAlreadyClicked : Boolean) {
-
-        if(isTabAlreadyClicked) {
-            scrollLayout.scrollTo(0, 0)
-            scrollLayout.fling(0)
-        }
-            //scroll to top
-        else
-            presenter.onResume()
+        presenter.getTransactions(chosenPeriod)
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.onResume()
+        //TODO: UNCOMMENT BELOW
+//        presenter.getTransactions(chosenPeriod)
     }
 
-    override fun liked(p0: LikeButton?) {
-        println("liked")
-        presenter.saveArticle(topArticle)
+    override fun showError() {
+        //TODO
     }
 
-    override fun unLiked(p0: LikeButton?) {
-        println("unLiked")
-        presenter.removeArticle(topArticle)
+    override fun showRefreshing() {
+//        swipeLayout.isRefreshing = true
     }
 
-    override fun showNoInternet() {
-        Snackbar.make(mView, R.string.splash_internet_required, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.retry) { presenter.getNews() }
-                .show()
+    override fun stopRefreshing() {
+//        swipeLayout.isRefreshing = false
     }
 
-    override fun hideProgressBar() {
-        Log.i(TAG, "hideProgressBar")
-        progressBarLayout.visibility = View.GONE
-        swipeLayout.isRefreshing = false
-    }
+    @SuppressLint("SetTextI18n")
+    override fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal) {
 
-    override fun showScrollLayout() {
-        Log.i(TAG, "showScrollLayout")
-        swipeLayout.visibility = View.VISIBLE
-    }
+        val fiat = Utils.getFiatSymbol(baseFiat.fiat)
 
-    override fun showProgressBar() {
-        Log.i(TAG, "showProgressBar")
-        progressBarLayout.visibility = View.VISIBLE
-    }
-
-    var newsLayoutManager: LinearLayoutManager? = null
-
-    var isLastPage: Boolean = false
-    var isLoading: Boolean = false
-
-    override fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
-
-        val headerArticle = news.keys.first()
-
-        val templist = HashMap<Article, Currency?>()
-
-        news.forEach { templist[it.key] = it.value }
-
-        templist.remove(headerArticle)
-
-        topArticle = headerArticle
-
-        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
-
-        if(newsLayoutManager == null) {
-
-            newsLayoutManager = LinearLayoutManager(context)
-
-            recyclerViewShimmerNews.layoutManager = newsLayoutManager
-            articlesVerticalAdapter = HomeArticlesVerticalAdapter(templist, savedArticles, context, presenter)
-            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
-
-        } else {
-            articlesVerticalAdapter.swap(templist, savedArticles)
+        when (this.chosenCurrency) { //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
+            CURRENCY_FIAT -> {
+                textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
+            }
+            CURRENCY_BTC -> {
+                textBalance.text = "BTC $balanceBtc"//₿
+            }
+            CURRENCY_ETH -> {
+                textBalance.text = "ETH $balanceEth"//Ξ
+            }
         }
-
-//            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
-//                override fun isLastPage(): Boolean {
-//                    return isLastPage
-//                }
-//
-//                override fun isLoading(): Boolean {
-//                    return isLoading
-//                }
-//
-//                override fun loadMoreItems() {
-//                    isLoading = true
-//                    getMoreItems()
-//                }
-//
-//            })
-//        } else {
-//
-//            Log.i(TAG, "Loading old layout manager")
-//            Log.i(TAG, "news size: ${news.size}")
-//            Log.i(TAG, "savedArticles size: ${savedArticles.size}")
-//
-//            articlesVerticalAdapter.swap(news, savedArticles)
-//
-//            recyclerViewShimmerNews.adapter.notifyDataSetChanged()
-//        }
-
-        showTopNewsArticle(headerArticle)
-
-//        if(newsLayoutManager == null) {
-//            Log.i(TAG, "1")
-//            newsLayoutManager = LinearLayoutManager(context)
-//            recyclerViewShimmerNews.layoutManager = newsLayoutManager
-//            articlesVerticalAdapter = HomeArticlesVerticalAdapter(news, savedArticles, context, presenter)
-//            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
-//        } else {
-//            Log.i(TAG, "2")
-//            articlesVerticalAdapter.currencies = news
-//            articlesVerticalAdapter.savedArticles = savedArticles
-//            articlesVerticalAdapter.notifyDataSetChanged()
-////            articlesVerticalAdapter.currencies?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
-//        }
-
     }
 
-//    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
+    @SuppressLint("SetTextI18n")
+    override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
+
+        val fiat = Utils.getFiatSymbol(baseFiat.fiat)
+
+        when (this.chosenCurrency) {
+            CURRENCY_FIAT -> {
+                if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs((changeUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
+                    if (changeUsd < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    } else if(changeUsd == 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.black)?.let { textChange.setTextColor(it) }
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                    }
+                } else {
+
+                    val change = changeUsd
+                    var absBalance = balanceUsd - changeUsd
+                    if (absBalance < 0.toBigDecimal())
+                        absBalance = (absBalance * (-1).toBigDecimal())
+
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
+                        textChange.text = "-"
+                        context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
+                    } else {
+
+                        val changePct = change / absBalance
+                        //TODO: absBalance can still be 0 somehow lmao
+                        formatPercentage(changePct * 100.toBigDecimal(), textChange)
+                    }
+
+
+//                    if ((this.balanceUsd.toDouble() == this.changeUsd.toDouble()) || (this.balanceUsd - this.changeUsd < 0.toBigDecimal())) {
+//                        textChange.text = "-"
+//                        context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
+//                    } else {
+//                        if((this.balanceUsd.toDouble() / this.changeUsd.toDouble()) > 0.toDouble()) {
+//                            context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+//                        }
+//                        else {
+//                            context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+//                        }
 //
-//        val headerArticle = news.keys.first()
-//
-//        news.remove(headerArticle)
-//
-//        topArticle = headerArticle
-//
-//        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
-//
-//        articlesVerticalAdapter.swap(news, savedArticles)
-//
-//    }
-
-    override fun setIsLoading(b: Boolean) {
-        isLoading = false
-    }
-
-    private fun showTopNewsArticle(article: Article) {
-
-        cardTopArticle.setOnClickListener {
-            context?.let { it1 -> ArticleArgs(article).launch(it1) }
-        }
-
-        Picasso.with(context)
-                .load(article.originalImageUrl)
-                .fit()
-                .centerCrop()
-                .into(cardImage)
-
-        cardTitle.text = article.title
-        cardDescription.text = article.description
-        cardLength.text = Utils.getReadTime(article.words)
-        cardDate.text = Utils.getTimeFrom(article.publishedAt)
-    }
-
-    var layoutManager: LinearLayoutManager? = null
-
-    override fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
-
-//        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
-//                Color.WHITE)
-//        animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
-//                Color.WHITE)
-
-        Log.i(TAG, sortedBy.size.toString())
-
-        if (sortedBy.size > 7) {
-            for (i in 0..7) {
-                val currency = sortedBy.filter { it.name != "Tether" }[i]
-
-                Log.i(TAG, currency.name)
-
-                var card = card1
-                var name = card1Name
-                var percentage = card1Percentage
-                var background = card1Layout
-
-                when (i) {
-                    0 -> {
-                        card = card1
-                        name = card1Name
-                        percentage = card1Percentage
-                        background = card1Layout
-                    }
-                    1 -> {
-                        card = card2
-                        name = card2Name
-                        percentage = card2Percentage
-                        background = card2Layout
-                    }
-                    2 -> {
-                        card = card3
-                        name = card3Name
-                        percentage = card3Percentage
-                        background = card3Layout
-                    }
-                    3 -> {
-                        card = card4
-                        name = card4Name
-                        percentage = card4Percentage
-                        background = card4Layout
-                    }
-                    4 -> {
-                        card = card5
-                        name = card5Name
-                        percentage = card5Percentage
-                        background = card5Layout
-                    }
-                    5 -> {
-                        card = card6
-                        name = card6Name
-                        percentage = card6Percentage
-                        background = card6Layout
-                    }
-                    6 -> {
-                        card = card7
-                        name = card7Name
-                        percentage = card7Percentage
-                        background = card7Layout
-                    }
-                    7 -> {
-                        card = card8
-                        name = card8Name
-                        percentage = card8Percentage
-                        background = card8Layout
-                    }
+//                        if(this.balanceUsd - this.changeUsd < 0.toBigDecimal() )
+//                        textChange.text = Utils.formatPercentage((this.changeUsd/(this.balanceUsd - this.changeUsd)))
+//                    }
                 }
-
-                val percentage2DP = Utils.formatPercentage(currency.quote?.uSD?.percentChange24h?.toBigDecimal())
-
-                name.text = currency.name
-                percentage.text = percentage2DP
-
-                background.setOnClickListener {
-                    context?.let { context -> currency.symbol?.let { symbol -> currency.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
-                }
-
-                when {
-                    percentage2DP.substring(0, 1) == "+" -> {
-                        card.setBackgroundResource(R.drawable.border_green_large_round)
-                        context?.resources?.getColor(R.color.green)?.let { percentage.setTextColor(it) }
-
-                        if (Math.random() < 0.6) {
-
-                            var color: Int
-
-                            color = if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-                                context?.resources?.getColor(R.color.backgroundblack)!!
-                            else
-                                context?.resources?.getColor(R.color.backgroundwhite)!!
-
-                            val animGreen = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.green)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
-
-                            animGreen.duration = 1500
-                            animGreen.setEvaluator(ArgbEvaluator())
-                            animGreen.repeatMode = ValueAnimator.REVERSE
-
-                            if (illuminate) {
-                                animGreen.start()
-                            }
-                        }
+            }
+            CURRENCY_BTC -> {
+                if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "BTC")
+                    if (changeBtc < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    } else if(changeBtc == 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.black)?.let { textChange.setTextColor(it) }
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
                     }
-                    else -> {
-                        card.setBackgroundResource(R.drawable.border_red_large_round)
-                        context?.resources?.getColor(R.color.red)?.let { percentage.setTextColor(it) }
+                } else {
 
-                        var color = 0
+                    val change = changeBtc
+                    val absBalance = (balanceBtc - changeBtc).abs()
 
-                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-                            color = context?.resources?.getColor(R.color.backgroundblack)!!
-                        else
-                            color = context?.resources?.getColor(R.color.backgroundwhite)!!
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
+                        textChange.text = "-"
+                        context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
+                    } else {
+                        val changePct = change / absBalance
+                        formatPercentage(changePct * 100.toBigDecimal(), textChange)
+                    }
+//                    if ((this.balanceBtc.toDouble()) == (this.changeBtc.toDouble())) {
+//                        textChange.text = "-"
+//                    } else {
+//
+////                        var multiplier = 1.toBigDecimal()
+////                        if(this.changeEth < 0.toBigDecimal() )
+////                            multiplier = -1.toBigDecimal()
+//                        textChange.text = Utils.formatPercentage((this.changeBtc) / (this.balanceBtc))
+//                    }
+                }
+            }
+            CURRENCY_ETH -> {
+                if (!isPercentage) {
+                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "ETH")
+                    if (changeEth < 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
+                    } else if(changeEth == 0.toBigDecimal()) {
+                        context?.resources?.getColor(R.color.black)?.let { textChange.setTextColor(it) }
+                    } else {
+                        context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
+                    }
+                } else {
+//                    if ((this.balanceEth) == (this.changeEth)) {
+//                        textChange.text = "-"
+//                    } else {
+////                        var multiplier = 1.toBigDecimal()
+////                        if(this.changeEth < 0.toBigDecimal())
+////                            multiplier = (-1).toBigDecimal()
+//                        textChange.text = Utils.formatPercentage((this.changeEth) / (this.balanceEth))
+//                    }
+                    val change = changeEth
+                    val absBalance = (balanceEth - changeEth).abs()
 
-                        if (Math.random() < 0.6) {
-                            val animRed = ObjectAnimator.ofInt(background, "backgroundColor", color, context?.resources?.getColor(R.color.red)!!, color) //be careful with color.white and color.transparent as it makes it look shit lol
-
-                            animRed.duration = 1500
-                            animRed.setEvaluator(ArgbEvaluator())
-                            animRed.repeatMode = ValueAnimator.REVERSE
-
-                            if (illuminate) {
-                                animRed.start()
-                            }
-                        }
+                    if ((absBalance.compareTo(0.toBigDecimal()) == 0) || (change.compareTo(0.toBigDecimal()) == 0)) {
+                        textChange.text = "-"
+                        context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }
+                    } else {
+                        val changePct = change / absBalance
+                        formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
                 }
             }
         }
-//        Log.i(TAG, "showTop100Changes")
-//        Log.i(TAG, (baseCurrency.fiat == null).toString())
+    }
+
+    fun formatPercentage(percentChange24h: BigDecimal, view: TextView) {
+
+        if (percentChange24h.compareTo(0.toBigDecimal()) == 0) {
+            context?.resources?.getColor(R.color.text_grey)?.let { view.setTextColor(it) }
+            view.text = "-"
+        } else {
+
+            val percentage2dp = percentChange24h.setScale(2, BigDecimal.ROUND_HALF_UP)
+
+            return when {
+                percentage2dp > 0.toBigDecimal() -> {
+                    context?.resources?.getColor(R.color.green)?.let { view.setTextColor(it) }
+                    view.text = "+$percentage2dp%"
+                }
+                else -> {
+                    context?.resources?.getColor(R.color.red)?.let { view.setTextColor(it) }
+                    view.text = "$percentage2dp%"
+                }
+            }
+        }
 //
-//        val arrayList = ArrayList<Currency>()
+//        val percentage2DP = String.format("%.2f", percentChange24h)
 //
-//        sortedBy?.forEach { arrayList.add(it) }
+////        val percentage2DP = DecimalFormat("#0.00").format(percentChange24h)
 //
-//        Log.i(TAG, baseCurrency.rate.toString())
-//
-//        if (layoutManager == null) {
-//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            recyclerViewTopMovers.layoutManager = layoutManager
-//            topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency, context)
-//            recyclerViewTopMovers.adapter = topMoversAdapter
-//
-//        } else {
-//
-//            topMoversAdapter.articles = arrayList
-//            topMoversAdapter.baseRate = baseCurrency
-//            topMoversAdapter.notifyDataSetChanged()
+//        return when {
+//            percentage2DP == "0.00" -> {
+//                "$percentage2DP%"
+////                holder.movement.text = "-"
+//            }
+//            percentage2DP.toDouble() > 0 -> {
+//                "+$percentage2DP%"
+//            }
+//            else -> {
+//                "$percentage2DP%"
+//            }
 //        }
     }
 
-    fun newInstance(headerStr: String): HomeFragment {
-        val fragmentDemo = HomeFragment()
+    override fun showNoHoldingsLayout() {
+        layoutEmpty.visibility = View.VISIBLE
+        layoutNotEmty.visibility = View.GONE
+    }
+
+    override fun showHoldingsLayout() {
+        layoutEmpty.visibility = View.GONE
+        layoutNotEmty.visibility = View.VISIBLE
+    }
+
+    override fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>, baseFiat: Rate, allFiats: ArrayList<Rate>) {
+
+        if(holdings.isEmpty())
+            showNoHoldingsLayout()
+        else {
+
+            showHoldingsLayout()
+
+            val mLayoutManager = LinearLayoutManager(context)
+
+            recyclerView.layoutManager = mLayoutManager
+            holdingsAdapter = HoldingsAdapter(holdings, prices, baseFiat, this.chosenCurrency, allFiats, this.isPercentage, context)
+            recyclerView.adapter = holdingsAdapter
+
+            holdingsAdapter.onSortChanged(chosenSort)
+        }
+    }
+
+    fun newInstance(headerStr: String): MarketsFragment {
+        val fragmentDemo = MarketsFragment()
         val args = Bundle()
         args.putString("headerStr", headerStr)
         fragmentDemo.arguments = args
@@ -447,6 +442,38 @@ class HomeFragment : Fragment(), TabInterface, HomeContract.View, OnLikeListener
     }
 
     companion object {
+
         val TAG = "HomeFragment"
+
+        val FIAT_STRING = "FIAT"
+        val CURRENCY_STRING = "CURRENCY"
+
+        val TIME_PERIOD_MINUTE = "minute"
+        val TIME_PERIOD_HOUR = "hour"
+        val TIME_PERIOD_DAY = "day"
+
+        val AGGREGATE_1H = "60"
+        val AGGREGATE_1D = "24"
+        val AGGREGATE_1W = "168"
+        val AGGREGATE_1M = "30"
+
+        val TIME_PERIOD_1H = "1H"
+        val TIME_PERIOD_1D = "1D"
+        val TIME_PERIOD_1W = "1W"
+        val TIME_PERIOD_1M = "1M"
+        val TIME_PERIOD_ALL = "ALL"
+
+        val CURRENCY_FIAT = "FIAT"
+        val CURRENCY_BTC = "BTC"
+        val CURRENCY_ETH = "ETH"
+
+        val SORT_HOLDINGS_ASCENDING = "HOLDINGS_ASCENDING"
+        val SORT_NAME_ASCENDING = "NAME_ASCENDING"
+        val SORT_CHANGE_ASCENDING = "CHANGE_ASCENDING"
+
+        val SORT_HOLDINGS_DESCENDING = "HOLDINGS_DESCENDING"
+        val SORT_NAME_DESCENDING = "NAME_DESCENDING"
+        val SORT_CHANGE_DESCENDING = "CHANGE_DESCENDING"
     }
+
 }

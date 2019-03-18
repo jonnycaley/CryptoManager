@@ -45,6 +45,9 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
         if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+
+            likeButton.setLikeDrawable(resources.getDrawable(R.drawable.bookmark_fill_black))
+            likeButton.setUnlikeDrawable(resources.getDrawable(R.drawable.bookmark_outlline_black))
         }
 
         setupToolbar()

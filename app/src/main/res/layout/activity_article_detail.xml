@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".ui.article.ArticleActivity"
-    android:background="?attr/backgroundcolor">
+    android:background="?attr/backgroundcolor"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -33,11 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
+                android:paddingEnd="@dimen/default_margin"
                 app:anim_scale_factor="2"
-                app:circle_end_color="@color/colorAccent"
-                app:circle_start_color="@color/colorPrimary"
-                app:dots_primary_color="@color/colorAccent"
-                app:dots_secondary_color="@color/colorPrimary"
+                app:circle_end_color="?attr/textcolor"
+                app:circle_start_color="?attr/textcolor"
+                app:dots_primary_color="?attr/textcolor"
+                app:dots_secondary_color="?attr/textcolor"
+                app:like_drawable="@drawable/bookmark_fill_white"
+                app:unlike_drawable="@drawable/bookmark_outline_white"
                 app:icon_size="15dp"
                 app:icon_type="Star"
                 app:is_enabled="true"
@@ -50,13 +54,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/layout_progress"/>
+    <include layout="@layout/layout_progress" />
 
     <WebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:attr/actionBarSize"
         android:visibility="gone"/>
 
     <RelativeLayout
@@ -79,4 +82,4 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

@@ -1,7 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.content.Context
+import android.graphics.Color
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +15,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
+import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 
 
@@ -24,7 +28,7 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = articles?.get(position)
 
-        if(item?.thumbnail == null){
+        if (item?.thumbnail == null) {
             holder.image.visibility = View.GONE
         } else {
             Picasso.with(context)
@@ -36,7 +40,7 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
 
         holder.likeButton.isLiked = true
 
-        holder.likeButton.setOnLikeListener(object : OnLikeListener{
+        holder.likeButton.setOnLikeListener(object : OnLikeListener {
             override fun liked(p0: LikeButton?) {
 
             }
@@ -56,7 +60,28 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            ArticleArgs(item!!).launch(context!!)
+            context?.let { context ->
+                item?.url?.let { url ->
+
+                    val builder = FinestWebView.Builder(context)
+                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                        builder.statusBarColor(context.resources.getColor(R.color.black))
+                        builder.progressBarColor(context.resources.getColor(R.color.black))
+                        builder.menuColor(context.resources.getColor(R.color.black))
+                        builder.toolbarColor(context.resources.getColor(R.color.black))
+                        builder.menuTextColor(context.resources.getColor(R.color.white))
+                        builder.iconDefaultColor(context.resources.getColor(R.color.white))
+                        builder.titleColor(context.resources.getColor(R.color.white))
+                        builder.menuTextColor(context.resources.getColor(R.color.white))
+                    } else {
+                        builder.statusBarColor(Color.parseColor("#ffffff"))
+                    }
+//                    builder.setCloseAnimations(R.anim.activity_open_scale, R.anim.activity_close_translate)
+                    builder.setCustomAnimations(R.anim.activity_open_translate, R.anim.activity_close_scale, R.anim.activity_open_scale, R.anim.activity_close_translate)
+                    builder.show(url)
+                }
+            }
+//            ArticleArgs(item!!).launch(context!!)
         }
     }
 
@@ -65,7 +90,7 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
         return articles?.size ?: 0
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val title = view.title

@@ -7,12 +7,12 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
-import android.util.Log
+import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.jonnycaley.cryptomanager.R
 import java.math.BigDecimal
-import java.text.NumberFormat
 import kotlin.math.absoluteValue
 
 object Utils {

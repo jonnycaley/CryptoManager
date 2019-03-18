@@ -172,7 +172,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     private fun changeSortText() {
         rank.text = "#"
-        name.text = "Name (Symbol)"
+        name.text = "Name"
         price.text = "Price"
         change.text = "Change"
 
@@ -184,10 +184,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 rank.text = "#▲"
             }
             FILTER_NAME_DOWN -> {
-                name.text = "Name (Symbol)▼"
+                name.text = "Name▼"
             }
             FILTER_NAME_UP -> {
-                name.text = "Name (Symbol)▲"
+                name.text = "Name▲"
             }
             FILTER_PRICE_DOWN -> {
                 price.text = "Price▼"

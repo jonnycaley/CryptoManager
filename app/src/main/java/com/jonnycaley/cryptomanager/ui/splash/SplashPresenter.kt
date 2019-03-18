@@ -31,7 +31,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-
         checkTheme()
     }
 
@@ -42,8 +41,10 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Boolean> {
                     override fun onSuccess(isDarkTheme: Boolean) {
-                        if(isDarkTheme)
+                        if(isDarkTheme) {
                             view.setDarkTheme()
+                        }
+                        Log.i("THEMEHERE", isDarkTheme.toString())
                         checkForStorage()
                     }
 
@@ -51,10 +52,9 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                         compositeDisposable?.add(d)
                     }
 
-                    override fun onError(e: Throwable) {
-                        println("onError1: ${e.message}")
-                    }
+                    override fun onError(e: Throwable) { //error handling checks for storage too because errors cant be raised from readTheme() - this will never happen (touch wood)
 
+                    }
                 })
     }
 
@@ -65,7 +65,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         dataManager.readAllExchanges()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
-                .doOnError {
+                .doOnError { //exchange rates have not been collected yet, retrieving new ones
                     getCurrencies()
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -81,9 +81,8 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError2: ${e.message}")
-                    }
 
+                    }
                 })
 
     }
@@ -98,12 +97,10 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
             dataManager.getExchangeRateService().getExchangeRates()
                     .subscribeOn(Schedulers.io())
-                    .observeOn(Schedulers.io())
                     .doOnError {
                         dataManager.saveBaseRate(rate)
                     }
                     .flatMapCompletable { json ->
-                        println("flatMapCompletable")
                         dataManager.saveAllRates(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java))
                     }
                     .andThen(dataManager.saveBaseRate(rate))
@@ -115,18 +112,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                     .flatMapCompletable { response ->
                         dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java))
                     }
-//                    .flatMap {
-//                        dataManager.getCryptoCompareService().getAllCrypto()
-//                    }
-//                    .flatMap { response ->
-//                        dataManager.saveAllCryptos(Gson().fromJson(JsonModifiers.jsonToCryptos(response), Currencies::class.java)).toObservable<Any>()
-//                    }
-//                    .flatMap {
-//                        dataManager.getCryptoCompareService().getAllExchanges()
-//                    }
-//                    .flatMap { response ->
-//                        dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java)).toObservable<Any>()
-//                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
 
@@ -140,7 +125,7 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError3: ${e.message}")
+                            view.showError()
                         }
                     })
         } else {

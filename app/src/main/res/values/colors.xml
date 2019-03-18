@@ -28,4 +28,6 @@
     <!--<color name="red">#FF2600</color>-->
     <!--<color name="green">#008F00</color>-->
 
+    <color name="theme_color">#5CC8FA</color>
+
 </resources>

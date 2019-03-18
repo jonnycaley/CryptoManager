@@ -24,6 +24,8 @@ interface GeneralContract {
         fun showVolume(vOLUME24HOUR: String, baseFiat: Rate)
         fun showGlobalData(data: Data?, baseFiat: Rate)
         fun updateSavedArticles(articles: ArrayList<Article>)
+        fun showNoInternet()
+        fun showError()
     }
 
     interface Presenter : BasePresenter {

@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jonnycaley.cryptomanager"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0.0.0"
@@ -118,6 +118,10 @@ dependencies {
 //  searchbar
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'
 
+//  bottom navigation view
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.2'
+
+//  webview
+    implementation 'com.thefinestartist:finestwebview:1.2.7'
 
 }

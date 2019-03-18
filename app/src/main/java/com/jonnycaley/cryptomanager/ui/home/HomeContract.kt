@@ -1,28 +1,29 @@
 package com.jonnycaley.cryptomanager.ui.home
 
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
+import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
+import com.jonnycaley.cryptomanager.data.model.DataBase.Holding
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
+import java.math.BigDecimal
 
 interface HomeContract {
     interface View : BaseView<Presenter> {
-        fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
-        fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate : Boolean)
-        fun hideProgressBar()
-        fun showScrollLayout()
-        fun showProgressBar()
-        fun showNoInternet()
-//        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
-        fun setIsLoading(b: Boolean)
+        fun showRefreshing()
+        fun stopRefreshing()
+        fun showNoHoldingsLayout()
+        fun showHoldingsLayout()
+        fun showHoldings(holdings: ArrayList<Holding>, prices: ArrayList<Price>, baseFiat: Rate, allFiats: ArrayList<Rate>)
+        fun showError()
+        fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal)
+        fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal)
+        fun hideRefreshing()
+        fun getToggledCurrency() : String
     }
 
     interface Presenter : BasePresenter {
-        fun getNews()
-        fun saveArticle(topArticle: Article)
-        fun removeArticle(topArticle: Article)
-        fun onRefresh()
-        fun getMoreArticles(size: Int)
-        fun onResume()
+        fun getTransactions(timePeriod : String)
+        fun clearDisposable()
+        fun updateView()
     }
 }

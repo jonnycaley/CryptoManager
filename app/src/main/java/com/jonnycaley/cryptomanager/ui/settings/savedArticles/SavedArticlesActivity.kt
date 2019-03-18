@@ -34,11 +34,16 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
+        overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_scale);
 
         setupToolbar()
 
         presenter = SavedArticlesPresenter(SavedArticlesDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun showNoArticles() {
@@ -69,6 +74,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         when (id) {
             android.R.id.home -> {
                 super.onBackPressed()
+                overridePendingTransition(R.anim.activity_open_scale, R.anim.activity_close_translate)
                 return false
             }
         }

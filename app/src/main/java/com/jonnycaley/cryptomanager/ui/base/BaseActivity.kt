@@ -1,21 +1,15 @@
 package com.jonnycaley.cryptomanager.ui.base
 
-import android.app.Application
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import android.util.Log
-import android.widget.Toast
 import com.jonnycaley.cryptomanager.R
-import com.jonnycaley.cryptomanager.ui.home.HomeFragment
+import com.jonnycaley.cryptomanager.ui.news.NewsFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
-import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
+import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
-import com.jonnycaley.cryptomanager.utils.App
 import com.jonnycaley.cryptomanager.utils.interfaces.OnThemeChangedListener
 import kotlinx.android.synthetic.main.content_home.*
 
@@ -27,7 +21,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     val fragment1: Fragment = HomeFragment()
     val fragment2: Fragment = MarketsFragment()
-    val fragment3: Fragment = PortfolioFragment()
+    val fragment3: Fragment = NewsFragment()
     val fragment4: Fragment = SettingsFragment()
 
     val fragment1TAG = "1"
@@ -58,6 +52,8 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
+        this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+
 //        fm.beginTransaction().add(R.id.frame_placeholder, fragment4, fragment4TAG).hide(fragment4).commit()
 //        fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
 //        fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
@@ -71,10 +67,13 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
         loadFragmentNew(args.fragment)
 
         navigation.enableItemShiftingMode(false)
+        navigation.enableShiftingMode(false)
+        navigation.setTextVisibility(false)
+        navigation.setPadding(0,15,0,15)
 
         navigation.onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> {
+                R.id.navigation_portfolio -> {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
                     else
@@ -94,11 +93,11 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
                     return@OnNavigationItemSelectedListener true
                 }
 
-                R.id.navigation_portfolio -> {
+                R.id.navigation_home -> {
                     if(fm.findFragmentByTag(fragment3TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
                     else
-                        (fragment3 as PortfolioFragment).onTabClicked(active == fragment3)
+                        (fragment3 as NewsFragment).onTabClicked(active == fragment3)
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
                     return@OnNavigationItemSelectedListener true
@@ -131,7 +130,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
                     fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).commit()
                 fm.beginTransaction().show(fragment1).commit()
                 active = fragment1
-                selectedItem = R.id.navigation_home
+                selectedItem = R.id.navigation_portfolio
             }
             1 -> {
                 if(fm.findFragmentByTag(fragment2TAG) == null)
@@ -145,7 +144,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
                     fm.beginTransaction().add(R.id.frame_placeholder,fragment3, fragment3TAG).commit()
                 fm.beginTransaction().show(fragment3).commit()
                 active = fragment3
-                selectedItem = R.id.navigation_portfolio
+                selectedItem = R.id.navigation_home
             }
             3 -> {
                 if(fm.findFragmentByTag(fragment4TAG) == null)
@@ -157,7 +156,6 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
         }
         navigation.selectedItemId = selectedItem
     }
-
 
 //    private fun replaceFragment(fragment: Fragment, tag: String) {
 //        if (fragment != currentFragment) {
@@ -177,7 +175,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //
 //        when (item.itemId) {
 //            R.id.navigation_home -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
+//                fragmentTransaction.replace(R.id.frame_placeholder, NewsFragment()).commit()
 //                return@OnNavigationItemSelectedListener true
 //            }
 //            R.id.navigation_markets -> {
@@ -185,7 +183,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //                return@OnNavigationItemSelectedListener true
 //            }
 //            R.id.navigation_portfolio -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
+//                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
 //                return@OnNavigationItemSelectedListener true
 //            }
 //            R.id.navigation_settings -> {
@@ -203,7 +201,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //        val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
 //        when(fragment){
 //            0 -> {
-//                this.fragment = HomeFragment().newInstance("Home")/* parcelable */
+//                this.fragment = NewsFragment().newInstance("Home")/* parcelable */
 //                selectedItem = R.id.navigation_home
 //            }
 //            1 -> {
@@ -211,7 +209,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //                selectedItem = R.id.navigation_markets
 //            }
 //            2 -> {
-//                this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
+//                this.fragment = HomeFragment().newInstance("Portfolio")/* parcelable */
 //                selectedItem = R.id.navigation_portfolio
 //            }
 //            3 -> {

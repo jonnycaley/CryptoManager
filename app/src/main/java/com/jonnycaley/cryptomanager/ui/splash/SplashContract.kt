@@ -11,6 +11,7 @@ interface SplashContract {
         fun showUsingStorage()
         fun setDarkTheme()
         fun hideProgressBar()
+        fun showError()
     }
 
     interface Presenter : BasePresenter {

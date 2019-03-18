@@ -1,20 +1,18 @@
 package com.jonnycaley.cryptomanager.ui.home
 
 import android.content.Context
-import com.jonnycaley.cryptomanager.data.CoinMarketCapService
-import com.jonnycaley.cryptomanager.data.CryptoControlService
+import com.jonnycaley.cryptomanager.data.CryptoCompareService
 import com.jonnycaley.cryptomanager.data.ExchangeRatesService
-import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
-import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
+import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.RetrofitHelper
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.prefs.UserPreferences
 import com.pacoworks.rxpaper2.RxPaperBook
-import io.reactivex.*
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-
 
 class HomeDataManager private constructor(val UserPreferences: UserPreferences) {
 
@@ -24,7 +22,7 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
 
         private lateinit var context: Context
 
-        private val TAG = "HomeDataManager"
+        private val TAG = "PortfolioData"
 
         @JvmStatic
         fun getInstance(context: Context): HomeDataManager {
@@ -36,18 +34,18 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
         }
     }
 
-    fun checkConnection(): Boolean {
-        return Utils.isNetworkConnected(context)
+    fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
+        return retrofit.create(CryptoCompareService::class.java)
     }
 
-    fun getCryptoControlService(): CryptoControlService {
-        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCONTROL_URL, Constants.CRYPTOCONTROL_NAME, Constants.CRYPTOCONTROL_KEY)
-        return retrofit.create(CryptoControlService::class.java)
+    fun getCryptoCompareService(): CryptoCompareService {
+        val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
+        return retrofit.create(CryptoCompareService::class.java)
     }
 
-    fun getCoinMarketCapService(): CoinMarketCapService {
-        val retrofit = RetrofitHelper().createRetrofit(Constants.COINMARKETCAP_URL, Constants.COINMARKETCAP_NAME, Constants.COINMARKETCAP_KEY)
-        return retrofit.create(CoinMarketCapService::class.java)
+    fun getTransactions(): Single<ArrayList<Transaction>> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
     fun getExchangeRateService(): ExchangeRatesService {
@@ -55,32 +53,15 @@ class HomeDataManager private constructor(val UserPreferences: UserPreferences) 
         return retrofit.create(ExchangeRatesService::class.java)
     }
 
-    fun getBaseFiat(): Single<Rate> {
+    fun checkConnection(): Boolean {
+        return Utils.isNetworkConnected(context)
+    }
+
+    fun readBaseFiat(): Single<Rate> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
-    fun getSavedArticles(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
+    fun readFiats(): Single<ExchangeRates> {
+        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_RATES, ExchangeRates())
     }
-
-    fun saveArticles(articles: ArrayList<Article>): Completable {
-        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_SAVED_ARTICLES, articles)
-    }
-
-    fun saveTopNews(news: ArrayList<Article>): Completable {
-        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_HOME_TOP_NEWS, news)
-    }
-
-    fun saveTop100(currencies: List<Currency>?): Completable {
-        return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_HOME_TOP_100, currencies)
-    }
-
-    fun readTop100(): Single<List<Currency>?> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_HOME_TOP_100, ArrayList())
-    }
-
-    fun readTopNews(): Single<ArrayList<Article>> {
-        return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_HOME_TOP_NEWS, ArrayList())
-    }
-
 }

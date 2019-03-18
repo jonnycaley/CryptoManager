@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data
@@ -40,8 +41,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         if (chartDisposable == null || (chartDisposable as CompositeDisposable).isDisposed) {
             chartDisposable = CompositeDisposable()
         }
-
-//        getCryptoData(view.getSymbol())
         getData()
     }
 
@@ -49,19 +48,13 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         clearChartDisposable()
         clearDisposable()
 //      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be separate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
-        getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD) //TODO: needs to be refactored
-        getCurrencyGeneralData(view.getSymbol())
-        getCurrencyNews(view.getSymbol())
-        getCurrencySocial(transformName(view.getName()))
-    }
 
-    private fun getCurrencySocial(transformName: String) {
-        if(dataManager.checkConnection()) {
-
-//            dataManager.getCryptoControlNewsService().getCurrencyNews()
-
+        if (dataManager.checkConnection()) {
+            getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD) //TODO: needs to be refactored
+            getCurrencyGeneralData(view.getSymbol())
+            getCurrencyNews(view.getSymbol())
         } else {
-
+            view.showNoInternet()
         }
     }
 
@@ -71,13 +64,16 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
     private fun getCurrencyGeneralData(symbol: String) {
 
-        var data : Data? = null
+        var data: Data? = null
 
-        if(dataManager.checkConnection()){
+        if (dataManager.checkConnection()) {
             dataManager.getCryptoCompareServiceWithScalars().getGeneralData(symbol, "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
-                    .map { json -> JsonModifiers.jsonToGeneral(json) }
+                    .map { json ->
+                        println(json)
+                        JsonModifiers.jsonToGeneral(json)
+                    }
                     .map { json -> data = Gson().fromJson(json, Data::class.java) }
                     .observeOn(Schedulers.io())
                     .flatMapSingle { dataManager.getBaseFiat() }
@@ -97,12 +93,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
-                            view.showGeneralDataError()
+                            view.hideRefreshing()
+                            view.showError()
                             Log.i(TAG, "onError: ${e.message}")
                         }
                     })
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
@@ -128,14 +126,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 })
     }
 
-    override fun getCurrencyChart(chart : Chart, symbol: String, conversion : String) {
+    override fun getCurrencyChart(chart: Chart, symbol: String, conversion: String) {
 
         if (dataManager.checkConnection()) {
 
-            val getGraph : Observable<HistoricalData> = dataManager.getCryptoCompareService().getCurrencyGraph(chart.measure, symbol, conversion, chart.limit.toString(), chart.aggregate.toString())
-            val getBaseFiat : Observable<Rate> = dataManager.getBaseFiat().toObservable()
+            val getGraph: Observable<HistoricalData> = dataManager.getCryptoCompareService().getCurrencyGraph(chart.measure, symbol, conversion, chart.limit.toString(), chart.aggregate.toString())
+            val getBaseFiat: Observable<Rate> = dataManager.getBaseFiat().toObservable()
 
-            var mBaseFiat : Rate? = null
+            var mBaseFiat: Rate? = null
 
             Observable.zip(getGraph, getBaseFiat, BiFunction<HistoricalData, Rate, HistoricalData> { graphData, baseFiat ->
                 mBaseFiat = baseFiat
@@ -146,8 +144,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     .subscribe(object : Observer<HistoricalData> {
                         override fun onComplete() {
                         }
+
                         override fun onNext(graphData: HistoricalData) {
-                            if(graphData.data?.isEmpty() == true) {
+                            if (graphData.data?.isEmpty() == true) {
                                 //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
                             } else {
 
@@ -165,11 +164,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideRefreshing()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
@@ -177,14 +179,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
         if (dataManager.checkConnection()) {
 
-            val getSavedArticles : Observable<ArrayList<Article>> = dataManager.getSavedArticles().toObservable()
-            val getAllCrypto : Observable<com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies> = dataManager.getAllCryptos().toObservable()
+            val getSavedArticles: Observable<ArrayList<Article>> = dataManager.getSavedArticles().toObservable()
+            val getAllCrypto: Observable<com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies> = dataManager.getAllCryptos().toObservable()
 
             var savedArticles = ArrayList<Article>()
 
             Observable.zip(getSavedArticles, getAllCrypto, BiFunction<ArrayList<Article>, com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies, String> { articles, allCrypto ->
                 savedArticles = articles
-                allCrypto.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase()}?.get(0)?.coinName?.toLowerCase()?.replace(" ", "-").toString()
+                allCrypto.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase() }?.get(0)?.coinName?.toLowerCase()?.replace(" ", "-").toString()
             })
                     .flatMap { cryptoName -> dataManager.getCryptoControlNewsService().getCurrencyNews(cryptoName) }
                     .subscribeOn(Schedulers.io())
@@ -202,18 +204,21 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideRefreshing()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
-
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
     override fun saveArticle(topArticle: Article) {
         dataManager.getSavedArticles()
-                .map { savedArticles -> savedArticles.add(topArticle)
+                .map { savedArticles ->
+                    savedArticles.add(topArticle)
                     return@map savedArticles
                 }
                 .flatMapCompletable { savedArticles -> dataManager.saveArticles(savedArticles) }
@@ -232,7 +237,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         println("onError: ${e.message}")
                     }
                 })
-
     }
 
     override fun removeArticle(topArticle: Article) {
@@ -246,6 +250,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     override fun onComplete() {
 
                     }
+
                     override fun onSubscribe(d: Disposable) {
                         println("onSubscribe")
                         compositeDisposable?.add(d)

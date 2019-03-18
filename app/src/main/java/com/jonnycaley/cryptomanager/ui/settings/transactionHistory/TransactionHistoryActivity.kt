@@ -48,7 +48,7 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
     }
 
     override fun showNoTransactionsLayout() {
-
+        //TODO
     }
 
     override fun onResume() {

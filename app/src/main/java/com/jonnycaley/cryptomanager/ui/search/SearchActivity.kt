@@ -11,7 +11,7 @@ import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
+import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -99,10 +99,10 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
     override fun onQueryTextChange(query: String?): Boolean {
         when(args.transactionString){
-            PortfolioFragment.CURRENCY_STRING -> {
+            HomeFragment.CURRENCY_STRING -> {
                 presenter.showCurrencies(query?.trim())
             }
-            PortfolioFragment.FIAT_STRING -> {
+            HomeFragment.FIAT_STRING -> {
                 presenter.showFiats(query?.trim())
             }
         }

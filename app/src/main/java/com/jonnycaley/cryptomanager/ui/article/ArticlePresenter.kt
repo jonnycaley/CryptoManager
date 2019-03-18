@@ -20,7 +20,6 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-
         getSavedArticles()
     }
 
@@ -38,7 +37,7 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError: ${e.message}") //no on error handling as it is not worth it
                     }
                 })
     }
@@ -104,5 +103,4 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
     companion object {
         val TAG = "ArticlePresenter"
     }
-
 }

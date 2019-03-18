@@ -23,9 +23,9 @@
     <View
         android:id="@+id/navigation_border"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         android:layout_above="@+id/navigation"
-        android:background="?attr/navigationBorder"/>
+        android:background="?attr/textcolorsecondary" />
 
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/navigation"

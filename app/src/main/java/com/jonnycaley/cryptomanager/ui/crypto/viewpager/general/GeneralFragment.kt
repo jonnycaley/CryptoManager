@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -84,7 +85,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     var mLayoutManager : LinearLayoutManager? = null
 
     override fun updateSavedArticles(articles: ArrayList<Article>) {
-
         if(mLayoutManager != null){
             articlesVerticalAdapter.savedArticles = articles
             articlesVerticalAdapter.notifyDataSetChanged()
@@ -109,7 +109,26 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         presenter.attachView()
     }
 
+    override fun showNoInternet() {
+        showSnackBar(resources.getString(R.string.internet_required))
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    lateinit var snackBar : Snackbar
+
+
+    fun showSnackBar(message: String) {
+
+        snackBar = Snackbar.make(scrollLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry) { presenter.getData() }
+        snackBar.show()
+    }
+
     override fun onRefresh() {
+        snackBar.dismiss()
         presenter.getData()
     }
 
@@ -127,7 +146,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
         val volume = vOLUME24HOUR?.toBigDecimal()?.times(rate)
 
-        val formattedString = formatPrice(volume)
+        val formattedString = formatPrice(volume, "#,###,###")
 
         text24hVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$formattedString"
     }
@@ -139,9 +158,9 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
         textCirculatingSupply.text = DecimalFormat("#,###,###").format(data?.uSD?.sUPPLY?.toDouble())
 
-        textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.mKTCAP?.toBigDecimal()?.times(rate))}"
+        textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.mKTCAP?.toBigDecimal()?.times(rate), "#,###,###")}"
 
-        text24hVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.vOLUME24HOUR?.toBigDecimal()?.times(rate))}"
+        text24hVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.tOTALVOLUME24HTO?.toBigDecimal()?.times(rate), "#,###,###")}"
 
         text24hHigh.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(data?.uSD?.hIGH24HOUR?.toBigDecimal()?.times(rate)?.times(rate)?.toDouble())}"
 
@@ -196,7 +215,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
             when {
                 price < 0.00000001 -> text =  "0.00000001"
                 price < 1 -> text =  String.format("%.8f", price)
-                else -> text = String.format("%.2f", price)
+                else -> text = formatPrice(String.format("%.2f", price).toBigDecimal(), "#,###,###.##")
             }
         } else {
             text = "?"
@@ -205,9 +224,9 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     }
 
 
-    fun formatPrice(price: BigDecimal?): String {
+    fun formatPrice(price: BigDecimal?, format : String): String {
 
-        val formatter = DecimalFormat("#,###,###")
+        val formatter = DecimalFormat(format)
         val formattedString = formatter.format(price)
 
         return formattedString
@@ -233,18 +252,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         else
             priceText = "-" + Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " (-"
 
-        priceChange
-
-        Log.i(TAG + "HERE: ", "${close}")
-        Log.i(TAG + "HERE: ", "${open}")
-        Log.i(TAG + "HERE: ", "${((close - open))}")
-
-
-
-        var dec = ((close - open).divide(open, 4, RoundingMode.HALF_UP))
-
-
-        Log.i(TAG + "H: ", dec.toString())
+        val dec = ((close - open).divide(open, 4, RoundingMode.HALF_UP))
 
         if (open != 0.toBigDecimal()) {
             change.text = priceText + formatPercentage(((close - open).divide(open, 8, RoundingMode.HALF_UP) * 100.toBigDecimal())) + ")"
@@ -393,9 +401,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         xAxis.gridColor = R.attr.textcolor
         xAxis.setLabelCount(6, false)
         xAxis.textColor = R.attr.textcolor
-//        xAxis.axisLineColor = R.color.red
-//        xAxis.setDrawAxisLine(false)
-
         val yAxisLeft = candleStickChart.axisLeft
         yAxisLeft.setDrawGridLines(true)
         yAxisLeft.gridLineWidth = 0.5F
@@ -446,9 +451,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
         val dataSet = CandleDataSet(entries, "Label")
 
-//        dataSet.setDrawIcons(false)
         dataSet.axisDependency = YAxis.AxisDependency.LEFT
-//        dataSet.shadowColor = Color.DKGRAY
         dataSet.shadowColorSameAsCandle = true
         dataSet.decreasingColor = resources.getColor(R.color.red)
         dataSet.decreasingPaintStyle = Paint.Style.FILL
@@ -472,12 +475,8 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
     private fun setChartMinMax(lowest: Float, highest: Float, chart: Chart) {
 
-
         val difference = (highest - lowest)
         val differenceBigDecimal = (highest.toBigDecimal() - lowest.toBigDecimal())
-
-        Log.i(TAG, "difference: $difference")
-
 
         val a = 30F
         val b = 5
@@ -512,23 +511,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
                 candleStickChart.axisLeft.axisMinimum = 0F
         }
     }
-
-//    private fun getLabelCount(lowest: Float, highest: Float): Int {
-//
-//        var difference = highest - lowest
-//
-//        var multiplesOf = 1
-//
-//        when {
-//            difference < 71F -> multiplesOf = 10
-//            difference < 120F -> multiplesOf = 20
-//            difference < 1000F -> multiplesOf = 100
-//            else -> multiplesOf = 200
-//        }
-//
-//        (roundToHighest(difference, multiplesOf).toInt() / multiplesOf) + 2
-//
-//    }
 
     private fun roundToLowest(lowest: Float, multiplesOf: Int): Float {
         var lowest10 = ((lowest.toInt() + (multiplesOf / 2)) / multiplesOf) * multiplesOf
@@ -583,38 +565,6 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         val aggregate3M = 3
         val aggregate6M = 6
         val aggregate1Y = 12
-
-//        val limit1H = 30
-//        val aggregate1H = 2
-//        val timeMeasure1H = "minute"
-//
-//        val limit1D = 30
-//        val aggregate1D = 1
-//        val timeMeasure1D = "hour"
-//
-//        val limit3D = 30
-//        val aggregate3D = 3
-//        val timeMeasure3D = "hour"
-//
-//        val limit1W = 30
-//        val aggregate1W = 6
-//        val timeMeasure1W = "hour"
-//
-//        val limit1M = 30
-//        val aggregate1M = 1
-//        val timeMeasure1M = "day"
-//
-//        val limit3M = 30
-//        val aggregate3M = 3
-//        val timeMeasur3M = "day"
-//
-//        val limit6M = 30
-//        val aggregate6M = 6
-//        val timeMeasure6M = "day"
-//
-//        val limit1Y = 30
-//        val aggregate1Y = 12
-//        val timeMeasure1Y = "day"
 
         @JvmStatic
         fun newInstance(param1: String) =
