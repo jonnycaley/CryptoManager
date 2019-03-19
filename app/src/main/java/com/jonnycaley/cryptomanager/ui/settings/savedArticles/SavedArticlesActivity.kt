@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_saved_articles.*
 
 class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
@@ -24,17 +25,17 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_articles)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
-        overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_scale);
+        overridePendingTransition(R.anim.new_activity_open,R.anim.old_activity_close)
 
         setupToolbar()
 
@@ -74,7 +75,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         when (id) {
             android.R.id.home -> {
                 super.onBackPressed()
-                overridePendingTransition(R.anim.activity_open_scale, R.anim.activity_close_translate)
+                overridePendingTransition(R.anim.old_activity_open, R.anim.new_activity_close)
                 return false
             }
         }

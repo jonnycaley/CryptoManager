@@ -8,7 +8,13 @@ interface CryptoContract {
     interface View : BaseView<Presenter> {
         fun getSymbol(): String
         fun loadTheme(info: GeneralInfo)
+        fun setupViewPager()
+        fun showNoInternet()
+        fun connectionAvailable()
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun checkInternet(): Boolean
+        fun getCoinColorScheme()
+    }
 }

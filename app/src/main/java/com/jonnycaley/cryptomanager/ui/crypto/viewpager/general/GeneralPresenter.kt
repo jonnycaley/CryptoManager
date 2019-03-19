@@ -50,16 +50,14 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 //      these two could be done together with map/flatmap. HOWEVER, due to the fact i need the disposable to be separate so i can dispose of the chart if a new time frame is clicked im keeping the seperate
 
         if (dataManager.checkConnection()) {
+            view.notifyActivityOfInternet()
             getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD) //TODO: needs to be refactored
             getCurrencyGeneralData(view.getSymbol())
             getCurrencyNews(view.getSymbol())
         } else {
+            view.hideRefreshing()
             view.showNoInternet()
         }
-    }
-
-    private fun transformName(name: String): String {
-        return name.replace(" ", "-")
     }
 
     private fun getCurrencyGeneralData(symbol: String) {
@@ -84,7 +82,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onNext(baseFiat: Rate) {
-
                             view.showGlobalData(data, baseFiat)
                         }
 
@@ -94,7 +91,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.hideRefreshing()
-                            view.showError()
                             Log.i(TAG, "onError: ${e.message}")
                         }
                     })
@@ -165,7 +161,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.hideRefreshing()
-                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
@@ -188,7 +183,11 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 savedArticles = articles
                 allCrypto.data?.filter { it.symbol?.toLowerCase() == symbol.toLowerCase() }?.get(0)?.coinName?.toLowerCase()?.replace(" ", "-").toString()
             })
-                    .flatMap { cryptoName -> dataManager.getCryptoControlNewsService().getCurrencyNews(cryptoName) }
+                    .flatMap { cryptoName ->
+                        if(cryptoName == "xrp"){
+                            dataManager.getCryptoControlNewsService().getCurrencyNews("ripple")
+                        } else
+                            dataManager.getCryptoControlNewsService().getCurrencyNews(cryptoName) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : Observer<Array<Article>> {
@@ -205,8 +204,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.hideRefreshing()
-                            view.showError()
-                            println("onError: ${e.message}")
+                            println("onError: ${e.message}") //dont show an error cause this can happen and is therefore not worth notifying 'no news obtained'
                         }
                     })
         } else {
@@ -248,7 +246,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-
                     }
 
                     override fun onSubscribe(d: Disposable) {

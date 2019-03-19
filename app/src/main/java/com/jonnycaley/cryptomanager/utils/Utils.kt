@@ -7,11 +7,14 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
+import android.graphics.Color
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatDelegate
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.jonnycaley.cryptomanager.R
+import com.thefinestartist.finestwebview.FinestWebView
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
 
@@ -21,6 +24,25 @@ object Utils {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork = cm.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    }
+
+    fun webViewBuilder(context : Context): FinestWebView.Builder {
+        val builder = FinestWebView.Builder(context)
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            builder.statusBarColor(context.resources.getColor(R.color.black))
+            builder.progressBarColor(context.resources.getColor(R.color.black))
+            builder.menuColor(context.resources.getColor(R.color.black))
+            builder.toolbarColor(context.resources.getColor(R.color.black))
+            builder.menuTextColor(context.resources.getColor(R.color.white))
+            builder.iconDefaultColor(context.resources.getColor(R.color.white))
+            builder.titleColor(context.resources.getColor(R.color.white))
+            builder.menuTextColor(context.resources.getColor(R.color.white))
+        } else {
+            builder.statusBarColor(Color.parseColor("#ffffff"))
+        }
+//                    builder.setCloseAnimations(R.anim.old_activity_open, R.anim.new_activity_close)
+        builder.setCustomAnimations(R.anim.new_activity_open_up, R.anim.activity_no_animation, R.anim.activity_no_animation, R.anim.new_activity_close_down)
+        return builder
     }
 
     fun getTimeFrom(date: String?): String {
@@ -420,6 +442,18 @@ object Utils {
         val format = SimpleDateFormat(Constants.dateFormat)
 
         return format.format(date)
+    }
+
+    fun isDarkTheme(): Boolean {
+        return AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+    }
+
+    fun setDarkMode() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+
+    fun setLightMode() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     val TAG = "Utils"

@@ -25,7 +25,7 @@ interface GeneralContract {
         fun showGlobalData(data: Data?, baseFiat: Rate)
         fun updateSavedArticles(articles: ArrayList<Article>)
         fun showNoInternet()
-        fun showError()
+        fun notifyActivityOfInternet()
     }
 
     interface Presenter : BasePresenter {

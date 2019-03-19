@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.content.DialogInterface
 import android.util.Log
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_update_fiat_transaction.*
 
 class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -61,14 +62,14 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_fiat_transaction)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
         }

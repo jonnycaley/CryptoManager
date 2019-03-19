@@ -10,13 +10,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Switch
-import android.widget.Toast
+import android.widget.*
 import com.jonnycaley.cryptomanager.BuildConfig
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
 import kotlin.collections.ArrayList
@@ -40,7 +40,7 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+        if(Utils.isDarkTheme())
             context?.setTheme(R.style.darktheme)
         else
             context?.setTheme(R.style.AppTheme)
@@ -53,14 +53,15 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
         super.onViewCreated(view, savedInstanceState)
         //view setup should occur here
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+        if(Utils.isDarkTheme()) {
             switchTheme.isChecked = true
+        }
 
         switchTheme.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                Utils.setDarkMode()
             } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                Utils.setLightMode()
             }
             presenter.saveThemePreference(isChecked)
         }

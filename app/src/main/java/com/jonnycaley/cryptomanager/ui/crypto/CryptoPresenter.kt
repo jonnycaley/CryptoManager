@@ -9,7 +9,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-
 class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContract.View) : CryptoContract.Presenter{
 
     var compositeDisposable: CompositeDisposable? = null
@@ -26,9 +25,9 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
         getCoinColorScheme()
     }
 
-    private fun getCoinColorScheme() {
-        if(dataManager.checkConnection()){
+    override fun getCoinColorScheme() {
 
+        if(dataManager.checkConnection()){
             dataManager.getCryptoCompareService().getGeneralInfo(view.getSymbol(), "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -51,8 +50,13 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
                     })
 
         } else {
+//            view.showNoInternet()
             //TODO: GET IMAGE FROM STORAGE SLOOOOOOOOWER
         }
+    }
+
+    override fun checkInternet(): Boolean {
+        return dataManager.checkConnection()
     }
 
 

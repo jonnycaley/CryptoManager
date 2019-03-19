@@ -59,7 +59,6 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                     override fun onError(e: Throwable) {
                         println("onError")
                     }
-
                 })
     }
 

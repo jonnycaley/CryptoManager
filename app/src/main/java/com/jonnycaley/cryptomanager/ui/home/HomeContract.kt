@@ -19,6 +19,9 @@ interface HomeContract {
         fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal)
         fun hideRefreshing()
         fun getToggledCurrency() : String
+        fun showNoInternet()
+        fun isNotColdStartup()
+        fun hideInternetRequiredLayout()
     }
 
     interface Presenter : BasePresenter {

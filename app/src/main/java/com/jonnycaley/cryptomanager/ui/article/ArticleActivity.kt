@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.Toast
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton
 import com.like.OnLikeListener
 import kotlinx.android.synthetic.main.activity_article_detail.*
@@ -36,14 +37,14 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
 
             likeButton.setLikeDrawable(resources.getDrawable(R.drawable.bookmark_fill_black))

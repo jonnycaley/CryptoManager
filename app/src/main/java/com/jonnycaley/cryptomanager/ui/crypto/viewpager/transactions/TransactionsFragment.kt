@@ -2,10 +2,10 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +31,8 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
     val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
 
     val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
+
+    val nestedScrollView by lazy { mView.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +75,6 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
     override fun onResume() {
         super.onResume()
         presenter.onResume() //notice how i don't call the presenter.getCryptoPrices() here as it is quite unnecessary to load a new set of prices when this would only run when coming from a transaction detail page which is more than likely not long after the prices are obtained in the first place therefore not worth the loading time wait again for update
-        Log.i(TAG, "onResume()")
     }
 
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {

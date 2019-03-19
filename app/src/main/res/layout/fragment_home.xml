@@ -1,257 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.SwipeRefreshLayout android:id="@+id/swipelayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="?attr/backgroundcolor">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+    <include
+        android:id="@+id/layout_no_internet"
+        layout="@layout/no_internet"
+        android:visibility="gone" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
+        android:background="?attr/backgroundcolor">
 
-        <LinearLayout
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/default_margin">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Portfolio Balance"
-                android:gravity="center"
-                android:textColor="?attr/textcolor"/>
-
-            <TextView
-                android:id="@+id/text_balance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="$0"
-                android:gravity="center"
-                android:textSize="@dimen/extra_large_text_size"
-                android:textColor="?attr/textcolor"/>
-
-            <TextView
-                android:id="@+id/text_change"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="$0"
-                android:gravity="center"
-                android:textSize="@dimen/large_text_size"
-                android:textColor="?attr/textcolor"/>
-
-
-            <co.ceryle.radiorealbutton.RadioRealButtonGroup
-                android:id="@+id/radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                app:rrbg_animateTexts_enter="overshoot"
-                app:rrbg_animateTexts_scale="1.3"
-                app:rrbg_animateTexts_textColorFrom="@color/text_grey"
-                app:rrbg_animateTexts_textColorTo="@color/black"
-                app:rrbg_animateTexts_textColor_duration="500"
-                app:rrbg_borderColor="?attr/cardbackground"
-                app:rrbg_borderSize="1dp"
-                app:rrbg_bottomLineRadius="2dp"
-                app:rrbg_bottomLineSize="1dp"
-                app:rrbg_dividerColor="@color/black"
-                app:rrbg_dividerPadding="12dp"
-                app:rrbg_dividerRadius="2dp"
-                app:rrbg_dividerSize="0dp"
-                app:rrbg_enableDeselection="false"
-                app:rrbg_radius="2dp"
-                app:rrbg_selectorAboveOfBottomLine="false"
-                app:rrbg_selectorAnimationType="translate_y"
-                app:rrbg_selectorColor="?attr/textcolor"
-                app:rrbg_selectorRadius="0dp"
-                app:rrbg_selectorSize="2dp"
-                app:rrbg_backgroundColor="?attr/cardbackground">
-
-                <co.ceryle.radiorealbutton.RadioRealButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:rrb_checked="true"
-                    app:rrb_drawableGravity="left"
-                    app:rrb_drawableHeight="36dp"
-                    app:rrb_drawablePadding="4dp"
-                    app:rrb_drawableWidth="36dp"
-                    app:rrb_selectorColor="@color/black"
-                    app:rrb_text="1H"
-                    app:rrb_textColor="?attr/textcolorsecondary"
-                    app:rrb_textGravity="center"
-                    app:rrb_textSize="10sp"
-                    app:rrb_textColorTo="?attr/textcolor"/>
-
-                <co.ceryle.radiorealbutton.RadioRealButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:rrb_drawableGravity="top"
-                    app:rrb_drawableHeight="36dp"
-                    app:rrb_drawablePadding="4dp"
-                    app:rrb_drawableWidth="36dp"
-                    app:rrb_selectorColor="@color/black"
-                    app:rrb_text="1D"
-                    app:rrb_textColor="?attr/textcolorsecondary"
-                    app:rrb_textGravity="center"
-                    app:rrb_textSize="10sp"
-                    app:rrb_textColorTo="?attr/textcolor" />
-
-                <co.ceryle.radiorealbutton.RadioRealButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:rrb_drawableGravity="right"
-                    app:rrb_drawableHeight="36dp"
-                    app:rrb_drawablePadding="4dp"
-                    app:rrb_drawableWidth="36dp"
-                    app:rrb_selectorColor="@color/black"
-                    app:rrb_text="1W"
-                    app:rrb_textColor="?attr/textcolorsecondary"
-                    app:rrb_textFillSpace="true"
-                    app:rrb_textGravity="center"
-                    app:rrb_textSize="10sp"
-                    app:rrb_textColorTo="?attr/textcolor" />
-
-                <co.ceryle.radiorealbutton.RadioRealButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:rrb_drawableGravity="right"
-                    app:rrb_drawableHeight="36dp"
-                    app:rrb_drawablePadding="4dp"
-                    app:rrb_drawableWidth="36dp"
-                    app:rrb_selectorColor="@color/black"
-                    app:rrb_text="1M"
-                    app:rrb_textColor="?attr/textcolorsecondary"
-                    app:rrb_textFillSpace="true"
-                    app:rrb_textGravity="center"
-                    app:rrb_textSize="10sp"
-                    app:rrb_textColorTo="?attr/textcolor" />
-
-                <co.ceryle.radiorealbutton.RadioRealButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:rrb_drawableGravity="right"
-                    app:rrb_drawableHeight="36dp"
-                    app:rrb_drawablePadding="4dp"
-                    app:rrb_drawableWidth="36dp"
-                    app:rrb_rippleColor="@color/black"
-                    app:rrb_selectorColor="@color/black"
-                    app:rrb_text="All"
-                    app:rrb_textColor="?attr/textcolorsecondary"
-                    app:rrb_textFillSpace="true"
-                    app:rrb_textGravity="center"
-                    app:rrb_textSize="10sp"
-                    app:rrb_textColorTo="?attr/textcolor" />
-
-            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="100">
-
-                <Button
-                    android:id="@+id/button_add_fiat"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="50"
-                    android:text="Add Fiat"
-                    android:textColor="?attr/textcolor" />
-
-
-                <Button
-                    android:id="@+id/button_add_currency"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="50"
-                    android:text="Add currency"
-                    android:textColor="?attr/textcolor"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_portfolio_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/default_margin"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/portfolio_empty"
-                    android:textAlignment="center"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Portfolio Balance"
                     android:textColor="?attr/textcolor" />
 
                 <TextView
+                    android:id="@+id/text_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="$0"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="@dimen/extra_large_text_size" />
+
+                <TextView
+                    android:id="@+id/text_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="$0"
+                    android:textColor="?attr/textcolor"
+                    android:textSize="@dimen/large_text_size" />
+
+
+                <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    app:rrbg_animateTexts_enter="overshoot"
+                    app:rrbg_animateTexts_scale="1.3"
+                    app:rrbg_animateTexts_textColorFrom="@color/text_grey"
+                    app:rrbg_animateTexts_textColorTo="@color/black"
+                    app:rrbg_animateTexts_textColor_duration="500"
+                    app:rrbg_backgroundColor="?attr/cardbackground"
+                    app:rrbg_borderColor="?attr/cardbackground"
+                    app:rrbg_borderSize="1dp"
+                    app:rrbg_bottomLineRadius="2dp"
+                    app:rrbg_bottomLineSize="1dp"
+                    app:rrbg_dividerColor="@color/black"
+                    app:rrbg_dividerPadding="12dp"
+                    app:rrbg_dividerRadius="2dp"
+                    app:rrbg_dividerSize="0dp"
+                    app:rrbg_enableDeselection="false"
+                    app:rrbg_radius="2dp"
+                    app:rrbg_selectorAboveOfBottomLine="false"
+                    app:rrbg_selectorAnimationType="translate_y"
+                    app:rrbg_selectorColor="?attr/textcolor"
+                    app:rrbg_selectorRadius="0dp"
+                    app:rrbg_selectorSize="2dp">
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_checked="true"
+                        app:rrb_drawableGravity="left"
+                        app:rrb_drawableHeight="36dp"
+                        app:rrb_drawablePadding="4dp"
+                        app:rrb_drawableWidth="36dp"
+                        app:rrb_selectorColor="@color/black"
+                        app:rrb_text="1H"
+                        app:rrb_textColor="?attr/textcolorsecondary"
+                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textGravity="center"
+                        app:rrb_textSize="10sp" />
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_drawableGravity="top"
+                        app:rrb_drawableHeight="36dp"
+                        app:rrb_drawablePadding="4dp"
+                        app:rrb_drawableWidth="36dp"
+                        app:rrb_selectorColor="@color/black"
+                        app:rrb_text="1D"
+                        app:rrb_textColor="?attr/textcolorsecondary"
+                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textGravity="center"
+                        app:rrb_textSize="10sp" />
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_drawableGravity="right"
+                        app:rrb_drawableHeight="36dp"
+                        app:rrb_drawablePadding="4dp"
+                        app:rrb_drawableWidth="36dp"
+                        app:rrb_selectorColor="@color/black"
+                        app:rrb_text="1W"
+                        app:rrb_textColor="?attr/textcolorsecondary"
+                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textFillSpace="true"
+                        app:rrb_textGravity="center"
+                        app:rrb_textSize="10sp" />
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_drawableGravity="right"
+                        app:rrb_drawableHeight="36dp"
+                        app:rrb_drawablePadding="4dp"
+                        app:rrb_drawableWidth="36dp"
+                        app:rrb_selectorColor="@color/black"
+                        app:rrb_text="1M"
+                        app:rrb_textColor="?attr/textcolorsecondary"
+                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textFillSpace="true"
+                        app:rrb_textGravity="center"
+                        app:rrb_textSize="10sp" />
+
+                    <co.ceryle.radiorealbutton.RadioRealButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:rrb_drawableGravity="right"
+                        app:rrb_drawableHeight="36dp"
+                        app:rrb_drawablePadding="4dp"
+                        app:rrb_drawableWidth="36dp"
+                        app:rrb_rippleColor="@color/black"
+                        app:rrb_selectorColor="@color/black"
+                        app:rrb_text="All"
+                        app:rrb_textColor="?attr/textcolorsecondary"
+                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textFillSpace="true"
+                        app:rrb_textGravity="center"
+                        app:rrb_textSize="10sp" />
+
+                </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <Button
+                        android:id="@+id/button_add_fiat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:text="Add Fiat"
+                        android:textColor="?attr/textcolor" />
+
+
+                    <Button
+                        android:id="@+id/button_add_currency"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:text="Add currency"
+                        android:textColor="?attr/textcolor" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_portfolio_empty"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="@string/portfolio_empty_tap"
-                    android:textAlignment="center"
-                    android:textColor="?attr/textcolor" />
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/default_margin"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/portfolio_empty"
+                        android:textAlignment="center"
+                        android:textColor="?attr/textcolor" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/portfolio_empty_tap"
+                        android:textAlignment="center"
+                        android:textColor="?attr/textcolor" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_portfolio_not_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_margin">
+
+                        <TextView
+                            android:id="@+id/text_sort_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingRight="@dimen/default_margin"
+                            android:text="Name"
+                            android:textColor="?attr/textcolor" />
+
+
+                        <TextView
+                            android:id="@+id/text_sort_holdings"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/text_sort_name"
+                            android:text="Holdings"
+                            android:textColor="?attr/textcolor" />
+
+                        <TextView
+                            android:id="@+id/text_sort_change"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Change"
+                            android:textColor="?attr/textcolor" />
+
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:nestedScrollingEnabled="false" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_portfolio_not_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+        </android.support.v4.widget.NestedScrollView>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_margin">
+        <!--</com.reginald.swiperefresh.CustomSwipeRefreshLayout>-->
 
-                    <TextView
-                        android:id="@+id/text_sort_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Name"
-                        android:textColor="?attr/textcolor"
-                        android:paddingRight="@dimen/default_margin"/>
-
-
-                    <TextView
-                        android:id="@+id/text_sort_holdings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Holdings"
-                        android:textColor="?attr/textcolor"
-                        android:layout_toEndOf="@id/text_sort_name"/>
-
-                    <TextView
-                        android:id="@+id/text_sort_change"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Change"
-                        android:textColor="?attr/textcolor"
-                        android:layout_alignParentEnd="true"/>
-
-                </RelativeLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="@dimen/default_margin"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
-
-<!--</com.reginald.swiperefresh.CustomSwipeRefreshLayout>-->
-
-</android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

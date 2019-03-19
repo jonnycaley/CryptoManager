@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashActivity">
+
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.splash.SplashActivity"
+        android:label="SplashActivity"
+        tools:layout="@layout/activity_splash"/>
+    <activity
+        android:id="@+id/baseActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.base.BaseActivity"
+        android:label="activity_base"
+        tools:layout="@layout/activity_base" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_articleActivity"
+            app:destination="@id/articleActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/marketsFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.markets.MarketsFragment"
+        android:label="MarketsFragment"
+        tools:layout="@layout/fragment_markets" />
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.news.NewsFragment"
+        android:label="NewsFragment"
+        tools:layout="@layout/fragment_news" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_transactionHistoryActivity"
+            app:destination="@id/transactionHistoryActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/transactionHistoryActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity"
+        android:label="TransactionHistoryActivity"
+        tools:layout="@layout/activity_transaction_history" />
+    <activity
+        android:id="@+id/fiatTransactionActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionActivity"
+        android:label="activity_update_fiat_transaction"
+        tools:layout="@layout/activity_update_fiat_transaction" />
+    <activity
+        android:id="@+id/articleActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.article.ArticleActivity"
+        android:label="activity_article_detail"
+        tools:layout="@layout/activity_article_detail" />
+    <activity
+        android:id="@+id/cryptoTransactionActivity"
+        android:name="com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity"
+        android:label="activity_update_crypto_transaction"
+        tools:layout="@layout/activity_update_crypto_transaction" />
+    <fragment
+        android:id="@+id/transactionsFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.TransactionsFragment"
+        android:label="TransactionsFragment"
+        tools:layout="@layout/fragment_transactions"/>
+</navigation>

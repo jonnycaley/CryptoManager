@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/image_no_internet"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="80dp"
+            android:src="@drawable/no_internet_black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No internet available"
+            android:textColor="?attr/textcolor"
+            android:layout_marginBottom="20dp"
+            android:textSize="25dp"/>
+
+        <TextView
+            android:id="@+id/text_try_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try again"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="?attr/colorPrimary"
+            android:paddingTop="@dimen/extra_small_margin"
+            android:paddingBottom="6dp"
+            android:paddingHorizontal="@dimen/large_text_size"
+            android:background="@drawable/ripple" />
+
+    </LinearLayout>
+
+</RelativeLayout>

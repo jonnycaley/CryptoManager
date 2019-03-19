@@ -1,7 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.crypto
 
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -18,17 +17,13 @@ import com.jonnycaley.cryptomanager.ui.crypto.viewpager.general.GeneralFragment
 import com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.TransactionsFragment
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.activity_crypto.*
-import android.widget.Toast
 import android.support.v7.graphics.Palette
-import android.R.attr.bitmap
-import android.graphics.Color
-import android.graphics.PorterDuff
 import com.squareup.picasso.Callback
-import android.graphics.drawable.BitmapDrawable
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatDelegate
 import android.widget.TextView
+import com.jonnycaley.cryptomanager.utils.Utils
 import java.util.*
 
 class CryptoActivity : AppCompatActivity(), CryptoContract.View {
@@ -45,24 +40,28 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
 
-        setupToolbar()
         setupViewPager()
-
-        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.colorPrimary)) //Set the initial tab color to background so you cant see it so it looks neat when loading in
+        setupToolbar()
 
         presenter = CryptoPresenter(CryptoDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    override fun connectionAvailable() {
+        if(!isPicassoLoaded){
+            presenter.getCoinColorScheme()
+        }
     }
 
     override fun getSymbol(): String {
@@ -71,7 +70,27 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         return args.currencySymbol
     }
 
+    override fun showNoInternet() {
+        showSnackBar(resources.getString(R.string.internet_required))
+    }
+
+
+    var snackBar : Snackbar? = null
+
+    fun showSnackBar(message: String) {
+
+        snackBar = Snackbar.make(viewPager, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry) {
+                    presenter.getCoinColorScheme()
+                }
+        snackBar.let { it?.show() }
+    }
+
+    var isPicassoLoaded = false
+
     override fun loadTheme(info: GeneralInfo) {
+
+        isPicassoLoaded = true
 
         if(info.data?.isNotEmpty() == true) {
 
@@ -109,10 +128,15 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         return if (swatches.size > 0) swatches[0].rgb else R.color.colorPrimary
     }
 
-    private fun setupViewPager() {
-        val myPagerAdapter = MyPagerAdapter(supportFragmentManager)
+    var myPagerAdapter : CryptoActivity.MyPagerAdapter? = null
+
+    override fun setupViewPager() {
+
+        myPagerAdapter = MyPagerAdapter(supportFragmentManager)
         viewPager.adapter = myPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
+        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.colorPrimary)) //Set the initial tab color to background so you cant see it so it looks neat when loading in
+
     }
 
     private fun setupToolbar() {

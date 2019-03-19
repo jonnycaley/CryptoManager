@@ -20,6 +20,8 @@ interface MarketsContract {
         fun stopRefreshing()
         fun getCurrenciesAdapterCount(): Int
         fun getSort(): String
+        fun showNoInternetLayout()
+        fun hideNoInternetLayout()
     }
 
     interface Presenter : BasePresenter {
@@ -29,5 +31,6 @@ interface MarketsContract {
         fun onResume()
         fun loadMoreItems(currencies: ArrayList<Currency>?, moreItemsCount: Int, searchString: CharSequence)
         fun getResultsCounter(): Int
+        fun getOnlineData()
     }
 }

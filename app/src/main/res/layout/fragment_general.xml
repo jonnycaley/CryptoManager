@@ -197,7 +197,6 @@
 
                     </co.ceryle.radiorealbutton.RadioRealButtonGroup>
 
-
                     <com.github.mikephil.charting.charts.CandleStickChart
                         android:id="@+id/chart_candlestick"
                         android:layout_width="match_parent"

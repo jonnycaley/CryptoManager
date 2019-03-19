@@ -25,7 +25,7 @@
         <!--<item name="colorControlNormal">#000000</item>-->
         <!--<item name="android:actionMenuTextColor">#000000</item>-->
 
-        <!--<item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>-->
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
         <!--<item name="android:textColor">#000000</item>-->
 
@@ -56,15 +56,18 @@
         <!--<item name="colorControlNormal">#ffffff</item>-->
         <!--<item name="android:actionMenuTextColor">#ffffff</item>-->
 
-        <!--<item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>-->
+        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
         <!--<item name="android:textColor">#000000</item>-->
 
     </style>
 
     <style name="WindowAnimationTransition">
-        <item name="android:windowEnterAnimation">@anim/fade_in</item>
-        <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <item name="android:activityOpenEnterAnimation">@anim/new_activity_open</item>
+        <item name="android:activityOpenExitAnimation">@anim/old_activity_close</item>
+        <item name="android:activityCloseEnterAnimation">@anim/old_activity_open</item>
+        <item name="android:activityCloseExitAnimation">@anim/new_activity_close</item>
+
     </style>
 
 

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_progress" />
+    <include layout="@layout/no_internet"
+        android:visibility="gone"
+        android:id="@+id/layout_no_internet"/>
+
+    <include layout="@layout/layout_progress"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -121,10 +125,12 @@
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     app:anim_scale_factor="2"
-                                    app:circle_end_color="@color/colorAccent"
-                                    app:circle_start_color="@color/colorPrimary"
-                                    app:dots_primary_color="@color/colorAccent"
-                                    app:dots_secondary_color="@color/colorPrimary"
+                                    app:circle_end_color="?attr/textcolor"
+                                    app:circle_start_color="?attr/textcolor"
+                                    app:dots_primary_color="?attr/textcolor"
+                                    app:dots_secondary_color="?attr/textcolor"
+                                    app:like_drawable="@drawable/bookmark_fill_white"
+                                    app:unlike_drawable="@drawable/bookmark_outline_white"
                                     app:icon_size="15dp"
                                     app:icon_type="Star"
                                     app:is_enabled="true"
@@ -761,4 +767,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</RelativeLayout>
+</LinearLayout>

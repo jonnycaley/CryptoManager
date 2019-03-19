@@ -11,9 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.MultiPrice.Price
@@ -32,6 +30,11 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     private lateinit var presenter: HomeContract.Presenter
 
     lateinit var holdingsAdapter: HoldingsAdapter
+
+    val layoutNoInternet by lazy { mView.findViewById<RelativeLayout>(R.id.layout_no_internet) }
+    val textTryAgain by lazy { mView.findViewById<TextView>(R.id.text_try_again) }
+
+    val imageNoInternet by lazy { mView.findViewById<ImageView>(R.id.image_no_internet) }
 
     val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
 
@@ -58,6 +61,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     var chosenCurrency = CURRENCY_FIAT
     var chosenSort = ""
 
+    var isColdStartup = true
+
     override fun setPresenter(presenter: HomeContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
@@ -65,6 +70,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_home, container, false)
         return mView
+    }
+
+    override fun isNotColdStartup() {
+        isColdStartup = false
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
@@ -80,6 +89,12 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
         textSortName.setOnClickListener(this)
         textSortHoldings.setOnClickListener(this)
         textSortChange.setOnClickListener(this)
+        textTryAgain.setOnClickListener(this)
+
+        if(Utils.isDarkTheme())
+            imageNoInternet.setImageResource(R.drawable.no_internet_white)
+        else
+            imageNoInternet.setImageResource(R.drawable.no_internet_black)
 
         setUpPortfolioTimeChoices()
 
@@ -90,7 +105,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
         if (isTabAlreadyClicked)
             nestedScrollView.scrollTo(0, 0)
-        else
+        if(layoutNoInternet.visibility == View.VISIBLE && Utils.isNetworkConnected(context!!))
             presenter.getTransactions(chosenPeriod)
         Log.i(TAG, "onTabClicked()")
     }
@@ -170,6 +185,9 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
                 onSortChanged()
                 notifySortTextChanged()
             }
+            textTryAgain.id -> {
+                presenter.getTransactions(chosenPeriod)
+            }
         }
     }
 
@@ -216,11 +234,20 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     override fun onResume() {
         super.onResume()
         //TODO: UNCOMMENT BELOW
-//        presenter.getTransactions(chosenPeriod)
+        presenter.getTransactions(chosenPeriod)
     }
 
     override fun showError() {
         //TODO
+    }
+
+    override fun showNoInternet() {
+        if(isColdStartup)
+            layoutNoInternet.visibility = View.VISIBLE
+    }
+
+    override fun hideInternetRequiredLayout() {
+        layoutNoInternet.visibility = View.GONE
     }
 
     override fun showRefreshing() {

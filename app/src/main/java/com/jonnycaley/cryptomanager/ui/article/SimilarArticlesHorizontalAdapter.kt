@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.SimilarArticle
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_related_news_horizontal.view.*
 
@@ -41,8 +42,8 @@ class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticl
             newNews.url = item?.url
             newNews.thumbnail = item?.thumbnail
 
-            SimilarArticle()
-            ArticleArgs(newNews).launch(context!!)
+            val builder = context?.let { context -> Utils.webViewBuilder(context) }
+            item?.url?.let { url -> builder?.show(url) }
         }
     }
 

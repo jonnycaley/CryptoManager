@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_picker_pair.*
 
 class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
@@ -28,14 +29,14 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_pair)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
 

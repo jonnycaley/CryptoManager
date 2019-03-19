@@ -1,20 +1,21 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.appyvet.rangebar.RangeBar
 import com.github.mikephil.charting.charts.CandleStickChart
@@ -29,7 +30,10 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.Hist
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.data.model.Utils.Chart
+import com.jonnycaley.cryptomanager.ui.crypto.CryptoActivity
+import com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.TransactionsFragment
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
@@ -77,6 +81,10 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         }
     }
 
+    override fun notifyActivityOfInternet() {
+        (activity as CryptoActivity).connectionAvailable()
+    }
+
     override fun onResume() {
         super.onResume()
         presenter.onResume()
@@ -108,27 +116,23 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         presenter = GeneralPresenter(GeneralDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
-
     override fun showNoInternet() {
         showSnackBar(resources.getString(R.string.internet_required))
     }
+    var snackBar : Snackbar? = null
 
-    override fun showError() {
-        showSnackBar(resources.getString(R.string.error_occurred))
-    }
-
-    lateinit var snackBar : Snackbar
-
+    lateinit var inter : TabInterface
 
     fun showSnackBar(message: String) {
 
         snackBar = Snackbar.make(scrollLayout, message, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.retry) { presenter.getData() }
-        snackBar.show()
+                .setAction(R.string.retry) {
+                    presenter.getData()
+                }
+        snackBar.let { it?.show() }
     }
-
     override fun onRefresh() {
-        snackBar.dismiss()
+        snackBar?.dismiss()
         presenter.getData()
     }
 
@@ -394,19 +398,25 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         candleStickChart.setTouchEnabled(false)
         candleStickChart.description.isEnabled = false
 
+        var color = "#000000"
+
+        if(Utils.isDarkTheme()) {
+            color = "#ffffff"
+        }
+
         val xAxis = candleStickChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(true)
         xAxis.gridLineWidth = 0.5F
-        xAxis.gridColor = R.attr.textcolor
+        xAxis.gridColor = Color.parseColor(color)
         xAxis.setLabelCount(6, false)
-        xAxis.textColor = R.attr.textcolor
+        xAxis.textColor = Color.parseColor(color)
         val yAxisLeft = candleStickChart.axisLeft
         yAxisLeft.setDrawGridLines(true)
         yAxisLeft.gridLineWidth = 0.5F
-        yAxisLeft.gridColor = R.attr.textcolor
+        yAxisLeft.gridColor = Color.parseColor(color)
         yAxisLeft.setLabelCount(4, true)
-        yAxisLeft.textColor = R.attr.textcolor
+        yAxisLeft.textColor = Color.parseColor(color)
         yAxisLeft.setDrawAxisLine(false)
 
         val yAxisRight = candleStickChart.axisRight

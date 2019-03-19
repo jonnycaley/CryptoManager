@@ -76,7 +76,6 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     override fun onError(e: Throwable) {
                         Log.i(TAG, "onError: ${e.message}")
                     }
-
                 })
     }
 
@@ -88,6 +87,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     override fun getTransactions(timePeriod: String) {
 
+        println("getting transactions")
+
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -97,7 +98,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         if (transactions.isEmpty()) {
                             view.showNoHoldingsLayout()
                             view.hideRefreshing()
-
+                            view.hideInternetRequiredLayout()
                         } else {
                             getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
                         }
@@ -112,8 +113,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         Log.i(TAG, "onError1: ${e.message}")
                         view.stopRefreshing()
                         view.showError()
+                        view.hideInternetRequiredLayout()
                     }
-
                 })
     }
 
@@ -334,7 +335,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //
 //                    })
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
@@ -358,7 +360,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             val oneHourBack = cal.time
             val timeStamp = oneHourBack.time / 100
 
-            val observables : ArrayList<Observable<String>> = ArrayList()
+            val observables: ArrayList<Observable<String>> = ArrayList()
 
             holdings.forEach {
                 observables.add(dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(it.symbol, "USD,BTC,ETH", timeStamp.toString()))
@@ -435,7 +437,6 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         override fun onSubscribe(d: Disposable) {
                             val time = System.currentTimeMillis()
                             android.util.Log.i("onSubscribe time start", " Time value in millisecinds $time")
-
                             compositeDisposable?.add(d)
                         }
 
@@ -450,13 +451,12 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     })
 
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
     private fun setHistoricalBtcEthHoldings(prices: ArrayList<com.jonnycaley.cryptomanager.data.model.CryptoCompare.PriceAtTimestampForReal.Price>, transactions: ArrayList<Transaction>, holdings: ArrayList<Holding>, timePeriod: String) {
-
-        println("hi")
 
         holdings.forEach { holding ->
 
@@ -518,9 +518,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             holding.costEth = newHoldingCostEth
 
         }
-
         getLatestPrices(holdings)
-
     }
 
     var baseFiat: Rate = Rate()
@@ -567,6 +565,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                         override fun onNext(baseFiat: Unit) {
                             view.hideRefreshing()
+                            view.hideInternetRequiredLayout()
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -577,6 +576,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             Log.i(TAG, "onError2: ${e.message}")
                             view.stopRefreshing()
                             view.showError()
+                            view.hideInternetRequiredLayout()
                         }
                     })
 //            dataManager.getExchangeRateService().getExchangeRates()
@@ -619,7 +619,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //                        }
 //                    })
         } else {
-
+            view.hideRefreshing()
+            view.showNoInternet()
         }
     }
 
@@ -627,6 +628,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         view.showHoldings(holdings, prices, baseFiat, allFiats)
         view.showBalance(baseFiat, balanceUsd, balanceBtc, balanceEth)
         view.showChange(baseFiat, balanceUsd, balanceBtc, balanceEth, changeUsd, changeBtc, changeEth)
+        view.isNotColdStartup()
     }
 
     fun getDate(timePeriod: String): Date {
@@ -817,11 +819,12 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         var balance = 0.toBigDecimal()
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
-            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) ?: 0.toBigDecimal()
+            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)
+                    ?: 0.toBigDecimal()
         }
 
         holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
-            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP)
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP)
 //            balance += fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate?.divide(holding.quantity, 8, RoundingMode.HALF_UP)!!
         }
 
@@ -842,15 +845,15 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         //divide by current btc price
         ////times by basefiat
 
-        holdings.filter { it.type ==  Variables.Transaction.Type.crypto}.forEach { holding ->
+        holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
             balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
                     ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
                     ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
 
         }
-        holdings.filter { it.type ==  Variables.Transaction.Type.fiat}.forEach { holding ->
-            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal() , 6, RoundingMode.HALF_UP)
+        holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
+                    ?: Constants.baseRate) ?: 1.toBigDecimal(), 6, RoundingMode.HALF_UP)
         }
 
 
@@ -861,15 +864,15 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
         var balance = 0.toBigDecimal()
 
-        holdings.filter { it.type ==  Variables.Transaction.Type.crypto}.forEach { holding ->
+        holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
             balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
                     ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
                     ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
         }
 
-        holdings.filter { it.type ==  Variables.Transaction.Type.fiat}.forEach { holding ->
-            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8 , RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal() , 6, RoundingMode.HALF_UP)
+        holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
+                    ?: Constants.baseRate) ?: 1.toBigDecimal(), 6, RoundingMode.HALF_UP)
         }
 
         return balance

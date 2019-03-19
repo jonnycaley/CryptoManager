@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.jonnycaley.cryptomanager"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -123,5 +123,6 @@ dependencies {
 
 //  webview
     implementation 'com.thefinestartist:finestwebview:1.2.7'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
 
 }

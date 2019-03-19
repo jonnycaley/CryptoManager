@@ -4,13 +4,11 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
-import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton
 import com.like.OnLikeListener
@@ -63,21 +61,7 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
             context?.let { context ->
                 item?.url?.let { url ->
 
-                    val builder = FinestWebView.Builder(context)
-                    if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-                        builder.statusBarColor(context.resources.getColor(R.color.black))
-                        builder.progressBarColor(context.resources.getColor(R.color.black))
-                        builder.menuColor(context.resources.getColor(R.color.black))
-                        builder.toolbarColor(context.resources.getColor(R.color.black))
-                        builder.menuTextColor(context.resources.getColor(R.color.white))
-                        builder.iconDefaultColor(context.resources.getColor(R.color.white))
-                        builder.titleColor(context.resources.getColor(R.color.white))
-                        builder.menuTextColor(context.resources.getColor(R.color.white))
-                    } else {
-                        builder.statusBarColor(Color.parseColor("#ffffff"))
-                    }
-//                    builder.setCloseAnimations(R.anim.activity_open_scale, R.anim.activity_close_translate)
-                    builder.setCustomAnimations(R.anim.activity_open_translate, R.anim.activity_close_scale, R.anim.activity_open_scale, R.anim.activity_close_translate)
+                    val builder = Utils.webViewBuilder(context)
                     builder.show(url)
                 }
             }

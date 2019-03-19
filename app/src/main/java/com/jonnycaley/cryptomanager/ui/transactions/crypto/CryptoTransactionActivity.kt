@@ -75,14 +75,14 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_crypto_transaction)
 
-        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
         }
@@ -260,12 +260,14 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             }
             textSubmit.id -> {
                 if (checkFields()) {
+                    println("1")
                     preventChanges()
                     if (transactionDate > Calendar.getInstance().time) {
                         transactionDate = Calendar.getInstance().time
                     }
 
                     args.transaction?.let { transaction ->
+                        println("update")
                         val tempDate: Date
                         if (isDateChanged)
                             tempDate = transactionDate
@@ -275,6 +277,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                         presenter.updateCryptoTransaction(transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), tempDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
                     }
                     if (!isUpdateTransaction) {
+                        println("create")
                         presenter.createCryptoTransaction(radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), transactionDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
 
                     }
@@ -387,7 +390,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             println("No quantity chosen!")
             canSubmit = false
         }
-
+        println(canSubmit)
         return canSubmit
     }
 

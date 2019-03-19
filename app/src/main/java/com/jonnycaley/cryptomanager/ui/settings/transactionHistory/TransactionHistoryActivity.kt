@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_transaction_history.*
 
 class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContract.View {
@@ -22,14 +23,14 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction_history)
 
-        if(AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+        if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
 

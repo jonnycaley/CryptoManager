@@ -61,6 +61,11 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             holder.date.text = Utils.getTimeFrom(article.publishedAt)
         holder.length.text = Utils.getReadTime(article.words)
 
+        if(!Utils.isDarkTheme()) {
+            holder.likeButton.setLikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_fill_black))
+            holder.likeButton.setUnlikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_outlline_black))
+        }
+
         holder.likeButton.isLiked = savedArticles.any { it.url == article.url }
 
         if (relatedCrypto != null) {
@@ -191,7 +196,9 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            context?.let { context -> ArticleArgs(article).launch(context) }
+            val builder = context?.let { context -> Utils.webViewBuilder(context) }
+            article.url?.let { url -> builder?.show(url) }
+
         }
     }
 

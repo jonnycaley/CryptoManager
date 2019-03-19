@@ -58,7 +58,8 @@ class GeneralArticlesVerticalAdapter(var newsItems: ArrayList<Article>, var save
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            item.let { article -> context?.let { context -> ArticleArgs(article).launch(context) } }
+            val builder = context?.let { context -> Utils.webViewBuilder(context) }
+            item.url?.let { url -> builder?.show(url) }
         }
     }
 

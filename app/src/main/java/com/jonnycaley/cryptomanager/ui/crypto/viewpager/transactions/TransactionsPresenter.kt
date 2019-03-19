@@ -30,12 +30,11 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
             compositeDisposable = CompositeDisposable()
         }
 
-        getCryptoPrice()
     }
 
-    private fun getCryptoPrice() {
-        if (dataManager.checkConnection()) {
+    override fun getCryptoPrice() {
 
+        if (dataManager.checkConnection()) {
             dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol(), "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -54,9 +53,9 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
                         override fun onError(e: Throwable) {
                             println("onError: ${e.message}")
+                            getTransactions(null)
                         }
                     })
-
         } else {
             getTransactions(null)
         }
@@ -66,6 +65,7 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         if(price != null)
             getTransactions(price)
         else
+//            view.showNoInternet()
             getCryptoPrice()
     }
 
@@ -116,7 +116,6 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
                     override fun onError(e: Throwable) {
                         println("onError")
                     }
-
                 })
     }
 

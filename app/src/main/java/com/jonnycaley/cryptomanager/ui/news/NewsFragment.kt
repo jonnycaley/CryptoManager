@@ -32,7 +32,7 @@ import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 
 
-class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener {
+class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     lateinit var mView: View
 
@@ -42,6 +42,10 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
     lateinit var topMoversAdapter: TopMoversAdapter
 
     lateinit var topArticle: Article
+
+    val layoutNoInternet by lazy { mView.findViewById<RelativeLayout>(R.id.layout_no_internet) }
+    val imageNoInternet by lazy { mView.findViewById<ImageView>(R.id.image_no_internet) }
+    val textRetry by lazy { mView.findViewById<TextView>(R.id.text_try_again) }
 
     val scrollLayout by lazy { mView.findViewById<NestedScrollView>(R.id.scroll_layout) }
     val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout>(R.id.swipelayout) }
@@ -105,18 +109,52 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mView = inflater.inflate(R.layout.fragment_news, container, false)
-
         return mView
+    }
+
+    override fun hideNoInternetLayout() {
+        layoutNoInternet.visibility = View.GONE
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    var snackBar : Snackbar? = null
+
+    fun showSnackBar(message: String) {
+
+        snackBar = Snackbar.make(scrollLayout, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry) {
+                    presenter.onRefresh()
+                }
+        snackBar.let { it?.show() }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if(!Utils.isDarkTheme()) {
+            cardStar.setLikeDrawable(resources.getDrawable(R.drawable.bookmark_fill_black))
+            cardStar.setUnlikeDrawable(resources.getDrawable(R.drawable.bookmark_outlline_black))
+        }
+        if(Utils.isDarkTheme())
+            imageNoInternet.setImageResource(R.drawable.no_internet_white)
+
+        textRetry.setOnClickListener(this)
         cardStar.setOnLikeListener(this)
         swipeLayout.setOnRefreshListener(this)
 
         presenter = NewsPresenter(NewsDataManager.getInstance(context!!), this)
         presenter.attachView() //runs on first creation of fragment
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            textRetry.id -> {
+                presenter.onRefresh()
+            }
+        }
     }
 
     override fun onRefresh() {
@@ -128,15 +166,12 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
         if(isTabAlreadyClicked) {
             scrollLayout.scrollTo(0, 0)
             scrollLayout.fling(0)
+        } else {
+            if(layoutNoInternet.visibility == View.VISIBLE && Utils.isNetworkConnected(context!!))
+                presenter.onRefresh()
+            else
+                presenter.onResume()
         }
-            //scroll to top
-        else
-            presenter.onResume()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.onResume()
     }
 
     override fun liked(p0: LikeButton?) {
@@ -149,10 +184,8 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
         presenter.removeArticle(topArticle)
     }
 
-    override fun showNoInternet() {
-        Snackbar.make(mView, R.string.internet_required, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.retry) { presenter.getNews() }
-                .show()
+    override fun showNoInternetLayout() {
+        layoutNoInternet.visibility = View.VISIBLE
     }
 
     override fun hideProgressBar() {
@@ -201,7 +234,6 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
         } else {
             articlesVerticalAdapter.swap(templist, savedArticles)
         }
-
 //            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
 //                override fun isLastPage(): Boolean {
 //                    return isLastPage
@@ -227,9 +259,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 //
 //            recyclerViewShimmerNews.adapter.notifyDataSetChanged()
 //        }
-
         showTopNewsArticle(headerArticle)
-
 //        if(newsLayoutManager == null) {
 //            Log.i(TAG, "1")
 //            newsLayoutManager = LinearLayoutManager(context)
@@ -243,9 +273,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 //            articlesVerticalAdapter.notifyDataSetChanged()
 ////            articlesVerticalAdapter.currencies?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
 //        }
-
     }
-
 //    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
 //
 //        val headerArticle = news.keys.first()
@@ -259,7 +287,6 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 //        articlesVerticalAdapter.swap(news, savedArticles)
 //
 //    }
-
     override fun setIsLoading(b: Boolean) {
         isLoading = false
     }
@@ -267,7 +294,8 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
     private fun showTopNewsArticle(article: Article) {
 
         cardTopArticle.setOnClickListener {
-            context?.let { it1 -> ArticleArgs(article).launch(it1) }
+            val builder = context?.let { context -> Utils.webViewBuilder(context) }
+            article.url?.let { url -> builder?.show(url) }
         }
 
         Picasso.with(context)
@@ -285,14 +313,11 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
     var layoutManager: LinearLayoutManager? = null
 
     override fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
-
 //        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
 //                Color.WHITE)
 //        animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
 //                Color.WHITE)
-
         Log.i(TAG, sortedBy.size.toString())
-
         if (sortedBy.size > 7) {
             for (i in 0..7) {
                 val currency = sortedBy.filter { it.name != "Tether" }[i]
@@ -373,7 +398,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 
                             var color: Int
 
-                            color = if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                            color = if(Utils.isDarkTheme())
                                 context?.resources?.getColor(R.color.backgroundblack)!!
                             else
                                 context?.resources?.getColor(R.color.backgroundwhite)!!
@@ -395,7 +420,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 
                         var color = 0
 
-                        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+                        if(Utils.isDarkTheme())
                             color = context?.resources?.getColor(R.color.backgroundblack)!!
                         else
                             color = context?.resources?.getColor(R.color.backgroundwhite)!!

@@ -14,10 +14,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.ScrollView
-import android.widget.SearchView
-import android.widget.TextView
+import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Market.Market
@@ -33,6 +30,10 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     private lateinit var presenter: MarketsContract.Presenter
 
     lateinit var currenciesAdapter: CurrenciesAdapter
+
+    val layoutNoInternet by lazy { root.findViewById<RelativeLayout>(R.id.layout_no_internet) }
+    val imageNoInternet by lazy { root.findViewById<ImageView>(R.id.image_no_internet) }
+    val textTryAgain by lazy { root.findViewById<TextView>(R.id.text_try_again) }
 
     val recyclerViewCurrencies by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_currencies) }
     val searchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
@@ -69,11 +70,24 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         return root
     }
 
+    override fun showNoInternetLayout() {
+        layoutNoInternet.visibility = View.VISIBLE
+    }
+
+    override fun hideNoInternetLayout() {
+        layoutNoInternet.visibility = View.GONE
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
 
+        if(Utils.isDarkTheme()){
+            imageNoInternet.setImageResource(R.drawable.no_internet_white)
+        }
+
         swipeRefreshLayout.setOnRefreshListener(this)
 
+        textTryAgain.setOnClickListener(this)
         rank.setOnClickListener(this)
         name.setOnClickListener(this)
         price.setOnClickListener(this)
@@ -138,6 +152,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
                 timeframe = TIMEFRAME_1W
                 changeTimeFrameText()
                 notifyTimeFrameChanged()
+            }
+            textTryAgain.id -> {
+                presenter.getOnlineData()
             }
         }
     }
@@ -249,7 +266,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
         if (mLayoutManager == null) {
 
-            Log.i(MarketsPresenter.TAG, currencies.size.toString() + " S E E  H E R E2")
+            Log.i(TAG, currencies.size.toString() + " S E E  H E R E2")
 
             mLayoutManager = LinearLayoutManager(context)
             recyclerViewCurrencies.layoutManager = mLayoutManager
@@ -277,9 +294,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
         } else {
 
-            Log.i(MarketsPresenter.TAG, currencies.size.toString() + " S E E  H E R E3")
-            Log.i(MarketsPresenter.TAG, resultsCount.toString())
-            Log.i(MarketsPresenter.TAG, currenciesAdapter.currencies.size.toString())
+            Log.i(TAG, currencies.size.toString() + " S E E  H E R E3")
+            Log.i(TAG, resultsCount.toString())
+            Log.i(TAG, currenciesAdapter.currencies.size.toString())
 
             currenciesAdapter.swap(ArrayList(currencies), baseFiat)
 
@@ -425,6 +442,9 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
         if (isTabAlreadyClicked) {
             nestedScrollView.scrollTo(0, 0)
             nestedScrollView.fling(0)
+        } else {
+            if(layoutNoInternet.visibility == View.VISIBLE && Utils.isNetworkConnected(context!!))
+                presenter.getOnlineData()
         }
         //scroll to top
 //        else

@@ -20,10 +20,11 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme())
+
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
-
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -48,7 +49,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
 
     override fun setDarkTheme() {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        Utils.setDarkMode()
         setTheme(R.style.darktheme)
         coordinatorLayout.setBackgroundColor(resources.getColor(R.color.black))
     }

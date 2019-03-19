@@ -1,6 +1,8 @@
 package com.jonnycaley.cryptomanager.ui.markets
 
 import android.content.Context
+import android.graphics.Color
+import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import com.jonnycaley.cryptomanager.ui.article.ArticleArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton
 import com.like.OnLikeListener
+import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_horizontal.view.*
 
 
@@ -44,7 +47,9 @@ class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var sa
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-            ArticleArgs(item!!).launch(context!!)
+            val builder = context?.let { context -> Utils.webViewBuilder(context) }
+            item?.url?.let { it1 -> builder?.show(it1) }
+//            ArticleArgs(item!!).launch(context!!)
         }
 
     }

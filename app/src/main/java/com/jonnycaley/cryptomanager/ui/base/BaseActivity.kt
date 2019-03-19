@@ -10,6 +10,7 @@ import com.jonnycaley.cryptomanager.ui.news.NewsFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
 import com.jonnycaley.cryptomanager.ui.home.HomeFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.OnThemeChangedListener
 import kotlinx.android.synthetic.main.content_home.*
 
@@ -37,7 +38,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
     private var currentFragment: Fragment? = null
 
     override fun updateThemeChanged() {
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
+        if(Utils.isDarkTheme())
             navigation.background = resources.getDrawable(R.color.black)
         else
             navigation.background = resources.getDrawable(R.color.white)
@@ -45,7 +46,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        if(Utils.isDarkTheme()) {
             setTheme(R.style.darktheme)
         }
 
@@ -155,6 +156,10 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
             }
         }
         navigation.selectedItemId = selectedItem
+    }
+
+    override fun onBackPressed() {
+
     }
 
 //    private fun replaceFragment(fragment: Fragment, tag: String) {

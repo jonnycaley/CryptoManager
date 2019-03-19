@@ -12,17 +12,19 @@ interface NewsContract {
         fun hideProgressBar()
         fun showScrollLayout()
         fun showProgressBar()
-        fun showNoInternet()
+        fun showNoInternetLayout()
 //        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
         fun setIsLoading(b: Boolean)
+        fun hideNoInternetLayout()
+        fun showError()
     }
 
     interface Presenter : BasePresenter {
-        fun getNews()
         fun saveArticle(topArticle: Article)
         fun removeArticle(topArticle: Article)
         fun onRefresh()
         fun getMoreArticles(size: Int)
         fun onResume()
+        fun getNews(showProgressLayout: Boolean)
     }
 }
