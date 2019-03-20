@@ -5,6 +5,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -135,6 +136,26 @@
         android:background="@color/text_grey" />
 
     <RelativeLayout
+        android:id="@+id/layout_empty_trading_pair"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_empty"
+        android:gravity="center|start"
+        android:paddingLeft="@dimen/default_margin"
+        android:paddingTop="@dimen/small_margin"
+        android:paddingRight="@dimen/default_margin"
+        android:paddingBottom="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Trading Pair"
+            android:textColor="?attr/textcolorsecondary" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:id="@+id/layout_filled_trading_pair"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -163,31 +184,13 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/layout_empty_trading_pair"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/layout_empty"
-        android:gravity="center|start"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Trading Pair"
-            android:textColor="?attr/textcolorsecondary" />
-
-    </RelativeLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/text_grey" />
 
     <RelativeLayout
+        android:id="@+id/layout_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusableInTouchMode="true"
@@ -196,14 +199,26 @@
         android:paddingRight="@dimen/default_margin"
         android:paddingBottom="@dimen/small_margin">
 
-        <EditText
-            android:id="@+id/edit_text_price"
+        <TextView
+            android:id="@+id/text_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Price"
+            android:layout_alignParentStart="true"
+            android:text="Price"
+            android:textColor="?attr/textcolorsecondary" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_text_price"
+            android:layout_below="@id/text_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:inputType="numberDecimal"
+            android:paddingTop="@dimen/padding_edit_text_vertical"
+            android:paddingBottom="@dimen/padding_edit_text_vertical"
             android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary" />
+            android:textColorHint="?attr/textcolorsecondary"
+            app:met_hideUnderline="true"
+            android:hint="0"/>
 
     </RelativeLayout>
 
@@ -213,6 +228,7 @@
         android:background="@color/text_grey" />
 
     <RelativeLayout
+        android:id="@+id/layout_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_margin"
@@ -220,14 +236,27 @@
         android:paddingRight="@dimen/default_margin"
         android:paddingBottom="@dimen/small_margin">
 
-        <EditText
-            android:id="@+id/edit_text_quantity"
+        <TextView
+            android:id="@+id/text_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Quantity"
+            android:layout_alignParentStart="true"
+            android:text="Quantity"
+            android:textColor="?attr/textcolorsecondary" />
+
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edit_text_quantity"
+            android:layout_below="@id/text_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_edit_text_vertical"
+            android:paddingBottom="@dimen/padding_edit_text_vertical"
             android:inputType="numberDecimal"
             android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary" />
+            android:textColorHint="?attr/textcolorsecondary"
+            app:met_hideUnderline="true"
+            android:hint="0"/>
 
         <TextView
             android:id="@+id/text_sell_all"
@@ -322,14 +351,14 @@
         android:paddingRight="@dimen/default_margin"
         android:paddingBottom="@dimen/small_margin">
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text_notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Notes"
-            android:inputType="number"
             android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary" />
+            android:textColorHint="?attr/textcolorsecondary"
+            app:met_hideUnderline="true"/>
 
     </RelativeLayout>
 

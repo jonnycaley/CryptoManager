@@ -22,6 +22,7 @@ interface HomeContract {
         fun showNoInternet()
         fun isNotColdStartup()
         fun hideInternetRequiredLayout()
+        fun hideProgressLayout()
     }
 
     interface Presenter : BasePresenter {

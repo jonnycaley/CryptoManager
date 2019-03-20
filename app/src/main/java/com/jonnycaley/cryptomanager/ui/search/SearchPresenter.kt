@@ -35,30 +35,34 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
         }
     }
 
-    private fun getAllFiats() {
+    override fun getAllFiats() {
 
         dataManager.getFiats()
+                .map { fiats -> allFiats = fiats}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<ExchangeRates> {
-                    override fun onSuccess(fiats: ExchangeRates) {
-                        allFiats = fiats
-                        fiats.rates?.let { view.showFiats(it, true) }
+                .subscribe(object : SingleObserver<Unit> {
+                    override fun onSuccess(na: Unit) {
+                        allFiats?.rates?.let { view.showFiats(it, true) }
+                        view.hideProgressLayout()
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        view.showProgressLayout()
                         println("Subscribed")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
+                        view.hideProgressLayout()
+                        view.showError()
                         println("onErrorFiats: ${e.message}")
                     }
                 })
 
     }
 
-    private fun getAllCurrencies() {
+    override fun getAllCurrencies() {
 
         dataManager.getAllCrypto()
                 .subscribeOn(Schedulers.io())
@@ -67,31 +71,27 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
-                        when (allCurrencies) {
-                            null -> {
-                                //TODO: show something/download automatically
-                            }
-                            else -> {
-                                view.showCurrencies(allCurrencies!!.data, allCurrencies!!.baseImageUrl, allCurrencies!!.baseLinkUrl)
-                            }
-                        }
+                        view.showCurrencies(allCurrencies?.data, allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl)
+                        view.hideProgressLayout()
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        view.showProgressLayout()
                         println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
+                        view.hideProgressLayout()
+                        view.showError()
                         println("onError: ${e.message}")
                     }
                 })
-
     }
 
     override fun showCurrencies(filter: String?) {
         allCurrencies?.let { currencies ->
-            view.showCurrencies(currencies!!.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter?.toLowerCase()!!) }, currencies!!.baseImageUrl, currencies!!.baseLinkUrl)
+            view.showCurrencies(currencies.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter.toLowerCase()) }, currencies.baseImageUrl, currencies.baseLinkUrl)
         }
     }
 

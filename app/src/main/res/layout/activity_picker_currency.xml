@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -24,6 +25,10 @@
             android:background="?attr/backgroundcolor" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/no_internet"
+        android:visibility="gone"
+        android:id="@+id/layout_no_internet"/>
 
     <include layout="@layout/layout_progress" />
 

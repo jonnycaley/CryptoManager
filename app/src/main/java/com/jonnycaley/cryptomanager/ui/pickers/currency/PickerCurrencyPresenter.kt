@@ -26,7 +26,7 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
         getFiats()
     }
 
-    private fun getFiats() {
+    override fun getFiats() {
         if(dataManager.checkConnection()){
 
             dataManager.getExchangeRateService().getExchangeRates()
@@ -43,20 +43,24 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
 
                         override fun onNext(fiats: ExchangeRates) {
                             view.showFiats(fiats)
+                            view.hideProgressBar()
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.hideNoInternetLayout()
+                            view.showProgressBar()
                             println("Subscribed")
                             compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideNoInternetLayout()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
-
         } else {
-
+            view.showNoInternetLayout()
         }
     }
 

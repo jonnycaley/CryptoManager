@@ -26,7 +26,7 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
         getExchanges(view.getCrypto())
     }
 
-    private fun getExchanges(crypto: String?) {
+    override fun getExchanges(crypto: String?) {
 
         var exchanges = ArrayList<Exchange>()
 
@@ -44,16 +44,19 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
                 .subscribe(object : SingleObserver<Unit?> {
                     override fun onSuccess(gson: Unit) {
                         view.showExchanges(exchanges)
+                        view.hideProgressBar()
                     }
 
                     override fun onSubscribe(d: Disposable) {
-
+                        view.showProgressBar()
                     }
 
                     override fun onError(e: Throwable) {
+                        view.hideProgressBar()
+                        view.showError()
                         println("onError: ${e.message}")
-                    }
 
+                    }
                 })
     }
 

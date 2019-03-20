@@ -30,6 +30,7 @@ class TransactionHistoryPresenter(var dataManager: TransactionHistoryDataManager
                 .subscribe(object : SingleObserver<ArrayList<Transaction>>{
                     override fun onSuccess(transactions: ArrayList<Transaction>) {
                         if(transactions.isNotEmpty()) {
+                            view.hideNoTransactionsLayout()
                             Log.i(TAG, transactions.size.toString())
                             view.showTransactions(transactions)
                         } else

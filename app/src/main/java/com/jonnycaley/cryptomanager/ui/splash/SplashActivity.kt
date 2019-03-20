@@ -47,7 +47,6 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
                 .show()
     }
 
-
     override fun setDarkTheme() {
         Utils.setDarkMode()
         setTheme(R.style.darktheme)

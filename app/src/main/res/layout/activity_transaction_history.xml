@@ -26,6 +26,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/no_transactions"
+        android:id="@+id/layout_no_transactions"
+        android:visibility="gone"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

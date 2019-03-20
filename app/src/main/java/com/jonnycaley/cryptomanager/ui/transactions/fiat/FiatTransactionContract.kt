@@ -10,6 +10,12 @@ interface FiatTransactionContract {
     interface View : BaseView<Presenter> {
         fun onTransactionUpdated()
         fun onTransactionCreated()
+        fun showError()
+        fun enableTouchEvents()
+        fun hideProgressBar()
+        fun showNoInternet()
+        fun showProgressBar()
+        fun disableTouchEvents()
     }
 
     interface Presenter : BasePresenter {

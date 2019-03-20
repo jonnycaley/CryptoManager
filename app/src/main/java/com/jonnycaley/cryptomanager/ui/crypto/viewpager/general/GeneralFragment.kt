@@ -119,9 +119,8 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     override fun showNoInternet() {
         showSnackBar(resources.getString(R.string.internet_required))
     }
-    var snackBar : Snackbar? = null
 
-    lateinit var inter : TabInterface
+    var snackBar : Snackbar? = null
 
     fun showSnackBar(message: String) {
 

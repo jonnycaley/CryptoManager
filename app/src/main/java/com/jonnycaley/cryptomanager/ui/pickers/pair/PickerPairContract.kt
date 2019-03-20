@@ -11,7 +11,10 @@ interface PickerPairContract {
         fun showProgressBar()
         fun hideProgressBar()
         fun onPairChosen(pair: String?)
+        fun showError()
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getPairs(exchange: String?, crytpoSymbol: String?)
+    }
 }

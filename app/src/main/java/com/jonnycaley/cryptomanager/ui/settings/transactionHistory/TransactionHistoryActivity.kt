@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -20,6 +22,8 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
     lateinit var transactionsAdapter : TransactionsAdapter
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val layoutNoTransactions by lazy { findViewById<LinearLayout>(R.id.layout_no_transactions) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -48,8 +52,12 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
         recyclerView.adapter = transactionsAdapter
     }
 
+    override fun hideNoTransactionsLayout() {
+        layoutNoTransactions.visibility = View.GONE
+    }
+
     override fun showNoTransactionsLayout() {
-        //TODO
+        layoutNoTransactions.visibility = View.VISIBLE
     }
 
     override fun onResume() {

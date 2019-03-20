@@ -1,12 +1,16 @@
 package com.jonnycaley.cryptomanager.ui.search
 
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
@@ -21,6 +25,10 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
     val searchBar by lazy { findViewById<SearchView>(R.id.search_view) }
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val layoutProgressBar by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
+
+    val layout by lazy { findViewById<LinearLayout>(R.id.layout) }
 
     val args by lazy { SearchArgs.deserializeFrom(intent) }
 
@@ -43,6 +51,33 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
         presenter = SearchPresenter(SearchDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    override fun showProgressLayout() {
+        layoutProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgressLayout() {
+        layoutProgressBar.visibility = View.GONE
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    fun showSnackBar(message: String) {
+        Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry) {
+                    when (getSearchType()) {
+                        HomeFragment.CURRENCY_STRING -> {
+                            presenter.getAllCurrencies()
+                        }
+                        HomeFragment.FIAT_STRING -> {
+                            presenter.getAllFiats()
+                        }
+                    }
+                }
+                .show()
     }
 
     override fun showCurrencies(currencies: List<Datum>?, baseImageUrl: String?, baseLinkUrl: String?) {
@@ -70,15 +105,26 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
             datum.symbol = "USD"
 
             data.add(datum)
-        }
 
-        rates.forEach {
-            val datum = Datum()
 
-            datum.coinName = Utils.getFiatName(it.fiat)
-            datum.symbol = it.fiat
+            rates.filter { it.fiat != "USD" }.sortedBy { it.fiat }.forEach {
+                val datum = Datum()
 
-            data.add(datum)
+                datum.coinName = Utils.getFiatName(it.fiat)
+                datum.symbol = it.fiat
+
+                data.add(datum)
+            }
+        } else {
+
+            rates.sortedBy { it.fiat }.forEach {
+                val datum = Datum()
+
+                datum.coinName = Utils.getFiatName(it.fiat)
+                datum.symbol = it.fiat
+
+                data.add(datum)
+            }
         }
 
         println(data.size)

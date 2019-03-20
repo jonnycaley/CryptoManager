@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="?attr/backgroundcolor">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Transactions"
+        android:textColor="?attr/textcolor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_margin="@dimen/default_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click to add?"
+        android:textColor="?attr/textcolor"
+        android:textSize="@dimen/large_text_size"
+        android:layout_margin="@dimen/default_margin"/>
+
+</LinearLayout>

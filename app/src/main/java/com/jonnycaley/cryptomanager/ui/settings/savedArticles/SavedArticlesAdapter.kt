@@ -38,6 +38,11 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
 
         holder.likeButton.isLiked = true
 
+        if(Utils.isDarkTheme()){
+            holder.likeButton.setLikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_fill_white))
+            holder.likeButton.setUnlikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_outline_white))
+        }
+
         holder.likeButton.setOnLikeListener(object : OnLikeListener {
             override fun liked(p0: LikeButton?) {
 
@@ -46,7 +51,6 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
             override fun unLiked(p0: LikeButton?) {
                 presenter.removeArticle(articles, item!!)
             }
-
         })
 
         holder.title.text = item?.title.toString()

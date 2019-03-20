@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.widget.NestedScrollView
 import android.support.v4.widget.SwipeRefreshLayout
@@ -54,6 +55,8 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     val textSortName by lazy { mView.findViewById<TextView>(R.id.text_sort_name) }
     val textSortHoldings by lazy { mView.findViewById<TextView>(R.id.text_sort_holdings) }
     val textSortChange by lazy { mView.findViewById<TextView>(R.id.text_sort_change) }
+
+    val layoutProgress by lazy { mView.findViewById<ConstraintLayout>(R.id.layout_progress) }
 
     val radioGroup: RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
@@ -239,6 +242,10 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
 
     override fun showError() {
         //TODO
+    }
+
+    override fun hideProgressLayout() {
+        layoutProgress.visibility = View.GONE
     }
 
     override fun showNoInternet() {

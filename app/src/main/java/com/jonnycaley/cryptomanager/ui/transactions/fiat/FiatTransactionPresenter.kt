@@ -39,14 +39,13 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
         var btcPrice = 1.toBigDecimal()
         var ethPrice = 1.toBigDecimal()
 
-        if(dataManager.checkConnection()) {
+        if (dataManager.checkConnection()) {
 
-            var getBtcPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
-            var getEthPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
-            var getIsDeductedPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getBtcPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getEthPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getIsDeductedPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date.time.toString().substring(0, date.time.toString().length - 3))
 
-            val getTransactions : Observable<ArrayList<Transaction>> = dataManager.getTransactions().toObservable()
-
+            val getTransactions: Observable<ArrayList<Transaction>> = dataManager.getTransactions().toObservable()
 
             Observable.zip(getBtcPrice, getEthPrice, getIsDeductedPrice, getTransactions, Function4<String, String, String, ArrayList<Transaction>, ArrayList<Transaction>> { res1, res2, res3, transactions ->
 
@@ -72,15 +71,21 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                     .subscribe(object : CompletableObserver {
 
                         override fun onComplete() {
+
                             view.onTransactionUpdated()
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBar()
+                            view.disableTouchEvents()
                             compositeDisposable?.add(d)
 //                        view.showProgressBar()
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideProgressBar()
+                            view.enableTouchEvents()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
@@ -156,7 +161,7 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
 //                        }
 //                    })
         } else {
-
+            view.showNoInternet()
         }
     }
 
@@ -172,18 +177,17 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        view.disableTouchEvents()
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
                         println("onError: ${e.message}")
+                        view.disableTouchEvents()
+                        view.showError()
                     }
-
                 })
-
     }
-
-
 
 
     override fun createFiatTransaction(exchange: String, currency: String, quantity: Float, date: Date, notes: String) {
@@ -195,11 +199,11 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
 
         if (dataManager.checkConnection()) {
 
-            val getBtcPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
-            val getEthPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
-            val getIsDeductedPrice : Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getBtcPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getEthPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
+            val getIsDeductedPrice: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(currency, "USD", date.time.toString().substring(0, date.time.toString().length - 3))
 
-            val getTransactions : Observable<ArrayList<Transaction>> = dataManager.getTransactions().toObservable()
+            val getTransactions: Observable<ArrayList<Transaction>> = dataManager.getTransactions().toObservable()
 
 
             Observable.zip(getBtcPrice, getEthPrice, getIsDeductedPrice, getTransactions, Function4<String, String, String, ArrayList<Transaction>, ArrayList<Transaction>> { res1, res2, res3, transactions ->
@@ -228,11 +232,16 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBar()
+                            view.disableTouchEvents()
                             compositeDisposable?.add(d)
 //                        view.showProgressBar()
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideProgressBar()
+                            view.enableTouchEvents()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
@@ -305,14 +314,11 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
 //
 //                    })
         } else {
-
+            view.showNoInternet()
         }
-
     }
 
     private fun saveTransactions(transactions: ArrayList<Transaction>) {
-        if(dataManager.checkConnection()){
-
             dataManager.saveTransactions(transactions)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -326,14 +332,14 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideProgressBar()
+                            view.enableTouchEvents()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
 
                     })
 
-        } else {
-            //TODO
-        }
     }
 
     override fun detachView() {

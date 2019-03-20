@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.settings.savedArticles.SavedArticlesActivity"
@@ -26,11 +27,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/layout_progress"
+        android:id="@+id/progress_bar_layout"/>
+
     <RelativeLayout
         android:id="@+id/layout_no_articles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"

@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.content.DialogInterface
 import android.util.Log
+import android.view.WindowManager
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_update_fiat_transaction.*
 
@@ -46,6 +47,8 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     val requiredQuantity by lazy { findViewById<EditText>(R.id.edit_text_quantity) }
     val notes by lazy { findViewById<EditText>(R.id.edit_text_notes) }
 
+    val submitProgressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar_submit) }
+
     val textViewSubmit by lazy { findViewById<TextView>(R.id.text_view_submit) }
     val requiredDate by lazy { findViewById<TextView>(R.id.date) }
 
@@ -58,7 +61,6 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     var transactionDate = Calendar.getInstance().time
 
     var isDateChanged = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -110,6 +112,31 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         }
     }
 
+
+    override fun showProgressBar() {
+        submitProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun disableTouchEvents() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    override fun hideProgressBar() {
+        submitProgressBar.visibility = View.GONE
+    }
+
+    override fun enableTouchEvents() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    override fun showError() {
+        Toast.makeText(this, resources.getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNoInternet() {
+        Toast.makeText(this, resources.getString(R.string.internet_required), Toast.LENGTH_SHORT).show()
+    }
+
     private fun setupUpdate() {
 
         args.transaction?.let { transaction ->
@@ -157,10 +184,11 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         }
         if (requestCode == REQUEST_CODE_CURRENCY) {
             if (resultCode == Activity.RESULT_OK) {
-                val exchange = data?.getStringExtra("data")
+                val currency = data?.getStringExtra("data")
                 layoutCurrencyEmpty.visibility = View.GONE
                 layoutCurrencyFilled.visibility = View.VISIBLE
-                requiredCurrency.text = exchange
+                requiredCurrency.text = currency
+                toolbar_title.text = currency
             }
         }
     }

@@ -24,7 +24,7 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
         loadSavedArticles()
     }
 
-    private fun loadSavedArticles() {
+    override fun loadSavedArticles() {
         dataManager.getArticles()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -36,15 +36,20 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
                             view.hideNoArticles()
                             view.showSavedNews(news)
                         }
+                        view.hideProgressLayout()
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        view.showProgressLayout()
                         println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
                         println("onError: ${e.message}")
+                        view.hideProgressLayout()
+                        view.hideNoArticles()
+                        view.showError()
                     }
                 })
     }

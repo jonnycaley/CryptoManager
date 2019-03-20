@@ -102,19 +102,19 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
     }
 
     override fun showPortfolioDeleted() {
-        Toast.makeText(context, "Portfolio Deleted", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "Portfolio Deleted", Toast.LENGTH_SHORT).show()
     }
 
     override fun showPortfolioDeletedError() {
-        Toast.makeText(context, "An error occurred", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
     }
 
     override fun showSavedArticlesDeleted() {
-        Toast.makeText(context, "Articles Deleted", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "Articles Deleted", Toast.LENGTH_SHORT).show()
     }
 
     override fun showSavedArticlesDeletedError() {
-        Toast.makeText(context, "An error occurred", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

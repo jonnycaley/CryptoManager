@@ -4,12 +4,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
@@ -23,6 +25,8 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
     lateinit var exchangesAdapter : ExchangesAdapter
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+
+    val layout by lazy { findViewById<LinearLayout>(R.id.layout) }
 
     val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
@@ -53,6 +57,29 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
         return null
     }
 
+    override fun hideProgressBar() {
+        progressBarLayout.visibility = View.GONE
+    }
+
+    override fun showProgressBar() {
+        progressBarLayout.visibility = View.VISIBLE
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    var snackBar : Snackbar? = null
+
+    fun showSnackBar(message: String) {
+
+        snackBar = Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry) {
+                    presenter.getExchanges(getCrypto())
+                }
+        snackBar.let { it?.show() }
+    }
+
     override fun onExchangeChosen(name: String?) {
         val intent = Intent()
         intent.putExtra("data", name)
@@ -66,8 +93,6 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
         recyclerView.layoutManager = mLayoutManager
         exchangesAdapter = ExchangesAdapter(exchanges?.sortedBy { it.name?.toLowerCase() }, this, this)
         recyclerView.adapter = exchangesAdapter
-
-        progressBarLayout.visibility = View.GONE
 
     }
 

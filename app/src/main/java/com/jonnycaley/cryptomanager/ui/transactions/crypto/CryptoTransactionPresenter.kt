@@ -83,7 +83,6 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                     .map { transactions ->
 
                         transactions.forEach { Log.i(TAG, it.date.time.toString()) }
-
                         val newTransaction = Transaction(exchange, view.getSymbol(), transaction.name, pair, correctQuantity, price.toBigDecimal(), priceUsd, date, notes, isDeducted, isDeductedPriceUsd, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
                         transactions.remove(transaction)
                         transactions.add(newTransaction)
@@ -100,10 +99,15 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBar()
+                            view.disableTouchEvents()
                             compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideProgressBar()
+                            view.enableTouchEvents()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
@@ -187,7 +191,7 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
 //                        }
 //                    })
         } else {
-//                view.showNoInternet()
+            view.showNoInternet()
         }
     }
 
@@ -273,10 +277,13 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                     }
 
                     override fun onSubscribe(d: Disposable) {
+                        view.disableTouchEvents()
                         compositeDisposable?.add(d)
                     }
 
                     override fun onError(e: Throwable) {
+                        view.disableTouchEvents()
+                        view.showError()
                         println("onError: ${e.message}")
                     }
                 })
@@ -343,10 +350,15 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                         }
 
                         override fun onSubscribe(d: Disposable) {
+                            view.showProgressBar()
+                            view.disableTouchEvents()
                             compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
+                            view.hideProgressBar()
+                            view.enableTouchEvents()
+                            view.showError()
                             println("onError: ${e.message}")
                         }
                     })
@@ -423,7 +435,7 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
 //                        }
 //                    })
         } else {
-
+            view.showNoInternet()
         }
     }
 
@@ -441,12 +453,13 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                     }
 
                     override fun onError(e: Throwable) {
+                        view.hideProgressBar()
+                        view.enableTouchEvents()
+                        view.showError()
                         println("onError: ${e.message}")
                     }
-
                 })
     }
-
 
     override fun getAllHoldings(symbol: String) {
 
@@ -472,7 +485,6 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                     override fun onError(e: Throwable) {
                         println("onError")
                     }
-
                 })
     }
 

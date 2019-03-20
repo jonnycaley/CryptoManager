@@ -10,7 +10,12 @@ interface PickerExchangeContract {
         fun showExchanges(exchanges: List<Exchange>?)
         fun onExchangeChosen(name: String?)
         fun getCrypto(): String?
+        fun hideProgressBar()
+        fun showProgressBar()
+        fun showError()
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getExchanges(crypto: String?)
+    }
 }

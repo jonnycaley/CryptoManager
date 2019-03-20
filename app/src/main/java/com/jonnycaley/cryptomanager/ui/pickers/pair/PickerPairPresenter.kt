@@ -1,9 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.pickers.pair
 
-import com.google.gson.Gson
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
-import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Symbol
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,11 +18,10 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-
         getPairs(view.getExchange(), view.getCryproSymbol())
     }
 
-    private fun getPairs(exchange: String?, crytpoSymbol: String?) {
+    override fun getPairs(exchange: String?, crytpoSymbol: String?) {
 
         dataManager.getExchanges()
                 .subscribeOn(Schedulers.io())
@@ -56,8 +51,8 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
                 .subscribe(object : SingleObserver<ArrayList<String>> {
 
                     override fun onSuccess(converters: ArrayList<String>) {
-                        view.hideProgressBar()
                         view.showPairs(converters)
+                        view.hideProgressBar()
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -67,10 +62,10 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
 
                     override fun onError(e: Throwable) {
                         println("onError: ${e.message}")
+                        view.showError()
+                        view.hideProgressBar()
                     }
-
                 })
-
     }
 
     override fun detachView() {
@@ -80,5 +75,4 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
     companion object {
         val TAG = "PickerPairPresenter"
     }
-
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -172,15 +173,28 @@
                 android:paddingBottom="@dimen/small_margin">
 
 
-                <EditText
-                    android:id="@+id/edit_text_quantity"
+                <TextView
+                    android:id="@+id/text_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:hint="Quantity"
-                    android:inputType="number"
+                    android:text="Quantity"
+                    android:textColor="?attr/textcolorsecondary" />
+
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edit_text_quantity"
+                    android:layout_below="@id/text_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/padding_edit_text_vertical"
+                    android:paddingBottom="@dimen/padding_edit_text_vertical"
+                    android:inputType="numberDecimal"
                     android:textColor="?attr/textcolor"
-                    android:textColorHint="?attr/textcolorsecondary" />
+                    android:textColorHint="?attr/textcolorsecondary"
+                    app:met_hideUnderline="true"
+                    android:hint="0"/>
+
 
             </RelativeLayout>
 
@@ -230,14 +244,14 @@
                 android:paddingRight="@dimen/default_margin"
                 android:paddingBottom="@dimen/small_margin">
 
-
-                <EditText
+                <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edit_text_notes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="Notes"
-                    android:textColor="?attr/textcolorsecondary" />
+                    android:hint="Notes"
+                    android:textColor="?attr/textcolor"
+                    android:textColorHint="?attr/textcolorsecondary"
+                    app:met_hideUnderline="true"/>
 
             </RelativeLayout>
 
@@ -249,17 +263,5 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
-    <TextView
-        android:id="@+id/text_view_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/green"
-        android:gravity="center"
-        android:padding="@dimen/default_margin"
-        android:text="Submit"
-        android:textColor="@color/white"
-        android:textSize="@dimen/large_text_size" />
 
 </RelativeLayout>

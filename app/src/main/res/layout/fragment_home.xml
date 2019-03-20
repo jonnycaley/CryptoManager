@@ -11,6 +11,10 @@
         layout="@layout/no_internet"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/layout_progress"
+        layout="@layout/layout_progress"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"

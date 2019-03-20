@@ -60,4 +60,36 @@
         android:layout_below="@id/app_bar_layout"/>
 
 
+
+    <LinearLayout
+        android:id="@+id/layout_update"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/green"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar_submit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:padding="@dimen/large_margin"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/text_view_submit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Submit"
+            android:padding="@dimen/default_margin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/large_text_size"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

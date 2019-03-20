@@ -8,6 +8,7 @@ interface TransactionHistoryContract {
     interface View : BaseView<Presenter> {
         fun showTransactions(transactions: ArrayList<Transaction>)
         fun showNoTransactionsLayout()
+        fun hideNoTransactionsLayout()
     }
 
     interface Presenter : BasePresenter {

@@ -2,12 +2,15 @@ package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
@@ -22,6 +25,9 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
     val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
     val layoutNoArticles by lazy { findViewById<RelativeLayout>(R.id.layout_no_articles) }
+
+    val layout by lazy { findViewById<LinearLayout>(R.id.layout) }
+    val progressLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -45,6 +51,24 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
     override fun onPause() {
         super.onPause()
+    }
+
+    override fun hideProgressLayout() {
+        progressLayout.visibility = View.GONE
+    }
+
+    override fun showProgressLayout() {
+        progressLayout.visibility = View.VISIBLE
+    }
+
+    override fun showError() {
+        showSnackBar(resources.getString(R.string.error_occurred))
+    }
+
+    fun showSnackBar(message: String) {
+        Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.retry) { presenter.loadSavedArticles() }
+                .show()
     }
 
     override fun showNoArticles() {

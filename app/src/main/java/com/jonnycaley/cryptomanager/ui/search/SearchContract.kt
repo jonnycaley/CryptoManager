@@ -10,10 +10,15 @@ interface SearchContract {
         fun showCurrencies(currencies: List<Datum>?, baseImageUrl: String?, baseLinkUrl: String?)
         fun getSearchType() : String?
         fun showFiats(currencies: List<Rate>, withUsdTop: Boolean)
+        fun showProgressLayout()
+        fun hideProgressLayout()
+        fun showError()
     }
 
     interface Presenter : BasePresenter {
         fun showCurrencies(filter: String?)
         fun showFiats(filter: String?)
+        fun getAllFiats()
+        fun getAllCurrencies()
     }
 }

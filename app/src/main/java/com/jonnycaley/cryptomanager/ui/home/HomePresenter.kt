@@ -99,6 +99,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             view.showNoHoldingsLayout()
                             view.hideRefreshing()
                             view.hideInternetRequiredLayout()
+                            view.hideProgressLayout()
                         } else {
                             getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
                         }
@@ -181,7 +182,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         override fun onError(e: Throwable) {
                             Log.i(TAG, "onError4: ${e.message}")
                             view.stopRefreshing()
-
+                            view.hideProgressLayout()
                             view.showError()
                         }
 
@@ -446,6 +447,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             Log.i(TAG, "onError3: ${e.localizedMessage}")
                             view.stopRefreshing()
                             view.showError()
+                            view.hideProgressLayout()
                         }
 
                     })
@@ -566,6 +568,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                         override fun onNext(baseFiat: Unit) {
                             view.hideRefreshing()
                             view.hideInternetRequiredLayout()
+                            view.hideProgressLayout()
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -577,6 +580,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                             view.stopRefreshing()
                             view.showError()
                             view.hideInternetRequiredLayout()
+                            view.hideProgressLayout()
                         }
                     })
 //            dataManager.getExchangeRateService().getExchangeRates()

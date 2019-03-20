@@ -73,8 +73,6 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
                         println("onErrorFiats: ${e.message}")
                     }
                 })
-
-
 //        dataManager.saveBaseCurrency(symbol)
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())

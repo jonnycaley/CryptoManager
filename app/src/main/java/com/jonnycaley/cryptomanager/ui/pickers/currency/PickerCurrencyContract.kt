@@ -8,7 +8,14 @@ interface PickerCurrencyContract {
     interface View : BaseView<Presenter> {
         fun showFiats(fiats: ExchangeRates)
         fun onPickerChosen(symbol: String?)
+        fun hideNoInternetLayout()
+        fun showNoInternetLayout()
+        fun showError()
+        fun hideProgressBar()
+        fun showProgressBar()
     }
 
-    interface Presenter : BasePresenter
+    interface Presenter : BasePresenter {
+        fun getFiats()
+    }
 }

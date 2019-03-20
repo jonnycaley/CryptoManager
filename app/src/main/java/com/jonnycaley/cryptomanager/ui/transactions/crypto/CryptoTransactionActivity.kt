@@ -2,6 +2,7 @@ package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -10,7 +11,9 @@ import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
@@ -21,6 +24,7 @@ import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.ui.pickers.pair.PickerPairActivity
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.rengwuxian.materialedittext.MaterialEditText
 import com.squareup.picasso.Picasso
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
@@ -33,6 +37,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     private lateinit var presenter: CryptoTransactionContract.Presenter
 
     val args by lazy { CryptoTransactionArgs.deserializeFrom(intent) }
+
+    val layout by lazy { findViewById<RelativeLayout>(R.id.layout) }
 
     val buttonDelete by lazy { findViewById<ImageView>(R.id.button_delete) }
 
@@ -47,12 +53,16 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     val layoutFilledPair by lazy { findViewById<RelativeLayout>(R.id.layout_filled_trading_pair) }
     val requiredPair by lazy { findViewById<TextView>(R.id.trading_pair) }
 
+    val layoutQuantity by lazy { findViewById<RelativeLayout>(R.id.layout_quantity) }
+    val layoutPrice by lazy { findViewById<RelativeLayout>(R.id.layout_price) }
+
     val layoutEmptyExchange by lazy { findViewById<RelativeLayout>(R.id.layout_empty_exchange) }
     val layoutFilledExchange by lazy { findViewById<RelativeLayout>(R.id.layout_filled_exchange) }
     val requiredExchange by lazy { findViewById<TextView>(R.id.exchange) }
 
-    val requiredPrice by lazy { findViewById<EditText>(R.id.edit_text_price) }
-    val requiredQuantity by lazy { findViewById<EditText>(R.id.edit_text_quantity) }
+    val textPrice by lazy { findViewById<TextView>(R.id.text_price) }
+    val requiredPrice by lazy { findViewById<com.rengwuxian.materialedittext.MaterialEditText>(R.id.edit_text_price) }
+    val requiredQuantity by lazy { findViewById<com.rengwuxian.materialedittext.MaterialEditText>(R.id.edit_text_quantity) }
 
     val textDeduction by lazy { findViewById<TextView>(R.id.text_deducation) }
 
@@ -63,9 +73,10 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     val switchDeduct by lazy { findViewById<Switch>(R.id.switch_deduct) }
 
-    val edittextNotes by lazy { findViewById<EditText>(R.id.edit_text_notes) }
+    val edittextNotes by lazy { findViewById<MaterialEditText>(R.id.edit_text_notes) }
 
     val textSubmit by lazy { findViewById<TextView>(R.id.text_view_update) }
+    val submitProgressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar_submit) }
 
     var transactionDate = Calendar.getInstance().time
 
@@ -90,21 +101,15 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         args.transaction?.let { transaction ->
 
             isUpdateTransaction = true
-//
-//            transactionDate = transaction.date
-
             setupUpdate(transaction)
             setupToolbarUpdate(transaction)
             setupHeaderUpdate(transaction)
             requiredDate.text = transaction.date.let { Utils.formatDate(it) }
         }
 
-        Log.i(TAG, isUpdateTransaction.toString())
-
         Utils.hideKeyboardFromActivity(this)
 
         args.notTransactions?.let { transaction ->
-            //                transactionPairImageUrl = transaction.imageUrl
             backPressToPortfolio = transaction.backpressToPortfolio
 
             setupCreate(transaction)
@@ -117,6 +122,30 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
         presenter = CryptoTransactionPresenter(CryptoTransactionDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    override fun showProgressBar() {
+        submitProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun disableTouchEvents() {
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    override fun hideProgressBar() {
+        submitProgressBar.visibility = View.GONE
+    }
+
+    override fun enableTouchEvents() {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    override fun showError() {
+        Toast.makeText(this, resources.getString(R.string.error_occurred), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNoInternet() {
+        Toast.makeText(this, resources.getString(R.string.internet_required), Toast.LENGTH_SHORT).show()
     }
 
     override fun getName(): String {
@@ -132,10 +161,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 .fit()
                 .centerCrop()
                 .transform(CircleTransform())
-//                .placeholder(R.drawable.circle)
                 .into(headerImage)
         headerName.text = transaction.symbol
-//        headerSymbol.text = transactionPairSymbol
 
     }
 
@@ -146,10 +173,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 .fit()
                 .centerCrop()
                 .transform(CircleTransform())
-//                .placeholder(R.drawable.circle)
                 .into(headerImage)
         headerName.text = transaction.currency.symbol
-//        headerSymbol.text = transactionPairSymbol
 
     }
 
@@ -161,6 +186,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     private fun setupBody() {
 
+        layoutPrice.setOnClickListener(this)
+        layoutQuantity.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
         layoutEmptyPair.setOnClickListener(this)
         layoutFilledPair.setOnClickListener(this)
@@ -178,7 +205,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        toolbar_title.text = "${transaction.name} - ${transaction.symbol}"
+        toolbar_title.text = "Edit ${transaction.name} Transaction"
     }
 
     private fun setupToolbarCreate(transaction: NotTransaction) {
@@ -189,16 +216,21 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     }
 
     private fun setupUpdate(transaction: Transaction) {
-        if (transaction.quantity > 0.toBigDecimal())
+        requiredPair.text = transaction.symbol + "/" + transaction.pairSymbol
+        textPrice.text = "Price in ${transaction.pairSymbol}"
+        if (transaction.quantity > 0.toBigDecimal()) {
+            textDeduction.text = "Deduct from ${getPairText()}holdings"
             radioButtonDeposit.isChecked = true
-        else
+        }
+        else {
+            textDeduction.text = "Add to ${getPairText()}holdings"
             radioButtonWithdrawl.isChecked = true
+        }
 
         requiredExchange.text = transaction.exchange
-        requiredPair.text = transaction.pairSymbol
         requiredPrice.setText(transaction.price.toString())
         if (transaction.quantity < 0.toBigDecimal())
-            requiredQuantity.setText((transaction.quantity?.times((-1).toBigDecimal())).toString())
+            requiredQuantity.setText((transaction.quantity.times((-1).toBigDecimal())).toString())
         else
             requiredQuantity.setText(transaction.quantity.toString())
         if (transaction.isDeducted)
@@ -212,78 +244,83 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         layoutFilledPair.visibility = View.VISIBLE
     }
 
+    var isLoading = false
+
 
     override fun onClick(view: View?) {
         lateinit var i: Intent
 
-        when (view?.id) {
-            buttonDelete.id -> {
-                val diaBox = AskOption()
-                diaBox.show()
-            }
-            layoutDate.id -> {
-                showDatePicker()
-            }
-            layoutEmptyPair.id -> {
-                i = Intent(this, PickerPairActivity::class.java)
-                i.putExtra(EXCHANGE_KEY, requiredExchange.text)
-                i.putExtra(CRYPTO_KEY, getSymbol())
-                startActivityForResult(i, REQUEST_CODE_PAIR)
-            }
-            layoutFilledPair.id -> {
-                i = Intent(this, PickerPairActivity::class.java)
-                i.putExtra(EXCHANGE_KEY, requiredExchange.text)
-                i.putExtra(CRYPTO_KEY, getSymbol())
-                startActivityForResult(i, REQUEST_CODE_PAIR)
-            }
-            layoutEmptyExchange.id -> {
-                i = Intent(this, PickerExchangeActivity::class.java)
-                i.putExtra(CRYPTO_KEY, getSymbol())
-                startActivityForResult(i, REQUEST_CODE_EXCHANGE)
-            }
-            layoutFilledExchange.id -> {
-                i = Intent(this, PickerExchangeActivity::class.java)
-                i.putExtra(CRYPTO_KEY, getSymbol())
-                startActivityForResult(i, REQUEST_CODE_EXCHANGE)
-            }
-            radioButtonDeposit.id -> {
-                textDeduction.text = "Deduct from ${getPairText()}holdings"
-                textSellAll.visibility = View.GONE
-            }
-            radioButtonWithdrawl.id -> {
-                textDeduction.text = "Add to ${getPairText()}holdings"
-                textSellAll.visibility = View.VISIBLE
-            }
-            textSellAll.id -> {
-                presenter.getAllHoldings(getSymbol())
+            when (view?.id) {
+                buttonDelete.id -> {
+                    val diaBox = AskOption()
+                    diaBox.show()
+                }
+                layoutDate.id -> {
+                    showDatePicker()
+                }
+                layoutPrice.id -> {
+                    //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
+                }
+                layoutQuantity.id -> {
+                    //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
+                }
+                layoutEmptyPair.id -> {
+                    i = Intent(this, PickerPairActivity::class.java)
+                    i.putExtra(EXCHANGE_KEY, requiredExchange.text)
+                    i.putExtra(CRYPTO_KEY, getSymbol())
+                    startActivityForResult(i, REQUEST_CODE_PAIR)
+                }
+                layoutFilledPair.id -> {
+                    i = Intent(this, PickerPairActivity::class.java)
+                    i.putExtra(EXCHANGE_KEY, requiredExchange.text)
+                    i.putExtra(CRYPTO_KEY, getSymbol())
+                    startActivityForResult(i, REQUEST_CODE_PAIR)
+                }
+                layoutEmptyExchange.id -> {
+                    i = Intent(this, PickerExchangeActivity::class.java)
+                    i.putExtra(CRYPTO_KEY, getSymbol())
+                    startActivityForResult(i, REQUEST_CODE_EXCHANGE)
+                }
+                layoutFilledExchange.id -> {
+                    i = Intent(this, PickerExchangeActivity::class.java)
+                    i.putExtra(CRYPTO_KEY, getSymbol())
+                    startActivityForResult(i, REQUEST_CODE_EXCHANGE)
+                }
+                radioButtonDeposit.id -> {
+                    textDeduction.text = "Deduct from ${getPairText()}holdings"
+                    textSellAll.visibility = View.GONE
+                }
+                radioButtonWithdrawl.id -> {
+                    textDeduction.text = "Add to ${getPairText()}holdings"
+                    textSellAll.visibility = View.VISIBLE
+                }
+                textSellAll.id -> {
+                    presenter.getAllHoldings(getSymbol())
 
-            }
-            textSubmit.id -> {
-                if (checkFields()) {
-                    println("1")
-                    preventChanges()
-                    if (transactionDate > Calendar.getInstance().time) {
-                        transactionDate = Calendar.getInstance().time
-                    }
-
-                    args.transaction?.let { transaction ->
-                        println("update")
-                        val tempDate: Date
-                        if (isDateChanged)
-                            tempDate = transactionDate
-                        else {
-                            tempDate = transaction.date
+                }
+                textSubmit.id -> {
+                    if (checkFields()) {
+                        preventChanges()
+                        if (transactionDate > Calendar.getInstance().time) {
+                            transactionDate = Calendar.getInstance().time
                         }
-                        presenter.updateCryptoTransaction(transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), tempDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
-                    }
-                    if (!isUpdateTransaction) {
-                        println("create")
-                        presenter.createCryptoTransaction(radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().toString(), java.lang.Float.parseFloat(requiredPrice.text.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text.trim().toString()), transactionDate, switchDeduct.isChecked, edittextNotes.text.trim().toString())
 
+                        args.transaction?.let { transaction ->
+                            println("update")
+                            val tempDate: Date
+                            if (isDateChanged)
+                                tempDate = transactionDate
+                            else {
+                                tempDate = transaction.date
+                            }
+                        presenter.updateCryptoTransaction(transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/")+1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), tempDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
+                        }
+                        if (!isUpdateTransaction) {
+                            presenter.createCryptoTransaction(radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/") + 1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), transactionDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
+                        }
                     }
                 }
             }
-        }
     }
 
 
@@ -292,9 +329,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 //set message, title, and icon
                 .setTitle("Delete Transaction")
                 .setMessage("Are you sure you want to delete this transaction?")
-
                 .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, whichButton ->
-                    //your deleting code
                     args.transaction?.let { presenter.deleteTransaction(it) }
                     dialog.dismiss()
                 })
@@ -302,7 +337,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                     dialog.dismiss()
                 })
                 .create()
-
     }
 
     override fun showSellAllAmount(amount: BigDecimal) {
@@ -315,6 +349,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 val exchange = data?.getStringExtra("data")
                 showExchange(exchange)
                 resetTradingPair()
+                textPrice.text = "Price"
             }
         }
         if (requestCode == REQUEST_CODE_PAIR) {
@@ -323,7 +358,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 showPair(pair)
                 showPairChanged(pair)
                 pair?.let { pairSymbol -> presenter.getCurrentPrice(getSymbol(), pairSymbol) }
-                requiredPrice.hint = "Price in $pair"
+                textPrice.text = "Price in $pair"
             }
         }
     }
@@ -343,7 +378,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     private fun showPair(pair: String?) {
         layoutEmptyPair.visibility = View.GONE
         layoutFilledPair.visibility = View.VISIBLE
-        requiredPair.text = pair
+        requiredPair.text = args.transaction?.symbol + "/" + pair
     }
 
     private fun showExchange(exchange: String?) {
@@ -359,9 +394,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     private fun getPairText(): CharSequence? {
         if (requiredPair.text.isBlank())
             return ""
-        return "${requiredPair.text} "
+        return "${requiredPair.text.substring(requiredPair.text.indexOf("/") + 1)} "
     }
-
 
     private fun checkFields(): Boolean {
 
@@ -396,7 +430,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
 
     private fun preventChanges() {
-
+        layout.isClickable = false
     }
 
     override fun getSymbol(): String {
@@ -422,7 +456,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         intent.putExtras(bundle)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
-
     }
 
     override fun onTransactionDeleted() {
@@ -457,7 +490,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             args.transaction?.date?.time = temp
 
         isDateChanged = true
-
     }
 
 
@@ -472,7 +504,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
         )
         dpd.maxDate = Calendar.getInstance()
-
         dpd.show(fragmentManager, "Datepickerdialog")
     }
 

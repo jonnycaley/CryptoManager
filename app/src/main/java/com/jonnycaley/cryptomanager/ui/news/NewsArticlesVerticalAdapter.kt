@@ -61,9 +61,9 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             holder.date.text = Utils.getTimeFrom(article.publishedAt)
         holder.length.text = Utils.getReadTime(article.words)
 
-        if(!Utils.isDarkTheme()) {
-            holder.likeButton.setLikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_fill_black))
-            holder.likeButton.setUnlikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_outlline_black))
+        if(Utils.isDarkTheme()) {
+            holder.likeButton.setLikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_fill_white))
+            holder.likeButton.setUnlikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_outline_white))
         }
 
         holder.likeButton.isLiked = savedArticles.any { it.url == article.url }

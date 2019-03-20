@@ -9,9 +9,13 @@ interface SavedArticlesContract {
         fun showSavedNews(news: ArrayList<Article>)
         fun showNoArticles()
         fun hideNoArticles()
+        fun showError()
+        fun hideProgressLayout()
+        fun showProgressLayout()
     }
 
     interface Presenter : BasePresenter {
         fun removeArticle(savedArticles : ArrayList<Article>?, topArticle: Article)
+        fun loadSavedArticles()
     }
 }
