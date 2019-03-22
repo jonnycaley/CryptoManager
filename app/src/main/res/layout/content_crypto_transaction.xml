@@ -193,7 +193,6 @@
         android:id="@+id/layout_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
         android:paddingLeft="@dimen/default_margin"
         android:paddingTop="@dimen/small_margin"
         android:paddingRight="@dimen/default_margin"
@@ -210,13 +209,13 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text_price"
             android:layout_below="@id/text_price"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:paddingTop="@dimen/padding_edit_text_vertical"
             android:paddingBottom="@dimen/padding_edit_text_vertical"
-            android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary"
+            app:met_textColorHint="?attr/textcolorsecondary"
+            app:met_textColor="?attr/textcolor"
             app:met_hideUnderline="true"
             android:hint="0"/>
 
@@ -248,15 +247,15 @@
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text_quantity"
             android:layout_below="@id/text_quantity"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_edit_text_vertical"
             android:paddingBottom="@dimen/padding_edit_text_vertical"
             android:inputType="numberDecimal"
-            android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary"
+            app:met_textColorHint="?attr/textcolorsecondary"
+            app:met_textColor="?attr/textcolor"
             app:met_hideUnderline="true"
-            android:hint="0"/>
+            android:hint="0" />
 
         <TextView
             android:id="@+id/text_sell_all"
@@ -356,9 +355,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Notes"
-            android:textColor="?attr/textcolor"
-            android:textColorHint="?attr/textcolorsecondary"
-            app:met_hideUnderline="true"/>
+            app:met_hideUnderline="true"
+            app:met_textColorHint="?attr/textcolorsecondary"
+            app:met_textColor="?attr/textcolor"/>
 
     </RelativeLayout>
 

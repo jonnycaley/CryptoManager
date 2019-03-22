@@ -213,7 +213,7 @@ object Utils {
         }
         imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        activity.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     fun showKeyboardFromActivity(activity: Activity) {

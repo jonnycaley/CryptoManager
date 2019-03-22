@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.Toolbar
+import android.text.InputType
 import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
@@ -186,6 +188,17 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     private fun setupBody() {
 
+        requiredPrice.setOnFocusChangeListener { v, hasFocus ->
+            println(hasFocus)
+            if(!hasFocus) {
+                val view = this.currentFocus
+                view?.let { v ->
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    imm?.let { it.hideSoftInputFromWindow(v.windowToken, 0) }
+                }
+            }
+        }
+
         layoutPrice.setOnClickListener(this)
         layoutQuantity.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
@@ -250,6 +263,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     override fun onClick(view: View?) {
         lateinit var i: Intent
 
+        println("onClick")
+
             when (view?.id) {
                 buttonDelete.id -> {
                     val diaBox = AskOption()
@@ -259,9 +274,12 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                     showDatePicker()
                 }
                 layoutPrice.id -> {
+                    println("pricelayout onclick")
+                    focusEdittext(requiredPrice)
                     //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
                 }
                 layoutQuantity.id -> {
+                    focusEdittext(requiredQuantity)
                     //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
                 }
                 layoutEmptyPair.id -> {
@@ -378,7 +396,16 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     private fun showPair(pair: String?) {
         layoutEmptyPair.visibility = View.GONE
         layoutFilledPair.visibility = View.VISIBLE
-        requiredPair.text = args.transaction?.symbol + "/" + pair
+        if(args.transaction?.symbol != null)
+            requiredPair.text = args.transaction?.symbol + "/" + pair
+        else
+            requiredPair.text = args.notTransactions?.currency?.symbol + "/" + pair
+    }
+
+    fun focusEdittext(editText: EditText){
+        editText.requestFocus()
+        val imm : InputMethodManager =  getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun showExchange(exchange: String?) {
