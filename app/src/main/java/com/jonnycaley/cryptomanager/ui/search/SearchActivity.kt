@@ -1,13 +1,13 @@
 package com.jonnycaley.cryptomanager.ui.search
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -24,7 +24,7 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
     private lateinit var presenter : SearchContract.Presenter
 
     val searchBar by lazy { findViewById<SearchView>(R.id.search_view) }
-    val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
     val layoutProgressBar by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
@@ -48,6 +48,13 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         }
         setupToolbar()
         setupSearchBar()
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(dy != 0)
+                    Utils.hideKeyboardFromActivity(this@SearchActivity)
+            }
+        })
 
         presenter = SearchPresenter(SearchDataManager.getInstance(this), this)
         presenter.attachView()
@@ -80,9 +87,13 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
                 .show()
     }
 
+    override fun showSearchBar() {
+        searchBar.visibility = View.VISIBLE
+    }
+
     override fun showCurrencies(currencies: List<Datum>?, baseImageUrl: String?, baseLinkUrl: String?) {
 
-        val mLayoutManager = LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SearchCurrenciesAdapter(currencies?.sortedBy { it.sortOrder?.toInt() }, baseImageUrl, baseLinkUrl, this)
         recyclerView.adapter = currenciesAdapter
@@ -129,7 +140,7 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
         println(data.size)
 
-        val mLayoutManager = LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this)
         recyclerView.adapter = currenciesAdapter
@@ -140,6 +151,7 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        Utils.hideKeyboardFromActivity(this)
         return true
     }
 

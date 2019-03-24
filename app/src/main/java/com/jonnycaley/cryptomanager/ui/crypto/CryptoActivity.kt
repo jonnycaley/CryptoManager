@@ -1,14 +1,14 @@
 package com.jonnycaley.cryptomanager.ui.crypto
 
 import android.graphics.Bitmap
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.widget.ImageView
 import com.jonnycaley.cryptomanager.R
@@ -18,10 +18,10 @@ import com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.Transaction
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_crypto.*
-import android.support.v7.graphics.Palette
+import androidx.palette.graphics.Palette
 import com.squareup.picasso.Callback
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatDelegate
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatDelegate
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.util.*
@@ -32,7 +32,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     val args by lazy { CryptoArgs.deserializeFrom(intent) }
 
-    val viewPager : ViewPager by lazy { findViewById<ViewPager>(R.id.pager) }
+    val viewPager : androidx.viewpager.widget.ViewPager by lazy { findViewById<androidx.viewpager.widget.ViewPager>(R.id.pager) }
     val tabLayout : TabLayout by lazy { findViewById<TabLayout>(R.id.tablayout) }
 
     val title : TextView by lazy { findViewById<TextView>(R.id.title) }
@@ -122,7 +122,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
     }
 
     fun getDominantColor(bitmap: Bitmap): Int {
-        val swatchesTemp = Palette.from(bitmap).generate().swatches
+        val swatchesTemp = androidx.palette.graphics.Palette.from(bitmap).generate().swatches
         val swatches = ArrayList(swatchesTemp)
         swatches.sortWith(Comparator { swatch1, swatch2 -> swatch2.population - swatch1.population })
         return if (swatches.size > 0) swatches[0].rgb else R.color.colorPrimary
@@ -160,11 +160,11 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
     }
 
 
-    inner class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class MyPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
         val NUM_PAGES = 2
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             return when(position){
                 0 -> GeneralFragment.newInstance(getSymbol())
                 else -> TransactionsFragment.newInstance(getSymbol())

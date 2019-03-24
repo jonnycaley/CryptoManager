@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_top_mover.view.*
 
 
-class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, var context: Context?) : RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
+class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, var context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<TopMoversAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_top_mover, parent, false))
@@ -101,7 +101,7 @@ class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, v
         return articles.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val name = view.name
         val price = view.price

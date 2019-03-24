@@ -2,12 +2,12 @@ package com.jonnycaley.cryptomanager.ui.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v4.widget.NestedScrollView
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.core.widget.NestedScrollView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +24,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
 
-class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, TabInterface {
+class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.OnClickListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, TabInterface {
 
     lateinit var mView: View
 
@@ -37,7 +37,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
 
     val imageNoInternet by lazy { mView.findViewById<ImageView>(R.id.image_no_internet) }
 
-    val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
+    val swipeLayout by lazy { mView.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipelayout) }
 
     val nestedScrollView by lazy { mView.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
 
@@ -47,7 +47,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
     val layoutEmpty by lazy { mView.findViewById<LinearLayout>(R.id.layout_portfolio_empty) }
     val layoutNotEmty by lazy { mView.findViewById<LinearLayout>(R.id.layout_portfolio_not_empty) }
 
-    val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
     val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
     val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
@@ -457,7 +457,7 @@ class HomeFragment : Fragment(), HomeContract.View, View.OnClickListener, SwipeR
 
             showHoldingsLayout()
 
-            val mLayoutManager = LinearLayoutManager(context)
+            val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
             recyclerView.layoutManager = mLayoutManager
             holdingsAdapter = HoldingsAdapter(holdings, prices, baseFiat, this.chosenCurrency, allFiats, this.isPercentage, context)

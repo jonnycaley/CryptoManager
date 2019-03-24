@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_select_fiat.view.*
 
 
-class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: SelectCurrencyContract.Presenter,  var context: Context?) : RecyclerView.Adapter<SelectCurrenciesAdapter.ViewHolder>() {
+class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: SelectCurrencyContract.Presenter,  var context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<SelectCurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_select_fiat, parent, false))
@@ -41,7 +41,7 @@ class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: Select
         return currencies?.size ?: 0
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val symbol = view.symbol
         val name = view.name

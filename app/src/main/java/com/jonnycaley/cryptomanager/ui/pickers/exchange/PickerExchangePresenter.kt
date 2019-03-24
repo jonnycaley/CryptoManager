@@ -26,17 +26,19 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
         getExchanges(view.getCrypto())
     }
 
-    override fun getExchanges(crypto: String?) {
+    var exchanges = ArrayList<Exchange>()
 
-        var exchanges = ArrayList<Exchange>()
+    override fun getExchanges(crypto: String?) {
 
         dataManager.readAllExchanges()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { gson ->
-                    if(crypto != null){
-                        gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ exchanges.add(exchange) } } }
+                    exchanges.clear()
+                    if(crypto != null) {
+                        gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ exchanges?.add(exchange) } } }
                     } else {
+                        println("2")
                         exchanges = gson.exchanges as ArrayList<Exchange>
                     }
                 }
@@ -44,6 +46,7 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
                 .subscribe(object : SingleObserver<Unit?> {
                     override fun onSuccess(gson: Unit) {
                         view.showExchanges(exchanges)
+                        view.showSearchBar()
                         view.hideProgressBar()
                     }
 
@@ -58,6 +61,10 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
 
                     }
                 })
+    }
+
+    override fun filterExchanges(trim: String) {
+        view.showExchanges(exchanges?.filter { it.name?.toLowerCase().toString().contains(trim.toLowerCase()) })
     }
 
     override fun detachView() {

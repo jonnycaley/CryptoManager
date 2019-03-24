@@ -7,14 +7,14 @@
     tools:context=".ui.transactions.fiat.FiatTransactionActivity"
     android:background="?attr/backgroundcolor">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         android:id="@+id/app_bar_layout"
         app:elevation="0dp">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
@@ -22,7 +22,7 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             tools:targetApi="lollipop" />
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include
         layout="@layout/content_fiat_transaction"

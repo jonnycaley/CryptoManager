@@ -13,9 +13,11 @@ interface PickerExchangeContract {
         fun hideProgressBar()
         fun showProgressBar()
         fun showError()
+        fun showSearchBar()
     }
 
     interface Presenter : BasePresenter {
         fun getExchanges(crypto: String?)
+        fun filterExchanges(trim: String)
     }
 }

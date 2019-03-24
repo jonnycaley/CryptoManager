@@ -99,13 +99,21 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            view.showProgressBar()
+                            if(isBuy){
+                                view.startUpdateBuyProgress()
+                            } else {
+                                view.startUpdateSellProgress()
+                            }
                             view.disableTouchEvents()
                             compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
-                            view.hideProgressBar()
+                            if(isBuy){
+                                view.stopUpdateBuyProgress()
+                            } else {
+                                view.stopUpdateSellProgress()
+                            }
                             view.enableTouchEvents()
                             view.showError()
                             println("onError: ${e.message}")
@@ -350,13 +358,21 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            view.showProgressBar()
+                            if(isBuy){
+                                view.startCreateBuyProgress()
+                            } else {
+                                view.startCreateSellProgress()
+                            }
                             view.disableTouchEvents()
                             compositeDisposable?.add(d)
                         }
 
                         override fun onError(e: Throwable) {
-                            view.hideProgressBar()
+                            if(isBuy){
+                                view.stopCreateBuyProgress()
+                            } else {
+                                view.stopCreateSellProgress()
+                            }
                             view.enableTouchEvents()
                             view.showError()
                             println("onError: ${e.message}")
@@ -453,7 +469,6 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                     }
 
                     override fun onError(e: Throwable) {
-                        view.hideProgressBar()
                         view.enableTouchEvents()
                         view.showError()
                         println("onError: ${e.message}")

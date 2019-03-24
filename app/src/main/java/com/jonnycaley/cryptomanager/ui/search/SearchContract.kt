@@ -13,6 +13,7 @@ interface SearchContract {
         fun showProgressLayout()
         fun hideProgressLayout()
         fun showError()
+        fun showSearchBar()
     }
 
     interface Presenter : BasePresenter {

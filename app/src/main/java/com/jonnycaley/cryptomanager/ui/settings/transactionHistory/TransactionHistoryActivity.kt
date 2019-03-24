@@ -1,12 +1,12 @@
 package com.jonnycaley.cryptomanager.ui.settings.transactionHistory
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
@@ -21,7 +21,7 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
 
     lateinit var transactionsAdapter : TransactionsAdapter
 
-    val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
     val layoutNoTransactions by lazy { findViewById<LinearLayout>(R.id.layout_no_transactions) }
 
@@ -46,7 +46,7 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
 
     override fun showTransactions(transactions: ArrayList<Transaction>) {
 
-        val mLayoutManager = LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), this)
         recyclerView.adapter = transactionsAdapter

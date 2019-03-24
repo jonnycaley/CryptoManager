@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.support.annotation.RequiresApi
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +23,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
 
-class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, TabInterface, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     lateinit var root: View
 
@@ -35,11 +35,11 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
     val imageNoInternet by lazy { root.findViewById<ImageView>(R.id.image_no_internet) }
     val textTryAgain by lazy { root.findViewById<TextView>(R.id.text_try_again) }
 
-    val recyclerViewCurrencies by lazy { root.findViewById<RecyclerView>(R.id.recycler_view_currencies) }
+    val recyclerViewCurrencies by lazy { root.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_currencies) }
     val searchView by lazy { root.findViewById<SearchView>(R.id.search_view_currencies) }
     val progressBar by lazy { root.findViewById<ProgressBar>(R.id.progress_bar_bottom) }
     val progressBarLayout by lazy { root.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
-    val swipeRefreshLayout by lazy { root.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
+    val swipeRefreshLayout by lazy { root.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipelayout) }
     val nestedScrollView by lazy { root.findViewById<ScrollView>(R.id.nested_scroll_view) }
 
     val rank by lazy { root.findViewById<TextView>(R.id.rank) }
@@ -245,7 +245,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
     }
 
-    var mLayoutManager: LinearLayoutManager? = null
+    var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun getCurrenciesAdapterCount(): Int {
         if (mLayoutManager == null)
@@ -268,7 +268,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 
             Log.i(TAG, currencies.size.toString() + " S E E  H E R E2")
 
-            mLayoutManager = LinearLayoutManager(context)
+            mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             recyclerViewCurrencies.layoutManager = mLayoutManager
             currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseFiat, context, timeframe)
             recyclerViewCurrencies.adapter = currenciesAdapter
@@ -423,7 +423,7 @@ class MarketsFragment : Fragment(), MarketsContract.View, TabInterface, SwipeRef
 //    }
 
 
-    var layoutManager: LinearLayoutManager? = null
+    var layoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun onRefresh() {
         presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.itemCount, searchView.query.trim())

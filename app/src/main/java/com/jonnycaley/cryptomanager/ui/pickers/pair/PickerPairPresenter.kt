@@ -21,6 +21,8 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
         getPairs(view.getExchange(), view.getCryproSymbol())
     }
 
+    val converters = ArrayList<String>()
+
     override fun getPairs(exchange: String?, crytpoSymbol: String?) {
 
         dataManager.getExchanges()
@@ -35,8 +37,6 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
                     }
                 }
                 .map { exchanges ->
-
-                    val converters = ArrayList<String>()
 
                     exchanges.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } }
 
@@ -53,6 +53,7 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
                     override fun onSuccess(converters: ArrayList<String>) {
                         view.showPairs(converters)
                         view.hideProgressBar()
+                        view.showSearchbar()
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -66,6 +67,10 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
                         view.hideProgressBar()
                     }
                 })
+    }
+
+    override fun filterPairs(trim: String) {
+        view.showPairs(converters.filter { it.toLowerCase().contains(trim.toLowerCase()) })
     }
 
     override fun detachView() {

@@ -76,14 +76,22 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            view.showProgressBar()
+                            if(quantity > 0){
+                                view.startUpdateDepositProgress()
+                            } else {
+                                view.startUpdateWithdrawlProgress()
+                            }
                             view.disableTouchEvents()
                             compositeDisposable?.add(d)
 //                        view.showProgressBar()
                         }
 
                         override fun onError(e: Throwable) {
-                            view.hideProgressBar()
+                            if(quantity > 0){
+                                view.stopUpdateDepositProgress()
+                            } else {
+                                view.stopUpdateWithdrawlProgress()
+                            }
                             view.enableTouchEvents()
                             view.showError()
                             println("onError: ${e.message}")
@@ -232,14 +240,22 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                         }
 
                         override fun onSubscribe(d: Disposable) {
-                            view.showProgressBar()
+                            if(quantity > 0){
+                                view.startCreateDepositProgress()
+                            } else {
+                                view.startCreateWithdrawlProgress()
+                            }
                             view.disableTouchEvents()
                             compositeDisposable?.add(d)
 //                        view.showProgressBar()
                         }
 
                         override fun onError(e: Throwable) {
-                            view.hideProgressBar()
+                            if(quantity > 0){
+                                view.stopCreateDepositProgress()
+                            } else {
+                                view.stopCreateWithdrawlProgress()
+                            }
                             view.enableTouchEvents()
                             view.showError()
                             println("onError: ${e.message}")
@@ -332,7 +348,6 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
                         }
 
                         override fun onError(e: Throwable) {
-                            view.hideProgressBar()
                             view.enableTouchEvents()
                             view.showError()
                             println("onError: ${e.message}")

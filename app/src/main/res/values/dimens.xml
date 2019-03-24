@@ -18,6 +18,7 @@
     <dimen name="extra_large_text_size">30sp</dimen>
     <dimen name="extra_small_text_size">10sp</dimen>
 
+    <dimen name="radius">3dp</dimen>
 
     <dimen name="card_corner_radius">10dp</dimen>
     <dimen name="layout_empty">53dp</dimen>

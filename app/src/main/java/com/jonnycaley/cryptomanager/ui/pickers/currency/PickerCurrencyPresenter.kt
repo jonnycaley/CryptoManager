@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.pickers.currency
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
+import com.jonnycaley.cryptomanager.utils.Utils
 import io.reactivex.Observer
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,6 +27,8 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
         getFiats()
     }
 
+    var fiatz : ExchangeRates? = null
+
     override fun getFiats() {
         if(dataManager.checkConnection()){
 
@@ -42,7 +45,9 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
                         }
 
                         override fun onNext(fiats: ExchangeRates) {
-                            view.showFiats(fiats)
+                            fiatz = fiats
+                            view.showFiats(fiats.rates)
+                            view.showSearchBar()
                             view.hideProgressBar()
                         }
 
@@ -61,6 +66,12 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
                     })
         } else {
             view.showNoInternetLayout()
+        }
+    }
+
+    override fun filterFiats(trim: String) {
+        fiatz?.let { fiats ->
+            view.showFiats(fiats.rates?.filter { it.fiat?.toLowerCase().toString().contains(trim.toLowerCase()) || Utils.getFiatName(it.fiat).toLowerCase().contains(trim.toLowerCase()) })
         }
     }
 

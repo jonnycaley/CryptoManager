@@ -2,7 +2,7 @@ package com.jonnycaley.cryptomanager.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +24,7 @@ import java.math.BigDecimal
 import android.widget.RelativeLayout
 import java.math.RoundingMode
 
-class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
+class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Price>, val baseFiat: Rate, val chosenCurrency: String, val allFiats: ArrayList<Rate>, val isPercentage: Boolean, val context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<HoldingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_holding, parent, false))
@@ -411,7 +411,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
         return holdings.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val currency = view.currency
         //        val textFiat = view.text_fiat

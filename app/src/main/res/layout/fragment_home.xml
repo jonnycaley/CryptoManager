@@ -13,15 +13,18 @@
 
     <include
         android:id="@+id/layout_progress"
-        layout="@layout/layout_progress"/>
+        layout="@layout/layout_progress"
+        android:visibility="gone"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <!--TODO: change above to true-->
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/backgroundcolor">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -89,12 +92,8 @@
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:rrb_rippleColor="?attr/textcolor"
                         app:rrb_checked="true"
-                        app:rrb_drawableGravity="left"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
                         app:rrb_text="1H"
                         app:rrb_textColor="?attr/textcolorsecondary"
                         app:rrb_textColorTo="?attr/textcolor"
@@ -105,10 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:rrb_drawableGravity="top"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
+                        app:rrb_rippleColor="?attr/textcolor"
                         app:rrb_text="1D"
                         app:rrb_textColor="?attr/textcolorsecondary"
                         app:rrb_textColorTo="?attr/textcolor"
@@ -118,11 +114,7 @@
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
+                        app:rrb_rippleColor="?attr/textcolor"
                         app:rrb_text="1W"
                         app:rrb_textColor="?attr/textcolorsecondary"
                         app:rrb_textColorTo="?attr/textcolor"
@@ -133,11 +125,7 @@
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_selectorColor="@color/black"
+                        app:rrb_rippleColor="?attr/textcolor"
                         app:rrb_text="1M"
                         app:rrb_textColor="?attr/textcolorsecondary"
                         app:rrb_textColorTo="?attr/textcolor"
@@ -149,11 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:rrb_drawableGravity="right"
-                        app:rrb_drawableHeight="36dp"
-                        app:rrb_drawablePadding="4dp"
-                        app:rrb_drawableWidth="36dp"
-                        app:rrb_rippleColor="@color/black"
-                        app:rrb_selectorColor="@color/black"
+                        app:rrb_rippleColor="?attr/textcolor"
                         app:rrb_text="All"
                         app:rrb_textColor="?attr/textcolorsecondary"
                         app:rrb_textColorTo="?attr/textcolor"
@@ -175,8 +159,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="50"
                         android:text="Add Fiat"
-                        android:textColor="?attr/textcolor" />
-
+                        android:textColor="@color/white"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:layout_marginEnd="@dimen/default_margin"/>
 
                     <Button
                         android:id="@+id/button_add_currency"
@@ -184,7 +169,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="50"
                         android:text="Add currency"
-                        android:textColor="?attr/textcolor" />
+                        android:textColor="@color/white"
+                        android:backgroundTint="?attr/colorPrimary"
+                        android:layout_marginStart="@dimen/default_margin" />
 
                 </LinearLayout>
 
@@ -253,7 +240,7 @@
 
                     </RelativeLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -264,9 +251,9 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <!--</com.reginald.swiperefresh.CustomSwipeRefreshLayout>-->
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

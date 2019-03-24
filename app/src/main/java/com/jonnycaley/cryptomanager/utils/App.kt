@@ -13,7 +13,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         RxPaperBook.init(this)
-
         val mPrefs : SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
         this.isNightModeEnabled = mPrefs.getBoolean("NIGHT_MODE", false)
     }

@@ -1,11 +1,11 @@
 package com.jonnycaley.cryptomanager.ui.settings.selectCurrency
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
@@ -19,7 +19,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
 
     private lateinit var presenter : SelectCurrencyContract.Presenter
 
-    val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
     lateinit var currenciesAdapter : SelectCurrenciesAdapter
 
@@ -84,7 +84,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
 //            data.add(datum)
 //        }
 
-        val mLayoutManager = LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SelectCurrenciesAdapter(fiats, presenter, this)
         recyclerView.adapter = currenciesAdapter

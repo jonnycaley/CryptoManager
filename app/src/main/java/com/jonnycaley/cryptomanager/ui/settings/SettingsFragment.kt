@@ -2,10 +2,10 @@ package com.jonnycaley.cryptomanager.ui.settings
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +21,7 @@ import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
+class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View, TabInterface {
 
     lateinit var mView : View
 
@@ -31,7 +31,7 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
 
     val TAG = this.javaClass.simpleName
 
-    val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
     val switchTheme by lazy { mView.findViewById<Switch>(R.id.switch_theme) }
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
@@ -94,7 +94,7 @@ class SettingsFragment : Fragment(), SettingsContract.View, TabInterface {
         val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})", "Send Feedback", "Full transaction history", "Share this app", "Review this app", "Version $versionName"))
 
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
-        val mLayoutManager = LinearLayoutManager(context)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
         settingsAdapter = SettingsAdapter(settingsList, presenter, context)
         recyclerView.adapter = settingsAdapter

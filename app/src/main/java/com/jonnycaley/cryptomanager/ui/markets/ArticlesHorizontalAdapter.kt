@@ -2,8 +2,8 @@ package com.jonnycaley.cryptomanager.ui.markets
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_horizontal.view.*
 
 
-class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var savedArticles : ArrayList<Article>?, val context: Context?, val presenter: MarketsContract.Presenter) : RecyclerView.Adapter<ArticlesHorizontalAdapter.ViewHolder>() {
+class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var savedArticles : ArrayList<Article>?, val context: Context?, val presenter: MarketsContract.Presenter) : androidx.recyclerview.widget.RecyclerView.Adapter<ArticlesHorizontalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_horizontal, parent, false))
@@ -59,7 +59,7 @@ class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var sa
         return latestArticles?.size ?: 0
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val title = view.title
         val category = view.source

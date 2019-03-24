@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.news
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +17,7 @@ import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 
-class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, var savedArticles: ArrayList<Article>, var context: Context?, var presenter: NewsContract.Presenter?) : RecyclerView.Adapter<NewsArticlesVerticalAdapter.ViewHolder>() {
+class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, var savedArticles: ArrayList<Article>, var context: Context?, var presenter: NewsContract.Presenter?) : androidx.recyclerview.widget.RecyclerView.Adapter<NewsArticlesVerticalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))
@@ -232,7 +232,7 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         return newsItems.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val title = view.title

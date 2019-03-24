@@ -1,10 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.article
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
@@ -12,7 +12,7 @@ import com.jonnycaley.cryptomanager.R
 import android.webkit.WebViewClient
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView
 import com.takusemba.multisnaprecyclerview.OnSnapListener
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.widget.Toast
@@ -101,7 +101,7 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
     }
 
     private fun setupRelated() {
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
 
         recyclerviewSnap.layoutManager = layoutManager
         recyclerviewSnap.adapter = adapter

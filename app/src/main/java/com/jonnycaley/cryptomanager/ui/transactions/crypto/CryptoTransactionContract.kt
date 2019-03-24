@@ -15,12 +15,18 @@ interface CryptoTransactionContract {
         fun showCurrentPrice(price: String)
         fun showSellAllAmount(amount: BigDecimal)
         fun getName(): String
-        fun showProgressBar()
         fun disableTouchEvents()
-        fun hideProgressBar()
         fun enableTouchEvents()
         fun showError()
         fun showNoInternet()
+        fun startUpdateBuyProgress()
+        fun startUpdateSellProgress()
+        fun stopUpdateBuyProgress()
+        fun stopUpdateSellProgress()
+        fun startCreateBuyProgress()
+        fun startCreateSellProgress()
+        fun stopCreateBuyProgress()
+        fun stopCreateSellProgress()
     }
 
     interface Presenter : BasePresenter {

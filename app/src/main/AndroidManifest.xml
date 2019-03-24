@@ -81,19 +81,19 @@
         <activity
             android:name=".ui.pickers.currency.PickerCurrencyActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/picker_currency_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.pickers.exchange.PickerExchangeActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/picker_exchange_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.pickers.pair.PickerPairActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/picker_pair_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

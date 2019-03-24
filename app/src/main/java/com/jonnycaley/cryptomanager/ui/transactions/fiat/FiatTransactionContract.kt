@@ -12,10 +12,16 @@ interface FiatTransactionContract {
         fun onTransactionCreated()
         fun showError()
         fun enableTouchEvents()
-        fun hideProgressBar()
         fun showNoInternet()
-        fun showProgressBar()
         fun disableTouchEvents()
+        fun startUpdateDepositProgress()
+        fun startUpdateWithdrawlProgress()
+        fun stopUpdateDepositProgress()
+        fun stopUpdateWithdrawlProgress()
+        fun startCreateDepositProgress()
+        fun startCreateWithdrawlProgress()
+        fun stopCreateDepositProgress()
+        fun stopCreateWithdrawlProgress()
     }
 
     interface Presenter : BasePresenter {

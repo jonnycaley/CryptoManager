@@ -2,8 +2,8 @@ package com.jonnycaley.cryptomanager.ui.settings.savedArticles
 
 import android.content.Context
 import android.graphics.Color
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 
 
-class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Context?, val presenter: SavedArticlesContract.Presenter) : RecyclerView.Adapter<SavedArticlesAdapter.ViewHolder>() {
+class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Context?, val presenter: SavedArticlesContract.Presenter) : androidx.recyclerview.widget.RecyclerView.Adapter<SavedArticlesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))
@@ -78,7 +78,7 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
         return articles?.size ?: 0
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val title = view.title

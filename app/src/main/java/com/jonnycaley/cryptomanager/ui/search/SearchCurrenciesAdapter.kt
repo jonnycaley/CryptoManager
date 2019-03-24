@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.search
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*
 
-class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: String?, var baseUrl: String?, var context: Context?) : RecyclerView.Adapter<SearchCurrenciesAdapter.ViewHolder>() {
+class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: String?, var baseUrl: String?, var context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<SearchCurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_currencies, parent, false))
@@ -61,7 +61,7 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
         return currencies?.size ?: 0
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val name = view.name

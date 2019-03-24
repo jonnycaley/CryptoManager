@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.pickers.currency
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*
 
 
-class PickerCurrenciesAdapter(var currencies: List<Datum>?, var context: Context?, var view: PickerCurrencyContract.View) : RecyclerView.Adapter<PickerCurrenciesAdapter.ViewHolder>() {
+class PickerCurrenciesAdapter(var currencies: List<Datum>?, var context: Context?, var view: PickerCurrencyContract.View) : androidx.recyclerview.widget.RecyclerView.Adapter<PickerCurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_currencies, parent, false))
@@ -49,7 +49,7 @@ class PickerCurrenciesAdapter(var currencies: List<Datum>?, var context: Context
         return currencies?.size ?: 0
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val name = view.name

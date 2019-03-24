@@ -5,13 +5,13 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +40,7 @@ import java.text.DecimalFormat
 import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
-class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnRefreshListener {
+class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var presenter: GeneralContract.Presenter
 
@@ -53,9 +53,9 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
     val price: TextView by lazy { mView.findViewById<TextView>(R.id.price) }
     val change: TextView by lazy { mView.findViewById<TextView>(R.id.change) }
 
-    val scrollLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout>(R.id.swipelayout) }
+    val scrollLayout by lazy { mView.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipelayout) }
 
-    val recyclerViewNews: RecyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_news) }
+    val recyclerViewNews: androidx.recyclerview.widget.RecyclerView by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_news) }
 
     val radioGroup: RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
@@ -90,7 +90,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
         presenter.onResume()
     }
 
-    var mLayoutManager : LinearLayoutManager? = null
+    var mLayoutManager : androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun updateSavedArticles(articles: ArrayList<Article>) {
         if(mLayoutManager != null){
@@ -184,7 +184,7 @@ class GeneralFragment : Fragment(), GeneralContract.View, SwipeRefreshLayout.OnR
 
         if(mLayoutManager == null){
 
-            mLayoutManager = LinearLayoutManager(context)
+            mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             recyclerViewNews.layoutManager = mLayoutManager
             articlesVerticalAdapter = GeneralArticlesVerticalAdapter(arrayNews, savedArticles, context, presenter)
             recyclerViewNews.adapter = articlesVerticalAdapter

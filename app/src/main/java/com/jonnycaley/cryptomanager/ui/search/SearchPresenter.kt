@@ -44,6 +44,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
                         allFiats?.rates?.let { view.showFiats(it, true) }
+                        view.showSearchBar()
                         view.hideProgressLayout()
                     }
 
@@ -72,6 +73,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
                         view.showCurrencies(allCurrencies?.data, allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl)
+                        view.showSearchBar()
                         view.hideProgressLayout()
                     }
 

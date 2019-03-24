@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.app.Activity
 import android.graphics.Color
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatDelegate
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatDelegate
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager

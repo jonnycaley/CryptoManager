@@ -42,4 +42,6 @@
     <string name="error_occurred">An error occurred</string>
     <string name="fiat_transaction_activity">Fiat Transaction</string>
     <string name="crypto_transaction_activity">Crypto Transaction</string>
+    <string name="none" />
+    <string name="Retry">Retry</string>
 </resources>

@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.settings
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,15 +9,15 @@ import com.jonnycaley.cryptomanager.R
 import kotlinx.android.synthetic.main.item_settings.view.*
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
 import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
-import android.support.v4.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v4.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
 
-class SettingsAdapter(val settings: ArrayList<String>, val presenter: SettingsContract.Presenter, val context: Context?) : RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
+class SettingsAdapter(val settings: ArrayList<String>, val presenter: SettingsContract.Presenter, val context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_settings, parent, false))
@@ -84,7 +84,7 @@ class SettingsAdapter(val settings: ArrayList<String>, val presenter: SettingsCo
         return settings.size
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val setting = view.setting
     }

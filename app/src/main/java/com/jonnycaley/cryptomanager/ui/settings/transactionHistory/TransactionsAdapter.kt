@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.settings.transactionHistory
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_history.view.*
 
-class TransactionsAdapter(val transactions: List<Transaction>?, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val transactions: List<Transaction>?, val context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_transaction_history, parent, false))
@@ -65,7 +65,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
         return transactions?.size ?: 0
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val date = view.date
         val pair = view.pair
         val description = view.description

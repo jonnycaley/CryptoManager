@@ -13,7 +13,7 @@
 
     <include layout="@layout/layout_progress"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipelayout"
@@ -22,7 +22,7 @@
         android:visibility="gone"
         android:descendantFocusability="blocksDescendants">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -47,7 +47,7 @@
                     <!--android:textSize="@dimen/header_text_size"-->
                     <!--android:textStyle="bold" />-->
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/card_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
 
                         </LinearLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
 
                     <TextView
@@ -174,7 +174,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -229,7 +229,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -243,7 +243,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView
+                                <androidx.cardview.widget.CardView
                                     xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
@@ -299,7 +299,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -313,7 +313,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -368,7 +368,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -382,7 +382,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -437,7 +437,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -459,7 +459,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -514,7 +514,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -528,7 +528,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -583,7 +583,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -597,7 +597,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -652,7 +652,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -666,7 +666,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
@@ -721,7 +721,7 @@
 
                                     </RelativeLayout>
 
-                                </android.support.v7.widget.CardView>
+                                </androidx.cardview.widget.CardView>
 
                             </RelativeLayout>
 
@@ -752,7 +752,7 @@
                     <!--android:textStyle="bold" />-->
 
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/shimmer_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -763,8 +763,8 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

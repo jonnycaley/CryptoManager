@@ -1,11 +1,11 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.widget.NestedScrollView
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.core.widget.NestedScrollView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
 
-class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+class TransactionsFragment : androidx.fragment.app.Fragment(), TransactionsContract.View, View.OnClickListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var presenter : TransactionsContract.Presenter
 
@@ -28,9 +28,9 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
     lateinit var mView : View
 
     val buttonAddTransaction by lazy { mView.findViewById<Button>(R.id.button_add_transaction) }
-    val recyclerView by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
-    val swipeLayout by lazy { mView.findViewById<SwipeRefreshLayout>(R.id.swipelayout) }
+    val swipeLayout by lazy { mView.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipelayout) }
 
     val nestedScrollView by lazy { mView.findViewById<NestedScrollView>(R.id.nested_scroll_view) }
 
@@ -85,7 +85,7 @@ class TransactionsFragment : Fragment(), TransactionsContract.View, View.OnClick
 
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {
 
-        val mLayoutManager = LinearLayoutManager(context)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         recyclerView.layoutManager = mLayoutManager
         transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), currencySymbol, currentUsdPrice?.toBigDecimal(), baseFiat, context)
         recyclerView.adapter = transactionsAdapter

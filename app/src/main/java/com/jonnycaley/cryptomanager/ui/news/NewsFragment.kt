@@ -4,13 +4,13 @@ import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.CardView
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
+import androidx.core.widget.NestedScrollView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,13 +26,13 @@ import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatDelegate
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.appcompat.app.AppCompatDelegate
 import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoArgs
 
 
-class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener, SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContract.View, OnLikeListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     lateinit var mView: View
 
@@ -48,13 +48,13 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
     val textRetry by lazy { mView.findViewById<TextView>(R.id.text_try_again) }
 
     val scrollLayout by lazy { mView.findViewById<NestedScrollView>(R.id.scroll_layout) }
-    val swipeLayout by lazy { mView.findViewById<android.support.v4.widget.SwipeRefreshLayout>(R.id.swipelayout) }
+    val swipeLayout by lazy { mView.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipelayout) }
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
-    val recyclerViewShimmerNews by lazy { mView.findViewById<RecyclerView>(R.id.shimmer_recycler_view) }
+    val recyclerViewShimmerNews by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.shimmer_recycler_view) }
 //    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
 
-    val cardTopArticle by lazy { mView.findViewById<CardView>(R.id.card_view) }
+    val cardTopArticle by lazy { mView.findViewById<androidx.cardview.widget.CardView>(R.id.card_view) }
 
     val cardImage by lazy { mView.findViewById<ImageView>(R.id.card_image) }
     val cardTitle by lazy { mView.findViewById<TextView>(R.id.card_title) }
@@ -204,7 +204,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
         progressBarLayout.visibility = View.VISIBLE
     }
 
-    var newsLayoutManager: LinearLayoutManager? = null
+    var newsLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
@@ -225,7 +225,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
 
         if(newsLayoutManager == null) {
 
-            newsLayoutManager = LinearLayoutManager(context)
+            newsLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
             recyclerViewShimmerNews.layoutManager = newsLayoutManager
             articlesVerticalAdapter = NewsArticlesVerticalAdapter(templist, savedArticles, context, presenter)
@@ -310,7 +310,7 @@ class NewsFragment : Fragment(), TabInterface, NewsContract.View, OnLikeListener
         cardDate.text = Utils.getTimeFrom(article.publishedAt)
     }
 
-    var layoutManager: LinearLayoutManager? = null
+    var layoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
     override fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
 //        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,

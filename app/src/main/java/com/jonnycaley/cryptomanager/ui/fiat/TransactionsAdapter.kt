@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.fiat
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_fiat_transaction.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transactions: List<Transaction>?, val context: Context?, val view: FiatContract.View) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transactions: List<Transaction>?, val context: Context?, val view: FiatContract.View) : androidx.recyclerview.widget.RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_fiat_transaction, parent, false))
@@ -60,7 +60,7 @@ class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transa
         return transactions?.size ?: 0
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val amount = view.amount
         val to = view.to

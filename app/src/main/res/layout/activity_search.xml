@@ -10,36 +10,35 @@
     android:orientation="vertical"
     android:background="?attr/backgroundcolor">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="?attr/textcolor"
             tools:targetApi="lollipop"
-            android:background="?attr/backgroundcolor" />
+            android:background="?attr/backgroundcolor" >
 
-    </android.support.design.widget.AppBarLayout>
+            <include
+                layout="@layout/layout_searchbar"
+                android:id="@+id/layout_searchbar" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include
         android:id="@+id/progress_bar_layout"
-        layout="@layout/layout_progress" />
+        layout="@layout/layout_progress"
+        android:visibility="gone"/>
 
-    <SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/backgroundcolor"
-        android:queryBackground="?attr/backgroundcolor"
-        android:submitBackground="?attr/backgroundcolor"/>
-
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

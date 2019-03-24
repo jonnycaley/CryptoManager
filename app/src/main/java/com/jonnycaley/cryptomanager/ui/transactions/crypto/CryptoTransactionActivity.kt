@@ -5,14 +5,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
-import android.text.InputType
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
@@ -44,6 +41,17 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     val buttonDelete by lazy { findViewById<ImageView>(R.id.button_delete) }
 
+    val layoutSell by lazy { findViewById<LinearLayout>(R.id.layout_sell_checked) }
+    val layoutBuy by lazy { findViewById<LinearLayout>(R.id.layout_buy_checked) }
+
+    val progressButtonCreateBuy by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_buy) }
+    val progressButtonCreateSell by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_sell) }
+    val progressButtonUpdateBuy by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_buy) }
+    val progressButtonUpdateSell by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_sell) }
+
+    val textviewBuy by lazy { findViewById<TextView>(R.id.text_view_buy) }
+    val textviewSell by lazy { findViewById<TextView>(R.id.text_view_sell) }
+
     val headerImage by lazy { findViewById<ImageView>(R.id.header_image) }
     val headerName by lazy { findViewById<TextView>(R.id.header_text_name) }
     val headerSymbol by lazy { findViewById<TextView>(R.id.header_text_symbol) }
@@ -70,15 +78,11 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     val textSellAll by lazy { findViewById<TextView>(R.id.text_sell_all) }
 
-    val radioButtonWithdrawl by lazy { findViewById<RadioButton>(R.id.radio_button_withdrawl) }
-    val radioButtonDeposit by lazy { findViewById<RadioButton>(R.id.radio_button_deposit) }
-
     val switchDeduct by lazy { findViewById<Switch>(R.id.switch_deduct) }
 
     val edittextNotes by lazy { findViewById<MaterialEditText>(R.id.edit_text_notes) }
 
-    val textSubmit by lazy { findViewById<TextView>(R.id.text_view_update) }
-    val submitProgressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar_submit) }
+//    val textSubmit by lazy { findViewById<TextView>(R.id.text_view_update) }
 
     var transactionDate = Calendar.getInstance().time
 
@@ -99,6 +103,11 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
         }
+
+        progressButtonCreateBuy.visibility = View.GONE
+        progressButtonCreateSell.visibility = View.GONE
+        progressButtonUpdateBuy.visibility = View.GONE
+        progressButtonUpdateSell.visibility = View.GONE
 
         args.transaction?.let { transaction ->
 
@@ -126,16 +135,25 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         presenter.attachView()
     }
 
-    override fun showProgressBar() {
-        submitProgressBar.visibility = View.VISIBLE
+
+    private fun hideSellLayout() {
+        layoutSell.visibility = View.GONE
+    }
+
+    private fun showBuyLayout() {
+        layoutBuy.visibility = View.VISIBLE
+    }
+
+    private fun hideBuyLayout() {
+        layoutBuy.visibility = View.GONE
+    }
+
+    private fun showSellLayout() {
+        layoutSell.visibility = View.VISIBLE
     }
 
     override fun disableTouchEvents() {
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    override fun hideProgressBar() {
-        submitProgressBar.visibility = View.GONE
     }
 
     override fun enableTouchEvents() {
@@ -182,9 +200,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     private fun setupCreate(transaction: NotTransaction) {
         buttonDelete.visibility = View.GONE
-        textSubmit.text = "Create"
+        showCreateBuy()
     }
-
 
     private fun setupBody() {
 
@@ -206,11 +223,16 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         layoutFilledPair.setOnClickListener(this)
         layoutEmptyExchange.setOnClickListener(this)
         layoutFilledExchange.setOnClickListener(this)
-        radioButtonDeposit.setOnClickListener(this)
-        radioButtonWithdrawl.setOnClickListener(this)
+        textviewBuy.setOnClickListener(this)
+        textviewSell.setOnClickListener(this)
+        textviewSell.setOnClickListener(this)
         textSellAll.setOnClickListener(this)
-        textSubmit.setOnClickListener(this)
         buttonDelete.setOnClickListener(this)
+
+        progressButtonCreateBuy.setOnClickListener(this)
+        progressButtonCreateSell.setOnClickListener(this)
+        progressButtonUpdateBuy.setOnClickListener(this)
+        progressButtonUpdateSell.setOnClickListener(this)
     }
 
     private fun setupToolbarUpdate(transaction: Transaction) {
@@ -233,11 +255,17 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         textPrice.text = "Price in ${transaction.pairSymbol}"
         if (transaction.quantity > 0.toBigDecimal()) {
             textDeduction.text = "Deduct from ${getPairText()}holdings"
-            radioButtonDeposit.isChecked = true
+            showUpdateBuy()
+            hideUpdateSell()
+            showBuyLayout()
+            hideSellLayout()
         }
         else {
             textDeduction.text = "Add to ${getPairText()}holdings"
-            radioButtonWithdrawl.isChecked = true
+            showUpdateSell()
+            hideUpdateBuy()
+            showSellLayout()
+            hideBuyLayout()
         }
 
         requiredExchange.text = transaction.exchange
@@ -259,11 +287,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     var isLoading = false
 
-
     override fun onClick(view: View?) {
         lateinit var i: Intent
-
-        println("onClick")
 
             when (view?.id) {
                 buttonDelete.id -> {
@@ -274,7 +299,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                     showDatePicker()
                 }
                 layoutPrice.id -> {
-                    println("pricelayout onclick")
                     focusEdittext(requiredPrice)
                     //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
                 }
@@ -304,43 +328,139 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                     i.putExtra(CRYPTO_KEY, getSymbol())
                     startActivityForResult(i, REQUEST_CODE_EXCHANGE)
                 }
-                radioButtonDeposit.id -> {
+                textviewBuy.id -> {
                     textDeduction.text = "Deduct from ${getPairText()}holdings"
                     textSellAll.visibility = View.GONE
+
+                    if(isUpdateTransaction) {
+                        showUpdateBuy()
+                        hideUpdateSell()
+                    }
+                    else {
+                        showCreateBuy()
+                        hideCreateSell()
+                    }
+                    showBuyLayout()
+                    hideSellLayout()
                 }
-                radioButtonWithdrawl.id -> {
+                textviewSell.id -> {
                     textDeduction.text = "Add to ${getPairText()}holdings"
                     textSellAll.visibility = View.VISIBLE
+                    if(isUpdateTransaction) {
+                        showUpdateSell()
+                        hideUpdateBuy()
+                    }
+                    else {
+                        showCreateSell()
+                        hideCreateBuy()
+                    }
+                    showSellLayout()
+                    hideBuyLayout()
                 }
                 textSellAll.id -> {
                     presenter.getAllHoldings(getSymbol())
-
                 }
-                textSubmit.id -> {
-                    if (checkFields()) {
-                        preventChanges()
-                        if (transactionDate > Calendar.getInstance().time) {
-                            transactionDate = Calendar.getInstance().time
-                        }
-
-                        args.transaction?.let { transaction ->
-                            println("update")
-                            val tempDate: Date
-                            if (isDateChanged)
-                                tempDate = transactionDate
-                            else {
-                                tempDate = transaction.date
-                            }
-                        presenter.updateCryptoTransaction(transaction, radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/")+1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), tempDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
-                        }
-                        if (!isUpdateTransaction) {
-                            presenter.createCryptoTransaction(radioButtonDeposit.isChecked, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/") + 1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), transactionDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
-                        }
-                    }
+                progressButtonCreateBuy.id -> {
+                    startProcess(true)
+                }
+                progressButtonCreateSell.id -> {
+                    startProcess(false)
+                }
+                progressButtonUpdateBuy.id -> {
+                    startProcess(true)
+                }
+                progressButtonUpdateSell.id -> {
+                    startProcess(false)
                 }
             }
     }
 
+    private fun hideCreateBuy() {
+        progressButtonCreateBuy.visibility = View.GONE
+    }
+
+    private fun showCreateSell() {
+        progressButtonCreateSell.visibility = View.VISIBLE
+    }
+
+    private fun hideUpdateBuy() {
+        progressButtonUpdateBuy.visibility = View.GONE
+    }
+
+    private fun showUpdateSell() {
+        progressButtonUpdateSell.visibility = View.VISIBLE
+    }
+
+    private fun hideCreateSell() {
+        progressButtonCreateSell.visibility = View.GONE
+    }
+
+    private fun showCreateBuy() {
+        progressButtonCreateBuy.visibility = View.VISIBLE
+    }
+
+    private fun hideUpdateSell() {
+        progressButtonUpdateSell.visibility = View.GONE
+    }
+
+    private fun showUpdateBuy() {
+        progressButtonUpdateBuy.visibility = View.VISIBLE
+    }
+
+    override fun startUpdateBuyProgress() {
+        progressButtonUpdateBuy.collapse()
+    }
+
+    override fun startUpdateSellProgress() {
+        progressButtonUpdateSell.collapse()
+    }
+
+    override fun stopUpdateBuyProgress() {
+        progressButtonUpdateBuy.expand()
+    }
+
+    override fun stopUpdateSellProgress() {
+        progressButtonUpdateSell.expand()
+    }
+
+    override fun startCreateBuyProgress() {
+        progressButtonCreateBuy.collapse()
+    }
+
+    override fun startCreateSellProgress() {
+        progressButtonCreateSell.collapse()
+    }
+
+    override fun stopCreateBuyProgress() {
+        progressButtonCreateBuy.expand()
+    }
+
+    override fun stopCreateSellProgress() {
+        progressButtonCreateSell.expand()
+    }
+
+    private fun startProcess(bool : Boolean) {
+        if (checkFields()) {
+            preventChanges()
+            if (transactionDate > Calendar.getInstance().time) {
+                transactionDate = Calendar.getInstance().time
+            }
+
+            args.transaction?.let { transaction ->
+                println("update")
+                val tempDate: Date
+                if (isDateChanged)
+                    tempDate = transactionDate
+                else {
+                    tempDate = transaction.date
+                }
+                presenter.updateCryptoTransaction(transaction, bool, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/")+1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), tempDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
+            }
+            if (!isUpdateTransaction) {
+                presenter.createCryptoTransaction(bool, requiredExchange.text.trim().toString(), requiredPair.text.trim().substring(requiredPair.text.indexOf("/") + 1), java.lang.Float.parseFloat(requiredPrice.text?.trim().toString()), java.lang.Float.parseFloat(requiredQuantity.text?.trim().toString()), transactionDate, switchDeduct.isChecked, edittextNotes.text?.trim().toString())
+            }
+        }
+    }
 
     private fun AskOption(): AlertDialog {
         return AlertDialog.Builder(this)
@@ -387,7 +507,7 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     }
 
     private fun showPairChanged(pair: String?) {
-        if (radioButtonDeposit.isChecked)
+        if (layoutBuy.visibility == View.VISIBLE)
             textDeduction.text = "Deduct from $pair holdings"
         else
             textDeduction.text = "Add to $pair holdings"

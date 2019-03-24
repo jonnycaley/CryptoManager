@@ -8,14 +8,14 @@
     android:background="?attr/backgroundcolor"
     tools:context=".ui.transactions.crypto.CryptoTransactionActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
@@ -50,44 +50,103 @@
 
             </RelativeLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include
         layout="@layout/content_crypto_transaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/layout_update"
+        android:layout_above="@id/layout_progress"
         android:layout_below="@id/app_bar_layout" />
 
     <LinearLayout
-        android:id="@+id/layout_update"
+        android:id="@+id/layout_progress"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/green"
-        android:gravity="center"
         android:orientation="vertical">
 
-
-        <ProgressBar
-            android:id="@+id/progress_bar_submit"
+        <com.ekalips.fancybuttonproj.FancyButton
+            android:id="@+id/progress_button_create_buy"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/large_margin"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/text_view_update"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Update"
-            android:padding="@dimen/large_margin"
-            android:textColor="@color/white"
-            android:textSize="@dimen/large_text_size"
+            android:padding="@dimen/default_margin"
+            android:textAlignment="center"
+            app:f_btnStyle="stroke_fill"
+            app:f_capsText="false"
+            app:f_fillColor="@color/light_green"
+            app:f_hideFillAfterCollapse="false"
+            app:f_progressColor="?attr/backgroundcolor"
+            app:f_strokeColor="@color/green"
+            app:f_strokeWidth="4"
+            app:f_text="Add Transaction"
+            app:f_textColor="@color/white"
+            app:f_textSize="@dimen/large_text_size"
+            android:visibility="visible"/>
+
+
+        <com.ekalips.fancybuttonproj.FancyButton
+            android:id="@+id/progress_button_create_sell"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:padding="@dimen/default_margin"
+            android:textAlignment="center"
+            app:f_btnStyle="stroke_fill"
+            app:f_capsText="false"
+            app:f_fillColor="@color/light_red"
+            app:f_hideFillAfterCollapse="false"
+            app:f_progressColor="?attr/backgroundcolor"
+            app:f_strokeColor="@color/red"
+            app:f_strokeWidth="4"
+            app:f_text="Add Transaction"
+            app:f_textColor="@color/white"
+            app:f_textSize="@dimen/large_text_size"
+            android:visibility="visible"/>
+
+
+        <com.ekalips.fancybuttonproj.FancyButton
+            android:id="@+id/progress_button_update_buy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/default_margin"
+            android:textAlignment="center"
+            app:f_btnStyle="stroke_fill"
+            app:f_capsText="false"
+            app:f_fillColor="@color/light_green"
+            app:f_hideFillAfterCollapse="false"
+            app:f_progressColor="?attr/backgroundcolor"
+            app:f_strokeColor="@color/green"
+            app:f_strokeWidth="4"
+            app:f_text="Update Transaction"
+            app:f_textColor="@color/white"
+            app:f_textSize="@dimen/large_text_size"
+            android:visibility="visible"/>
+
+
+        <com.ekalips.fancybuttonproj.FancyButton
+            android:id="@+id/progress_button_update_sell"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:padding="@dimen/default_margin"
+            android:textAlignment="center"
+            app:f_btnStyle="stroke_fill"
+            app:f_capsText="false"
+            app:f_fillColor="@color/light_red"
+            app:f_hideFillAfterCollapse="false"
+            app:f_progressColor="?attr/backgroundcolor"
+            app:f_strokeColor="@color/red"
+            app:f_strokeWidth="4"
+            app:f_text="Update Transaction"
+            app:f_textColor="@color/white"
+            app:f_textSize="@dimen/large_text_size"
             android:visibility="visible"/>
 
     </LinearLayout>

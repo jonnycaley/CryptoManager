@@ -1,10 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.base
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.news.NewsFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
@@ -16,14 +16,14 @@ import kotlinx.android.synthetic.main.content_home.*
 
 class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
-    lateinit var fragment: Fragment
+    lateinit var fragment: androidx.fragment.app.Fragment
 
     val args by lazy { BaseArgs.deserializeFrom(intent) }
 
-    val fragment1: Fragment = HomeFragment()
-    val fragment2: Fragment = MarketsFragment()
-    val fragment3: Fragment = NewsFragment()
-    val fragment4: Fragment = SettingsFragment()
+    val fragment1: androidx.fragment.app.Fragment = HomeFragment()
+    val fragment2: androidx.fragment.app.Fragment = MarketsFragment()
+    val fragment3: androidx.fragment.app.Fragment = NewsFragment()
+    val fragment4: androidx.fragment.app.Fragment = SettingsFragment()
 
     val fragment1TAG = "1"
     val fragment2TAG = "2"
@@ -35,13 +35,17 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     var TAG = this.javaClass.simpleName
 
-    private var currentFragment: Fragment? = null
+    private var currentFragment: androidx.fragment.app.Fragment? = null
 
     override fun updateThemeChanged() {
-        if(Utils.isDarkTheme())
+        if(Utils.isDarkTheme()) {
+            println("HEREYOUFUCKER DARK THEME")
             navigation.background = resources.getDrawable(R.color.black)
-        else
+        }
+        else {
+            println("HEREYOUFUCKER LIGHT THEME")
             navigation.background = resources.getDrawable(R.color.white)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

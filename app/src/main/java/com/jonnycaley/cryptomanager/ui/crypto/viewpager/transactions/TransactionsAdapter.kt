@@ -2,7 +2,7 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.item_transaction_detail.view.*
 import java.math.BigDecimal
 
-class TransactionsAdapter(val transactions: List<Transaction>, val currency: String, val currentUSDPrice: BigDecimal?, val baseFiat: Rate, val context: Context?) : RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
+class TransactionsAdapter(val transactions: List<Transaction>, val currency: String, val currentUSDPrice: BigDecimal?, val baseFiat: Rate, val context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<TransactionsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_transaction_detail, parent, false))
@@ -136,7 +136,7 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         return transactions.size
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val titlePrice = view.title_price
         val textPrice = view.text_price

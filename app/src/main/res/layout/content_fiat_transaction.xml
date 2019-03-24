@@ -4,47 +4,113 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_transaction_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_bar_layout"
-        android:padding="@dimen/default_margin">
+        android:padding="@dimen/default_margin"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
+            android:id="@+id/layout_deposit_checked"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <RadioButton
-                android:id="@+id/radio_button_deposit"
+            <TextView
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:checked="true"
                 android:text="@string/deposit"
-                android:textColor="?attr/textcolor" />
+                android:textColor="?attr/colorPrimary"
+                android:gravity="center"
+                android:background="@drawable/border_primary"
+                android:layout_margin="@dimen/default_margin" />
 
-            <RadioButton
-                android:id="@+id/radio_button_withdrawl"
+            <TextView
+                android:id="@+id/text_view_withdrawl"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/withdrawl"
-                android:textColor="?attr/textcolor" />
-        </RadioGroup>
+                android:textColor="@color/text_grey"
+                android:gravity="center"
+                android:background="@drawable/border_grey"
+                android:layout_margin="@dimen/default_margin" />
 
-    </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_withdrawl_checked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/text_view_deposit"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/deposit"
+                android:textColor="@color/text_grey"
+                android:gravity="center"
+                android:background="@drawable/border_grey"
+                android:layout_margin="@dimen/default_margin" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/withdrawl"
+                android:textColor="?attr/colorPrimary"
+                android:gravity="center"
+                android:background="@drawable/border_primary"
+                android:layout_margin="@dimen/default_margin" />
+
+        </LinearLayout>
+
+
+        <!--<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:weightSum="2"-->
+            <!--android:visibility="gone">-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/radio_button_deposit"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:checked="true"-->
+                <!--android:text="@string/deposit"-->
+                <!--android:textColor="?attr/textcolor" />-->
+
+            <!--<RadioButton-->
+                <!--android:id="@+id/radio_button_withdrawl"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:text="@string/withdrawl"-->
+                <!--android:textColor="?attr/textcolor" />-->
+        <!--</RadioGroup>-->
+
+    </LinearLayout>
 
     <View
         android:id="@+id/view_1"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/layout_transaction_type"
-        android:background="@color/text_grey" />
+        android:background="@color/text_grey"
+        android:visibility="gone"/>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,6 +230,7 @@
                 android:background="@color/text_grey" />
 
             <RelativeLayout
+                android:id="@+id/layout_quantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|start"
@@ -262,6 +329,6 @@
 
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>

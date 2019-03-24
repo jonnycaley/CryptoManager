@@ -2,11 +2,12 @@ package com.jonnycaley.cryptomanager.ui.transactions.fiat
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -24,6 +25,7 @@ import java.util.*
 import android.content.DialogInterface
 import android.util.Log
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_update_fiat_transaction.*
 
@@ -33,8 +35,8 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     val args by lazy { FiatTransactionArgs.deserializeFrom(intent) }
 
-    val radioButtonDeposit by lazy { findViewById<RadioButton>(R.id.radio_button_deposit) }
-    val radioButtonWithdrawl by lazy { findViewById<RadioButton>(R.id.radio_button_withdrawl) }
+    val textviewDeposit by lazy { findViewById<TextView>(R.id.text_view_deposit) }
+    val textviewWithdrawl by lazy { findViewById<TextView>(R.id.text_view_withdrawl) }
 
     val requiredExchange by lazy { findViewById<TextView>(R.id.text_chosen_exchange) }
     val layoutExchangeFilled by lazy { findViewById<RelativeLayout>(R.id.layout_exchange_filled) }
@@ -44,12 +46,20 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     val layoutCurrencyFilled by lazy { findViewById<RelativeLayout>(R.id.layout_currency_filled) }
     val layoutCurrencyEmpty by lazy { findViewById<RelativeLayout>(R.id.layout_currency_empty) }
 
+    val layoutQuantity by lazy { findViewById<RelativeLayout>(R.id.layout_quantity) }
+
     val requiredQuantity by lazy { findViewById<EditText>(R.id.edit_text_quantity) }
     val notes by lazy { findViewById<EditText>(R.id.edit_text_notes) }
 
-    val submitProgressBar by lazy { findViewById<ProgressBar>(R.id.progress_bar_submit) }
 
-    val textViewSubmit by lazy { findViewById<TextView>(R.id.text_view_submit) }
+    val layoutDeposit by lazy { findViewById<LinearLayout>(R.id.layout_deposit_checked) }
+    val layoutWithdrawl by lazy { findViewById<LinearLayout>(R.id.layout_withdrawl_checked) }
+
+    val progressButtonCreateDeposit by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_deposit) }
+    val progressButtonCreateWithdrawl by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_withdrawl) }
+    val progressButtonUpdateDeposit by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_deposit) }
+    val progressButtonUpdateWithdrawl by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_withdrawl) }
+
     val requiredDate by lazy { findViewById<TextView>(R.id.date) }
 
     val buttonDelete by lazy { findViewById<ImageView>(R.id.button_delete)}
@@ -76,11 +86,14 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
         }
 
+        progressButtonCreateDeposit.visibility = View.GONE
+        progressButtonCreateWithdrawl.visibility = View.GONE
+        progressButtonUpdateDeposit.visibility = View.GONE
+        progressButtonUpdateWithdrawl.visibility = View.GONE
+
         fillFields()
         setupUpdate()
         setupCreate()
-
-        Log.i(TAG + "Seeee", args.backpressToPortfolio.toString())
 
         presenter = FiatTransactionPresenter(FiatTransactionDataManager.getInstance(this), this)
         presenter.attachView()
@@ -107,22 +120,45 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         args.currency?.let { currency ->
             setupToolbarCreate(currency)
             requiredDate.text = formatDate(transactionDate)
-            textViewSubmit.text = "Create"
             requiredCurrency.text = currency
+            progressButtonCreateDeposit.visibility = View.VISIBLE
         }
     }
 
+    override fun startUpdateDepositProgress() {
+        progressButtonUpdateDeposit.collapse()
+    }
 
-    override fun showProgressBar() {
-        submitProgressBar.visibility = View.VISIBLE
+    override fun startUpdateWithdrawlProgress() {
+        progressButtonUpdateWithdrawl.collapse()
+    }
+
+    override fun stopUpdateDepositProgress() {
+        progressButtonUpdateDeposit.expand()
+    }
+
+    override fun stopUpdateWithdrawlProgress() {
+        progressButtonUpdateWithdrawl.expand()
+    }
+
+    override fun startCreateDepositProgress() {
+        progressButtonCreateDeposit.collapse()
+    }
+
+    override fun startCreateWithdrawlProgress() {
+        progressButtonCreateWithdrawl.collapse()
+    }
+
+    override fun stopCreateDepositProgress() {
+        progressButtonCreateWithdrawl.expand()
+    }
+
+    override fun stopCreateWithdrawlProgress() {
+        progressButtonCreateWithdrawl.expand()
     }
 
     override fun disableTouchEvents() {
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-    }
-
-    override fun hideProgressBar() {
-        submitProgressBar.visibility = View.GONE
     }
 
     override fun enableTouchEvents() {
@@ -141,10 +177,15 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
         args.transaction?.let { transaction ->
             if(transaction.quantity > 0.toBigDecimal() ){
-                radioButtonDeposit.isChecked = true
+                showDepositChecked()
+                hideWithdrawlChecked()
+                progressButtonUpdateDeposit.visibility = View.VISIBLE
             } else {
-                radioButtonWithdrawl.isChecked = true
+                showWithdrawlChecked()
+                hideDepositChecked()
+                progressButtonUpdateWithdrawl.visibility = View.VISIBLE
             }
+
             buttonDelete.visibility = View.VISIBLE
 
             layoutExchangeEmpty.visibility = View.GONE
@@ -162,6 +203,22 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         }
     }
 
+    private fun hideDepositChecked() {
+        layoutDeposit.visibility = View.GONE
+    }
+
+    private fun hideWithdrawlChecked() {
+        layoutWithdrawl.visibility = View.GONE
+    }
+
+    private fun showWithdrawlChecked() {
+        layoutWithdrawl.visibility = View.VISIBLE
+    }
+
+    private fun showDepositChecked() {
+        layoutDeposit.visibility = View.VISIBLE
+    }
+
     private fun fillFields() {
 
         layoutExchangeFilled.setOnClickListener(this)
@@ -170,8 +227,16 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         layoutCurrencyEmpty.setOnClickListener(this)
         layoutDate.setOnClickListener(this)
         buttonDelete.setOnClickListener(this)
-        textViewSubmit.setOnClickListener(this)
+        layoutQuantity.setOnClickListener(this)
+        textviewDeposit.setOnClickListener(this)
+        textviewWithdrawl.setOnClickListener(this)
+
+        progressButtonCreateDeposit.setOnClickListener(this)
+        progressButtonCreateWithdrawl.setOnClickListener(this)
+        progressButtonUpdateDeposit.setOnClickListener(this)
+        progressButtonUpdateWithdrawl.setOnClickListener(this)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CODE_EXCHANGE) {
@@ -202,6 +267,10 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
                 diaBox.show()
 //                args.transaction?.let { presenter.deleteTransaction(it) }
             }
+            layoutQuantity.id -> {
+                focusEdittext(requiredQuantity)
+                //TODO: RE ADD FOCUS TO EDITTEXT WITH NUMERICAL KEYBOARD?
+            }
             layoutExchangeFilled.id -> {
                 i = Intent(this, PickerExchangeActivity::class.java)
                 startActivityForResult(i, REQUEST_CODE_EXCHANGE)
@@ -221,36 +290,106 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             layoutDate.id -> {
                 showDatePicker()
             }
-            textViewSubmit.id -> {
-                if (checkFields()) {
-                    preventFieldChanges()
-                    val correctQuantity: Float
+            textviewDeposit.id -> {
+                showDepositChecked()
+                hideWithdrawlChecked()
 
-                    if (radioButtonWithdrawl.isChecked)
-                        correctQuantity = (requiredQuantity.text.toString().toFloat() * (-1).toFloat())
-                    else
-                        correctQuantity = requiredQuantity.text.toString().toFloat()
-
-                    if(transactionDate > Calendar.getInstance().time)
-                        transactionDate = Calendar.getInstance().time
-
-                    val tempDate : Date
-
-                    if(isDateChanged)
-                        tempDate = transactionDate
-
-                    else
-                        tempDate = args.transaction?.date ?: transactionDate
-
-                    args.transaction?.let { transaction ->
-                        presenter.updateFiatTransaction(transaction, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
-                    }
-
-                    if(args.transaction == null)
-                        presenter.createFiatTransaction(requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
+                if(args.transaction != null) {
+                    showUpdateDeposit()
+                    hideUpdateWithdrawl()
+                }
+                else {
+                    showCreateDeposit()
+                    hideCreateWithdrawl()
                 }
             }
+            textviewWithdrawl.id -> {
+                showWithdrawlChecked()
+                hideDepositChecked()
+                if(args.transaction != null) {
+                    hideUpdateDeposit()
+                    showUpdateWithdrawl()
+                }
+                else {
+                    hideCreateDeposit()
+                    showCreateWithdrawl()
+                }
+            }
+            progressButtonCreateDeposit.id -> {
+                startProcess()
+            }
+            progressButtonUpdateDeposit.id -> {
+                startProcess()
+            }
+            progressButtonCreateWithdrawl.id -> {
+                startProcess()
+            }
+            progressButtonUpdateWithdrawl.id -> {
+                startProcess()
+            }
         }
+    }
+
+    private fun startProcess() {
+        if (checkFields()) {
+            preventFieldChanges()
+            val correctQuantity: Float
+
+            if (layoutWithdrawl.visibility == View.VISIBLE)
+                correctQuantity = (requiredQuantity.text.toString().toFloat() * (-1).toFloat())
+            else
+                correctQuantity = requiredQuantity.text.toString().toFloat()
+
+            if(transactionDate > Calendar.getInstance().time)
+                transactionDate = Calendar.getInstance().time
+
+            val tempDate : Date
+
+            if(isDateChanged)
+                tempDate = transactionDate
+
+            else
+                tempDate = args.transaction?.date ?: transactionDate
+
+            args.transaction?.let { transaction ->
+                presenter.updateFiatTransaction(transaction, requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
+            }
+
+            if(args.transaction == null)
+                presenter.createFiatTransaction(requiredExchange.text.trim().toString(), requiredCurrency.text.trim().toString(), correctQuantity, tempDate, notes.text.trim().toString())
+        }
+    }
+
+    private fun showCreateWithdrawl() {
+        progressButtonCreateWithdrawl.visibility = View.VISIBLE
+    }
+
+    private fun hideCreateDeposit() {
+        progressButtonCreateDeposit.visibility = View.GONE
+    }
+
+    private fun showUpdateWithdrawl() {
+        progressButtonUpdateWithdrawl.visibility = View.VISIBLE
+    }
+
+    private fun hideUpdateDeposit() {
+        progressButtonUpdateDeposit.visibility = View.GONE
+    }
+
+    private fun hideCreateWithdrawl() {
+        progressButtonCreateWithdrawl.visibility = View.GONE
+    }
+
+    private fun showCreateDeposit() {
+        progressButtonCreateDeposit.visibility = View.VISIBLE
+    }
+
+    private fun hideUpdateWithdrawl() {
+        progressButtonUpdateWithdrawl.visibility = View.GONE
+    }
+
+    private fun showUpdateDeposit() {
+        progressButtonUpdateDeposit.visibility = View.VISIBLE
     }
 
     override fun onTransactionUpdated() {
@@ -264,6 +403,12 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             super.onBackPressed()
     }
 
+
+    fun focusEdittext(editText: EditText){
+        editText.requestFocus()
+        val imm : InputMethodManager =  getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+    }
 
 
     private fun loadBaseActivityWithoutRestart() {

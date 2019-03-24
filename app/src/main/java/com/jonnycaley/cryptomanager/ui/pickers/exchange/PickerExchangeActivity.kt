@@ -1,32 +1,35 @@
 package com.jonnycaley.cryptomanager.ui.pickers.exchange
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_picker_exchange.*
 
-class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View {
+class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View, SearchView.OnQueryTextListener {
 
     private lateinit var presenter: PickerExchangeContract.Presenter
 
     lateinit var exchangesAdapter : ExchangesAdapter
 
-    val recyclerView by lazy { findViewById<RecyclerView>(R.id.recycler_view) }
+    val recyclerView by lazy { findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
 
     val layout by lazy { findViewById<LinearLayout>(R.id.layout) }
+
+    val searchBar by lazy { findViewById<SearchView>(R.id.search_view) }
 
     val progressBarLayout by lazy { findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
@@ -46,9 +49,39 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
         }
 
         setupToolbar()
+        setupSearchBar()
+
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(dy != 0)
+                    Utils.hideKeyboardFromActivity(this@PickerExchangeActivity)
+            }
+        })
 
         presenter = PickerExchangePresenter(PickerExchangeDataManager.getInstance(this), this)
         presenter.attachView()
+    }
+
+    private fun setupSearchBar() {
+        searchBar.setOnQueryTextListener(this)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        Utils.hideKeyboardFromActivity(this)
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        query?.let {
+            presenter.filterExchanges(it.trim())
+
+        }
+        return true
+    }
+
+    override fun showSearchBar() {
+        searchBar.visibility = View.VISIBLE
     }
 
     override fun getCrypto(): String? {
@@ -89,7 +122,10 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View 
 
     override fun showExchanges(exchanges: List<Exchange>?) {
 
-        val mLayoutManager = LinearLayoutManager(this)
+        println("Showing exchanges")
+        println(exchanges?.size.toString())
+
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         exchangesAdapter = ExchangesAdapter(exchanges?.sortedBy { it.name?.toLowerCase() }, this, this)
         recyclerView.adapter = exchangesAdapter

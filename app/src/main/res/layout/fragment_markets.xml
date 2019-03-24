@@ -13,7 +13,7 @@
 
     <include layout="@layout/layout_progress" />
 
-    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                 android:orientation="vertical">
                 <!--blocksDescendants stops view from automatically scrolling to recyclerview ||| However, it prevents searchview from becoming clickable so i took it out-->
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/card_margin_small"
@@ -147,7 +147,7 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
                 <TextView
@@ -162,7 +162,7 @@
                     android:visibility="gone" />
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/card_margin_small"
@@ -226,9 +226,9 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -351,7 +351,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <android.support.v7.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_view_currencies"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -366,12 +366,12 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
         </ScrollView>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

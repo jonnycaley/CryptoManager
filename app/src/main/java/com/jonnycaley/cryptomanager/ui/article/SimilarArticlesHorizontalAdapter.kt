@@ -1,7 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.article
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_related_news_horizontal.view.*
 
-class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticle>?, val context: Context?) : RecyclerView.Adapter<SimilarArticlesHorizontalAdapter.ViewHolder>() {
+class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticle>?, val context: Context?) : androidx.recyclerview.widget.RecyclerView.Adapter<SimilarArticlesHorizontalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_related_news_horizontal, parent, false))
@@ -52,7 +52,7 @@ class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticl
         return articles?.size ?: 0
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
         val image = view.image
         val title = view.title
