@@ -16,7 +16,6 @@ import com.like.OnLikeListener
 import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_horizontal.view.*
 
-
 class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var savedArticles : ArrayList<Article>?, val context: Context?, val presenter: MarketsContract.Presenter) : androidx.recyclerview.widget.RecyclerView.Adapter<ArticlesHorizontalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

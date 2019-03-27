@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Portfolio Balance"
-                    android:textColor="?attr/textcolor" />
+                    android:textColor="?attr/textColor" />
 
                 <TextView
                     android:id="@+id/text_balance"
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="$0"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/extra_large_text_size" />
 
                 <TextView
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="$0"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/large_text_size" />
 
 
@@ -72,8 +72,8 @@
                     app:rrbg_animateTexts_textColorFrom="@color/text_grey"
                     app:rrbg_animateTexts_textColorTo="@color/black"
                     app:rrbg_animateTexts_textColor_duration="500"
-                    app:rrbg_backgroundColor="?attr/cardbackground"
-                    app:rrbg_borderColor="?attr/cardbackground"
+                    app:rrbg_backgroundColor="?attr/itemBackgroundColor"
+                    app:rrbg_borderColor="?attr/itemBackgroundColor"
                     app:rrbg_borderSize="1dp"
                     app:rrbg_bottomLineRadius="2dp"
                     app:rrbg_bottomLineSize="1dp"
@@ -85,18 +85,18 @@
                     app:rrbg_radius="2dp"
                     app:rrbg_selectorAboveOfBottomLine="false"
                     app:rrbg_selectorAnimationType="translate_y"
-                    app:rrbg_selectorColor="?attr/textcolor"
+                    app:rrbg_selectorColor="?attr/textColor"
                     app:rrbg_selectorRadius="0dp"
                     app:rrbg_selectorSize="2dp">
 
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:rrb_rippleColor="?attr/textcolor"
+                        app:rrb_rippleColor="?attr/textColor"
                         app:rrb_checked="true"
                         app:rrb_text="1H"
-                        app:rrb_textColor="?attr/textcolorsecondary"
-                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textColor="?attr/textColorSecondary"
+                        app:rrb_textColorTo="?attr/textColor"
                         app:rrb_textGravity="center"
                         app:rrb_textSize="10sp" />
 
@@ -104,20 +104,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:rrb_drawableGravity="top"
-                        app:rrb_rippleColor="?attr/textcolor"
+                        app:rrb_rippleColor="?attr/textColor"
                         app:rrb_text="1D"
-                        app:rrb_textColor="?attr/textcolorsecondary"
-                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textColor="?attr/textColorSecondary"
+                        app:rrb_textColorTo="?attr/textColor"
                         app:rrb_textGravity="center"
                         app:rrb_textSize="10sp" />
 
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:rrb_rippleColor="?attr/textcolor"
+                        app:rrb_rippleColor="?attr/textColor"
                         app:rrb_text="1W"
-                        app:rrb_textColor="?attr/textcolorsecondary"
-                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textColor="?attr/textColorSecondary"
+                        app:rrb_textColorTo="?attr/textColor"
                         app:rrb_textFillSpace="true"
                         app:rrb_textGravity="center"
                         app:rrb_textSize="10sp" />
@@ -125,10 +125,10 @@
                     <co.ceryle.radiorealbutton.RadioRealButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:rrb_rippleColor="?attr/textcolor"
+                        app:rrb_rippleColor="?attr/textColor"
                         app:rrb_text="1M"
-                        app:rrb_textColor="?attr/textcolorsecondary"
-                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textColor="?attr/textColorSecondary"
+                        app:rrb_textColorTo="?attr/textColor"
                         app:rrb_textFillSpace="true"
                         app:rrb_textGravity="center"
                         app:rrb_textSize="10sp" />
@@ -137,10 +137,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:rrb_drawableGravity="right"
-                        app:rrb_rippleColor="?attr/textcolor"
+                        app:rrb_rippleColor="?attr/textColor"
                         app:rrb_text="All"
-                        app:rrb_textColor="?attr/textcolorsecondary"
-                        app:rrb_textColorTo="?attr/textcolor"
+                        app:rrb_textColor="?attr/textColorSecondary"
+                        app:rrb_textColorTo="?attr/textColor"
                         app:rrb_textFillSpace="true"
                         app:rrb_textGravity="center"
                         app:rrb_textSize="10sp" />
@@ -189,14 +189,14 @@
                         android:layout_height="match_parent"
                         android:text="@string/portfolio_empty"
                         android:textAlignment="center"
-                        android:textColor="?attr/textcolor" />
+                        android:textColor="?attr/textColor" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/portfolio_empty_tap"
                         android:textAlignment="center"
-                        android:textColor="?attr/textcolor" />
+                        android:textColor="?attr/textColor" />
 
                 </LinearLayout>
 
@@ -219,7 +219,7 @@
                             android:layout_height="wrap_content"
                             android:paddingRight="@dimen/default_margin"
                             android:text="Name"
-                            android:textColor="?attr/textcolor" />
+                            android:textColor="?attr/textColor" />
 
 
                         <TextView
@@ -228,7 +228,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/text_sort_name"
                             android:text="Holdings"
-                            android:textColor="?attr/textcolor" />
+                            android:textColor="?attr/textColor" />
 
                         <TextView
                             android:id="@+id/text_sort_change"
@@ -236,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:text="Change"
-                            android:textColor="?attr/textcolor" />
+                            android:textColor="?attr/textColor" />
 
                     </RelativeLayout>
 

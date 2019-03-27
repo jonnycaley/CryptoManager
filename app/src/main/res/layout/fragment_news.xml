@@ -53,13 +53,13 @@
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="@dimen/card_corner_radius"
                         app:cardUseCompatPadding="true"
-                        app:cardBackgroundColor="?attr/cardbackground">
+                        app:cardBackgroundColor="?attr/itemBackgroundColor">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:background="?attr/cardbackground">
+                            android:background="?attr/itemBackgroundColor">
 
                             <ImageView
                                 android:id="@+id/card_image"
@@ -77,7 +77,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text=""
-                                    android:textColor="?attr/textcolor"
+                                    android:textColor="?attr/textColor"
                                     android:textSize="@dimen/large_text_size"
                                     android:textStyle="bold"
                                     />
@@ -90,7 +90,7 @@
                                     android:ellipsize="end"
                                     android:maxLines="3"
                                     android:text=""
-                                    android:textColor="?attr/textcolor"
+                                    android:textColor="?attr/textColor"
                                     android:textSize="@dimen/medium_text_size" />
 
 
@@ -103,7 +103,7 @@
                                     android:layout_marginBottom="3dp"
                                     android:text=""
                                     android:textSize="@dimen/small_text_size"
-                                    android:textColor="?attr/textcolor" />
+                                    android:textColor="?attr/textColor" />
 
                                 <TextView
                                     android:id="@+id/card_date"
@@ -115,7 +115,7 @@
                                     android:layout_toEndOf="@id/card_length"
                                     android:text=""
                                     android:textSize="@dimen/small_text_size"
-                                    android:textColor="?attr/textcolor" />
+                                    android:textColor="?attr/textColor" />
 
                                 <com.like.LikeButton
                                     android:id="@+id/like_button_top_article"
@@ -125,10 +125,10 @@
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     app:anim_scale_factor="2"
-                                    app:circle_end_color="?attr/textcolor"
-                                    app:circle_start_color="?attr/textcolor"
-                                    app:dots_primary_color="?attr/textcolor"
-                                    app:dots_secondary_color="?attr/textcolor"
+                                    app:circle_end_color="?attr/textColor"
+                                    app:circle_start_color="?attr/textColor"
+                                    app:dots_primary_color="?attr/textColor"
+                                    app:dots_secondary_color="?attr/textColor"
                                     app:like_drawable="@drawable/bookmark_fill_white"
                                     app:unlike_drawable="@drawable/bookmark_outline_white"
                                     app:icon_size="15dp"
@@ -199,7 +199,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -269,7 +269,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -338,7 +338,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -407,7 +407,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -484,7 +484,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -553,7 +553,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -622,7 +622,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 
@@ -691,7 +691,7 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:text=""
-                                            android:textColor="?attr/textcolor"
+                                            android:textColor="?attr/textColor"
                                             android:textSize="@dimen/small_text_size"
                                             android:textStyle="bold" />
 

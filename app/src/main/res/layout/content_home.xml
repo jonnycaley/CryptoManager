@@ -14,8 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navigation_border"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <!--this is where the fragment gets put in-->
@@ -25,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_above="@+id/navigation"
-        android:background="?attr/textcolorsecondary" />
+        android:background="?attr/dividerColor" />
 
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/navigation"
@@ -40,6 +38,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/navigation"
+        app:labelVisibilityMode="labeled"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

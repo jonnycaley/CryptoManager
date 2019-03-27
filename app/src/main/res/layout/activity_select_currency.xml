@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="?attr/textcolor"
+            app:titleTextColor="?attr/textColor"
             tools:targetApi="lollipop"
             android:background="?attr/backgroundcolor" />
 

@@ -17,19 +17,19 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
         <TextView
             android:id="@+id/pair"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
         <TextView
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
     </LinearLayout>
 
@@ -37,6 +37,6 @@
         android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/line"
-        android:background="?attr/textcolor"/>
+        android:background="?attr/textColor"/>
 
 </LinearLayout>

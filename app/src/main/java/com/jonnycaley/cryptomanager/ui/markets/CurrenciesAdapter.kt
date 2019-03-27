@@ -129,7 +129,7 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
 //                holder.percentage.setBackgroundColor(context?.resources?.getColor(R.color.stock_green)!!)
 
 //                holder.movement.text = "▲"
-                context?.resources?.getColor(R.color.arrow_green)?.let { holder.movement.setTextColor(it) }
+                context?.resources?.getColor(R.color.green)?.let { holder.movement.setTextColor(it) }
             }
             percentage2DP.toDouble() < 0 -> {
                 holder.percentage.text = "$percentage2DP%"
@@ -137,7 +137,7 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
 //                holder.percentage.setBackgroundColor(context?.resources?.getColor(R.color.stock_red)!!)
 
 //                holder.movement.text = "▼"
-                context?.resources?.getColor(R.color.arrow_red)?.let { holder.movement.setTextColor(it) }
+                context?.resources?.getColor(R.color.red)?.let { holder.movement.setTextColor(it) }
             }
             else -> {
                 holder.percentage.text = "0.00%"

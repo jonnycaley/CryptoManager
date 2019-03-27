@@ -8,7 +8,7 @@
     android:layout_marginBottom="@dimen/card_margin"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/cardbackground">
+    app:cardBackgroundColor="?attr/itemBackgroundColor">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                         android:id="@+id/category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/textColor"
                         android:textSize="@dimen/medium_text_size" />
 
 
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/textColor"
                         android:textSize="@dimen/medium_text_size"
                         android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
                             android:text="ICX"
                             android:textSize="@dimen/extra_small_text_size"
                             android:textStyle="bold"
-                            android:textColor="?attr/textcolor" />
+                            android:textColor="?attr/textColor" />
 
 
                         <TextView
@@ -136,7 +136,7 @@
                             android:text="test"
                             android:textSize="@dimen/extra_small_text_size"
                             android:textStyle="bold"
-                            android:textColor="?attr/textcolor" />
+                            android:textColor="?attr/textColor" />
 
 
                         <TextView
@@ -163,7 +163,7 @@
                     android:text="6 minute read • "
                     android:textSize="@dimen/extra_small_text_size"
                     android:visibility="visible"
-                    android:textColor="?attr/textcolor"/>
+                    android:textColor="?attr/textColor"/>
 
                 <TextView
                     android:id="@+id/date"
@@ -173,7 +173,7 @@
                     android:layout_toEndOf="@+id/length"
                     android:text="3 hours ago"
                     android:textSize="@dimen/extra_small_text_size"
-                    android:textColor="?attr/textcolor" />
+                    android:textColor="?attr/textColor" />
 
                 <com.like.LikeButton
                     android:id="@+id/like_button"
@@ -182,10 +182,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     app:anim_scale_factor="2"
-                    app:circle_end_color="?attr/textcolor"
-                    app:circle_start_color="?attr/textcolor"
-                    app:dots_primary_color="?attr/textcolor"
-                    app:dots_secondary_color="?attr/textcolor"
+                    app:circle_end_color="?attr/textColor"
+                    app:circle_start_color="?attr/textColor"
+                    app:dots_primary_color="?attr/textColor"
+                    app:dots_secondary_color="?attr/textColor"
                     app:like_drawable="@drawable/bookmark_fill_black"
                     app:unlike_drawable="@drawable/bookmark_outlline_black"
                     app:icon_size="15dp"

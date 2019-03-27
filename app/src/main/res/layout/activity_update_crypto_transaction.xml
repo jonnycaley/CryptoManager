@@ -21,7 +21,7 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="?attr/backgroundcolor"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="?attr/textcolor"
+            app:titleTextColor="?attr/textColor"
             tools:targetApi="lollipop">
 
 
@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text=""
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/large_text_size"
                     android:textStyle="bold" />
 
@@ -77,7 +77,7 @@
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
-            app:f_fillColor="@color/light_green"
+            app:f_fillColor="@color/green"
             app:f_hideFillAfterCollapse="false"
             app:f_progressColor="?attr/backgroundcolor"
             app:f_strokeColor="@color/green"
@@ -98,7 +98,7 @@
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
-            app:f_fillColor="@color/light_red"
+            app:f_fillColor="@color/red"
             app:f_hideFillAfterCollapse="false"
             app:f_progressColor="?attr/backgroundcolor"
             app:f_strokeColor="@color/red"
@@ -118,7 +118,7 @@
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
-            app:f_fillColor="@color/light_green"
+            app:f_fillColor="@color/green"
             app:f_hideFillAfterCollapse="false"
             app:f_progressColor="?attr/backgroundcolor"
             app:f_strokeColor="@color/green"
@@ -139,7 +139,7 @@
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
-            app:f_fillColor="@color/light_red"
+            app:f_fillColor="@color/red"
             app:f_hideFillAfterCollapse="false"
             app:f_progressColor="?attr/backgroundcolor"
             app:f_strokeColor="@color/red"

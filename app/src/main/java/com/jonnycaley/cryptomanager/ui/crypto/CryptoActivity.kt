@@ -125,7 +125,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         val swatchesTemp = androidx.palette.graphics.Palette.from(bitmap).generate().swatches
         val swatches = ArrayList(swatchesTemp)
         swatches.sortWith(Comparator { swatch1, swatch2 -> swatch2.population - swatch1.population })
-        return if (swatches.size > 0) swatches[0].rgb else R.color.colorPrimary
+        return if (swatches.size > 0) swatches[0].rgb else R.color.theme_color
     }
 
     var myPagerAdapter : CryptoActivity.MyPagerAdapter? = null
@@ -135,7 +135,7 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         myPagerAdapter = MyPagerAdapter(supportFragmentManager)
         viewPager.adapter = myPagerAdapter
         tabLayout.setupWithViewPager(viewPager)
-        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.colorPrimary)) //Set the initial tab color to background so you cant see it so it looks neat when loading in
+        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.theme_color)) //Set the initial tab color to background so you cant see it so it looks neat when loading in
 
     }
 

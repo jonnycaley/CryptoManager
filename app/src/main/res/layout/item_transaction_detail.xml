@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?attr/cardbackground"
+    app:cardBackgroundColor="?attr/itemBackgroundColor"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -35,7 +35,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="BTC Buy Price"
-                        android:textColor="?attr/textcolorsecondary"
+                        android:textColor="?attr/textColorSecondary"
                         android:textSize="@dimen/small_text_size" />
 
                     <TextView
@@ -46,7 +46,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text=""
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/textColor"
                         android:textSize="@dimen/small_text_size" />
 
                 </RelativeLayout>
@@ -63,7 +63,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="Trading Pair"
-                        android:textColor="?attr/textcolorsecondary"
+                        android:textColor="?attr/textColorSecondary"
                         android:textSize="@dimen/small_text_size" />
 
                     <TextView
@@ -74,7 +74,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text=""
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/textColor"
                         android:textSize="@dimen/small_text_size" />
 
                 </RelativeLayout>
@@ -91,7 +91,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text="Amount Bought"
-                        android:textColor="?attr/textcolorsecondary"
+                        android:textColor="?attr/textColorSecondary"
                         android:textSize="@dimen/small_text_size" />
 
                     <TextView
@@ -102,7 +102,7 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:text=""
-                        android:textColor="?attr/textcolor"
+                        android:textColor="?attr/textColor"
                         android:textSize="@dimen/small_text_size" />
 
                 </RelativeLayout>
@@ -133,7 +133,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Proceeds"
-                    android:textColor="?attr/textcolorsecondary"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
@@ -144,7 +144,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/small_text_size" />
 
             </RelativeLayout>
@@ -161,7 +161,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Cost"
-                    android:textColor="?attr/textcolorsecondary"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
@@ -172,7 +172,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/small_text_size" />
 
             </RelativeLayout>
@@ -189,7 +189,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Worth"
-                    android:textColor="?attr/textcolorsecondary"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
@@ -200,7 +200,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/small_text_size" />
 
             </RelativeLayout>
@@ -217,7 +217,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="Change"
-                    android:textColor="?attr/textcolorsecondary"
+                    android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView

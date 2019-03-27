@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Transactions"
-        android:textColor="?attr/textcolor"
+        android:textColor="?attr/textColor"
         android:textSize="@dimen/large_text_size"
         android:layout_margin="@dimen/default_margin"/>
 
@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Click to add?"
-        android:textColor="?attr/textcolor"
+        android:textColor="?attr/textColor"
         android:textSize="@dimen/large_text_size"
         android:layout_margin="@dimen/default_margin"/>
 

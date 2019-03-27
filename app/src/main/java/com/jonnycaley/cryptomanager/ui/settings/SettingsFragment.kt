@@ -1,20 +1,19 @@
 package com.jonnycaley.cryptomanager.ui.settings
 
-import android.app.Activity
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Switch
+import android.widget.Toast
 import com.jonnycaley.cryptomanager.BuildConfig
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
@@ -71,11 +70,22 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
     }
 
     override fun updateTheme() {
+        context?.let { Utils.vibrate(it) }
+
         BaseArgs(3).launch(context!!)
 
         //TODO: RESTART ACTIVITY OF RE-LOAD ALL VIEWS IN FRAGMENT? :S
 //        (activity as BaseActivity).updateThemeChanged()
 //        presenter.loadSettings()
+    }
+
+    fun vibratePhone() {
+        val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            vibrator.vibrate(200)
+        }
     }
 
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {

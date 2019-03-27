@@ -23,14 +23,14 @@
                 android:layout_height="wrap_content"
                 android:text="Bitcoin"
                 android:layout_marginEnd="@dimen/default_padding_top"
-                android:textColor="?attr/textcolor"/>
+                android:textColor="?attr/textColor"/>
 
             <TextView
                 android:id="@+id/symbol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BTC"
-                android:textColor="?attr/textcolor"/>
+                android:textColor="?attr/textColor"/>
 
         </LinearLayout>
 

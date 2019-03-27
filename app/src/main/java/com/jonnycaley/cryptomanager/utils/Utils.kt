@@ -17,8 +17,16 @@ import com.jonnycaley.cryptomanager.R
 import com.thefinestartist.finestwebview.FinestWebView
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
+import android.os.Vibrator
+
+
 
 object Utils {
+
+    fun vibrate(context: Context) {
+        val v = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(100) // 5000 miliseconds = 5 seconds
+    }
 
     fun isNetworkConnected(context: Context): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

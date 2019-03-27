@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text=""
-                android:textColor="?attr/textcolor" />
+                android:textColor="?attr/textColor" />
 
 
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text=""
-                android:textColor="?attr/textcolor" />
+                android:textColor="?attr/textColor" />
 
         </LinearLayout>
 
@@ -64,9 +64,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/buy"
-                android:textColor="@color/green"
+                android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/border_green"
+                android:background="@drawable/button_checked_green"
                 android:layout_margin="@dimen/default_margin" />
 
             <TextView
@@ -75,9 +75,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/sell"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/border_grey"
+                android:background="@drawable/button_unchecked_red"
                 android:layout_margin="@dimen/default_margin" />
 
         </LinearLayout>
@@ -96,9 +96,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/buy"
-                android:textColor="@color/text_grey"
+                android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/border_grey"
+                android:background="@drawable/button_unchecked_green"
                 android:layout_margin="@dimen/default_margin" />
 
             <TextView
@@ -106,9 +106,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/sell"
-                android:textColor="@color/red"
+                android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/border_red"
+                android:background="@drawable/button_checked_red"
                 android:layout_margin="@dimen/default_margin" />
 
         </LinearLayout>
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Exchange"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/exchange"
@@ -145,7 +145,7 @@
             android:layout_below="@id/text_exchange"
             android:layout_alignParentStart="true"
             android:text=""
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
     </RelativeLayout>
 
@@ -164,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Exchange"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
     </RelativeLayout>
 
@@ -189,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Trading Pair"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
     </RelativeLayout>
 
@@ -210,7 +210,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Trading Pair"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/trading_pair"
@@ -219,7 +219,7 @@
             android:layout_below="@id/text_trading_pair"
             android:layout_alignParentStart="true"
             android:text=""
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
     </RelativeLayout>
 
@@ -243,7 +243,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Price"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text_price"
@@ -253,8 +253,8 @@
             android:inputType="numberDecimal"
             android:paddingTop="@dimen/padding_edit_text_vertical"
             android:paddingBottom="@dimen/padding_edit_text_vertical"
-            app:met_textColorHint="?attr/textcolorsecondary"
-            app:met_textColor="?attr/textcolor"
+            app:met_textColorHint="?attr/textColorSecondary"
+            app:met_textColor="?attr/textColor"
             app:met_hideUnderline="true"
             android:hint="0"/>
 
@@ -280,7 +280,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Quantity"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -291,8 +291,8 @@
             android:paddingTop="@dimen/padding_edit_text_vertical"
             android:paddingBottom="@dimen/padding_edit_text_vertical"
             android:inputType="numberDecimal"
-            app:met_textColorHint="?attr/textcolorsecondary"
-            app:met_textColor="?attr/textcolor"
+            app:met_textColorHint="?attr/textColorSecondary"
+            app:met_textColor="?attr/textColor"
             app:met_hideUnderline="true"
             android:hint="0" />
 
@@ -303,7 +303,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:text="Sell All"
-            android:textColor="?attr/textcolorsecondary"
+            android:textColor="?attr/textColorSecondary"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -329,7 +329,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="Date"
-            android:textColor="?attr/textcolorsecondary" />
+            android:textColor="?attr/textColorSecondary" />
 
         <TextView
             android:id="@+id/date"
@@ -338,7 +338,7 @@
             android:layout_below="@id/text_date"
             android:layout_alignParentStart="true"
             android:text="Sun, 06 Sep 2018 16:55"
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
     </RelativeLayout>
 
@@ -365,7 +365,7 @@
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="Deduct from holdings"
-            android:textColor="?attr/textcolor" />
+            android:textColor="?attr/textColor" />
 
         <Switch
             android:id="@+id/switch_deduct"
@@ -395,8 +395,8 @@
             android:layout_height="wrap_content"
             android:hint="Notes"
             app:met_hideUnderline="true"
-            app:met_textColorHint="?attr/textcolorsecondary"
-            app:met_textColor="?attr/textcolor"/>
+            app:met_textColorHint="?attr/textColorSecondary"
+            app:met_textColor="?attr/textColor"/>
 
     </RelativeLayout>
 

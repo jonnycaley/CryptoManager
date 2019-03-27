@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/cardbackground">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/itemBackgroundColor">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/default_margin">
-
-    <TextView
-        android:id="@+id/setting"
-        android:textColor="?attr/textcolor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Setting"/>
+        android:paddingLeft="@dimen/margin_item_horizontal"
+        android:paddingTop="@dimen/margin_item_vertical"
+        android:paddingRight="@dimen/margin_item_horizontal"
+        android:paddingBottom="@dimen/margin_item_vertical">
+
+        <TextView
+            android:id="@+id/setting"
+            android:textColor="?attr/textColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Setting" />
 
     </RelativeLayout>
-</LinearLayout>
 
-</androidx.cardview.widget.CardView>
+
+    <include
+        layout="@layout/border"/>
+
+</LinearLayout>

@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="?attr/textcolor"
+            app:titleTextColor="?attr/textColor"
             tools:targetApi="lollipop"
             android:background="?attr/backgroundcolor" >
 
@@ -36,10 +36,10 @@
                 android:layout_alignParentEnd="true"
                 android:paddingEnd="@dimen/default_margin"
                 app:anim_scale_factor="2"
-                app:circle_end_color="?attr/textcolor"
-                app:circle_start_color="?attr/textcolor"
-                app:dots_primary_color="?attr/textcolor"
-                app:dots_secondary_color="?attr/textcolor"
+                app:circle_end_color="?attr/textColor"
+                app:circle_start_color="?attr/textColor"
+                app:dots_primary_color="?attr/textColor"
+                app:dots_secondary_color="?attr/textColor"
                 app:like_drawable="@drawable/bookmark_fill_white"
                 app:unlike_drawable="@drawable/bookmark_outline_white"
                 app:icon_size="15dp"

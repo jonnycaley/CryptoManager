@@ -1,5 +1,6 @@
 package com.jonnycaley.cryptomanager.ui.base
 
+import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
@@ -13,6 +14,8 @@ import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.OnThemeChangedListener
 import kotlinx.android.synthetic.main.content_home.*
+import android.content.Context.VIBRATOR_SERVICE
+import android.os.Vibrator
 
 class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
@@ -39,11 +42,9 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     override fun updateThemeChanged() {
         if(Utils.isDarkTheme()) {
-            println("HEREYOUFUCKER DARK THEME")
             navigation.background = resources.getDrawable(R.color.black)
         }
         else {
-            println("HEREYOUFUCKER LIGHT THEME")
             navigation.background = resources.getDrawable(R.color.white)
         }
     }

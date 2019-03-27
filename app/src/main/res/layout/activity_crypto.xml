@@ -19,7 +19,7 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="?attr/backgroundcolor"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="?attr/textcolor"
+            app:titleTextColor="?attr/textColor"
             tools:targetApi="lollipop">
 
             <RelativeLayout
@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textColor="?attr/textcolor"
+                    android:textColor="?attr/textColor"
                     android:textSize="@dimen/large_text_size"
                     android:textStyle="bold"/>
 
@@ -56,9 +56,9 @@
         android:background="?attr/backgroundcolor"
         android:minHeight="?attr/actionBarSize"
         app:tabBackground="?attr/backgroundcolor"
-        app:tabIndicatorColor="?attr/textcolor"
-        app:tabSelectedTextColor="?attr/textcolor"
-        app:tabTextColor="?attr/textcolorsecondary">
+        app:tabIndicatorColor="?attr/textColor"
+        app:tabSelectedTextColor="?attr/textColor"
+        app:tabTextColor="?attr/textColorSecondary">
 
     </com.google.android.material.tabs.TabLayout>
 

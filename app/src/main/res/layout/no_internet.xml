@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No internet available"
-            android:textColor="?attr/textcolor"
+            android:textColor="?attr/textColor"
             android:layout_marginBottom="20dp"
             android:textSize="25dp"/>
 

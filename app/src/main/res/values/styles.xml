@@ -3,30 +3,35 @@
     <!-- Light/Day mode theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/theme_color</item>
-        <item name="colorPrimaryDark">#303F9F</item>
-        <item name="colorAccent">?attr/colorPrimary</item>
 
-        <item name="primarycolor">#000000</item>
-        <item name="secondarycolor">#000000</item>
+        <item name="colorPrimary">@color/theme_color</item>
+        <item name="colorPrimaryOpacity20">@color/theme_color_opacity_20</item>
+
+        <item name="textColor">#000000</item>
+        <item name="textColorSecondary">#B9B9B9</item>
+
 
         <item name="backgroundcolor">#ffffff</item>
-        <item name="cardbackground">#ffffff</item>
-        <item name="textcolor">#000000</item>
-        <item name="textcolorsecondary">#B9B9B9</item>
-        <item name="tintcolor">#ffffff</item>
-        <item name="buttoncolor">#5E989F</item>
+        <item name="itemBackgroundColor">#ffffff</item>
 
+        <item name="iconGrey">#B9B9B9</item>
+        <item name="iconBlack">#000000</item>
 
-        <item name="navigationBorder">#5E989F</item>
+        <item name="dividerColor">#F6F6F6</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#fcfcfc</item>
 
-        <!--<item name="colorControlNormal">#000000</item>-->
-        <!--<item name="android:actionMenuTextColor">#000000</item>-->
-
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
+        <item name="colorAccent">?attr/colorPrimary</item>
+
+        <!--<item name="tintcolor">#ffffff</item>-->
+        <!--<item name="navigationBorder">#5E989F</item>-->
+        <!--<item name="colorControlNormal">#000000</item>-->
+        <!--<item name="android:actionMenuTextColor">#000000</item>-->
+        <!--<item name="colorPrimaryDark">#303F9F</item>-->
+        <!--<item name="primarycolor">#000000</item>-->
+        <!--<item name="secondarycolor">#000000</item>-->
         <!--<item name="android:textColor">#000000</item>-->
 
     </style>
@@ -36,30 +41,35 @@
     <style name="darktheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/theme_color</item>
-        <item name="colorPrimaryDark">#000000</item>
-        <item name="colorAccent">?attr/colorPrimary</item>
+        <item name="colorPrimaryOpacity20">@color/theme_color_opacity_20</item>
 
-        <item name="primarycolor">#000000</item>
-        <item name="secondarycolor">#000000</item>
+        <item name="textColor">#ffffff</item>
+        <item name="textColorSecondary">#515151</item>
+
 
         <item name="backgroundcolor">#000000</item>
-        <item name="cardbackground">#000000</item>
-        <item name="textcolor">#ffffff</item>
-        <item name="textcolorsecondary">#515151</item>
-        <item name="tintcolor">#ffffff</item>
-        <item name="buttoncolor">#2196f3</item>
+        <item name="itemBackgroundColor">#000000</item>
 
-        <item name="navigationBorder">#5E989F</item>
+        <item name="iconGrey">#515151</item>
+        <item name="iconBlack">#000000</item>
+
+        <item name="dividerColor">#F6F6F6</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
-        <!--<item name="colorControlNormal">#ffffff</item>-->
-        <!--<item name="android:actionMenuTextColor">#ffffff</item>-->
-
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
-        <!--<item name="android:textColor">#000000</item>-->
+        <item name="colorAccent">?attr/colorPrimary</item>
 
+        <!--<item name="tintcolor">#ffffff</item>-->
+        <!--<item name="navigationBorder">#5E989F</item>-->
+        <!--<item name="colorControlNormal">#ffffff</item>-->
+        <!--<item name="android:actionMenuTextColor">#ffffff</item>-->
+        <!--<item name="android:textColor">#000000</item>-->
+        <!--<item name="colorPrimaryDark">#000000</item>-->
+        <!--<item name="colorAccent">?attr/colorPrimary</item>-->
+        <!--<item name="primarycolor">#000000</item>-->
+        <!--<item name="secondarycolor">#000000</item>-->
     </style>
 
     <style name="WindowAnimationTransition">
@@ -78,11 +88,11 @@
 
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
         <!-- Query Text Color -->
-        <item name="android:textColorPrimary">?attr/textcolor</item>
+        <item name="android:textColorPrimary">?attr/textColor</item>
         <!-- Hint Color -->
-        <item name="android:textColorHint">?attr/textcolorsecondary</item>
+        <item name="android:textColorHint">?attr/iconGrey</item>
         <!-- Icon Color -->
-        <item name="android:tint">?attr/textcolor</item>
+        <item name="android:tint">?attr/textColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
