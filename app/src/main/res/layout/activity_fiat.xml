@@ -37,14 +37,12 @@
             android:id="@+id/card_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="?attr/itemBackgroundColor"
             app:cardElevation="@dimen/cardview_default_elevation"
             app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/itemBackgroundColor"
                 android:orientation="vertical"
                 android:padding="@dimen/default_margin">
 

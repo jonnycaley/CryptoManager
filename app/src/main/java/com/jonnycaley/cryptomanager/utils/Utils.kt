@@ -20,7 +20,6 @@ import kotlin.math.absoluteValue
 import android.os.Vibrator
 
 
-
 object Utils {
 
     fun vibrate(context: Context) {

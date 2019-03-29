@@ -44,4 +44,13 @@
     <string name="crypto_transaction_activity">Crypto Transaction</string>
     <string name="none" />
     <string name="Retry">Retry</string>
+    <string name="settings_saved_articles">Saved Articles</string>
+    <string name="settings_delete_all_articles">Delete All Articles</string>
+    <string name="settings_delete_portfolio">Delete Portfolio</string>
+    <string name="settings_select_base_currency">Select Base Currency</string>
+    <string name="settings_send_feedback">Send Feedback</string>
+    <string name="settings_transaction_history">Full transaction history</string>
+    <string name="settings_share_app">Share this app</string>
+    <string name="settings_review_app">Review this app</string>
+    <string name="settings_version">Version</string>
 </resources>

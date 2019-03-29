@@ -27,7 +27,13 @@
     <!--<color name="red">#FF2600</color>-->
     <!--<color name="green">#008F00</color>-->
 
+
     <color name="theme_color">#00A6FF</color>
     <color name="theme_color_opacity_20">#4D00A6FB</color>
+
+
+
+
+
 
 </resources>

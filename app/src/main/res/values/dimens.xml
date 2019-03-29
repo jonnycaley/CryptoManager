@@ -40,9 +40,12 @@
 
     <dimen name="margin_item_horizontal">8dp</dimen>
     <dimen name="margin_item_vertical">12dp</dimen>
-    <dimen name="item_height">60dp</dimen>
 
-    <dimen name="margin_base_horizontal">12dp</dimen>
+    <dimen name="item_height_large">60dp</dimen>
+    <dimen name="item_height_medium">40dp</dimen>
+
+    <dimen name="margin_base_horizontal">16dp</dimen>
+    <dimen name="margin_base_vertical">12dp</dimen>
 
 
 </resources>

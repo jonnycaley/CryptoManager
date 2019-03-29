@@ -6,10 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -161,20 +157,44 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
 
     private fun changeTimeFrameText() {
 
-        text1H.setTypeface(null, Typeface.NORMAL)
-        text1D.setTypeface(null, Typeface.NORMAL)
-        text1W.setTypeface(null, Typeface.NORMAL)
+//        text1H.setTypeface(null, Typeface.NORMAL)
+//        text1D.setTypeface(null, Typeface.NORMAL)
+//        text1W.setTypeface(null, Typeface.NORMAL)
+
+        setTextColorSecondary(text1H)
+        setTextColorSecondary(text1D)
+        setTextColorSecondary(text1W)
 
         when (timeframe) {
             TIMEFRAME_1H -> {
-                text1H.setTypeface(text1H.typeface, Typeface.BOLD)
+                setTextColorPrimary(text1H)
+//                text1H.setTypeface(text1H.typeface, Typeface.BOLD)
             }
             TIMEFRAME_1D -> {
-                text1D.setTypeface(text1D.typeface, Typeface.BOLD)
+                setTextColorPrimary(text1D)
+//                text1D.setTypeface(text1D.typeface, Typeface.BOLD)
             }
             TIMEFRAME_1W -> {
-                text1W.setTypeface(text1W.typeface, Typeface.BOLD)
+                setTextColorPrimary(text1W)
+//                text1W.setTypeface(text1W.typeface, Typeface.BOLD)
             }
+        }
+    }
+
+    fun setTextColorSecondary(textView: TextView) {
+        if(Utils.isDarkTheme()){
+            textView.setTextColor(resources.getColor(R.color.dark_text_color_secondary))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.light_text_color_secondary))
+        }
+    }
+
+
+    fun setTextColorPrimary(textView: TextView) {
+        if(Utils.isDarkTheme()){
+            textView.setTextColor(resources.getColor(R.color.dark_text_color))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.light_text_color))
         }
     }
 
@@ -193,30 +213,47 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         price.text = "Price"
         change.text = "Change"
 
+        setTextColorSecondary(rank)
+        setTextColorSecondary(name)
+        setTextColorSecondary(price)
+        setTextColorSecondary(change)
+
         when (filter) {
             FILTER_RANK_DOWN -> {
-                rank.text = "#▼"
+                setTextColorPrimary(rank)
+                rank.setTypeface(rank.typeface, Typeface.BOLD)
+                rank.text = "▼#"
             }
             FILTER_RANK_UP -> {
-                rank.text = "#▲"
+                setTextColorPrimary(rank)
+                rank.setTypeface(rank.typeface, Typeface.BOLD)
+                rank.text = "▲#"
             }
             FILTER_NAME_DOWN -> {
-                name.text = "Name▼"
+                setTextColorPrimary(name)
+                name.setTypeface(name.typeface, Typeface.BOLD)
+                name.text = "▼Name"
             }
             FILTER_NAME_UP -> {
-                name.text = "Name▲"
+                setTextColorPrimary(name)
+                name.setTypeface(name.typeface, Typeface.BOLD)
+                name.text = "▲Name"
             }
             FILTER_PRICE_DOWN -> {
-                price.text = "Price▼"
+                setTextColorPrimary(price)
+                price.text = "▼Price"
             }
             FILTER_PRICE_UP -> {
-                price.text = "Price▲"
+                setTextColorPrimary(price)
+                price.text = "▲Price"
             }
             FILTER_CHANGE_DOWN -> {
-                change.text = "Change▼"
+                setTextColorPrimary(change)
+                change.text = "▼Change"
             }
             FILTER_CHANGE_UP -> {
-                change.text = "Change▲"
+                setTextColorPrimary(change)
+                change.text = "▲Change"
             }
         }
     }

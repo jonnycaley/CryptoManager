@@ -41,8 +41,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="?attr/itemBackgroundColor">
+                app:cardUseCompatPadding="true">
                 <!-- app:cardCornerRadius="@dimen/card_corner_radius" -->
 
                 <RelativeLayout
@@ -59,7 +58,6 @@
                         app:rrbg_animateTexts_textColorFrom="@color/text_grey"
                         app:rrbg_animateTexts_textColorTo="@color/black"
                         app:rrbg_animateTexts_textColor_duration="500"
-                        app:rrbg_borderColor="?attr/itemBackgroundColor"
                         app:rrbg_borderSize="1dp"
                         app:rrbg_bottomLineRadius="2dp"
                         app:rrbg_bottomLineSize="1dp"
@@ -73,8 +71,7 @@
                         app:rrbg_selectorAnimationType="translate_y"
                         app:rrbg_selectorColor="?attr/textColor"
                         app:rrbg_selectorRadius="0dp"
-                        app:rrbg_selectorSize="2dp"
-                        app:rrbg_backgroundColor="?attr/itemBackgroundColor">
+                        app:rrbg_selectorSize="2dp">
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -211,8 +208,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                app:cardBackgroundColor="?attr/itemBackgroundColor">
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"

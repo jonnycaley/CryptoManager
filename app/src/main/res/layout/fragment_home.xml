@@ -14,7 +14,7 @@
     <include
         android:id="@+id/layout_progress"
         layout="@layout/layout_progress"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <!--TODO: change above to true-->
 
@@ -79,8 +79,7 @@
                         app:rrbg_animateTexts_textColorFrom="@color/text_grey"
                         app:rrbg_animateTexts_textColorTo="@color/black"
                         app:rrbg_animateTexts_textColor_duration="500"
-                        app:rrbg_backgroundColor="?attr/itemBackgroundColor"
-                        app:rrbg_borderColor="?attr/itemBackgroundColor"
+                        app:rrbg_borderColor="?attr/backgroundcolor"
                         app:rrbg_borderSize="1dp"
                         app:rrbg_bottomLineRadius="2dp"
                         app:rrbg_bottomLineSize="1dp"
@@ -216,37 +215,45 @@
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_base_horizontal">
+                        android:layout_marginLeft="@dimen/margin_base_horizontal"
+                        android:layout_marginRight="@dimen/margin_base_horizontal"
+                        android:layout_marginTop="@dimen/margin_base_vertical"
+                        android:layout_marginBottom="@dimen/margin_base_vertical"
+                        android:weightSum="100">
 
                         <TextView
                             android:id="@+id/text_sort_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="30"
                             android:layout_height="wrap_content"
-                            android:paddingRight="@dimen/default_margin"
                             android:text="Name"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary"/>
+
+                        <TextView
+                            android:id="@+id/text_sort_change"
+                            android:layout_width="0dp"
+                            android:layout_weight="35"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="Change"
+                            android:textColor="?attr/textColorSecondary"
+                            android:gravity="end"/>
 
 
                         <TextView
                             android:id="@+id/text_sort_holdings"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="35"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/text_sort_name"
-                            android:text="Holdings"
-                            android:textColor="?attr/textColor" />
+                            android:text="Holdings▼"
+                            android:textColor="?attr/textColor"
+                            android:gravity="end"/>
 
-                        <TextView
-                            android:id="@+id/text_sort_change"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="Change"
-                            android:textColor="?attr/textColor" />
-
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <include layout="@layout/layout_border" />
 

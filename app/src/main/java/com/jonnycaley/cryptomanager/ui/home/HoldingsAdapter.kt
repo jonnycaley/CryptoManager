@@ -91,6 +91,10 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
                         }
                     }
 //                }
+
+                if(holding.type == Variables.Transaction.Type.fiat){
+                    parameter = 0.toBigDecimal()
+                }
                 Log.i(TAG, "Parameter: $parameter")
                 parameter
             })
@@ -98,7 +102,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
         if(sort == HomeFragment.SORT_CHANGE_ASCENDING) {
             Log.i(TAG, "Ascending")
             tempHoldings.forEach{
-                println(it.symbol)
+                Log.i(TAG, it.symbol)
             }
             this.holdings.addAll(tempHoldings.asReversed())
         }
@@ -166,25 +170,27 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
 
             holder.price.visibility = View.GONE
-            holder.change.text = value?.let { Utils.getPriceTextAbs(it.times(baseRate).toDouble(), symbol) }
+            holder.value.text = value?.let { Utils.getPriceTextAbs(it.times(baseRate).toDouble(), symbol) }
 
             val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END, 0)
 
-            holder.change.layoutParams = layoutParams
+            holder.value.layoutParams = layoutParams
 
             holder.currency.text = holding.symbol
-            holder.value.visibility = View.GONE
-            holder.holding.visibility = View.GONE
+            holder.change.visibility = View.GONE
+//            holder.holding.visibility = View.GONE
+
+            holder.holding.text = Utils.getPriceTextAbs(holding.quantity.toDouble(), "")
 
             when (chosenCurrency) {
                 HomeFragment.CURRENCY_BTC -> {
                     symbol = "B"
-                    holder.change.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
+                    holder.value.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
                 HomeFragment.CURRENCY_ETH -> {
                     symbol = "E"
-                    holder.change.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
+                    holder.value.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
             }
         } else {
@@ -312,24 +318,44 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 //                holder.change.setTextColor(context?.resources?.getColor(R.color.text_grey)!!)
 //                holder.change.text = "-"
 //            }
-            holder.holding.text = "(${Utils.getPriceTextAbs(holding.quantity.toDouble(), "")} ${holding.symbol})"
+            holder.holding.text = Utils.getPriceTextAbs(holding.quantity.toDouble(), "")
             holder.currency.text = holding.symbol
             holder.value.text = "${value?.let { priceDecimal -> Utils.getPriceTextAbs(priceDecimal.toDouble(), symbol) }}"
             holder.price.text = Utils.getPriceTextAbs(price?.toDouble(), symbol)
 
         }
+        Picasso.with(context)
+                .load(holding.imageUrl)
+                .fit()
+                .centerCrop()
+                .transform(CircleTransform())
+                .placeholder(R.drawable.circle)
+                .into(holder.image)
 
-        if (holding.imageUrl != null && (holding.imageUrl?.contains("null")) != true) {
-            Picasso.with(context)
-                    .load(holding.imageUrl)
-                    .fit()
-                    .centerCrop()
-                    .transform(CircleTransform())
-                    .placeholder(R.drawable.circle)
-                    .into(holder.image)
-        } else {
-            holder.image.visibility = View.GONE
+        if (!(holding.imageUrl != null && (holding.imageUrl?.contains("null")) != true)) {
+            holder.fiat.visibility = View.VISIBLE
+            holder.fiat.text = Utils.getFiatSymbol(holding.symbol)
         }
+
+//        if (holding.imageUrl != null && (holding.imageUrl?.contains("null")) != true) {
+//            Picasso.with(context)
+//                    .load(holding.imageUrl)
+//                    .fit()
+//                    .centerCrop()
+//                    .transform(CircleTransform())
+//                    .placeholder(R.drawable.circle)
+//                    .into(holder.image)
+//        } else {
+//            Picasso.with(context)
+//                    .load()
+//                    .fit()
+//                    .centerCrop()
+//                    .transform(CircleTransform())
+//                    .placeholder(R.drawable.circle)
+//                    .into(holder.image)
+//
+//            holder.image.visibility = View.GONE
+//        }
 
         holder.itemView.setOnClickListener {
 
@@ -416,6 +442,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
         val currency = view.currency
         //        val textFiat = view.text_fiat
         val holding = view.holding
+        val fiat = view.fiat
         val change = view.change
         val value = view.value
         val price = view.price

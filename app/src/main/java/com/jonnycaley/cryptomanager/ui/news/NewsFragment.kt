@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
@@ -54,7 +55,7 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     val recyclerViewShimmerNews by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.shimmer_recycler_view) }
 //    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
 
-    val cardTopArticle by lazy { mView.findViewById<androidx.cardview.widget.CardView>(R.id.card_view) }
+    val layoutTopArticle by lazy { mView.findViewById<RelativeLayout>(R.id.layout_top) }
 
     val cardImage by lazy { mView.findViewById<ImageView>(R.id.card_image) }
     val cardTitle by lazy { mView.findViewById<TextView>(R.id.card_title) }
@@ -293,7 +294,7 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 
     private fun showTopNewsArticle(article: Article) {
 
-        cardTopArticle.setOnClickListener {
+        layoutTopArticle.setOnClickListener {
             val builder = context?.let { context -> Utils.webViewBuilder(context) }
             article.url?.let { url -> builder?.show(url) }
         }

@@ -26,11 +26,16 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
 
     private lateinit var presenter : SettingsContract.Presenter
 
-    lateinit var settingsAdapter : SettingsAdapter
+    lateinit var settingsAdapterGeneral : SettingsAdapter
+    lateinit var settingsAdapterAbout : SettingsAdapter
+    lateinit var settingsAdapterData : SettingsAdapter
 
     val TAG = this.javaClass.simpleName
 
-    val recyclerView by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
+    val recyclerViewGeneral by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_general) }
+    val recyclerViewData by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_data) }
+    val recyclerViewAbout by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_about) }
+
     val switchTheme by lazy { mView.findViewById<Switch>(R.id.switch_theme) }
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
@@ -101,13 +106,30 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
 
         val versionName = BuildConfig.VERSION_NAME
 
-        val settingsList: ArrayList<String> = ArrayList(Arrays.asList("Saved Articles", "Delete All Articles", "Delete Portfolio", "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})", "Send Feedback", "Full transaction history", "Share this app", "Review this app", "Version $versionName"))
+//      "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})"
+//      "Version $versionName"
+
+        val settingsListGeneral: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_select_base_currency)))
+        val settingsListData: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_saved_articles), resources.getString(R.string.settings_delete_all_articles), resources.getString(R.string.settings_delete_portfolio), resources.getString(R.string.settings_transaction_history)))
+        val settingsListAbout: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_send_feedback), resources.getString(R.string.settings_share_app), resources.getString(R.string.settings_review_app), resources.getString(R.string.settings_version)))
 
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
-        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-        recyclerView.layoutManager = mLayoutManager
-        settingsAdapter = SettingsAdapter(settingsList, presenter, context)
-        recyclerView.adapter = settingsAdapter
+        val mLayoutManagerAbout = androidx.recyclerview.widget.LinearLayoutManager(context)
+        val mLayoutManagerData = androidx.recyclerview.widget.LinearLayoutManager(context)
+        val mLayoutManagerGeneral = androidx.recyclerview.widget.LinearLayoutManager(context)
+
+        recyclerViewAbout.layoutManager = mLayoutManagerAbout
+        recyclerViewData.layoutManager = mLayoutManagerData
+        recyclerViewGeneral.layoutManager = mLayoutManagerGeneral
+
+        settingsAdapterGeneral = SettingsAdapter(settingsListGeneral, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        recyclerViewGeneral.adapter = settingsAdapterGeneral
+
+        settingsAdapterData = SettingsAdapter(settingsListData, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        recyclerViewData.adapter = settingsAdapterData
+
+        settingsAdapterAbout = SettingsAdapter(settingsListAbout, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        recyclerViewAbout.adapter = settingsAdapterAbout
 
     }
 

@@ -13,6 +13,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         RxPaperBook.init(this)
+
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/Roboto-Regular.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/Roboto-Regular.ttf");
+        FontsOverride.setDefaultFont(this, "SERIF", "fonts/Roboto-Regular.ttf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/Roboto-Regular.ttf");
+
         val mPrefs : SharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
         this.isNightModeEnabled = mPrefs.getBoolean("NIGHT_MODE", false)
     }

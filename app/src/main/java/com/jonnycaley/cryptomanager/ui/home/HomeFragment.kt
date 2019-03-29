@@ -62,7 +62,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
     var chosenPeriod = TIME_PERIOD_1H
     var chosenCurrency = CURRENCY_FIAT
-    var chosenSort = ""
+    var chosenSort = SORT_HOLDINGS_DESCENDING
 
     var isColdStartup = true
 
@@ -194,30 +194,58 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
         }
     }
 
+    fun setTextColorSecondary(textView: TextView) {
+        if(Utils.isDarkTheme()){
+            textView.setTextColor(resources.getColor(R.color.dark_text_color_secondary))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.light_text_color_secondary))
+        }
+    }
+
+
+    fun setTextColorPrimary(textView: TextView) {
+        if(Utils.isDarkTheme()){
+            textView.setTextColor(resources.getColor(R.color.dark_text_color))
+        } else {
+            textView.setTextColor(resources.getColor(R.color.light_text_color))
+        }
+    }
+
     private fun notifySortTextChanged() {
 
         textSortName.text = "Name"
         textSortHoldings.text = "Holdings"
         textSortChange.text = "Change"
 
+
+        setTextColorSecondary(textSortName)
+        setTextColorSecondary(textSortHoldings)
+        setTextColorSecondary(textSortChange)
+
         when (chosenSort) {
             SORT_NAME_ASCENDING -> {
                 textSortName.text = "Name▼"
+                setTextColorPrimary(textSortName)
             }
             SORT_NAME_DESCENDING -> {
                 textSortName.text = "Name▲"
+                setTextColorPrimary(textSortName)
             }
             SORT_HOLDINGS_ASCENDING -> {
                 textSortHoldings.text = "Holdings▲"
+                setTextColorPrimary(textSortHoldings)
             }
             SORT_HOLDINGS_DESCENDING -> {
                 textSortHoldings.text = "Holdings▼"
+                setTextColorPrimary(textSortHoldings)
             }
             SORT_CHANGE_ASCENDING -> {
                 textSortChange.text = "Change▲"
+                setTextColorPrimary(textSortChange)
             }
             SORT_CHANGE_DESCENDING -> {
                 textSortChange.text = "Change▼"
+                setTextColorPrimary(textSortChange)
             }
         }
     }

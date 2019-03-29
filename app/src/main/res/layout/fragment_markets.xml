@@ -12,15 +12,14 @@
         android:id="@+id/layout_no_internet" />
 
     <include layout="@layout/layout_progress"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ScrollView
             android:id="@+id/nested_scroll_view"
@@ -46,7 +45,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/itemBackgroundColor"
                         android:orientation="horizontal"
                         android:padding="@dimen/default_margin"
                         android:weightSum="3">
@@ -175,7 +173,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/itemBackgroundColor"
                         android:weightSum="100">
 
                         <SearchView
@@ -183,8 +180,7 @@
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_alignParentStart="true"
-                            android:layout_weight="64"
-                            android:background="?attr/itemBackgroundColor" />
+                            android:layout_weight="64" />
 
                         <TextView
                             android:id="@+id/text_1H"
@@ -211,7 +207,7 @@
                             android:paddingEnd="@dimen/small_margin"
                             android:paddingBottom="@dimen/small_margin"
                             android:text="1D"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary" />
 
                         <TextView
                             android:id="@+id/text_1W"
@@ -224,7 +220,7 @@
                             android:paddingEnd="@dimen/small_margin"
                             android:paddingBottom="@dimen/small_margin"
                             android:text="1W"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary" />
 
                     </LinearLayout>
 
@@ -245,72 +241,71 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="?attr/itemBackgroundColor">
+                            android:paddingStart="@dimen/margin_base_horizontal"
+                            android:paddingEnd="@dimen/margin_base_horizontal"
+                            android:orientation="horizontal"
+                            android:weightSum="100">
 
                             <TextView
                                 android:id="@+id/rank"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:paddingStart="@dimen/small_margin"
-                                android:paddingTop="@dimen/small_margin"
-                                android:paddingBottom="@dimen/small_margin"
-                                android:text="#"
-                                android:textColor="?attr/textColor"
-                                android:textStyle="bold" />
+                                android:layout_marginEnd="@dimen/margin_item_horizontal"
+                                android:layout_weight="8"
+                                android:paddingTop="@dimen/margin_base_vertical"
+                                android:paddingBottom="@dimen/margin_base_vertical"
+                                android:text="▼#"
+                                android:textColor="?attr/textColor" />
 
 
                             <TextView
                                 android:id="@+id/name"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="47"
                                 android:layout_height="wrap_content"
-                                android:layout_toEndOf="@id/rank"
-                                android:paddingStart="@dimen/default_margin"
-                                android:paddingTop="@dimen/small_margin"
-                                android:paddingBottom="@dimen/small_margin"
+                                android:paddingTop="@dimen/margin_base_vertical"
+                                android:paddingBottom="@dimen/margin_base_vertical"
                                 android:text="Name"
-                                android:textColor="?attr/textColor" />
+                                android:textColor="?attr/textColorSecondary" />
 
                             <TextView
                                 android:id="@+id/symbol"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_toRightOf="@id/name"
-                                android:paddingTop="@dimen/small_margin"
-                                android:paddingBottom="@dimen/small_margin"
                                 android:text=" (Symbol)"
-                                android:textColor="@color/light_grey" />
+                                android:textColor="@color/light_grey"
+                                android:visibility="gone"/>
 
                             <TextView
                                 android:id="@+id/price"
-                                android:layout_width="70dp"
+                                android:layout_width="0dp"
+                                android:layout_weight="25"
                                 android:layout_height="wrap_content"
+                                android:paddingTop="@dimen/margin_base_vertical"
+                                android:paddingBottom="@dimen/margin_base_vertical"
                                 android:layout_toLeftOf="@id/change"
                                 android:gravity="end"
-                                android:paddingTop="@dimen/small_margin"
-                                android:paddingEnd="@dimen/default_margin"
-                                android:paddingBottom="@dimen/small_margin"
                                 android:text="Price"
-                                android:textColor="?attr/textColor" />
+                                android:textColor="?attr/textColorSecondary" />
 
 
                             <TextView
                                 android:id="@+id/change"
-                                android:layout_width="75dp"
+                                android:layout_width="0dp"
+                                android:layout_weight="20"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
+                                android:paddingTop="@dimen/margin_base_vertical"
+                                android:paddingBottom="@dimen/margin_base_vertical"
                                 android:maxLines="1"
-                                android:paddingTop="@dimen/small_margin"
-                                android:paddingEnd="@dimen/small_margin"
-                                android:paddingBottom="@dimen/small_margin"
                                 android:text="Change"
                                 android:textAlignment="textEnd"
-                                android:textColor="?attr/textColor" />
+                                android:textColor="?attr/textColorSecondary" />
 
-                        </RelativeLayout>
+                        </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"

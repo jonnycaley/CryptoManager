@@ -7,8 +7,7 @@
     android:layout_marginTop="@dimen/card_margin"
     android:layout_marginBottom="@dimen/card_margin"
     app:cardElevation="@dimen/cardview_default_elevation"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/itemBackgroundColor">
+    app:cardUseCompatPadding="true">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

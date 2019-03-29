@@ -100,24 +100,29 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
 
         var percentage2DP = ""
 
-
         when (timeFrame) {
             MarketsFragment.TIMEFRAME_1H -> {
                 if (item.quote?.uSD?.percentChange1h == null)
                     percentage2DP = "0.00"
-                else
+                else if(item?.quote?.uSD?.percentChange1h!! > 100) {
+                    percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange1h).substring(0,String.format("%.2f", item?.quote?.uSD?.percentChange1h).length-3)
+                } else
                     percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange1h)
             }
             MarketsFragment.TIMEFRAME_1D -> {
                 if (item.quote?.uSD?.percentChange24h == null)
                     percentage2DP = "0.00"
-                else
+                else if(item?.quote?.uSD?.percentChange24h!! > 100) {
+                        percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h).substring(0,String.format("%.2f", item?.quote?.uSD?.percentChange24h).length-3)
+                } else
                     percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange24h)
             }
             MarketsFragment.TIMEFRAME_1W -> {
                 if (item.quote?.uSD?.percentChange7d == null)
                     percentage2DP = "0.00"
-                else
+                else if(item?.quote?.uSD?.percentChange7d!! > 100) {
+                    percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange7d).substring(0,String.format("%.2f", item?.quote?.uSD?.percentChange7d).length-3)
+                } else
                     percentage2DP = String.format("%.2f", item?.quote?.uSD?.percentChange7d)
             }
         }

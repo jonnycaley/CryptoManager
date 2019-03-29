@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="?attr/itemBackgroundColor">
+    android:background="?attr/backgroundcolor">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_item_horizontal"
-        android:paddingTop="@dimen/margin_item_vertical"
-        android:paddingRight="@dimen/margin_item_horizontal"
-        android:paddingBottom="@dimen/margin_item_vertical">
+        android:layout_height="@dimen/item_height_medium"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/setting"
@@ -24,8 +23,17 @@
 
     </RelativeLayout>
 
+    <include
+        layout="@layout/item_border"
+        android:id="@+id/layout_border"
+        android:visibility="gone"/>
 
     <include
-        layout="@layout/item_border"/>
+        layout="@layout/item_border"
+        android:id="@+id/layout_border_partial"
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_marginStart="@dimen/margin_base_horizontal"
+        android:visibility="gone"/>
 
 </LinearLayout>

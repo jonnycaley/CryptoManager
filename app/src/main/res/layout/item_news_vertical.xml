@@ -8,7 +8,7 @@
     android:layout_marginBottom="@dimen/card_margin"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/itemBackgroundColor">
+    app:cardBackgroundColor="?attr/backgroundcolor">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

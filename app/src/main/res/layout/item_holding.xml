@@ -2,34 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:background="?attr/itemBackgroundColor"
-        android:padding="@dimen/margin_base_horizontal"
-        android:weightSum="100">
+        android:layout_height="@dimen/item_height_large"
 
-        <LinearLayout
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingBottom="@dimen/margin_base_vertical"
+
+        android:weightSum="100"
+        android:orientation="horizontal">
+
+        <RelativeLayout
             android:id="@+id/layout_left"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:layout_weight="30">
+            android:layout_weight="30"
+            android:layout_gravity="center"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/image"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_centerVertical="true" />
+
+
+
+            <TextView
+                android:id="@+id/fiat"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text=""
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/currency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/image"
-                android:layout_gravity="center"
+                android:layout_toEndOf="@id/image"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/default_margin"
                 android:text="BTC"
                 android:textColor="?attr/textColor" />
@@ -44,19 +66,56 @@
             <!--android:layout_below="@id/image"-->
             <!--android:visibility="gone" />-->
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/layout_change"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:layout_weight="35"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:gravity="bottom"
+                android:text="-$3"
+                android:maxLines="1"
+                android:textColor="?attr/textColor"
+                android:visibility="visible" />
+
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/change"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:text="$138.68"
+                android:maxLines="1"
+                android:textColor="?attr/textColor" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/layout_holdings"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="2"
-            android:layout_weight="30">
+            android:layout_weight="35"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/value"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:gravity="end"
@@ -66,49 +125,17 @@
 
             <TextView
                 android:id="@+id/holding"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
+                android:layout_below="@id/value"
                 android:gravity="end"
                 android:text="(0.9650000 BTC)"
                 android:maxLines="1"
                 android:textColor="?attr/textColorSecondary" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_change"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:layout_weight="40">
-
-            <TextView
-                android:id="@+id/change"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:text="-$3"
-                android:textColor="?attr/textColor"
-                android:visibility="visible" />
-
-
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_below="@id/change"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:text="$138.68"
-                android:textColor="?attr/textColor" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <include layout="@layout/item_border" />

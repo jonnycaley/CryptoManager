@@ -7,17 +7,19 @@
         <item name="colorPrimary">@color/theme_color</item>
         <item name="colorPrimaryOpacity20">@color/theme_color_opacity_20</item>
 
-        <item name="textColor">#000000</item>
-        <item name="textColorSecondary">#B9B9B9</item>
+        <item name="textColor">@color/light_text_color</item>
+        <item name="textColorSecondary">@color/light_text_color_secondary</item>
+
+        <item name="android:typeface">monospace</item>
 
 
-        <item name="backgroundcolor">#ffffff</item>
-        <item name="itemBackgroundColor">#ffffff</item>
+        <item name="backgroundcolor">#FFFFFF</item>
+        <item name="secondaryBackgroundColor">#E6EBEF</item>
 
         <item name="iconGrey">#B9B9B9</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#F6F6F6</item>
+        <item name="dividerColor">#4DB9B9B9</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#fcfcfc</item>
 
@@ -43,17 +45,20 @@
         <item name="colorPrimary">@color/theme_color</item>
         <item name="colorPrimaryOpacity20">@color/theme_color_opacity_20</item>
 
-        <item name="textColor">#ffffff</item>
-        <item name="textColorSecondary">#515151</item>
 
+
+        <item name="textColor">@color/dark_text_color</item>
+        <item name="textColorSecondary">@color/dark_text_color_secondary</item>
+
+        <item name="android:typeface">monospace</item>
 
         <item name="backgroundcolor">#000000</item>
-        <item name="itemBackgroundColor">#000000</item>
+        <item name="secondaryBackgroundColor">#131517</item>
 
         <item name="iconGrey">#515151</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#F6F6F6</item>
+        <item name="dividerColor">#4D515151</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
@@ -101,4 +106,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
+    <color name="light_text_color">#000000</color>
+    <color name="light_text_color_secondary">#B9B9B9</color>
+    <color name="dark_text_color">#ffffff</color>
+    <color name="dark_text_color_secondary">#515151</color>
 </resources>
