@@ -270,6 +270,8 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
         val fiat = Utils.getFiatSymbol(baseFiat.fiat)
 
+        Log.i(TAG, "BAL"+balanceUsd.toString())
+
         when (this.chosenCurrency) { //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
             CURRENCY_FIAT -> {
                 textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
@@ -287,6 +289,8 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
 
         val fiat = Utils.getFiatSymbol(baseFiat.fiat)
+
+        Log.i(TAG, "CHA"+changeUsd.toString())
 
         when (this.chosenCurrency) {
             CURRENCY_FIAT -> {

@@ -26,6 +26,6 @@
 
 
     <include
-        layout="@layout/border"/>
+        layout="@layout/item_border"/>
 
 </LinearLayout>

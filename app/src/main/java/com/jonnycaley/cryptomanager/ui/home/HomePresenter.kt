@@ -32,7 +32,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     var compositeDisposable: CompositeDisposable? = null
 
-    val TAG = this.javaClass.simpleName
+    val TAG = "HomePresenter"
 
     var holdings: ArrayList<Holding> = ArrayList()
     var prices: ArrayList<Price> = ArrayList()
@@ -557,6 +557,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                     .map { change -> changeUsd = getChangeUsd(holdingsSorted, newPrices) }
                     .map { getBalanceUsd(holdingsSorted, newPrices, fiatPrices) }
                     .map { balance ->
+                        Log.i(TAG, balance.toString())
                         saveData(holdingsSorted, newPrices, baseFiat, newPrices.first { it.symbol?.toUpperCase() == "BTC" }, newPrices.first { it.symbol?.toUpperCase() == "ETH" }, balance, getBalanceBtc(holdingsSorted, newPrices, fiatPrices), getBalanceEth(holdingsSorted, newPrices, fiatPrices), changeUsd, getChangeBtc(holdingsSorted, newPrices), getChangeEth(holdingsSorted, newPrices))
                     }
                     .observeOn(AndroidSchedulers.mainThread())
@@ -699,8 +700,8 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
 
-            val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD?.times(baseFiat.rate
-                    ?: 1.toBigDecimal())
+            val price = combinedPrices.filter { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }[0].prices?.uSD
+
             val value = price?.times(holding.quantity)
 
             change += value?.minus(holding.costUsd) ?: 0.toBigDecimal()
@@ -717,10 +718,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         holdings.filter { it.symbol.toUpperCase() != "BTC" && it.type != Variables.Transaction.Type.fiat }.forEach { holding ->
 
             val costBtcHistorical = holding.costBtc //this is what it was at time stamp
-            val costBtcNow = holding.quantity * (combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate)
-                    ?: 0.toBigDecimal()) / (combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal())
+            val costBtcNow = holding.quantity * (combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD ?: 0.toBigDecimal()) / (combinedPrices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?: 0.toBigDecimal())
 
             change += costBtcNow - costBtcHistorical
 //            if(holding.quantity < 0.toBigDecimal() )
@@ -771,10 +769,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         holdings.filter { it.symbol.toUpperCase() != "ETH" && it.type != Variables.Transaction.Type.fiat }.forEach { holding ->
 
             val costEthHistorical = holding.costEth //this is what it was at time stamp
-            val costEthNow = holding.quantity * (combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate)
-                    ?: 0.toBigDecimal()) / (combinedPrices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal())
+            val costEthNow = holding.quantity * (combinedPrices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD ?: 0.toBigDecimal()) / (combinedPrices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD ?: 1.toBigDecimal())
 
             change += costEthNow - costEthHistorical
 //            if(holding.quantity < 0.toBigDecimal() )
@@ -823,12 +818,16 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         var balance = 0.toBigDecimal()
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
-            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity)
-                    ?: 0.toBigDecimal()
+            Log.i("BalanceAdd", (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) ?: 0.toBigDecimal()).toString())
+
+            balance += prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) ?: 0.toBigDecimal()
         }
 
         holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
+            Log.i("BalanceAdd", (holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP)).toString())
+
             balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP)
+
 //            balance += fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate?.divide(holding.quantity, 8, RoundingMode.HALF_UP)!!
         }
 
@@ -850,14 +849,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         ////times by basefiat
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
-            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
-                    ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
+            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD ?: 1.toBigDecimal()) ?: 0.toBigDecimal()
 
         }
         holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
-            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal(), 6, RoundingMode.HALF_UP)
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).divide(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD, 6, RoundingMode.HALF_UP)
         }
 
 
@@ -869,14 +865,11 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         var balance = 0.toBigDecimal()
 
         holdings.filter { it.type == Variables.Transaction.Type.crypto }.forEach { holding ->
-            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.times(baseFiat.rate
-                    ?: Constants.baseRate)?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
+            balance += (prices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity))?.div((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD ?: 1.toBigDecimal())) ?: 0.toBigDecimal()
         }
 
         holdings.filter { it.type == Variables.Transaction.Type.fiat }.forEach { holding ->
-            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).times(baseFiat.rate!!).divide(prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseFiat.rate
-                    ?: Constants.baseRate) ?: 1.toBigDecimal(), 6, RoundingMode.HALF_UP)
+            balance += holding.quantity.divide(fiatPrices.rates?.first { it.fiat == holding.symbol }?.rate, 8, RoundingMode.HALF_UP).divide(prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?: 0.toBigDecimal(), 6, RoundingMode.HALF_UP)
         }
 
         return balance

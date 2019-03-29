@@ -2,7 +2,8 @@ package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
+import android.opengl.Visibility
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,107 +24,100 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val transaction = transactions.get(position)
+        val transaction = transactions[position]
 
         holder.setIsRecyclable(false)
 
-        val convertedPrice = transaction.price.times(baseFiat.rate?: 1.toBigDecimal())
+        val convertedPrice = transaction.price.times(baseFiat.rate?: 1.toBigDecimal()) //
 
         val symbol = Utils.getFiatSymbol(baseFiat.fiat)
 
-        if(transaction.symbol == currency){
+        val priceUsd = getPrice(transaction)
+        val priceConverted = priceUsd.toBigDecimal().times(baseFiat.rate?: 1.toBigDecimal())
 
-            holder.textPrice.text =  Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times(convertedPrice).toDouble(), symbol)
-            holder.titlePair.text = "Trading Pair"
-            holder.textPair.text = "${transaction.symbol}/${transaction.pairSymbol}"
+        Log.i(TAG, "Exchange: ${transaction.exchange}   " + "symbol: ${transaction.symbol}   " + "name: ${transaction.name}   " + "pairSymbol: ${transaction.pairSymbol}   " + "quantity: ${transaction.quantity}   " + "price: ${transaction.price}   " + "priceUSD: ${transaction.priceUSD}   " + "date: ${transaction.date}   " + "isDeducted: ${transaction.isDeducted}   " + "isDeductedPriceUsd: ${transaction.isDeductedPriceUsd}   " + "btcPrice: ${transaction.btcPrice}   " + "ethPrice: ${transaction.ethPrice}   ")
 
-            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity)).toDouble(), symbol)
+        holder.titlePair.text = getTitlePair(transaction)
+        holder.titleAmount.text = getTitleAmount(transaction)
+        holder.titlePrice.text = getTitlePrice(transaction)
+
+        holder.textPair.text = getTextPair(transaction)
+
+        holder.layoutBottomSell.visibility = getSellTransactionVisibility(transaction)
+
+        holder.textAmount.text = Utils.getPriceTextAbs(getTextAmount(transaction).toDouble(), "")
+
+        holder.textPrice.text = Utils.getPriceTextAbs(priceConverted.toDouble(), symbol)
+
+        holder.textCost.text = Utils.getPriceTextAbs((priceConverted * getTextAmount(transaction)).toDouble(), symbol)
+
+        holder.textProceeds.text = Utils.getPriceTextAbs((priceConverted * getTextAmount(transaction)).toDouble(), symbol)
+
+        holder.textWorth.text = Utils.getPriceTextAbs(getWorth(transaction)?.toDouble(), symbol)
+
+        holder.textChange.text = Utils.formatPercentage(getChange(transaction))
+
+        if(getChange(transaction)!! > 0.toBigDecimal())
+            context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
+        else
+            context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
+
+        if(transaction.symbol == currency){ //buy transaction
 
             var multiplier = 1.toBigDecimal()
 
-            if(transaction.quantity > 0.toBigDecimal()){
-                holder.titlePrice.text = "${currency.toUpperCase()} Buy Price"
-                holder.titleAmount.text = "Amount Bought"
+            if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a buy transaction
 
-                holder.layoutBottomSell.visibility = View.GONE
             }
-            if(transaction.quantity < 0.toBigDecimal()){
+            if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a sell transaction
                 multiplier = (-1).toBigDecimal()
-                holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
-                holder.titleAmount.text = "Amount Sold"
-                holder.textProceeds.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)).toDouble(), symbol)
-                holder.layoutBottomSell.visibility = View.VISIBLE
+//                holder.textProceeds.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)).toDouble(), symbol)
             }
-            holder.textAmount.text = (transaction.quantity * multiplier).toString()
 
             if (currentUSDPrice != null) {
-                holder.textWorth.text = symbol + (currentUSDPrice * (transaction.quantity * multiplier)).toString()
+//                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * multiplier)).toDouble(), symbol)
 
-                val change = ((((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))).minus((currentUSDPrice * (transaction.quantity * multiplier)))).div((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))))).times((-100).toBigDecimal()))
-                holder.textChange.text = Utils.formatPercentage(change)
+//                val change = ((((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))).minus((currentUSDPrice * (transaction.quantity * multiplier)))).div((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))))).times((-100).toBigDecimal()))
+//                holder.textChange.text = Utils.formatPercentage(change)
+//
+//                if(change > 0.toBigDecimal())
+//                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
+//                else
+//                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
 
-                if(change > 0.toBigDecimal())
-                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
-                else
-                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
-
-            } else {
-                holder.textWorth.visibility = View.GONE
-                holder.titleWorth.visibility = View.GONE
-                holder.textChange.visibility = View.GONE
-                holder.titleChange.visibility = View.GONE
             }
-
         }
-        if(transaction.pairSymbol == currency){
-
-            holder.textPair.text = "${transaction.symbol}"
-
-            holder.textPrice.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.toDouble(), symbol)
+        if(transaction.pairSymbol == currency){ //sell transaction
 
             var multiplier = 1.toBigDecimal()
 
-            if(transaction.quantity > 0.toBigDecimal()){
+//            if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a sell transaction
+//            }
+//            if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a buy transaction
+//                multiplier = -1.toBigDecimal()
+//            }
 
-                holder.titlePrice.text = "${currency.toUpperCase()} Sell Price"
-                holder.titlePair.text = "Due to buy of"
-                holder.titleAmount.text = "Amount Deducted"
-
-                holder.layoutBottomSell.visibility = View.VISIBLE
-            }
-            if(transaction.quantity < 0.toBigDecimal()){
-                multiplier = -1.toBigDecimal()
-
-                holder.titlePrice.text = "${currency.toUpperCase()} Buy Price"
-                holder.titlePair.text = "Due to sell of"
-                holder.titleAmount.text = "Amount Added"
-
-                holder.layoutBottomSell.visibility = View.GONE
-
-            }
-
-
-            holder.textProceeds.text = Utils.getPriceTextAbs((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).toDouble(), symbol)
-            holder.textAmount.text = Utils.getPriceTextAbs(((transaction.quantity * transaction.price * multiplier)).toDouble(), "")
-            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
+//            holder.textProceeds.text = Utils.getPriceTextAbs((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).toDouble(), symbol)
+//            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
 
             if (currentUSDPrice != null) {
-                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
+//                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
 
-                val change = (((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).minus((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)))).div((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))))).times(-100.toBigDecimal())
-                holder.textChange.text = Utils.formatPercentage(change)
-
-                if(change > 0.toBigDecimal())
-                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
-                else
-                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
-            } else {
-                holder.textWorth.visibility = View.GONE
-                holder.titleWorth.visibility = View.GONE
-                holder.textChange.visibility = View.GONE
-                holder.titleChange.visibility = View.GONE
+//                val change = (((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).minus((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)))).div((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))))).times(-100.toBigDecimal())
+//                holder.textChange.text = Utils.formatPercentage(change)
+//
+//                if(change > 0.toBigDecimal())
+//                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
+//                else
+//                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
             }
+        }
 
+        if(currentUSDPrice == null) {
+            holder.textWorth.visibility = View.GONE
+            holder.titleWorth.visibility = View.GONE
+            holder.textChange.visibility = View.GONE
+            holder.titleChange.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
@@ -131,13 +125,113 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
-    // Gets the number of animals in the list
+    private fun getWorth(transaction: Transaction): BigDecimal? {
+        return currentUSDPrice?.times(baseFiat.rate ?: 1.toBigDecimal())?.times(getTextAmount(transaction))
+    }
+
+    private fun getChange(transaction: Transaction): BigDecimal? {
+        return ((getWorth(transaction)?.minus(getCost(transaction)!!))?.div(getCost(transaction)))?.times(100.toBigDecimal())
+    }
+
+    fun getCost(transaction: Transaction): BigDecimal {
+        if(transaction.symbol == currency) { // btc/eth
+            return transaction.isDeductedPriceUsd.times((transaction.price.times(baseFiat.rate?: 1.toBigDecimal()) * transaction.quantity)).abs()
+        } else {// eth/btc
+            return transaction.isDeductedPriceUsd.times((transaction.price.times(baseFiat.rate?: 1.toBigDecimal()) * transaction.quantity)).abs()
+        }
+    }
+
+
+    fun getPrice(transaction: Transaction): Double {
+        return if (transaction.symbol == currency) {
+          transaction.isDeductedPriceUsd.times(transaction.price).toDouble()
+//            transaction.priceUSD.toDouble()
+        } else {
+            transaction.isDeductedPriceUsd.toDouble()
+        }
+    }
+
+    private fun getTextAmount(transaction: Transaction): BigDecimal {
+        if(transaction.symbol == currency) {
+            return transaction.quantity.abs()
+        } else {
+            return transaction.quantity.times(transaction.price).abs()
+        }
+    }
+
+    fun getSellTransactionVisibility(transaction: Transaction): Int {
+        if(transaction.symbol == currency) {
+            if(transaction.quantity > 0.toBigDecimal()){
+                return View.GONE
+            } else {
+                return View.VISIBLE
+            }
+        } else {
+            if(transaction.quantity > 0.toBigDecimal()){
+                return View.VISIBLE
+            } else {
+                return View.GONE
+            }
+        }
+    }
+
+    fun getTitlePair(transaction: Transaction): CharSequence {
+        return if (transaction.symbol == currency) {
+            "Trading Pair"
+        } else {
+            if(transaction.quantity > 0.toBigDecimal()) {
+                "Due to buy of"
+            } else {
+                "Due to sell of"
+            }
+        }
+    }
+
+    fun getTitleAmount(transaction: Transaction): CharSequence {
+        return if (transaction.symbol == currency) {
+            if(transaction.quantity > 0.toBigDecimal()) {
+                "Amount Bought"
+            } else {
+                "Amount Sold"
+            }
+        } else  {
+            if(transaction.quantity > 0.toBigDecimal()) {
+                "Amount Deducted"
+            } else {
+                "Amount Added"
+            }
+        }
+    }
+
+    fun getTextPair(transaction: Transaction): CharSequence {
+        return if(transaction.symbol == currency) {
+            "${transaction.symbol}/${transaction.pairSymbol}"
+        } else {
+            transaction.symbol
+        }
+    }
+
+    fun getTitlePrice(transaction: Transaction): CharSequence {
+        if(transaction.symbol == currency) {
+            if(transaction.quantity > 0.toBigDecimal()){
+                return "${currency.toUpperCase()} Buy Price"
+            } else {
+                return "${currency.toUpperCase()} Sell Price"
+            }
+        } else {
+            if(transaction.quantity > 0.toBigDecimal()){
+                return "${currency.toUpperCase()} Sell Price"
+            } else {
+                return "${currency.toUpperCase()} Buy Price"
+            }
+        }
+    }
+
     override fun getItemCount(): Int {
         return transactions.size
     }
 
     class ViewHolder (view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        // Holds the TextView that will add each animal to
         val titlePrice = view.title_price
         val textPrice = view.text_price
 
@@ -160,5 +254,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
         val titleProceeds = view.title_proceeds
         val textProceeds = view.text_proceeds
+    }
+
+    companion object {
+        val TAG = "TransactionsAdapter"
     }
 }

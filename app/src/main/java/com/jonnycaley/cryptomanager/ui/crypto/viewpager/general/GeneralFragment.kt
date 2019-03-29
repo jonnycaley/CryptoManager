@@ -254,9 +254,7 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
             priceText = Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " ("
         else
             priceText = "-" + Utils.getPriceTextAbs(priceChange.toDouble().absoluteValue, Utils.getFiatSymbol(baseFiat.fiat)) + " (-"
-
-        val dec = ((close - open).divide(open, 4, RoundingMode.HALF_UP))
-
+        
         if (open != 0.toBigDecimal()) {
             change.text = priceText + formatPercentage(((close - open).divide(open, 8, RoundingMode.HALF_UP) * 100.toBigDecimal())) + ")"
         }

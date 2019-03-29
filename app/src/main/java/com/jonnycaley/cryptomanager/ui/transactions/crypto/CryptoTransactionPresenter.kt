@@ -62,6 +62,7 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
             val getTransactions : Observable<ArrayList<Transaction>> = dataManager.getTransactions().toObservable()
 
             Observable.zip(getBtcPrice, getEthPrice, getIsDeductedPrice, getPriceUsd, getAllCrypto, getTransactions, Function6<String, String, String, String, Currencies, ArrayList<Transaction>, ArrayList<Transaction>> { res1, res2, res3, res4, res5, transactions ->
+                println("BTCPRICE $res1")
                 val gson1= Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(res1), Price::class.java)
                 gson1.uSD?.let { btcPrice = it }
 
