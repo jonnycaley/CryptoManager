@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/backgroundcolor"
-        android:queryBackground="?attr/backgroundcolor"
-        android:submitBackground="?attr/backgroundcolor"
-        android:queryHint="Search..."
-        android:visibility="gone"
-        android:theme="@style/AppSearchView"/>
+        android:visibility="visible"
+        android:theme="@style/AppSearchView"
+        android:background="@drawable/rounded_search"
+        android:layout_marginEnd="@dimen/margin_base_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:queryHint="Search"
+        app:queryBackground="@drawable/rounded_search"
+        app:submitBackground="@drawable/rounded_search"/>
 
 </RelativeLayout>

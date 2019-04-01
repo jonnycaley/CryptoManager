@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/card_margin"
-    android:layout_marginBottom="@dimen/card_margin"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="?attr/backgroundcolor">
+    android:background="?attr/backgroundcolor"
+    android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <ImageView
             android:id="@+id/image_enlarged"
@@ -26,175 +27,190 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="78dp"
-                    android:layout_height="78dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="6dp"
-                    android:background="@color/light_grey"
-                    android:visibility="visible" />
-
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/card_image"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
                         android:textColor="?attr/textColor"
                         android:textSize="@dimen/medium_text_size" />
-
 
                     <TextView
                         android:id="@+id/title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/category"
                         android:ellipsize="end"
                         android:maxLines="3"
+                        android:text="Title"
                         android:textColor="?attr/textColor"
                         android:textSize="@dimen/medium_text_size"
                         android:textStyle="bold" />
 
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/layout_stock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/layout_stock_green"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/additional"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:background="@drawable/border_green_small_round"
-                        android:paddingHorizontal="6dp"
-                        android:paddingVertical="3dp"
-                        android:visibility="gone">
+                        android:layout_below="@id/title"
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/stock_name_green"
+                        <LinearLayout
+                            android:id="@+id/layout_stock"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingEnd="3dp"
-                            android:text="ICX"
-                            android:textSize="@dimen/extra_small_text_size"
-                            android:textStyle="bold"
-                            android:textColor="?attr/textColor" />
+                            android:layout_centerVertical="true"
+                            android:orientation="horizontal">
 
+                            <LinearLayout
+                                android:id="@+id/layout_stock_green"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:background="@drawable/border_green_small_round"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="3dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/stock_name_green"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingEnd="3dp"
+                                    android:text="ICX"
+                                    android:textColor="?attr/textColor"
+                                    android:textSize="@dimen/extra_small_text_size"
+                                    android:textStyle="bold" />
+
+
+                                <TextView
+                                    android:id="@+id/stock_percentage_green"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="+5%"
+                                    android:textColor="@color/green"
+                                    android:textSize="@dimen/extra_small_text_size"
+                                    android:textStyle="bold" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layout_stock_red"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:background="@drawable/border_red_small_round"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="3dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/stock_name_red"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingEnd="3dp"
+                                    android:text="test"
+                                    android:textColor="?attr/textColor"
+                                    android:textSize="@dimen/extra_small_text_size"
+                                    android:textStyle="bold" />
+
+
+                                <TextView
+                                    android:id="@+id/stock_percentage_red"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="+5%"
+                                    android:textColor="@color/red"
+                                    android:textSize="@dimen/extra_small_text_size"
+                                    android:textStyle="bold" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/stock_percentage_green"
+                            android:id="@+id/length"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+5%"
-                            android:textColor="@color/green"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="-1dp"
+                            android:layout_toEndOf="@+id/layout_stock"
+                            android:text="6 minute read • "
+                            android:textColor="?attr/textColor"
                             android:textSize="@dimen/extra_small_text_size"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layout_stock_red"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:background="@drawable/border_red_small_round"
-                        android:paddingHorizontal="6dp"
-                        android:paddingVertical="3dp"
-                        android:visibility="gone">
+                            android:visibility="visible" />
 
                         <TextView
-                            android:id="@+id/stock_name_red"
+                            android:id="@+id/date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingEnd="3dp"
-                            android:text="test"
-                            android:textSize="@dimen/extra_small_text_size"
-                            android:textStyle="bold"
-                            android:textColor="?attr/textColor" />
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/length"
+                            android:text="3 hours ago"
+                            android:textColor="?attr/textColor"
+                            android:textSize="@dimen/extra_small_text_size" />
 
-
-                        <TextView
-                            android:id="@+id/stock_percentage_red"
+                        <com.like.LikeButton
+                            android:id="@+id/like_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="+5%"
-                            android:textColor="@color/red"
-                            android:textSize="@dimen/extra_small_text_size"
-                            android:textStyle="bold" />
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            app:anim_scale_factor="2"
+                            app:circle_end_color="?attr/textColor"
+                            app:circle_start_color="?attr/textColor"
+                            app:dots_primary_color="?attr/textColor"
+                            app:dots_secondary_color="?attr/textColor"
+                            app:icon_size="15dp"
+                            app:icon_type="Star"
+                            app:is_enabled="true"
+                            app:like_drawable="@drawable/bookmark_fill_black"
+                            app:liked="false"
+                            app:unlike_drawable="@drawable/bookmark_outlline_black" />
 
+                    </RelativeLayout>
 
-                    </LinearLayout>
+                </RelativeLayout>
 
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/length"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="-1dp"
-                    android:layout_toEndOf="@+id/layout_stock"
-                    android:text="6 minute read • "
-                    android:textSize="@dimen/extra_small_text_size"
-                    android:visibility="visible"
-                    android:textColor="?attr/textColor"/>
-
-                <TextView
-                    android:id="@+id/date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/length"
-                    android:text="3 hours ago"
-                    android:textSize="@dimen/extra_small_text_size"
-                    android:textColor="?attr/textColor" />
-
-                <com.like.LikeButton
-                    android:id="@+id/like_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_image"
+                    android:layout_width="78dp"
+                    android:layout_height="78dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    app:anim_scale_factor="2"
-                    app:circle_end_color="?attr/textColor"
-                    app:circle_start_color="?attr/textColor"
-                    app:dots_primary_color="?attr/textColor"
-                    app:dots_secondary_color="?attr/textColor"
-                    app:like_drawable="@drawable/bookmark_fill_black"
-                    app:unlike_drawable="@drawable/bookmark_outlline_black"
-                    app:icon_size="15dp"
-                    app:icon_type="Star"
-                    app:is_enabled="true"
-                    app:liked="false" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="78dp"
+                        android:layout_height="78dp"
+                        android:background="@drawable/rounded_card_image"
+                        android:visibility="visible" />
+
+                </androidx.cardview.widget.CardView>
 
             </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <include layout="@layout/item_border" />
+
+</LinearLayout>

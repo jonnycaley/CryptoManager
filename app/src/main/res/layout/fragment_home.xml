@@ -14,7 +14,7 @@
     <include
         android:id="@+id/layout_progress"
         layout="@layout/layout_progress"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <!--TODO: change above to true-->
 
@@ -40,9 +40,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginLeft="@dimen/margin_base_horizontal"
-                    android:layout_marginRight="@dimen/margin_base_horizontal">
+                    android:layout_marginRight="@dimen/margin_base_horizontal"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -55,6 +55,7 @@
                         android:id="@+id/text_balance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_base_vertical"
                         android:gravity="center"
                         android:text="$0"
                         android:textColor="?attr/textColor"
@@ -64,6 +65,8 @@
                         android:id="@+id/text_change"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_base_vertical"
+                        android:layout_marginBottom="@dimen/margin_base_vertical"
                         android:gravity="center"
                         android:text="$0"
                         android:textColor="?attr/textColor"
@@ -74,11 +77,13 @@
                         android:id="@+id/radio_group"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_base_vertical"
                         app:rrbg_animateTexts_enter="overshoot"
                         app:rrbg_animateTexts_scale="1.3"
-                        app:rrbg_animateTexts_textColorFrom="@color/text_grey"
-                        app:rrbg_animateTexts_textColorTo="@color/black"
+                        app:rrbg_animateTexts_textColorFrom="?attr/textColorSecondary"
+                        app:rrbg_animateTexts_textColorTo="?attr/textColor"
                         app:rrbg_animateTexts_textColor_duration="500"
+                        app:rrbg_backgroundColor="?attr/backgroundcolor"
                         app:rrbg_borderColor="?attr/backgroundcolor"
                         app:rrbg_borderSize="1dp"
                         app:rrbg_bottomLineRadius="2dp"
@@ -91,7 +96,7 @@
                         app:rrbg_radius="2dp"
                         app:rrbg_selectorAboveOfBottomLine="false"
                         app:rrbg_selectorAnimationType="translate_y"
-                        app:rrbg_selectorColor="?attr/textColor"
+                        app:rrbg_selectorColor="?attr/backgroundcolor"
                         app:rrbg_selectorRadius="0dp"
                         app:rrbg_selectorSize="2dp">
 
@@ -156,6 +161,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_base_vertical"
                         android:orientation="horizontal"
                         android:weightSum="100">
 
@@ -163,41 +169,44 @@
                             android:id="@+id/button_add_fiat"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
                             android:layout_weight="50"
-                            android:backgroundTint="?attr/colorPrimary"
+                            android:background="@drawable/border"
                             android:text="Add Fiat"
-                            android:textColor="@color/white" />
+                            android:textColor="?attr/backgroundcolor" />
 
                         <Button
                             android:id="@+id/button_add_currency"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="50"
-                            android:backgroundTint="?attr/colorPrimary"
+                            android:background="@drawable/border"
                             android:text="Add currency"
-                            android:textColor="@color/white" />
+                            android:textColor="?attr/backgroundcolor" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/layout_portfolio_empty"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="250dp"
                         android:layout_gravity="center"
                         android:orientation="vertical"
                         android:paddingTop="@dimen/default_margin"
-                        android:visibility="visible">
+                        android:visibility="visible"
+                        android:gravity="center">
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/portfolio_empty"
                             android:textAlignment="center"
                             android:textColor="?attr/textColor" />
 
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/portfolio_empty_tap"
                             android:textAlignment="center"
                             android:textColor="?attr/textColor" />
@@ -213,45 +222,45 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_base_horizontal"
-                        android:layout_marginRight="@dimen/margin_base_horizontal"
                         android:layout_marginTop="@dimen/margin_base_vertical"
+                        android:layout_marginRight="@dimen/margin_base_horizontal"
                         android:layout_marginBottom="@dimen/margin_base_vertical"
                         android:weightSum="100">
 
                         <TextView
                             android:id="@+id/text_sort_name"
                             android:layout_width="0dp"
-                            android:layout_weight="30"
                             android:layout_height="wrap_content"
+                            android:layout_weight="30"
                             android:text="Name"
-                            android:textColor="?attr/textColorSecondary"/>
+                            android:textColor="?attr/textColorSecondary" />
 
                         <TextView
                             android:id="@+id/text_sort_change"
                             android:layout_width="0dp"
-                            android:layout_weight="35"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
+                            android:layout_weight="35"
+                            android:gravity="end"
                             android:text="Change"
-                            android:textColor="?attr/textColorSecondary"
-                            android:gravity="end"/>
+                            android:textColor="?attr/textColorSecondary" />
 
 
                         <TextView
                             android:id="@+id/text_sort_holdings"
                             android:layout_width="0dp"
-                            android:layout_weight="35"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/text_sort_name"
+                            android:layout_weight="35"
+                            android:gravity="end"
                             android:text="Holdings▼"
-                            android:textColor="?attr/textColor"
-                            android:gravity="end"/>
+                            android:textColor="?attr/textColor" />
 
                     </LinearLayout>
 

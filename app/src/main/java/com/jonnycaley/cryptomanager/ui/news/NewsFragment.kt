@@ -134,11 +134,7 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if(!Utils.isDarkTheme()) {
-            cardStar.setLikeDrawable(resources.getDrawable(R.drawable.bookmark_fill_black))
-            cardStar.setUnlikeDrawable(resources.getDrawable(R.drawable.bookmark_outlline_black))
-        }
+        
         if(Utils.isDarkTheme())
             imageNoInternet.setImageResource(R.drawable.no_internet_white)
 

@@ -8,12 +8,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_height_large"
-
         android:paddingStart="@dimen/margin_base_horizontal"
         android:paddingEnd="@dimen/margin_base_horizontal"
         android:paddingTop="@dimen/margin_base_vertical"
         android:paddingBottom="@dimen/margin_base_vertical"
-
         android:weightSum="100"
         android:orientation="horizontal">
 

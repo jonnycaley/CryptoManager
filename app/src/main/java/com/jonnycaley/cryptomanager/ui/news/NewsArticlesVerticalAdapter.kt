@@ -28,18 +28,18 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         val article = newsItems.keys.toTypedArray()[position]
         val relatedCrypto = newsItems.values.toTypedArray()[position]
 
-        if(((position + 1 ) % 3 == 0 ) && (article.originalImageUrl != null)){
-
-            holder.image.visibility = View.GONE
-            holder.imageEnlarged.visibility = View.VISIBLE
-
-            Picasso.with(context)
-                    .load(article.originalImageUrl)
-                    .fit()
-                    .centerCrop()
-                    .into(holder.imageEnlarged)
-
-        } else {
+//        if(((position + 1 ) % 3 == 0 ) && (article.originalImageUrl != null)){
+//
+//            holder.image.visibility = View.GONE
+//            holder.imageEnlarged.visibility = View.VISIBLE
+//
+//            Picasso.with(context)
+//                    .load(article.originalImageUrl)
+//                    .fit()
+//                    .centerCrop()
+//                    .into(holder.imageEnlarged)
+//
+//        } else {
             holder.imageEnlarged.visibility = View.GONE
             holder.image.visibility = View.VISIBLE
 
@@ -48,11 +48,12 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             } else {
                 Picasso.with(context)
                         .load(article.thumbnail)
+                        .placeholder(R.drawable.rounded_card_image)
                         .fit()
                         .centerCrop()
                         .into(holder.image)
             }
-        }
+//        }
 
         holder.title.text = article.title.toString()
         holder.category.text = article.primaryCategory.toString()

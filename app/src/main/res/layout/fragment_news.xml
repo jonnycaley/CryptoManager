@@ -34,9 +34,10 @@
                 android:orientation="vertical"
                 android:nestedScrollingEnabled="false">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <!--<TextView-->
                     <!--android:id="@+id/top_gainers_text"-->
@@ -77,7 +78,10 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/default_margin"
+                                android:paddingTop="@dimen/margin_base_vertical"
+                                android:paddingBottom="@dimen/margin_base_vertical"
+                                android:paddingStart="@dimen/margin_base_horizontal"
+                                android:paddingEnd="@dimen/margin_base_horizontal"
                                 android:layout_alignParentBottom="true">
 
                                 <TextView
@@ -87,7 +91,7 @@
                                     android:text=""
                                     android:maxLines="2"
                                     android:ellipsize="end"
-                                    android:textColor="?attr/textColor"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/large_text_size"
                                     android:textStyle="bold" />
 
@@ -99,7 +103,7 @@
                                     android:ellipsize="end"
                                     android:maxLines="3"
                                     android:text=""
-                                    android:textColor="?attr/textColor"
+                                    android:textColor="@color/white"
                                     android:textSize="@dimen/medium_text_size"
                                     android:visibility="gone"/>
 
@@ -112,7 +116,7 @@
                                     android:layout_marginBottom="3dp"
                                     android:text=""
                                     android:textSize="@dimen/small_text_size"
-                                    android:textColor="?attr/textColor" />
+                                    android:textColor="@color/white" />
 
                                 <TextView
                                     android:id="@+id/card_date"
@@ -124,7 +128,7 @@
                                     android:layout_toEndOf="@id/card_length"
                                     android:text=""
                                     android:textSize="@dimen/small_text_size"
-                                    android:textColor="?attr/textColor" />
+                                    android:textColor="@color/white" />
 
                                 <com.like.LikeButton
                                     android:id="@+id/like_button_top_article"
@@ -134,10 +138,10 @@
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
                                     app:anim_scale_factor="2"
-                                    app:circle_end_color="?attr/textColor"
-                                    app:circle_start_color="?attr/textColor"
-                                    app:dots_primary_color="?attr/textColor"
-                                    app:dots_secondary_color="?attr/textColor"
+                                    app:circle_end_color="@color/white"
+                                    app:circle_start_color="@color/white"
+                                    app:dots_primary_color="@color/white"
+                                    app:dots_secondary_color="@color/white"
                                     app:like_drawable="@drawable/bookmark_fill_white"
                                     app:unlike_drawable="@drawable/bookmark_outline_white"
                                     app:icon_size="15dp"
@@ -152,21 +156,52 @@
                     <!--</androidx.cardview.widget.CardView>-->
 
 
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:background="?attr/secondaryBackgroundColor"/>
+
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent" />
+
                     <TextView
                         android:id="@+id/header_top_100"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_top"
-                        android:paddingTop="@dimen/default_margin"
-                        android:text="Top 100"
-                        android:visibility="gone" />
+                        android:paddingTop="@dimen/margin_base_vertical"
+                        android:paddingBottom="@dimen/margin_base_vertical"
+                        android:paddingStart="@dimen/margin_base_horizontal"
+                        android:paddingEnd="@dimen/margin_base_horizontal"
+                        android:text="Top currencies"
+                        android:visibility="visible"
+                        android:textStyle="bold"
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/large_text_size"
+                        android:background="?attr/backgroundcolor"/>
+
+
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent" />
 
                     <LinearLayout
                         android:id="@+id/layout_top_8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/header_top_100"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="?attr/backgroundcolor"
+                        android:paddingStart="@dimen/margin_base_horizontal"
+                        android:paddingEnd="@dimen/margin_base_horizontal"
+                        android:paddingTop="@dimen/margin_base_vertical"
+                        android:paddingBottom="@dimen/margin_base_vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -179,7 +214,8 @@
                                 android:id="@+id/card_1"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginBottom="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -248,7 +284,9 @@
                                 android:id="@+id/card_2"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginBottom="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -318,7 +356,9 @@
                                 android:id="@+id/card_3"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginBottom="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -387,7 +427,8 @@
                                 android:id="@+id/card_4"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginBottom="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -463,8 +504,9 @@
                                 xmlns:app="http://schemas.android.com/apk/res-auto"
                                 android:id="@+id/card_5"
                                 android:layout_width="0dp"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginTop="@dimen/card_margin"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -533,8 +575,10 @@
                                 android:id="@+id/card_6"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
                                 android:layout_weight="1"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginTop="@dimen/card_margin"
                                 android:orientation="horizontal">
 
                                 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -602,7 +646,9 @@
                                 android:id="@+id/card_7"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginEnd="@dimen/card_margin"
+                                android:layout_marginTop="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -671,7 +717,8 @@
                                 android:id="@+id/card_8"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="@dimen/card_margin"
+                                android:layout_marginStart="@dimen/card_margin"
+                                android:layout_marginTop="@dimen/card_margin"
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
@@ -739,6 +786,21 @@
 
                     </LinearLayout>
 
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:background="?attr/secondaryBackgroundColor"/>
+
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent" />
+
                     <!--<android.support.v7.widget.RecyclerView-->
                     <!--android:id="@+id/recycler_view_top_movers"-->
                     <!--android:layout_width="match_parent"-->
@@ -761,14 +823,35 @@
                     <!--android:textStyle="bold" />-->
 
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/margin_base_vertical"
+                        android:paddingBottom="@dimen/margin_base_vertical"
+                        android:paddingStart="@dimen/margin_base_horizontal"
+                        android:paddingEnd="@dimen/margin_base_horizontal"
+                        android:text="Trending news"
+                        android:visibility="visible"
+                        android:textStyle="bold"
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/large_text_size"
+                        android:background="?attr/backgroundcolor"/>
+
+
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="0.5dp"
+                        android:layout_width="match_parent" />
+
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/shimmer_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/layout_top_8"
+                        android:layout_below="@id/layout_border"
                         android:nestedScrollingEnabled="false" />
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

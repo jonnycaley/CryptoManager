@@ -19,13 +19,17 @@
         <item name="iconGrey">#B9B9B9</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#4DB9B9B9</item>
+        <item name="dividerColor">#ADB7C1</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#fcfcfc</item>
 
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
         <item name="colorAccent">?attr/colorPrimary</item>
+
+
+        <item name="android:textColorHint">@color/dark_text_color_secondary</item>
+        <item name="android:editTextColor">@color/dark_text_color</item>
 
         <!--<item name="tintcolor">#ffffff</item>-->
         <!--<item name="navigationBorder">#5E989F</item>-->
@@ -53,18 +57,21 @@
         <item name="android:typeface">monospace</item>
 
         <item name="backgroundcolor">#000000</item>
-        <item name="secondaryBackgroundColor">#131517</item>
+        <item name="secondaryBackgroundColor">#121617</item>
 
         <item name="iconGrey">#515151</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#4D515151</item>
+        <item name="dividerColor">#3E4144</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
 
         <item name="colorAccent">?attr/colorPrimary</item>
+
+        <item name="android:textColorHint">@color/dark_text_color_secondary</item>
+        <item name="android:editTextColor">@color/light_text_color</item>
 
         <!--<item name="tintcolor">#ffffff</item>-->
         <!--<item name="navigationBorder">#5E989F</item>-->
