@@ -52,9 +52,12 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
         dataManager.getBaseFiat()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe (object : SingleObserver<Rate>{
-                    override fun onSuccess(rate: Rate) {
-                        view.loadSettings(rate)
+                .map { rate ->
+                    view.loadSettings(rate)
+                }
+                .subscribe (object : SingleObserver<Unit>{
+                    override fun onSuccess(rate: Unit) {
+                        view.hideProgressLayout()
                     }
 
                     override fun onSubscribe(d: Disposable) {

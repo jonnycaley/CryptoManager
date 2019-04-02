@@ -264,7 +264,7 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     }
 
     @SuppressLint("SetTextI18n")
-    override fun showMarketData(marketData: Market) {
+    override fun showMarketData(marketData: Market, baseFiat: Rate) {
 
         //TODO: MARKET DATA COMES BACK NULL SOMETIMES WTF
 
@@ -274,9 +274,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         println(marketData.data?.quote?.uSD?.totalVolume24h)
         println(marketData.data?.btcDominance)
 
-        textMarketCap.text = "$${marketData.data?.quote?.uSD?.totalMarketCap?.let { truncateNumber(it) }}"
+        textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${marketData.data?.quote?.uSD?.totalMarketCap?.let { baseFiat.rate?.let { it1 -> truncateNumber(it*it1)  }}}"
 
-        textVolume.text = "$${marketData.data?.quote?.uSD?.totalVolume24h?.let { truncateNumber(it) }}"
+        textVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${marketData.data?.quote?.uSD?.totalVolume24h?.let { truncateNumber(it) }}"
 
         textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance?.toBigDecimal()).substring(1)
 
@@ -470,10 +470,11 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         swipeRefreshLayout.isRefreshing = false
     }
 
-//    override fun onResume() {
-//        super.onResume()
-////        presenter.onResume()
-//    }
+    override fun onResume() {
+        super.onResume()
+        if(mLayoutManager != null)
+            presenter.onResume()
+    }
 
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
         if (isTabAlreadyClicked) {

@@ -45,6 +45,7 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 
             if (article.thumbnail == null) {
                 holder.image.visibility = View.GONE
+                holder.cardImage.visibility = View.GONE
             } else {
                 Picasso.with(context)
                         .load(article.thumbnail)
@@ -235,6 +236,8 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 
     class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         // Holds the TextView that will add each animal to
+
+        val cardImage = view.card_image
         val image = view.image
         val title = view.title
         val category = view.category

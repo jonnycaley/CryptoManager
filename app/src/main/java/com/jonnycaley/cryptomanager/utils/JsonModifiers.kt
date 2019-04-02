@@ -1,26 +1,49 @@
 package com.jonnycaley.cryptomanager.utils
 
+import android.util.Log
+
 object JsonModifiers {
 
     fun jsonToCurrencies(fiats: String) : String {
 
+        Log.i("jsonToCurrencies1", fiats)
+
         var ratesJson = fiats.substring(fiats.indexOf("\"rates"), fiats.indexOf("}") + 1)
+
+        Log.i("jsonToCurrencies2", ratesJson)
 
         ratesJson = ratesJson.replace("\"rates\":{", "")
 
+        Log.i("jsonToCurrencies3", ratesJson)
+
         ratesJson = ratesJson.replace(":", ",\"rate\":")
+
+        Log.i("jsonToCurrencies4", ratesJson)
 
         ratesJson = ratesJson.replace(",\"rate\"" , "\"rate\"")
 
+        Log.i("jsonToCurrencies5", ratesJson)
+
         ratesJson = ratesJson.replace("," , "},{\"fiat\":")
+
+        Log.i("jsonToCurrencies6", ratesJson)
 
         ratesJson = ratesJson.replace("\"rate\"" , ",\"rate\"")
 
+        Log.i("jsonToCurrencies7", ratesJson)
+
         ratesJson = "\"rates\":[{\"fiat\":$ratesJson"
+
+        Log.i("jsonToCurrencies8", ratesJson)
 
         ratesJson = ratesJson.substring(0, ratesJson.length -1)
 
-        ratesJson = "{${ratesJson.substring(0, ratesJson.length - 9)}}]}"
+        Log.i("jsonToCurrencies9", ratesJson)
+
+//        ratesJson = "{${ratesJson.substring(0, ratesJson.length - 9)}}]}"
+
+        ratesJson = "{$ratesJson}]}"
+        Log.i("jsonToCurrencies10", ratesJson)
 
         return ratesJson.trim()
 

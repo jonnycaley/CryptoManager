@@ -62,6 +62,27 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 
     override fun onResume() {
         Log.i(TAG, "onResume")
+        dataManager.getBaseFiat()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : SingleObserver<Rate> {
+                    override fun onSuccess(rate: Rate) {
+                        if(baseFiat != rate)
+                            baseFiat = rate
+
+                        marketData?.let { marketData -> baseFiat?.let { baseFiat -> view.showMarketData(marketData, baseFiat)  }}
+
+                        topCurrencies?.let { topCurrencies -> baseFiat?.let { baseFiat -> view.showTop100Changes(topCurrencies, baseFiat, resultsCount) } }
+                    }
+
+                    override fun onSubscribe(d: Disposable) {
+                        compositeDisposable?.add(d)
+                    }
+
+                    override fun onError(e: Throwable) {
+                        println("onError: ${e.message}")
+                    }
+                })
 //        refresh()
     }
 
@@ -81,7 +102,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { res1 ->
                         view.showTop100Changes(this.topCurrencies ?: ArrayList(), this.baseFiat ?: Rate(), resultsCount)
-                        marketData?.let { view.showMarketData(it) }
+                        marketData?.let { baseFiat?.let { it1 -> view.showMarketData(it, it1) } }
                         view.hideProgressBarLayout()
                         view.showContentLayout()
                         res1
@@ -324,7 +345,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                             if (topCurrencies?.isNotEmpty() == true) {
                                 Log.i(TAG, "Se4")
                                 view.showTop100Changes(topCurrencies ?: ArrayList(), baseFiat ?: Rate(), resultsCount)
-                                marketData?.let { view.showMarketData(it) }
+                                marketData?.let { baseFiat?.let { it1 -> view.showMarketData(it, it1) } }
                                 view.hideProgressBarLayout()
                                 view.showContentLayout()
                                 setCurrencySearchListener(view.getCurrencySearchView())

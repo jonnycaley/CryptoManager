@@ -19,6 +19,11 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.util.*
 import kotlin.collections.ArrayList
+import android.graphics.Typeface
+import android.widget.RelativeLayout
+import android.widget.TextView
+import com.thefinestartist.Base.getAssets
+
 
 class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View, TabInterface {
 
@@ -36,10 +41,20 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
     val recyclerViewData by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_data) }
     val recyclerViewAbout by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_about) }
 
+    val layoutProgressBar by lazy { mView.findViewById<RelativeLayout>(R.id.progress_bar_layout) }
+
+    val textGeneral by lazy { mView.findViewById<TextView>(R.id.text_general) }
+    val textData by lazy { mView.findViewById<TextView>(R.id.text_data) }
+    val textAbout by lazy { mView.findViewById<TextView>(R.id.text_about) }
+
     val switchTheme by lazy { mView.findViewById<Switch>(R.id.switch_theme) }
 
     override fun setPresenter(presenter: SettingsContract.Presenter) {
         this.presenter = checkNotNull(presenter)
+    }
+
+    override fun hideProgressLayout() {
+        layoutProgressBar.visibility = View.GONE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,6 +75,12 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         if(Utils.isDarkTheme()) {
             switchTheme.isChecked = true
         }
+
+        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+
+        textGeneral.typeface = custom_font
+        textData.typeface = custom_font
+        textAbout.typeface = custom_font
 
         switchTheme.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked){

@@ -74,8 +74,9 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
         navigation.enableItemShiftingMode(false)
         navigation.enableShiftingMode(false)
-        navigation.setTextVisibility(false)
+        navigation.setTextVisibility(true)
         navigation.setPadding(0,15,0,15)
+        navigation.setTextSize(10F)
 
         navigation.onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {

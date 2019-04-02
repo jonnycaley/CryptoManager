@@ -17,6 +17,7 @@
         <attr name="buttoncolor" format="color"/>
 
         <attr name="dividerColor" format="color"/>
+        <attr name="textColorDivider" format="color"/>
 
         <attr name="navigationBorder" format="color"/>
 

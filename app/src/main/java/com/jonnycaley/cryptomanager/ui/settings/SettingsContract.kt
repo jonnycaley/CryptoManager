@@ -12,6 +12,7 @@ interface SettingsContract {
         fun showSavedArticlesDeletedError()
         fun loadSettings(baseFiat: Rate)
         fun updateTheme()
+        fun hideProgressLayout()
     }
 
     interface Presenter : BasePresenter {

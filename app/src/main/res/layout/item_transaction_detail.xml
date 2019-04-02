@@ -1,145 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--app:cardUseCompatPadding="true">-->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true">
+    android:layout_marginLeft="@dimen/margin_base_horizontal"
+    android:layout_marginTop="@dimen/margin_base_vertical"
+    android:layout_marginRight="@dimen/margin_base_horizontal"
+    android:layout_marginBottom="@dimen/margin_base_vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_margin">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/small_margin"
-                android:weightSum="3">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/title_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="BTC Buy Price"
-                        android:textColor="?attr/textColorSecondary"
-                        android:textSize="@dimen/small_text_size" />
-
-                    <TextView
-                        android:id="@+id/text_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/title_price"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text=""
-                        android:textColor="?attr/textColor"
-                        android:textSize="@dimen/small_text_size" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/title_pair"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="Trading Pair"
-                        android:textColor="?attr/textColorSecondary"
-                        android:textSize="@dimen/small_text_size" />
-
-                    <TextView
-                        android:id="@+id/text_pair"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/title_pair"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text=""
-                        android:textColor="?attr/textColor"
-                        android:textSize="@dimen/small_text_size" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/title_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text="Amount Bought"
-                        android:textColor="?attr/textColorSecondary"
-                        android:textSize="@dimen/small_text_size" />
-
-                    <TextView
-                        android:id="@+id/text_amount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/title_amount"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:text=""
-                        android:textColor="?attr/textColor"
-                        android:textSize="@dimen/small_text_size" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/layout_top"
-            android:visibility="visible"
+            android:paddingBottom="@dimen/small_margin"
             android:weightSum="3">
 
             <RelativeLayout
-                android:id="@+id/layout_bottom_sell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:visibility="gone">
+                android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/title_proceeds"
+                    android:id="@+id/title_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Proceeds"
+                    android:text="BTC Buy Price"
                     android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
-                    android:id="@+id/text_proceeds"
+                    android:id="@+id/text_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_proceeds"
+                    android:layout_below="@id/title_price"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
@@ -154,20 +60,20 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/title_cost"
+                    android:id="@+id/title_pair"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Cost"
+                    android:text="Trading Pair"
                     android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
-                    android:id="@+id/text_cost"
+                    android:id="@+id/text_pair"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_cost"
+                    android:layout_below="@id/title_pair"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
@@ -182,57 +88,162 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/title_worth"
+                    android:id="@+id/title_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Worth"
+                    android:text="Amount Bought"
                     android:textColor="?attr/textColorSecondary"
                     android:textSize="@dimen/small_text_size" />
 
                 <TextView
-                    android:id="@+id/text_worth"
+                    android:id="@+id/text_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_worth"
+                    android:layout_below="@id/title_amount"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/small_text_size" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/title_change"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="Change"
-                    android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/small_text_size" />
-
-                <TextView
-                    android:id="@+id/text_change"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/title_change"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text=""
                     android:textSize="@dimen/small_text_size" />
 
             </RelativeLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_top"
+        android:visibility="visible"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:id="@+id/layout_bottom_sell"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/title_proceeds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Proceeds"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/text_proceeds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_proceeds"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/small_text_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/title_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Cost"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/text_cost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_cost"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/small_text_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/title_worth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Worth"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/text_worth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_worth"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/small_text_size" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/title_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Change"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/small_text_size" />
+
+            <TextView
+                android:id="@+id/text_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_change"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text=""
+                android:textSize="@dimen/small_text_size" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+    <include
+        layout="@layout/layout_border"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent" />
+
+</LinearLayout>
+
+    <!--</androidx.cardview.widget.CardView>-->

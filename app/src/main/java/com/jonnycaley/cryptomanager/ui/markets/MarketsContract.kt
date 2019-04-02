@@ -16,7 +16,7 @@ interface MarketsContract {
         fun showContentLayout()
         fun showProgressBarLayout()
         fun hideContentLayout()
-        fun showMarketData(marketData: Market)
+        fun showMarketData(marketData: Market, baseFiat: Rate)
         fun stopRefreshing()
         fun getCurrenciesAdapterCount(): Int
         fun getSort(): String

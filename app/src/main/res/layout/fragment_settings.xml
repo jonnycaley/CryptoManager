@@ -8,11 +8,25 @@
     tools:context=".ui.settings.SettingsFragment"
     android:background="?attr/secondaryBackgroundColor">
 
+    <RelativeLayout
+        android:id="@+id/progress_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+    </RelativeLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -22,16 +36,20 @@
             android:gravity="center">
 
             <TextView
-                android:textColor="?attr/textColor"
+                android:id="@+id/text_general"
+                android:textColor="?attr/textColorDivider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GENERAL"
-                android:textStyle="bold"/>
-
+                android:text="General"
+                android:textStyle="bold"
+                android:textSize="@dimen/large_text_size"/>
         </RelativeLayout>
 
-        <include
-            layout="@layout/item_border"/>
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
 
     </LinearLayout>
 
@@ -90,6 +108,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_height_medium"
@@ -98,16 +122,20 @@
             android:gravity="center">
 
             <TextView
-                android:textColor="?attr/textColor"
+                android:id="@+id/text_data"
+                android:textColor="?attr/textColorDivider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DATA"
-                android:textStyle="bold"/>
+                android:text="Data"
+                android:textStyle="bold"
+                android:textSize="@dimen/large_text_size"/>
 
         </RelativeLayout>
-
-        <include
-            layout="@layout/item_border"/>
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
 
     </LinearLayout>
 
@@ -124,7 +152,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="@dimen/item_height_medium"
@@ -133,16 +165,20 @@
             android:gravity="center">
 
             <TextView
-                android:textColor="?attr/textColor"
+                android:id="@+id/text_about"
+                android:textColor="?attr/textColorDivider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ABOUT"
-                android:textStyle="bold"/>
+                android:text="About"
+                android:textStyle="bold"
+                android:textSize="@dimen/large_text_size"/>
 
         </RelativeLayout>
-
-        <include
-            layout="@layout/item_border"/>
+        <View
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="?attr/dividerColor" />
 
     </LinearLayout>
 

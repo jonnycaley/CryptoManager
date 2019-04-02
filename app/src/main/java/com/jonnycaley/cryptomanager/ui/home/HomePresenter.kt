@@ -541,20 +541,26 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             val getMultiPrices: Observable<String> = dataManager.getCryptoCompareServiceWithScalars().getMultiPrice(getCryptoQueryString(holdings), "USD")
 
             Observable.zip(getExchangeRates, getMultiPrices, BiFunction<String, String, String> { fiatsJson, cryptoPricesJson ->
+                println("Checkpoint 1")
                 fiatPrices = Gson().fromJson(JsonModifiers.jsonToCurrencies(fiatsJson), ExchangeRates::class.java)
+                println("Checkpoint 2")
+                println(fiatsJson)
                 newPrices = getPrices(Gson().fromJson(JsonModifiers.jsonToMultiPrices(cryptoPricesJson), MultiPrices::class.java).prices, fiatPrices)
+                println("Checkpoint 3")
                 ""
             })
                     .subscribeOn(Schedulers.io())
                     .map {
-                        println(holdings.size)
+//                        println("Checkpoint 1")
                         holdingsSorted = ArrayList(holdings.sortedBy { holding -> newPrices.first { it.symbol?.toLowerCase() == holding.symbol.toLowerCase() }.prices?.uSD?.times(holding.quantity) }.asReversed())
-                        println("1")
+//                        println("Checkpoint 2")
                     }
                     .flatMapSingle { dataManager.readBaseFiat() }
                     .observeOn(Schedulers.computation())
                     .map { fiat -> baseFiat = fiat }
-                    .map { change -> changeUsd = getChangeUsd(holdingsSorted, newPrices) }
+                    .map { change ->
+//                        println("Checkpoint 3")
+                        changeUsd = getChangeUsd(holdingsSorted, newPrices) }
                     .map { getBalanceUsd(holdingsSorted, newPrices, fiatPrices) }
                     .map { balance ->
                         Log.i(TAG, balance.toString())
@@ -658,20 +664,29 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     private fun getPrices(prices: List<Price>?, fiatPrices: ExchangeRates): ArrayList<Price> {
 
+        println("Getting prices")
+
         val combinedPrices = ArrayList(prices)
 
         fiatPrices.rates?.forEach { fiatRate ->
+
+            println(fiatRate.fiat)
 
             val tempPrice = Price()
             tempPrice.symbol = fiatRate.fiat
 
             val tempPrices = Prices()
 
+            println(fiatRate.rate)
+
             tempPrices.uSD = 1.toBigDecimal() / (fiatRate.rate ?: 1.toBigDecimal())
             tempPrice.prices = tempPrices
 
             combinedPrices.add(tempPrice)
         }
+
+        println("Prices combined")
+
         return combinedPrices
     }
 

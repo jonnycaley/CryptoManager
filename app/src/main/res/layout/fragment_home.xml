@@ -70,7 +70,7 @@
                         android:gravity="center"
                         android:text="$0"
                         android:textColor="?attr/textColor"
-                        android:textSize="@dimen/large_text_size" />
+                        android:textSize="@dimen/extra_large_text_size_lesser" />
 
 
                     <co.ceryle.radiorealbutton.RadioRealButtonGroup
@@ -248,7 +248,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_weight="35"
                             android:gravity="end"
-                            android:text="Change"
+                            android:text="Price"
                             android:textColor="?attr/textColorSecondary" />
 
 
@@ -264,7 +264,10 @@
 
                     </LinearLayout>
 
-                    <include layout="@layout/layout_border" />
+                    <include
+                        layout="@layout/layout_border"
+                        android:layout_height="1dp"
+                        android:layout_width="match_parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"

@@ -47,7 +47,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="(BTC)"
-                android:textColor="@color/light_grey"
+                android:textColor="?attr/textColorSecondary"
                 />
 
         </RelativeLayout>
@@ -85,6 +85,8 @@
     </LinearLayout>
 
     <include
-        layout="@layout/item_border"/>
+        layout="@layout/item_border"
+        android:layout_height="0.1dp"
+        android:layout_width="match_parent"/>
 
 </LinearLayout>

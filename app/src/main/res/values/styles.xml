@@ -9,6 +9,7 @@
 
         <item name="textColor">@color/light_text_color</item>
         <item name="textColorSecondary">@color/light_text_color_secondary</item>
+        <item name="textColorDivider">@color/dark_text_color_secondary</item>
 
         <item name="android:typeface">monospace</item>
 
@@ -53,6 +54,7 @@
 
         <item name="textColor">@color/dark_text_color</item>
         <item name="textColorSecondary">@color/dark_text_color_secondary</item>
+        <item name="textColorDivider">@color/light_text_color_secondary</item>
 
         <item name="android:typeface">monospace</item>
 
@@ -62,7 +64,7 @@
         <item name="iconGrey">#515151</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#3E4144</item>
+        <item name="dividerColor">#3C4144</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 

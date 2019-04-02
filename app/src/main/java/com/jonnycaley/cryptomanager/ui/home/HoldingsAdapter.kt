@@ -185,11 +185,11 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
             when (chosenCurrency) {
                 HomeFragment.CURRENCY_BTC -> {
-                    symbol = "B"
+                    symbol = "BTC"
                     holder.value.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
                 HomeFragment.CURRENCY_ETH -> {
-                    symbol = "E"
+                    symbol = "ETH"
                     holder.value.text = Utils.getPriceTextAbs(value?.divide((prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()), 8 , RoundingMode.HALF_UP)?.toDouble() ?: 0.toDouble(), symbol)
                 }
             }
@@ -197,7 +197,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
             when (chosenCurrency) {
                 HomeFragment.CURRENCY_BTC -> {
-                    symbol = "B"
+                    symbol = "BTC"
                     val costBtcHistorical = holding.costBtc
                     val costBtcNow = holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 0.toBigDecimal()) / (prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
 //                    if (holding.quantity < 0)
@@ -205,8 +205,10 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 //                    else
                     change = costBtcNow - costBtcHistorical
 
+                    println("See hererere")
+                    println(holding.symbol)
                     if (holding.symbol == "BTC")
-                        change = 0.toBigDecimal()
+                        change = 0.0.toBigDecimal()
 
                     price = price?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
                     value = value?.div(prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
@@ -215,14 +217,14 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
                     val costEthHistorical = holding.costEth
                     val costEthNow = holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal()) / (prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
-                    symbol = "E"
+                    symbol = "Ξ"
 //                    if (holding.quantity < 0)
 //                        change = costBtcHistorical?.minus(costBtcNow!!)
 //                    else
                     change = costEthNow - costEthHistorical
 
                     if (holding.symbol == "ETH")
-                        change = 0.toBigDecimal()
+                        change = 0.0.toBigDecimal()
 
                     price = prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate)?.let { price?.div(it) }
                     value = prices.first { it.symbol?.toUpperCase() == "ETH" }.prices?.uSD?.times(baseRate)?.let { value?.div(it) }

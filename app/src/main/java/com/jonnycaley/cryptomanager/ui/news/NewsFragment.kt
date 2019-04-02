@@ -3,6 +3,7 @@ package com.jonnycaley.cryptomanager.ui.news
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
@@ -54,6 +55,9 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 
     val recyclerViewShimmerNews by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.shimmer_recycler_view) }
 //    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
+
+    val headerTopNews by lazy { mView.findViewById<TextView>(R.id.header_top_currencies) }
+    val headerTrendingNews by lazy { mView.findViewById<TextView>(R.id.header_trending_news) }
 
     val layoutTopArticle by lazy { mView.findViewById<RelativeLayout>(R.id.layout_top) }
 
@@ -138,6 +142,12 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         if(Utils.isDarkTheme())
             imageNoInternet.setImageResource(R.drawable.no_internet_white)
 
+
+        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+
+        headerTopNews.typeface = custom_font
+        headerTrendingNews.typeface = custom_font
+ 
         textRetry.setOnClickListener(this)
         cardStar.setOnLikeListener(this)
         swipeLayout.setOnRefreshListener(this)

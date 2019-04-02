@@ -215,7 +215,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
         textSortName.text = "Name"
         textSortHoldings.text = "Holdings"
-        textSortChange.text = "Change"
+        textSortChange.text = "Price"
 
 
         setTextColorSecondary(textSortName)
@@ -240,11 +240,11 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                 setTextColorPrimary(textSortHoldings)
             }
             SORT_CHANGE_ASCENDING -> {
-                textSortChange.text = "Change▲"
+                textSortChange.text = "Price▲"
                 setTextColorPrimary(textSortChange)
             }
             SORT_CHANGE_DESCENDING -> {
-                textSortChange.text = "Change▼"
+                textSortChange.text = "Price▼"
                 setTextColorPrimary(textSortChange)
             }
         }
@@ -305,10 +305,10 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                 textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
             }
             CURRENCY_BTC -> {
-                textBalance.text = "BTC $balanceBtc"//₿
+                textBalance.text = "฿ $balanceBtc"//₿
             }
             CURRENCY_ETH -> {
-                textBalance.text = "ETH $balanceEth"//Ξ
+                textBalance.text = "Ξ $balanceEth"//Ξ
             }
         }
     }
@@ -317,8 +317,6 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
 
         val fiat = Utils.getFiatSymbol(baseFiat.fiat)
-
-        Log.i(TAG, "CHA"+changeUsd.toString())
 
         when (this.chosenCurrency) {
             CURRENCY_FIAT -> {
@@ -367,7 +365,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
             }
             CURRENCY_BTC -> {
                 if (!isPercentage) {
-                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "BTC")
+                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "฿")
                     if (changeBtc < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
                     } else if(changeBtc == 0.toBigDecimal()) {
@@ -400,7 +398,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
             }
             CURRENCY_ETH -> {
                 if (!isPercentage) {
-                    textChange.text = Utils.getPriceTextAbs(changeBtc.toDouble(), "ETH")
+                    textChange.text = Utils.getPriceTextAbs(changeEth.toDouble(), "Ξ")
                     if (changeEth < 0.toBigDecimal()) {
                         context?.resources?.getColor(R.color.red)?.let { textChange.setTextColor(it) }
                     } else if(changeEth == 0.toBigDecimal()) {

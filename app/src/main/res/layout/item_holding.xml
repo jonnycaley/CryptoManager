@@ -77,28 +77,28 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:id="@+id/change"
+                android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="end"
                 android:gravity="bottom"
+                android:text="$138.68"
+                android:maxLines="1"
+                android:textColor="?attr/textColor" />
+
+
+            <TextView
+                android:id="@+id/change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/price"
+                android:layout_gravity="end"
                 android:text="-$3"
                 android:maxLines="1"
                 android:textColor="?attr/textColor"
                 android:visibility="visible" />
-
-
-            <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/change"
-                android:layout_alignParentEnd="true"
-                android:layout_gravity="end"
-                android:text="$138.68"
-                android:maxLines="1"
-                android:textColor="?attr/textColor" />
 
         </RelativeLayout>
 

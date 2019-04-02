@@ -12,7 +12,7 @@
         android:id="@+id/layout_no_internet"/>
 
     <include layout="@layout/layout_progress"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -155,24 +155,23 @@
 
                     <!--</androidx.cardview.widget.CardView>-->
 
-
-                    <include
-                        layout="@layout/layout_border"
+                    <View
+                        android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:layout_width="match_parent"/>
+                        android:background="?attr/dividerColor" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:background="?attr/secondaryBackgroundColor"/>
 
-                    <include
-                        layout="@layout/layout_border"
+                    <View
+                        android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:layout_width="match_parent" />
+                        android:background="?attr/dividerColor" />
 
                     <TextView
-                        android:id="@+id/header_top_100"
+                        android:id="@+id/header_top_currencies"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/margin_base_vertical"
@@ -786,20 +785,20 @@
 
                     </LinearLayout>
 
-                    <include
-                        layout="@layout/layout_border"
+                    <View
+                        android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:layout_width="match_parent"/>
+                        android:background="?attr/dividerColor" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:background="?attr/secondaryBackgroundColor"/>
 
-                    <include
-                        layout="@layout/layout_border"
+                    <View
+                        android:layout_width="match_parent"
                         android:layout_height="0.5dp"
-                        android:layout_width="match_parent" />
+                        android:background="?attr/dividerColor" />
 
                     <!--<android.support.v7.widget.RecyclerView-->
                     <!--android:id="@+id/recycler_view_top_movers"-->
@@ -824,6 +823,7 @@
 
 
                     <TextView
+                        android:id="@+id/header_trending_news"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="@dimen/margin_base_vertical"
