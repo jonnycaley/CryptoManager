@@ -11,6 +11,7 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.NotTransaction
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
 import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.CircleTransform
+import com.jonnycaley.cryptomanager.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_search_currencies.view.*
 
@@ -29,12 +30,17 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
         holder.name.text = item?.coinName
         holder.symbol.text = item?.symbol
 
+        var circle = R.drawable.circle_light
+
+        if(Utils.isDarkTheme())
+            circle = R.drawable.circle_dark
+
         Picasso.with(context)
                 .load(baseImageUrl + item?.imageUrl)
                 .fit()
                 .centerCrop()
                 .transform(CircleTransform())
-                .placeholder(R.drawable.circle)
+                .placeholder(circle)
                 .into(holder.image)
 
         if(item?.imageUrl == null){

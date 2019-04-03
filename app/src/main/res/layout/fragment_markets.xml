@@ -42,6 +42,27 @@
                 <!--app:cardCornerRadius="@dimen/card_corner_radius"-->
                 <!--app:cardUseCompatPadding="true">-->
 
+
+                <TextView
+                    android:id="@+id/header_global_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/margin_base_vertical"
+                    android:paddingBottom="@dimen/margin_base_vertical"
+                    android:paddingStart="@dimen/margin_base_horizontal"
+                    android:paddingEnd="@dimen/margin_base_horizontal"
+                    android:text="Global data"
+                    android:visibility="visible"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/large_text_size"/>
+
+
+                <include
+                    layout="@layout/layout_border"
+                    android:layout_height="0.5dp"
+                    android:layout_width="match_parent" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,6 +171,45 @@
 
                 </LinearLayout>
 
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="?attr/dividerColor" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:background="?attr/secondaryBackgroundColor"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="?attr/dividerColor" />
+
+
+                <TextView
+                    android:id="@+id/header_currencies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/margin_base_vertical"
+                    android:paddingBottom="@dimen/margin_base_vertical"
+                    android:paddingStart="@dimen/margin_base_horizontal"
+                    android:paddingEnd="@dimen/margin_base_horizontal"
+                    android:text="All cryptocurrencies"
+                    android:visibility="visible"
+                    android:textStyle="bold"
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/large_text_size"
+                    android:background="?attr/backgroundcolor"/>
+
+
+                <include
+                    layout="@layout/layout_border"
+                    android:layout_height="0.5dp"
+                    android:layout_width="match_parent" />
+
+
                 <!--</androidx.cardview.widget.CardView>-->
 
 
@@ -188,6 +248,7 @@
                         android:layout_height="50dp"
                         android:layout_weight="64"
                         android:background="@drawable/rounded_search"
+                        android:theme="@style/AppSearchView"
                         android:layout_marginEnd="@dimen/margin_item_horizontal"
                         android:queryHint="Search"
                         app:queryBackground="@drawable/rounded_search"
@@ -252,18 +313,17 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/margin_base_horizontal"
-                        android:paddingTop="@dimen/margin_base_vertical"
                         android:paddingEnd="@dimen/margin_base_horizontal"
-                        android:paddingBottom="@dimen/margin_base_vertical"
                         android:weightSum="100">
 
                         <TextView
                             android:id="@+id/rank"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/margin_item_horizontal"
-                            android:layout_weight="8"
-                            android:text="▼#"
+                            android:layout_weight="10"
+                            android:paddingTop="@dimen/margin_base_vertical"
+                            android:paddingBottom="@dimen/margin_base_vertical"
+                            android:text="#▼"
                             android:textColor="?attr/textColor" />
 
 
@@ -271,7 +331,9 @@
                             android:id="@+id/name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="47"
+                            android:paddingTop="@dimen/margin_base_vertical"
+                            android:paddingBottom="@dimen/margin_base_vertical"
+                            android:layout_weight="45"
                             android:text="Name"
                             android:textColor="?attr/textColorSecondary" />
 
@@ -290,6 +352,8 @@
                             android:layout_height="wrap_content"
                             android:layout_toLeftOf="@id/change"
                             android:layout_weight="25"
+                            android:paddingTop="@dimen/margin_base_vertical"
+                            android:paddingBottom="@dimen/margin_base_vertical"
                             android:gravity="end"
                             android:text="Price"
                             android:textColor="?attr/textColorSecondary" />
@@ -302,6 +366,8 @@
                             android:layout_weight="20"
                             android:maxLines="1"
                             android:text="Change"
+                            android:paddingTop="@dimen/margin_base_vertical"
+                            android:paddingBottom="@dimen/margin_base_vertical"
                             android:textAlignment="textEnd"
                             android:textColor="?attr/textColorSecondary" />
 

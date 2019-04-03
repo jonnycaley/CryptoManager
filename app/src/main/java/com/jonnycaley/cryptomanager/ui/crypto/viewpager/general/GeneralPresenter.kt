@@ -195,7 +195,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onNext(articles: Array<Article>) {
-                            view.loadCurrencyNews(articles, savedArticles)
+                            view.loadCurrencyNews(articles.filter { it.thumbnail != null }.toTypedArray(), savedArticles)
                         }
 
                         override fun onSubscribe(d: Disposable) {

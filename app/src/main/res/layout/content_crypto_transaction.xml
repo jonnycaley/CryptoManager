@@ -48,9 +48,11 @@
         android:id="@+id/layout_transaction_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_margin"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:id="@+id/layout_buy_checked"
@@ -65,9 +67,9 @@
                 android:layout_weight="1"
                 android:text="@string/buy"
                 android:textColor="@color/white"
+                android:layout_marginEnd="@dimen/margin_base_horizontal"
                 android:gravity="center"
-                android:background="@drawable/button_checked_green"
-                android:layout_margin="@dimen/default_margin" />
+                android:background="@drawable/border_green_checked" />
 
             <TextView
                 android:id="@+id/text_view_sell"
@@ -75,10 +77,9 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/sell"
-                android:textColor="@color/white"
+                android:textColor="@color/red"
                 android:gravity="center"
-                android:background="@drawable/button_unchecked_red"
-                android:layout_margin="@dimen/default_margin" />
+                android:background="@drawable/border_red_unchecked" />
 
         </LinearLayout>
 
@@ -96,10 +97,10 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:text="@string/buy"
-                android:textColor="@color/white"
+                android:layout_marginEnd="@dimen/margin_base_horizontal"
+                android:textColor="@color/green"
                 android:gravity="center"
-                android:background="@drawable/button_unchecked_green"
-                android:layout_margin="@dimen/default_margin" />
+                android:background="@drawable/border_green_unchecked" />
 
             <TextView
                 android:layout_width="0dp"
@@ -108,26 +109,22 @@
                 android:text="@string/sell"
                 android:textColor="@color/white"
                 android:gravity="center"
-                android:background="@drawable/button_checked_red"
-                android:layout_margin="@dimen/default_margin" />
+                android:background="@drawable/border_red_checked" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:id="@+id/layout_filled_exchange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical"
         android:visibility="gone">
 
         <TextView
@@ -154,10 +151,10 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_empty"
         android:gravity="center|start"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -168,21 +165,17 @@
 
     </RelativeLayout>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:id="@+id/layout_empty_trading_pair"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_empty"
         android:gravity="center|start"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -198,10 +191,10 @@
         android:id="@+id/layout_filled_trading_pair"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical"
         android:visibility="gone">
 
         <TextView
@@ -223,19 +216,16 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:id="@+id/layout_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:id="@+id/text_price"
@@ -260,19 +250,16 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:id="@+id/layout_quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:id="@+id/text_quantity"
@@ -308,20 +295,16 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
-
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:id="@+id/layout_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:id="@+id/text_date"
@@ -342,21 +325,16 @@
 
     </RelativeLayout>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
-
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_empty"
         android:gravity="center|start"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <TextView
             android:id="@+id/text_deducation"
@@ -376,18 +354,15 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_margin"
-        android:paddingTop="@dimen/small_margin"
-        android:paddingRight="@dimen/default_margin"
-        android:paddingBottom="@dimen/small_margin">
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edit_text_notes"
@@ -400,10 +375,7 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/text_grey" />
+    <include layout="@layout/item_border" />
 
 </LinearLayout>
 

@@ -45,11 +45,13 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/text_portfolio_balance"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Portfolio Balance"
-                        android:textColor="?attr/textColor" />
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/large_text_size"/>
 
                     <TextView
                         android:id="@+id/text_balance"
@@ -171,9 +173,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="50"
-                            android:background="@drawable/border"
+                            android:background="@drawable/border_primary"
                             android:text="Add Fiat"
-                            android:textColor="?attr/backgroundcolor" />
+                            android:textColor="?attr/colorPrimary"  />
 
                         <Button
                             android:id="@+id/button_add_currency"
@@ -181,9 +183,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_weight="50"
-                            android:background="@drawable/border"
+                            android:background="@drawable/border_primary"
                             android:text="Add currency"
-                            android:textColor="?attr/backgroundcolor" />
+                            android:textColor="?attr/colorPrimary" />
 
                     </LinearLayout>
 

@@ -35,6 +35,8 @@
     <include layout="@layout/layout_progress"
         android:id="@+id/progress_bar_layout" />
 
+    <include layout="@layout/item_border" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

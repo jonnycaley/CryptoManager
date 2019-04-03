@@ -27,7 +27,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingEnd="@dimen/default_margin">
+                android:paddingEnd="@dimen/margin_base_horizontal">
 
                 <TextView
                     android:id="@+id/toolbar_title"
@@ -64,14 +64,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_margin">
 
         <com.ekalips.fancybuttonproj.FancyButton
             android:id="@+id/progress_button_create_deposit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
+            android:paddingBottom="@dimen/default_margin"
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
@@ -90,9 +93,9 @@
             android:id="@+id/progress_button_create_withdrawl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:padding="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
+            android:paddingBottom="@dimen/default_margin"
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
@@ -112,7 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
+            android:paddingBottom="@dimen/default_margin"
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"
@@ -131,9 +135,9 @@
             android:id="@+id/progress_button_update_withdrawl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:padding="@dimen/default_margin"
+            android:paddingTop="@dimen/default_margin"
+            android:paddingBottom="@dimen/default_margin"
             android:textAlignment="center"
             app:f_btnStyle="stroke_fill"
             app:f_capsText="false"

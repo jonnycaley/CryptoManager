@@ -44,7 +44,11 @@ class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transa
         holder.date.text = formatDate(transaction?.date)
 
         holder.itemView.setOnClickListener {
-            FiatTransactionArgs(transaction!!, null, false).launch(context!!)
+            if(transaction.pairSymbol != null){
+                println("cryptotransaction")
+            } else {
+                FiatTransactionArgs(transaction, null, false).launch(context!!)
+            }
         }
     }
 

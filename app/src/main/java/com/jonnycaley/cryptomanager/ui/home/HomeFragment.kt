@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.home
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -52,6 +53,8 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     val textBalance by lazy { mView.findViewById<TextView>(R.id.text_balance) }
     val textChange by lazy { mView.findViewById<TextView>(R.id.text_change) }
 
+    val textPortfolioBalance by lazy { mView.findViewById<TextView>(R.id.text_portfolio_balance) }
+
     val textSortName by lazy { mView.findViewById<TextView>(R.id.text_sort_name) }
     val textSortHoldings by lazy { mView.findViewById<TextView>(R.id.text_sort_holdings) }
     val textSortChange by lazy { mView.findViewById<TextView>(R.id.text_sort_change) }
@@ -82,6 +85,10 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
         //view setup should occur here
+
+        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+
+        textPortfolioBalance.typeface = custom_font
 
         buttonAddCurrency.setOnClickListener(this)
         buttonAddFiat.setOnClickListener(this)

@@ -36,7 +36,12 @@
     <include
         android:id="@+id/progress_bar_layout"
         layout="@layout/layout_progress"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
+
+    <include
+        layout="@layout/item_border"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

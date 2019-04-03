@@ -143,7 +143,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                     .observeOn(Schedulers.computation())
                     .map { news ->
                         this.news.clear()
-                        news.sortedBy { it.hotness }.forEach { this.news.add(it) }
+                        news.filter { it.thumbnail != null }.sortedBy { it.publishedAt }.forEach { this.news.add(it) }
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable {

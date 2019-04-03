@@ -47,6 +47,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     val textVolume by lazy { root.findViewById<TextView>(R.id.text_volume) }
     val textBTCDominance by lazy { root.findViewById<TextView>(R.id.text_btc_dominance) }
 
+    val headerGlobalData by lazy { root.findViewById<TextView>(R.id.header_global_data) }
+    val headerAllCurrencies by lazy { root.findViewById<TextView>(R.id.header_currencies) }
+
     val text1H by lazy { root.findViewById<TextView>(R.id.text_1H) }
     val text1D by lazy { root.findViewById<TextView>(R.id.text_1D) }
     val text1W by lazy { root.findViewById<TextView>(R.id.text_1W) }
@@ -82,6 +85,11 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
 
         swipeRefreshLayout.setOnRefreshListener(this)
+
+        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+
+        headerAllCurrencies.typeface = custom_font
+        headerGlobalData.typeface = custom_font
 
         textTryAgain.setOnClickListener(this)
         rank.setOnClickListener(this)
@@ -222,22 +230,22 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
             FILTER_RANK_DOWN -> {
                 setTextColorPrimary(rank)
                 rank.setTypeface(rank.typeface, Typeface.BOLD)
-                rank.text = "▼#"
+                rank.text = "#▼"
             }
             FILTER_RANK_UP -> {
                 setTextColorPrimary(rank)
                 rank.setTypeface(rank.typeface, Typeface.BOLD)
-                rank.text = "▲#"
+                rank.text = "#▲"
             }
             FILTER_NAME_DOWN -> {
                 setTextColorPrimary(name)
                 name.setTypeface(name.typeface, Typeface.BOLD)
-                name.text = "▼Name"
+                name.text = "Name▼"
             }
             FILTER_NAME_UP -> {
                 setTextColorPrimary(name)
                 name.setTypeface(name.typeface, Typeface.BOLD)
-                name.text = "▲Name"
+                name.text = "Name▲"
             }
             FILTER_PRICE_DOWN -> {
                 setTextColorPrimary(price)

@@ -28,11 +28,12 @@
         android:id="@+id/layout_border"
         android:visibility="gone"/>
 
+
     <include
         layout="@layout/item_border"
         android:id="@+id/layout_border_partial"
         android:layout_width="match_parent"
-        android:layout_height="0.1dp"
+        android:layout_height="0.5dp"
         android:layout_marginStart="@dimen/margin_base_horizontal"
         android:visibility="gone"/>
 

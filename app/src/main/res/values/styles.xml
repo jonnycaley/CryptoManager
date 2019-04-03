@@ -20,7 +20,7 @@
         <item name="iconGrey">#B9B9B9</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#ADB7C1</item>
+        <item name="dividerColor">@color/light_divider_color</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#fcfcfc</item>
 
@@ -64,7 +64,7 @@
         <item name="iconGrey">#515151</item>
         <item name="iconBlack">#000000</item>
 
-        <item name="dividerColor">#3C4144</item>
+        <item name="dividerColor">@color/dark_divider_color</item>
 
         <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
@@ -103,6 +103,7 @@
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
         <!-- Query Text Color -->
         <item name="android:textColorPrimary">?attr/textColor</item>
+        <item name="android:editTextColor">?attr/textColor</item>
         <!-- Hint Color -->
         <item name="android:textColorHint">?attr/iconGrey</item>
         <!-- Icon Color -->
@@ -119,4 +120,6 @@
     <color name="light_text_color_secondary">#B9B9B9</color>
     <color name="dark_text_color">#ffffff</color>
     <color name="dark_text_color_secondary">#515151</color>
+    <color name="light_divider_color">#ADB7C1</color>
+    <color name="dark_divider_color">#3C4144</color>
 </resources>

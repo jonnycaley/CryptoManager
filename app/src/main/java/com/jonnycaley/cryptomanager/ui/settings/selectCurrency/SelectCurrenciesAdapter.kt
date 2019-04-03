@@ -24,8 +24,11 @@ class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: Select
 
         holder.setIsRecyclable(false)
 
-        holder.name.text = item?.fiat
-        holder.symbol.text = Utils.getFiatName(item?.fiat)
+        holder.symbol.text = item?.fiat
+        holder.name.text = Utils.getFiatName(item?.fiat)
+
+        if(Utils.isDarkTheme())
+            holder.image.setImageResource(R.drawable.circle_dark)
 
         holder.itemView.setOnClickListener {
 //            var rate = Rate()
@@ -45,5 +48,6 @@ class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: Select
         // Holds the TextView that will add each animal to
         val symbol = view.symbol
         val name = view.name
+        val image = view.image
     }
 }

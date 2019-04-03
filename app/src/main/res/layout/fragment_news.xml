@@ -185,7 +185,6 @@
                         android:textSize="@dimen/large_text_size"
                         android:background="?attr/backgroundcolor"/>
 
-
                     <include
                         layout="@layout/layout_border"
                         android:layout_height="0.5dp"

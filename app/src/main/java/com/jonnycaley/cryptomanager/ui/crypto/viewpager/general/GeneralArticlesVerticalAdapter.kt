@@ -55,6 +55,11 @@ class GeneralArticlesVerticalAdapter(var newsItems: ArrayList<Article>, var save
             }
         })
 
+        if(Utils.isDarkTheme()) {
+            holder.likeButton.setLikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_fill_white))
+            holder.likeButton.setUnlikeDrawable(context?.resources?.getDrawable(R.drawable.bookmark_outline_white))
+        }
+
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
