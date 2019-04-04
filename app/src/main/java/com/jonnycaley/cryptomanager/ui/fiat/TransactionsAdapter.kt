@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
+import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionArgs
 import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -41,22 +42,15 @@ class TransactionsAdapter(val fiat : String, val fiatSymbol : String, val transa
                 holder.toText.text = "Due to sell of"
         }
         holder.currency.text = transaction?.symbol.toString()
-        holder.date.text = formatDate(transaction?.date)
+        holder.date.text = Utils.formatDate(transaction?.date)
 
         holder.itemView.setOnClickListener {
             if(transaction.pairSymbol != null){
-                println("cryptotransaction")
+                CryptoTransactionArgs(transaction,null,false).launch(context!!)
             } else {
                 FiatTransactionArgs(transaction, null, false).launch(context!!)
             }
         }
-    }
-
-    private fun formatDate(date: Date?): CharSequence? {
-
-        val format = SimpleDateFormat(Constants.dateFormat)
-
-        return format.format(date)
     }
 
     // Gets the number of animals in the list

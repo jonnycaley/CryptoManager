@@ -11,6 +11,8 @@ interface CryptoContract {
         fun setupViewPager()
         fun showNoInternet()
         fun connectionAvailable()
+        fun showNoDataAvailable()
+        fun onBackPressed()
     }
 
     interface Presenter : BasePresenter {

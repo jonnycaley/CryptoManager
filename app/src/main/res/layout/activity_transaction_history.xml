@@ -30,6 +30,12 @@
         android:id="@+id/layout_no_transactions"
         android:visibility="gone"/>
 
+
+    <include
+        layout="@layout/item_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

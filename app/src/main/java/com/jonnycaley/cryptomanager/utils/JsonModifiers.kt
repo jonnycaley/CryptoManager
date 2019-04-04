@@ -114,11 +114,19 @@ object JsonModifiers {
 
         val jsonFromDisplayOnwards = json.substring(0, json.indexOf("\"DISPLAY") -1 )
 
-        val jsonFromUSDOnwards = jsonFromDisplayOnwards.substring(jsonFromDisplayOnwards.indexOf("\"USD"))
+        println(jsonFromDisplayOnwards)
+
+        val jsonFromUSDOnwards = jsonFromDisplayOnwards.substring(jsonFromDisplayOnwards.indexOf("\"USD\""))
+
+        println(jsonFromUSDOnwards)
 
         val jsonSubEnd = jsonFromUSDOnwards.substring(0, jsonFromUSDOnwards.length - 2)
 
+        println(jsonSubEnd)
+
         val jsonAddStart = "{$jsonSubEnd}"
+
+        println(jsonAddStart)
 
         return jsonAddStart
     }

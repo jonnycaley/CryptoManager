@@ -69,7 +69,8 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { json ->
-                        println(json)
+                        println(JsonModifiers.jsonToGeneral(json))
+
                         JsonModifiers.jsonToGeneral(json)
                     }
                     .map { json -> data = Gson().fromJson(json, Data::class.java) }
@@ -91,7 +92,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onError(e: Throwable) {
                             view.hideRefreshing()
-                            Log.i(TAG, "onError: ${e.message}")
+                            Log.i(TAG, "onError1: ${e.message}")
                         }
                     })
         } else {
@@ -195,7 +196,10 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onNext(articles: Array<Article>) {
-                            view.loadCurrencyNews(articles.filter { it.thumbnail != null }.toTypedArray(), savedArticles)
+                            if(articles.isEmpty())
+                                view.showNoNews()
+                            else
+                                view.loadCurrencyNews(articles.filter { it.thumbnail != null }.toTypedArray(), savedArticles)
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -203,6 +207,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                         }
 
                         override fun onError(e: Throwable) {
+                            view.showNoNews()
                             view.hideRefreshing()
                             println("onError: ${e.message}") //dont show an error cause this can happen and is therefore not worth notifying 'no news obtained'
                         }

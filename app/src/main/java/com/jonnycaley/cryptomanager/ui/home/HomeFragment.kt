@@ -60,6 +60,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     val textSortChange by lazy { mView.findViewById<TextView>(R.id.text_sort_change) }
 
     val layoutProgress by lazy { mView.findViewById<ConstraintLayout>(R.id.layout_progress) }
+    val progressBarHorizontal by lazy { mView.findViewById<ProgressBar>(R.id.progress_bar_horizontal) }
 
     val radioGroup: RadioRealButtonGroup by lazy { mView.findViewById<RadioRealButtonGroup>(R.id.radio_group) }
 
@@ -272,7 +273,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     override fun onResume() {
         super.onResume()
         //TODO: UNCOMMENT BELOW
-        presenter.getTransactions(chosenPeriod)
+//        presenter.getTransactions(chosenPeriod)
     }
 
     override fun showError() {
@@ -293,10 +294,13 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
     }
 
     override fun showRefreshing() {
+        if(!swipeLayout.isRefreshing)
+            progressBarHorizontal.visibility = View.VISIBLE
 //        swipeLayout.isRefreshing = true
     }
 
     override fun stopRefreshing() {
+        progressBarHorizontal.visibility = View.GONE
 //        swipeLayout.isRefreshing = false
     }
 
@@ -312,10 +316,10 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                 textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
             }
             CURRENCY_BTC -> {
-                textBalance.text = "฿ $balanceBtc"//₿
+                textBalance.text = Utils.getPriceTextAbs(balanceBtc.toDouble(), "฿")
             }
             CURRENCY_ETH -> {
-                textBalance.text = "Ξ $balanceEth"//Ξ
+                textBalance.text = Utils.getPriceTextAbs(balanceEth.toDouble(), "Ξ")
             }
         }
     }
@@ -337,7 +341,6 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                         context?.resources?.getColor(R.color.green)?.let { textChange.setTextColor(it) }
                     }
                 } else {
-
                     val change = changeUsd
                     var absBalance = balanceUsd - changeUsd
                     if (absBalance < 0.toBigDecimal())
@@ -352,8 +355,6 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                         //TODO: absBalance can still be 0 somehow lmao
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
-
-
 //                    if ((this.balanceUsd.toDouble() == this.changeUsd.toDouble()) || (this.balanceUsd - this.changeUsd < 0.toBigDecimal())) {
 //                        textChange.text = "-"
 //                        context?.resources?.getColor(R.color.text_grey)?.let { textChange.setTextColor(it) }

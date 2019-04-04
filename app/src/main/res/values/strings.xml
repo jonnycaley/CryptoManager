@@ -53,4 +53,5 @@
     <string name="settings_share_app">Share this app</string>
     <string name="settings_review_app">Review this app</string>
     <string name="settings_version">Version</string>
+    <string name="no_news_available">No news available.</string>
 </resources>

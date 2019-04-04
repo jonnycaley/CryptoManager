@@ -352,16 +352,16 @@ object Utils {
     fun getFiatSymbol(fiat: String?): String {
         when (fiat) {
             "AUD" -> {
-                return "A$"
+                return "$"
             }
             "BGN" -> {
-                return "Лв."
+                return "Лв"
             }
             "BRL" -> {
-                return "R$"
+                return "$"
             }
             "CAD" -> {
-                return "C$"
+                return "$"
             }
             "CHF" -> {
                 return "CHF"
@@ -379,7 +379,7 @@ object Utils {
                 return "£"
             }
             "HKD" -> {
-                return "HK$"
+                return "$"
             }
             "HRK" -> {
                 return "kn"
@@ -406,7 +406,7 @@ object Utils {
                 return "₩"
             }
             "MXN" -> {
-                return "Mex$"
+                return "$"
             }
             "MYR" -> {
                 return "RM"
@@ -415,7 +415,7 @@ object Utils {
                 return "kr"
             }
             "NZD" -> {
-                return "NZ$"
+                return "$"
             }
             "PHP" -> {
                 return "₱"
@@ -433,7 +433,7 @@ object Utils {
                 return "kr"
             }
             "SGD" -> {
-                return "SG$"
+                return "$"
             }
             "THB" -> {
                 return "฿"
@@ -459,9 +459,13 @@ object Utils {
 
     fun formatDate(date: Date): CharSequence? {
 
-        val format = SimpleDateFormat(Constants.dateFormat)
+        val formatStart = SimpleDateFormat(Constants.dateFormatStart)
+        val textStart = formatStart.format(date)
 
-        return format.format(date)
+        val formatEnd = SimpleDateFormat(Constants.dateFormatEnd)
+        val textEnd = formatEnd.format(date)
+
+        return textStart + " at " + textEnd
     }
 
     fun isDarkTheme(): Boolean {

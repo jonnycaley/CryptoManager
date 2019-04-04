@@ -45,7 +45,9 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
                         }
 
                         override fun onError(e: Throwable) {
-                            println("onError: ${e.message}")
+                            view.showNoDataAvailable()
+                            view.onBackPressed()
+                            println("onError11: ${e.message}")
                         }
                     })
 

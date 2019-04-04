@@ -7,9 +7,12 @@
     android:orientation="vertical"
     android:background="?attr/backgroundcolor">
 
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_height_medium"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingBottom="@dimen/margin_base_vertical"
         android:paddingStart="@dimen/margin_base_horizontal"
         android:paddingEnd="@dimen/margin_base_horizontal"
         android:gravity="center">
@@ -27,7 +30,6 @@
         layout="@layout/item_border"
         android:id="@+id/layout_border"
         android:visibility="gone"/>
-
 
     <include
         layout="@layout/item_border"

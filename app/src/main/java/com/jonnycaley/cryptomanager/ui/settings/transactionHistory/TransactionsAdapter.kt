@@ -26,7 +26,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
 
         var pairStr = "${transaction?.symbol}"
         if(transaction?.pairSymbol != null)
-            pairStr += "/${transaction?.pairSymbol}"
+            pairStr += "/${transaction.pairSymbol}"
 
         holder.date.text = Utils.formatDate(transaction?.date!!)
         holder.pair.text = pairStr + " - " + transaction.exchange
@@ -34,24 +34,28 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
         var descriptionStart = ""
 
         if(transaction.pairSymbol == null) {
-            if(transaction?.quantity!! > 0.toBigDecimal())
+            holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked)
+            if(transaction.quantity > 0.toBigDecimal())
                 descriptionStart = "Deposited "
-            else if(transaction?.quantity!! < 0.toBigDecimal())
+            else if(transaction.quantity < 0.toBigDecimal())
                 descriptionStart = "Withdrew "
-
         } else {
-            if(transaction?.quantity!! > 0.toBigDecimal())
+            if(transaction.quantity > 0.toBigDecimal()) {
                 descriptionStart = "Bought "
-            else if(transaction?.quantity!! < 0.toBigDecimal())
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_green)
+            }
+            else if(transaction.quantity < 0.toBigDecimal()) {
                 descriptionStart = "Sold "
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_red)
+            }
         }
 
         var descriptionEnd = ""
 
         if(transaction.pairSymbol != null)
-            descriptionEnd += " for ${transaction.price.abs() * transaction.quantity.abs()} ${transaction.pairSymbol}"
+            descriptionEnd += "for ${Utils.getPriceTextAbs((transaction.price.abs() * transaction.quantity.abs()).toDouble(), "")} ${transaction.pairSymbol}"
 
-        holder.description.text = descriptionStart + transaction?.quantity.abs().toString() + " ${transaction.symbol} $descriptionEnd"
+        holder.description.text = descriptionStart + Utils.getPriceTextAbs(transaction?.quantity.abs().toDouble(), "")+ " ${transaction.symbol} $descriptionEnd"
 
         holder.itemView.setOnClickListener {
             if(transaction.pairSymbol == null)
@@ -69,6 +73,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
         val date = view.date
         val pair = view.pair
         val description = view.description
+        val type = view.view_transaction_type
 
     }
 }

@@ -34,8 +34,8 @@
                 android:layout_marginRight="@dimen/margin_base_horizontal"
                 android:layout_marginTop="@dimen/margin_base_vertical"
                 android:layout_marginBottom="@dimen/margin_base_vertical"
-                android:background="@drawable/border"
-                android:textColor="@color/white"/>
+                android:background="@drawable/border_primary"
+                android:textColor="?attr/colorPrimary" />
 
             <include
                 layout="@layout/layout_border"

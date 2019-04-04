@@ -32,21 +32,14 @@
         android:layout_below="@+id/app_bar_layout"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardElevation="@dimen/cardview_default_elevation"
-            app:cardUseCompatPadding="true"
-            android:layout_marginTop="@dimen/margin_base_vertical"
-            android:layout_marginBottom="@dimen/margin_base_vertical"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/margin_base_vertical"
+                android:layout_marginBottom="@dimen/margin_base_vertical"
+                android:layout_marginStart="@dimen/margin_base_horizontal"
+                android:layout_marginEnd="@dimen/margin_base_horizontal">
 
                 <TextView
                     android:id="@+id/text_available"
@@ -122,8 +115,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
-
         <Button
             android:id="@+id/button_add_transaction"
             android:layout_width="match_parent"
@@ -135,6 +126,11 @@
             android:background="@drawable/border_primary"
             android:text="Add Transaction"
             android:textColor="?attr/colorPrimary"  />
+
+        <include
+            layout="@layout/item_border"
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"

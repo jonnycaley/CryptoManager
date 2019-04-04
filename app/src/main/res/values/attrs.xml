@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="ds">
 
+        <attr name="colorPrimary" format="color"/>
         <attr name="colorPrimaryOpacity20" format="color"/>
         <attr name="secondarycolor" format="color"/>
 

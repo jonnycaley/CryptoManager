@@ -26,6 +26,7 @@ interface GeneralContract {
         fun updateSavedArticles(articles: ArrayList<Article>)
         fun showNoInternet()
         fun notifyActivityOfInternet()
+        fun showNoNews()
     }
 
     interface Presenter : BasePresenter {

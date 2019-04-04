@@ -107,7 +107,6 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                     override fun onSubscribe(d: Disposable) {
                         compositeDisposable?.add(d)
-                        view.showRefreshing()
                     }
 
                     override fun onError(e: Throwable) {
@@ -177,6 +176,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                         override fun onSubscribe(d: Disposable) {
                             compositeDisposable?.add(d)
+                            view.showRefreshing()
                         }
 
                         override fun onError(e: Throwable) {
@@ -574,6 +574,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                         override fun onNext(baseFiat: Unit) {
                             view.hideRefreshing()
+                            view.stopRefreshing()
                             view.hideInternetRequiredLayout()
                             view.hideProgressLayout()
                         }

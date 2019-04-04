@@ -23,6 +23,7 @@ import com.squareup.picasso.Callback
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatDelegate
 import android.widget.TextView
+import android.widget.Toast
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.util.*
 
@@ -143,9 +144,13 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-//        supportActionBar?.title = args.currencySymbol
 
-        title.text = args.currencyName
+//        supportActionBar?.title = args.currencySymbol
+        if(args.currencyName != "")
+            title.text = args.currencyName
+        else
+            title.text = args.currencySymbol
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -159,6 +164,9 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         return false
     }
 
+    override fun showNoDataAvailable() {
+        Toast.makeText(this, "No data available for ${args.currencyName}", Toast.LENGTH_SHORT).show()
+    }
 
     inner class MyPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 

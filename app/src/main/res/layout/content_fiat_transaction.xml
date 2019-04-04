@@ -313,7 +313,8 @@
                     android:layout_alignParentStart="true"
                     android:hint="Notes"
                     android:textColor="?attr/textColor"
-                    android:textColorHint="?attr/textColorSecondary"
+                    app:met_textColor="?attr/textColor"
+                    app:met_textColorHint="?attr/textColorSecondary"
                     app:met_hideUnderline="true"/>
 
             </RelativeLayout>

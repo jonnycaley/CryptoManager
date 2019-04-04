@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import co.ceryle.radiorealbutton.RadioRealButtonGroup
 import com.appyvet.rangebar.RangeBar
@@ -68,6 +70,8 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
     val textCirculatingSupply: TextView by lazy { mView.findViewById<TextView>(R.id.text_circulating_supply) }
     val text24hVolume: TextView by lazy { mView.findViewById<TextView>(R.id.text_24h_volume) }
 
+    val layoutNoNews: LinearLayout by lazy { mView.findViewById<LinearLayout>(R.id.layout_no_news) }
+
     val rangeBar: RangeBar by lazy { mView.findViewById<RangeBar>(R.id.rangebar) }
 
     var selectedChartFrame = Chart(numOfCandlesticks, aggregate1H, minuteString)
@@ -97,6 +101,10 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
             articlesVerticalAdapter.savedArticles = articles
             articlesVerticalAdapter.notifyDataSetChanged()
         }
+    }
+
+    override fun showNoNews() {
+        layoutNoNews.visibility = View.VISIBLE
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -159,18 +167,22 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
 
         val rate = baseFiat.rate ?: 1.toBigDecimal()
 
+        println(data?.uSD?.sUPPLY)
+
         textCirculatingSupply.text = DecimalFormat("#,###,###").format(data?.uSD?.sUPPLY?.toDouble())
 
         textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.mKTCAP?.toBigDecimal()?.times(rate), "#,###,###")}"
 
         text24hVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${formatPrice(data?.uSD?.tOTALVOLUME24HTO?.toBigDecimal()?.times(rate), "#,###,###")}"
 
-        text24hHigh.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(data?.uSD?.hIGH24HOUR?.toBigDecimal()?.times(rate)?.times(rate)?.toDouble())}"
+        text24hHigh.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(data?.uSD?.hIGH24HOUR?.toBigDecimal()?.times(rate)?.toDouble())}"
 
-        text24hLow.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(data?.uSD?.lOW24HOUR?.toBigDecimal()?.times(rate)?.times(rate)?.toDouble())}"
+        text24hLow.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(data?.uSD?.lOW24HOUR?.toBigDecimal()?.times(rate)?.toDouble())}"
 
         text24hChange.text = "${String.format("%.2f", data?.uSD?.cHANGEPCT24HOUR?.toDouble())}%"
     }
+
+
 
     override fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>) {
 
@@ -217,7 +229,7 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         if (price != null) {
             when {
                 price < 0.00000001 -> text =  "0.00000001"
-                price < 1 -> text =  String.format("%.8f", price)
+                price < 1 -> text =  String.format("%.6f", price)
                 else -> text = formatPrice(String.format("%.2f", price).toBigDecimal(), "#,###,###.##")
             }
         } else {
@@ -504,8 +516,12 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
 
         if (differenceBigDecimal > 1.toBigDecimal()) {
 
-            val labelCount = ((roundToHighest(highest, multiplesOf) - roundToLowest(lowest, multiplesOf)) / multiplesOf).toInt() + 1
+            var labelCount = ((roundToHighest(highest, multiplesOf) - roundToLowest(lowest, multiplesOf)) / multiplesOf).toInt() + 1
 
+            Log.i(TAG, "Label Count:" + labelCount)
+
+            if(labelCount == 2)
+                labelCount = 6
 
             candleStickChart.axisLeft.setLabelCount(labelCount, true)
 

@@ -41,7 +41,7 @@
                     android:layout_height="25dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/default_margin" />
+                    android:layout_marginEnd="@dimen/margin_base_horizontal" />
 
             </RelativeLayout>
 

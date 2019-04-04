@@ -136,6 +136,9 @@
 
     </LinearLayout>
 
-    <include layout="@layout/item_border" />
+    <include
+        layout="@layout/item_border"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
 
 </LinearLayout>

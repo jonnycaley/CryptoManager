@@ -42,7 +42,8 @@ object Constants {
 
 //    val PAPER_CRYPTO_TRANSACTIONS = "all_crypto_transactions"
 
-    val dateFormat = "EEE, dd MMM yyyy HH:mm"
+    val dateFormatStart = "dd MMM yyyy"
+    val dateFormatEnd = "HH:mm"
 
     val baseRate = 1.toBigDecimal()
 

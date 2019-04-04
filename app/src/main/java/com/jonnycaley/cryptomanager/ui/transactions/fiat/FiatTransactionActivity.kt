@@ -119,7 +119,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     private fun setupCreate() {
         args.currency?.let { currency ->
             setupToolbarCreate(currency)
-            requiredDate.text = formatDate(transactionDate)
+            requiredDate.text = Utils.formatDate(transactionDate)
             requiredCurrency.text = currency
             progressButtonCreateDeposit.visibility = View.VISIBLE
         }
@@ -197,7 +197,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             requiredExchange.text = transaction.exchange
             requiredCurrency.text = transaction.symbol
             requiredQuantity.setText(String.format(transaction.quantity.abs().toString()))
-            requiredDate.text = formatDate(transaction.date)
+            requiredDate.text = Utils.formatDate(transaction.date)
             buttonDelete.visibility = View.VISIBLE
             setupToolbarUpdate(transaction)
         }
@@ -464,7 +464,7 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         transactionDate.hours = hourOfDay
         transactionDate.minutes = minute
         transactionDate.seconds = second
-        requiredDate.text = formatDate(transactionDate)
+        requiredDate.text = Utils.formatDate(transactionDate)
 
         isDateChanged = true
     }
@@ -492,11 +492,6 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
                 false
         )
         dpd.show(fragmentManager, "Datepickerdialog")
-    }
-
-    private fun formatDate(date: Date): CharSequence? {
-        val format = SimpleDateFormat(Constants.dateFormat)
-        return format.format(date)
     }
 
     private fun setupToolbarUpdate(transaction: Transaction) {

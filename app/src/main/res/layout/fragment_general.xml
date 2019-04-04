@@ -476,6 +476,25 @@
                 android:layout_height="0.5dp"
                 android:background="?attr/dividerColor" />
 
+            <LinearLayout
+                android:id="@+id/layout_no_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/margin_base_horizontal"
+                android:layout_marginRight="@dimen/margin_base_horizontal"
+                android:layout_marginTop="@dimen/margin_base_vertical"
+                android:layout_marginBottom="@dimen/margin_base_vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_news_available"
+                    android:gravity="center"
+                    android:textColor="?attr/textColorSecondary"/>
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_news"
