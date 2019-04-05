@@ -24,8 +24,8 @@
     <string name="picker_exchange_activity">Pick Exchange</string>
     <string name="picker_pair_activity">Pick Pair Currency</string>
     <string name="fiat_activity">FiatActivity</string>
-    <string name="withdrawl">Withdrawl</string>
-    <string name="deposit">Deposit</string>
+    <string name="withdrawl">WITHDRAWAL</string>
+    <string name="deposit">DEPOSIT</string>
     <string name="update_crypto_transaction_activity">Update Crypto Transaction</string>
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>

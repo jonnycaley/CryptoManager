@@ -45,8 +45,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textColor="?attr/textColor"
-                        android:textSize="@dimen/medium_text_size" />
+                        android:text="General"
+                        android:textColor="?attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_caption" />
 
                     <TextView
                         android:id="@+id/title"
@@ -57,8 +58,8 @@
                         android:maxLines="3"
                         android:text="Title"
                         android:textColor="?attr/textColor"
-                        android:textSize="@dimen/medium_text_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_size_subtitle_2"
+                        android:fontFamily="sans-serif-medium" />
 
                     <RelativeLayout
                         android:id="@+id/additional"
@@ -80,7 +81,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="6dp"
                                 android:background="@drawable/border_green_small_round"
-                                android:paddingHorizontal="6dp"
+                                android:paddingHorizontal="9dp"
                                 android:paddingVertical="3dp"
                                 android:visibility="gone">
 
@@ -111,7 +112,7 @@
                                 android:id="@+id/layout_stock_red"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
+                                android:layout_marginEnd="9dp"
                                 android:background="@drawable/border_red_small_round"
                                 android:paddingHorizontal="6dp"
                                 android:paddingVertical="3dp"
@@ -150,8 +151,8 @@
                             android:layout_marginStart="-1dp"
                             android:layout_toEndOf="@+id/layout_stock"
                             android:text="6 minute read • "
-                            android:textColor="?attr/textColor"
-                            android:textSize="@dimen/extra_small_text_size"
+                            android:textSize="@dimen/text_size_overline"
+                            android:textColor="?attr/textColorSecondary"
                             android:visibility="visible" />
 
                         <TextView
@@ -161,8 +162,8 @@
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/length"
                             android:text="3 hours ago"
-                            android:textColor="?attr/textColor"
-                            android:textSize="@dimen/extra_small_text_size" />
+                            android:textSize="@dimen/text_size_overline"
+                            android:textColor="?attr/textColorSecondary" />
 
                         <com.like.LikeButton
                             android:id="@+id/like_button"

@@ -36,9 +36,6 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
     val viewPager : androidx.viewpager.widget.ViewPager by lazy { findViewById<androidx.viewpager.widget.ViewPager>(R.id.pager) }
     val tabLayout : TabLayout by lazy { findViewById<TabLayout>(R.id.tablayout) }
 
-    val title : TextView by lazy { findViewById<TextView>(R.id.title) }
-    val image : ImageView by lazy { findViewById<ImageView>(R.id.image) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         if(Utils.isDarkTheme()) {
@@ -47,10 +44,6 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
-
-        if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-        }
 
         setupViewPager()
         setupToolbar()
@@ -140,17 +133,24 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     }
 
-    private fun setupToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+    val title : TextView by lazy { findViewById<TextView>(R.id.title) }
+    val image : ImageView by lazy { findViewById<ImageView>(R.id.image) }
+
+    val toolbar : Toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
+
+    fun setupToolbar() {
+
+        if(!Utils.isDarkTheme()) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
+
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-//        supportActionBar?.title = args.currencySymbol
         if(args.currencyName != "")
             title.text = args.currencyName
         else
             title.text = args.currencySymbol
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

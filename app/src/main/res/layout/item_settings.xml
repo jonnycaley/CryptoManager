@@ -9,7 +9,7 @@
 
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/margin_base_vertical"
         android:paddingBottom="@dimen/margin_base_vertical"
@@ -22,7 +22,17 @@
             android:textColor="?attr/textColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Setting" />
+            android:text="Setting"
+            android:textSize="@dimen/text_size_body_2"
+            android:fontFamily="sans-serif" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/next_black"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 

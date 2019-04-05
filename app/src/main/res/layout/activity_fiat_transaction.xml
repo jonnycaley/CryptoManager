@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.transactions.fiat.FiatTransactionActivity"
+    android:background="?attr/backgroundcolor">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:id="@+id/app_bar_layout"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextColor="?attr/textColor"
+            tools:targetApi="lollipop"
+            android:background="?attr/backgroundcolor" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="@dimen/margin_base_horizontal">
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textColor="?attr/textColor"
+                    android:text=""
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:id="@+id/button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/baseline_delete_white_24"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        layout="@layout/content_fiat_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar_layout"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:id="@+id/button_create_deposit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Add deposit"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:background="@drawable/button_checked"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/button_create_withdrawal"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Add withdrawal"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/button_checked"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:id="@+id/button_update_deposit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:textAllCaps="true"
+            android:text="Update deposit"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/button_checked"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:id="@+id/button_update_withdrawl"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Update withdrawal"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:background="@drawable/button_checked"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

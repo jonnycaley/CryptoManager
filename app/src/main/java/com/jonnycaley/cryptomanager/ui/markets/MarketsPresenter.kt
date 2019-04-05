@@ -231,9 +231,8 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
 //                    })
 
         } else {
-
+            getOfflineData()
         }
-
     }
 
     var resultsCount = 100
@@ -338,6 +337,7 @@ class MarketsPresenter(var dataManager: MarketsDataManager, var view: MarketsCon
                     .subscribe(object : Observer<Unit> {
                         override fun onComplete() {
                             Log.i(TAG, "offline loaded from storage")
+                            view.stopRefreshing()
 //                            getOnlineData()
                         }
 

@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +12,7 @@ import android.widget.SearchView
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.home.HomeFragment
+import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.utils.Utils
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -76,10 +73,10 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) {
                     when (getSearchType()) {
-                        HomeFragment.CURRENCY_STRING -> {
+                        PortfolioFragment.CURRENCY_STRING -> {
                             presenter.getAllCurrencies()
                         }
-                        HomeFragment.FIAT_STRING -> {
+                        PortfolioFragment.FIAT_STRING -> {
                             presenter.getAllFiats()
                         }
                     }
@@ -138,8 +135,6 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
             }
         }
 
-        println(data.size)
-
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this)
@@ -157,10 +152,10 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
 
     override fun onQueryTextChange(query: String?): Boolean {
         when(args.transactionString){
-            HomeFragment.CURRENCY_STRING -> {
+            PortfolioFragment.CURRENCY_STRING -> {
                 presenter.showCurrencies(query?.trim())
             }
-            HomeFragment.FIAT_STRING -> {
+            PortfolioFragment.FIAT_STRING -> {
                 presenter.showFiats(query?.trim())
             }
         }

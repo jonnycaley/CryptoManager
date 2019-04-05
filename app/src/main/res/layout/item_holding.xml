@@ -31,8 +31,6 @@
                 android:layout_gravity="center"
                 android:layout_centerVertical="true" />
 
-
-
             <TextView
                 android:id="@+id/fiat"
                 android:layout_width="30dp"
@@ -42,7 +40,9 @@
                 android:text=""
                 android:maxLines="1"
                 android:textColor="@color/white"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/currency"
@@ -52,7 +52,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/default_margin"
                 android:text="BTC"
-                android:textColor="?attr/textColor" />
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
             <!--<TextView-->
             <!--android:id="@+id/text_fiat"-->
@@ -85,7 +87,9 @@
                 android:gravity="bottom"
                 android:text="$138.68"
                 android:maxLines="1"
-                android:textColor="?attr/textColor" />
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
 
             <TextView
@@ -98,7 +102,9 @@
                 android:text="-$3"
                 android:maxLines="1"
                 android:textColor="?attr/textColor"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 
@@ -119,7 +125,9 @@
                 android:gravity="end"
                 android:text="$7000"
                 android:maxLines="1"
-                android:textColor="?attr/textColor" />
+                android:textColor="?attr/textColor"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
             <TextView
                 android:id="@+id/holding"
@@ -130,7 +138,9 @@
                 android:gravity="end"
                 android:text="(0.9650000 BTC)"
                 android:maxLines="1"
-                android:textColor="?attr/textColorSecondary" />
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 

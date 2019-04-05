@@ -1,21 +1,16 @@
 package com.jonnycaley.cryptomanager.ui.base
 
-import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.news.NewsFragment
 import com.jonnycaley.cryptomanager.ui.markets.MarketsFragment
-import com.jonnycaley.cryptomanager.ui.home.HomeFragment
+import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.ui.settings.SettingsFragment
 import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.OnThemeChangedListener
 import kotlinx.android.synthetic.main.content_home.*
-import android.content.Context.VIBRATOR_SERVICE
-import android.os.Vibrator
 
 class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
@@ -23,7 +18,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     val args by lazy { BaseArgs.deserializeFrom(intent) }
 
-    val fragment1: androidx.fragment.app.Fragment = HomeFragment()
+    val fragment1: androidx.fragment.app.Fragment = PortfolioFragment()
     val fragment2: androidx.fragment.app.Fragment = MarketsFragment()
     val fragment3: androidx.fragment.app.Fragment = NewsFragment()
     val fragment4: androidx.fragment.app.Fragment = SettingsFragment()
@@ -84,7 +79,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
                         fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
                     else
-                        (fragment1 as HomeFragment).onTabClicked(active == fragment1)
+                        (fragment1 as PortfolioFragment).onTabClicked(active == fragment1)
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
                     return@OnNavigationItemSelectedListener true
@@ -194,7 +189,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //                return@OnNavigationItemSelectedListener true
 //            }
 //            R.id.navigation_portfolio -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, HomeFragment()).commit()
+//                fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
 //                return@OnNavigationItemSelectedListener true
 //            }
 //            R.id.navigation_settings -> {
@@ -220,7 +215,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //                selectedItem = R.id.navigation_markets
 //            }
 //            2 -> {
-//                this.fragment = HomeFragment().newInstance("Portfolio")/* parcelable */
+//                this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
 //                selectedItem = R.id.navigation_portfolio
 //            }
 //            3 -> {

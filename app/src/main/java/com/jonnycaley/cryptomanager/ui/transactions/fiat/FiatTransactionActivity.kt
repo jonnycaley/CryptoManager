@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -17,17 +16,14 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.base.BaseActivity
 import com.jonnycaley.cryptomanager.ui.pickers.currency.PickerCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
-import com.jonnycaley.cryptomanager.utils.Constants
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
-import java.text.SimpleDateFormat
 import java.util.*
 import android.content.DialogInterface
-import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.jonnycaley.cryptomanager.utils.Utils
-import kotlinx.android.synthetic.main.activity_update_fiat_transaction.*
+import kotlinx.android.synthetic.main.activity_fiat_transaction.*
 
 class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
@@ -46,6 +42,9 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     val layoutCurrencyFilled by lazy { findViewById<RelativeLayout>(R.id.layout_currency_filled) }
     val layoutCurrencyEmpty by lazy { findViewById<RelativeLayout>(R.id.layout_currency_empty) }
 
+    val arrowExchange by lazy { findViewById<ImageView>(R.id.arrow_exchange) }
+    val arrowTradingPair by lazy { findViewById<ImageView>(R.id.arrow_currency) }
+
     val layoutQuantity by lazy { findViewById<RelativeLayout>(R.id.layout_quantity) }
 
     val requiredQuantity by lazy { findViewById<EditText>(R.id.edit_text_quantity) }
@@ -55,10 +54,10 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     val layoutDeposit by lazy { findViewById<LinearLayout>(R.id.layout_deposit_checked) }
     val layoutWithdrawl by lazy { findViewById<LinearLayout>(R.id.layout_withdrawl_checked) }
 
-    val progressButtonCreateDeposit by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_deposit) }
-    val progressButtonCreateWithdrawl by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_withdrawl) }
-    val progressButtonUpdateDeposit by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_deposit) }
-    val progressButtonUpdateWithdrawl by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_withdrawl) }
+    val buttonCreateDeposit by lazy { findViewById<TextView>(R.id.button_create_deposit) }
+    val buttonCreateWithdrawl by lazy { findViewById<TextView>(R.id.button_create_withdrawal) }
+    val buttonUpdateDeposit by lazy { findViewById<TextView>(R.id.button_update_deposit) }
+    val buttonUpdateWithdrawl by lazy { findViewById<TextView>(R.id.button_update_withdrawl) }
 
     val requiredDate by lazy { findViewById<TextView>(R.id.date) }
 
@@ -79,17 +78,19 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_update_fiat_transaction)
+        setContentView(R.layout.activity_fiat_transaction)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
+            arrowExchange.setImageResource(R.drawable.next_white)
+            arrowTradingPair.setImageResource(R.drawable.next_white)
         }
 
-        progressButtonCreateDeposit.visibility = View.GONE
-        progressButtonCreateWithdrawl.visibility = View.GONE
-        progressButtonUpdateDeposit.visibility = View.GONE
-        progressButtonUpdateWithdrawl.visibility = View.GONE
+        buttonCreateDeposit.visibility = View.GONE
+        buttonCreateWithdrawl.visibility = View.GONE
+        buttonUpdateDeposit.visibility = View.GONE
+        buttonUpdateWithdrawl.visibility = View.GONE
 
         fillFields()
         setupUpdate()
@@ -100,11 +101,11 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     }
 
     private fun AskOption(): AlertDialog {
+
         return AlertDialog.Builder(this)
                 //set message, title, and icon
                 .setTitle("Delete Transaction")
                 .setMessage("Are you sure you want to delete this transaction?")
-
                 .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, whichButton ->
                     //your deleting code
                     args.transaction?.let { presenter.deleteTransaction(it) }
@@ -121,40 +122,40 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             setupToolbarCreate(currency)
             requiredDate.text = Utils.formatDate(transactionDate)
             requiredCurrency.text = currency
-            progressButtonCreateDeposit.visibility = View.VISIBLE
+            buttonCreateDeposit.visibility = View.VISIBLE
         }
     }
 
     override fun startUpdateDepositProgress() {
-        progressButtonUpdateDeposit.collapse()
+        buttonUpdateDeposit.visibility = View.GONE
     }
 
     override fun startUpdateWithdrawlProgress() {
-        progressButtonUpdateWithdrawl.collapse()
+        buttonUpdateWithdrawl.visibility = View.GONE
     }
 
     override fun stopUpdateDepositProgress() {
-        progressButtonUpdateDeposit.expand()
+        buttonUpdateDeposit.visibility = View.VISIBLE
     }
 
     override fun stopUpdateWithdrawlProgress() {
-        progressButtonUpdateWithdrawl.expand()
+        buttonUpdateWithdrawl.visibility = View.VISIBLE
     }
 
     override fun startCreateDepositProgress() {
-        progressButtonCreateDeposit.collapse()
+        buttonCreateDeposit.visibility = View.GONE
     }
 
     override fun startCreateWithdrawlProgress() {
-        progressButtonCreateWithdrawl.collapse()
+        buttonCreateWithdrawl.visibility = View.GONE
     }
 
     override fun stopCreateDepositProgress() {
-        progressButtonCreateWithdrawl.expand()
+        buttonCreateDeposit.visibility = View.VISIBLE
     }
 
     override fun stopCreateWithdrawlProgress() {
-        progressButtonCreateWithdrawl.expand()
+        buttonCreateWithdrawl.visibility = View.VISIBLE
     }
 
     override fun disableTouchEvents() {
@@ -179,11 +180,11 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
             if(transaction.quantity > 0.toBigDecimal() ){
                 showDepositChecked()
                 hideWithdrawlChecked()
-                progressButtonUpdateDeposit.visibility = View.VISIBLE
+                buttonUpdateDeposit.visibility = View.VISIBLE
             } else {
                 showWithdrawlChecked()
                 hideDepositChecked()
-                progressButtonUpdateWithdrawl.visibility = View.VISIBLE
+                buttonUpdateWithdrawl.visibility = View.VISIBLE
             }
 
             buttonDelete.visibility = View.VISIBLE
@@ -231,10 +232,10 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         textviewDeposit.setOnClickListener(this)
         textviewWithdrawl.setOnClickListener(this)
 
-        progressButtonCreateDeposit.setOnClickListener(this)
-        progressButtonCreateWithdrawl.setOnClickListener(this)
-        progressButtonUpdateDeposit.setOnClickListener(this)
-        progressButtonUpdateWithdrawl.setOnClickListener(this)
+        buttonUpdateDeposit.setOnClickListener(this)
+        buttonUpdateWithdrawl.setOnClickListener(this)
+        buttonCreateWithdrawl.setOnClickListener(this)
+        buttonCreateDeposit.setOnClickListener(this)
     }
 
 
@@ -315,16 +316,16 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
                     showCreateWithdrawl()
                 }
             }
-            progressButtonCreateDeposit.id -> {
+            buttonCreateDeposit.id -> {
                 startProcess()
             }
-            progressButtonUpdateDeposit.id -> {
+            buttonCreateWithdrawl.id -> {
                 startProcess()
             }
-            progressButtonCreateWithdrawl.id -> {
+            buttonUpdateDeposit.id -> {
                 startProcess()
             }
-            progressButtonUpdateWithdrawl.id -> {
+            buttonUpdateWithdrawl.id -> {
                 startProcess()
             }
         }
@@ -361,35 +362,35 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
     }
 
     private fun showCreateWithdrawl() {
-        progressButtonCreateWithdrawl.visibility = View.VISIBLE
+        buttonCreateWithdrawl.visibility = View.VISIBLE
     }
 
     private fun hideCreateDeposit() {
-        progressButtonCreateDeposit.visibility = View.GONE
+        buttonCreateDeposit.visibility = View.GONE
     }
 
     private fun showUpdateWithdrawl() {
-        progressButtonUpdateWithdrawl.visibility = View.VISIBLE
+        buttonUpdateWithdrawl.visibility = View.VISIBLE
     }
 
     private fun hideUpdateDeposit() {
-        progressButtonUpdateDeposit.visibility = View.GONE
+        buttonUpdateDeposit.visibility = View.GONE
     }
 
     private fun hideCreateWithdrawl() {
-        progressButtonCreateWithdrawl.visibility = View.GONE
+        buttonCreateWithdrawl.visibility = View.GONE
     }
 
     private fun showCreateDeposit() {
-        progressButtonCreateDeposit.visibility = View.VISIBLE
+        buttonCreateDeposit.visibility = View.VISIBLE
     }
 
     private fun hideUpdateWithdrawl() {
-        progressButtonUpdateWithdrawl.visibility = View.GONE
+        buttonUpdateWithdrawl.visibility = View.GONE
     }
 
     private fun showUpdateDeposit() {
-        progressButtonUpdateDeposit.visibility = View.VISIBLE
+        buttonUpdateDeposit.visibility = View.VISIBLE
     }
 
     override fun onTransactionUpdated() {

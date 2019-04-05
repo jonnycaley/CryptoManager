@@ -2,6 +2,7 @@
 
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipelayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,29 +24,30 @@
             <include
                 layout="@layout/layout_border"
                 android:layout_height="0.5dp"
-                android:layout_width="match_parent" />
-
+                android:layout_width="match_parent"
+                tools:ignore="Suspicious0dp" />
 
             <TextView
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textSize="@dimen/extra_large_text_size"
                 android:textColor="?attr/textColor"
                 android:layout_marginLeft="@dimen/margin_base_horizontal"
                 android:layout_marginRight="@dimen/margin_base_horizontal"
-                android:layout_marginTop="@dimen/margin_item_vertical"/>
+                android:layout_marginTop="@dimen/margin_item_vertical"
+                android:textSize="@dimen/text_size_headline_4"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/change"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="@dimen/medium_text_size"
                 android:layout_marginLeft="@dimen/margin_base_horizontal"
                 android:layout_marginRight="@dimen/margin_base_horizontal"
-                android:layout_marginBottom="@dimen/margin_item_vertical"/>
+                android:layout_marginBottom="@dimen/margin_item_vertical"
+                android:textSize="@dimen/text_size_subtitle_1"
+                android:fontFamily="sans-serif"/>
 
 
             <!--<include-->
@@ -124,7 +126,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textColorTo="?attr/textColor"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp" />
+
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -137,8 +141,9 @@
                             app:rrb_text="1D"
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -152,8 +157,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -167,8 +173,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -182,8 +189,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -197,8 +205,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -212,8 +221,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                         <co.ceryle.radiorealbutton.RadioRealButton
                             android:layout_width="wrap_content"
@@ -227,8 +237,9 @@
                             app:rrb_textColor="?attr/textColorSecondary"
                             app:rrb_textFillSpace="true"
                             app:rrb_textGravity="center"
-                            app:rrb_textSize="10sp"
-                            app:rrb_textColorTo="?attr/textColor" />
+                            app:rrb_textColorTo="?attr/textColor"
+                            app:rrb_textTypeface="sans"
+                            app:rrb_textSize="@dimen/text_size_overline" />
 
                     </co.ceryle.radiorealbutton.RadioRealButtonGroup>
 
@@ -296,7 +307,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Market Cap"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size"/>
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif"/>
 
                             <TextView
                                 android:id="@+id/text_market_cap"
@@ -305,7 +317,8 @@
                                 android:layout_below="@+id/title_market_cap"
                                 android:textColor="?attr/textColor"
                                 android:text=""
-                                android:textStyle="bold"/>
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -320,7 +333,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Change (24h)"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size" />
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif" />
 
                             <TextView
                                 android:id="@+id/text_24h_change"
@@ -328,7 +342,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_change"
                                 android:textColor="?attr/textColor"
-                                android:text="" />
+                                android:text=""
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -353,7 +369,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Circulating Supply"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size"/>
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif"/>
 
                             <TextView
                                 android:id="@+id/text_circulating_supply"
@@ -361,7 +378,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_circulating_supply"
                                 android:textColor="?attr/textColor"
-                                android:text="" />
+                                android:text=""
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -376,7 +395,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Volume (24h)"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size"/>
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif"/>
 
                             <TextView
                                 android:id="@+id/text_24h_volume"
@@ -384,7 +404,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_volume"
                                 android:textColor="?attr/textColor"
-                                android:text="" />
+                                android:text=""
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -408,7 +430,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Low (24h)"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size" />
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif" />
 
                             <TextView
                                 android:id="@+id/text_24h_low"
@@ -416,7 +439,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_low"
                                 android:textColor="?attr/textColor"
-                                android:text="" />
+                                android:text=""
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -432,7 +457,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="High (24h)"
                                 android:textColor="?attr/textColorSecondary"
-                                android:textSize="@dimen/small_text_size" />
+                                android:textSize="@dimen/text_size_caption"
+                                android:fontFamily="sans-serif"/>
 
                             <TextView
                                 android:id="@+id/text_24h_high"
@@ -440,7 +466,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/title_24h_high"
                                 android:textColor="?attr/textColor"
-                                android:text="" />
+                                android:text=""
+                                android:textSize="@dimen/text_size_body_2"
+                                android:fontFamily="sans-serif" />
 
                         </RelativeLayout>
 
@@ -492,7 +520,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/no_news_available"
                     android:gravity="center"
-                    android:textColor="?attr/textColorSecondary"/>
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif"/>
 
             </LinearLayout>
 
@@ -500,7 +530,8 @@
                 android:id="@+id/recycler_view_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                android:animateLayoutChanges="true"/>
 
         </LinearLayout>
 

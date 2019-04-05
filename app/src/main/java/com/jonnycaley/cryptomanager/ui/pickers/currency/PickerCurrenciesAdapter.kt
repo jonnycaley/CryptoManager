@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_search_currencies.view.*
 class PickerCurrenciesAdapter(var currencies: List<Datum>?, var context: Context?, var view: PickerCurrencyContract.View) : androidx.recyclerview.widget.RecyclerView.Adapter<PickerCurrenciesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_currencies, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_pick_currencies, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

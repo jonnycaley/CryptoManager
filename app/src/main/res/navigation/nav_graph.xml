@@ -17,9 +17,9 @@
         tools:layout="@layout/activity_base" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.jonnycaley.cryptomanager.ui.home.HomeFragment"
+        android:name="com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_portfolio">
         <action
             android:id="@+id/action_homeFragment_to_articleActivity"
             app:destination="@id/articleActivity" />
@@ -51,8 +51,8 @@
     <activity
         android:id="@+id/fiatTransactionActivity"
         android:name="com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionActivity"
-        android:label="activity_update_fiat_transaction"
-        tools:layout="@layout/activity_update_fiat_transaction" />
+        android:label="activity_fiat_transaction"
+        tools:layout="@layout/activity_fiat_transaction" />
     <activity
         android:id="@+id/articleActivity"
         android:name="com.jonnycaley.cryptomanager.ui.article.ArticleActivity"
@@ -61,8 +61,8 @@
     <activity
         android:id="@+id/cryptoTransactionActivity"
         android:name="com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity"
-        android:label="activity_update_crypto_transaction"
-        tools:layout="@layout/activity_update_crypto_transaction" />
+        android:label="activity_crypto_transaction"
+        tools:layout="@layout/activity_crypto_transaction" />
     <fragment
         android:id="@+id/transactionsFragment"
         android:name="com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.TransactionsFragment"

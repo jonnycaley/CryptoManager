@@ -32,8 +32,10 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
 
         var circle = R.drawable.circle_light
 
-        if(Utils.isDarkTheme())
+        if(Utils.isDarkTheme()) {
             circle = R.drawable.circle_dark
+            holder.arrow.setImageResource(R.drawable.next_white)
+        }
 
         Picasso.with(context)
                 .load(baseImageUrl + item?.imageUrl)
@@ -73,5 +75,6 @@ class SearchCurrenciesAdapter(var currencies: List<Datum>?, var baseImageUrl: St
         val name = view.name
         val symbol = view.symbol
         val imageText = view.image_text
+        val arrow = view.arrow
     }
 }

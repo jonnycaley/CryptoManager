@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor"
+    tools:context=".ui.transactions.crypto.CryptoTransactionActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="?attr/backgroundcolor"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:titleTextColor="?attr/textColor"
+            tools:targetApi="lollipop">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="@dimen/margin_base_horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text=""
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/baseline_delete_white_24"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        layout="@layout/content_crypto_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_progress"
+        android:layout_below="@id/app_bar_layout" />
+
+    <RelativeLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical"
+        android:paddingTop="@dimen/margin_base_vertical">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:id="@+id/button_create_buy"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Add transaction"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:background="@drawable/button_checked_green"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium" />
+
+
+        <TextView
+            android:id="@+id/button_create_sell"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Add transaction"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/button_checked_red"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+
+        <TextView
+            android:id="@+id/button_update_buy"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:textAllCaps="true"
+            android:text="Update transaction"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/button_checked_green"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+
+        <TextView
+            android:id="@+id/button_update_sell"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:text="Update transaction"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:background="@drawable/button_checked_red"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

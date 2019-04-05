@@ -142,11 +142,11 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         if(Utils.isDarkTheme())
             imageNoInternet.setImageResource(R.drawable.no_internet_white)
 
-        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
-
-        headerTopNews.typeface = custom_font
-        headerTrendingNews.typeface = custom_font
- 
+//        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+//
+//        headerTopNews.typeface = custom_font
+//        headerTrendingNews.typeface = custom_font
+//
         textRetry.setOnClickListener(this)
         cardStar.setOnLikeListener(this)
         swipeLayout.setOnRefreshListener(this)

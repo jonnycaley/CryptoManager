@@ -20,7 +20,9 @@
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/default_padding_bottom"
             android:text="12th match 2017 via Binance"
-            android:textColor="?attr/textColorSecondary"/>
+            android:textColor="?attr/textColorSecondary"
+            android:textSize="@dimen/text_size_caption"
+            android:fontFamily="sans-serif"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,7 +43,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="Amount"
-                    android:textColor="?attr/textColorSecondary" />
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_caption"
+                    android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/amount"
@@ -51,7 +55,9 @@
                     android:gravity="start"
                     android:maxLines="1"
                     android:text="$100"
-                    android:textColor="?attr/textColor"/>
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif"/>
 
             </RelativeLayout>
 
@@ -67,17 +73,23 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:text="To"
-                    android:textColor="?attr/textColorSecondary" />
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_caption"
+                    android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/to"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/to_text"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="0dp"
+                    android:fontFamily="sans-serif"
                     android:gravity="start"
                     android:maxLines="1"
                     android:text="Binance"
-                    android:textColor="?attr/textColor"/>
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/text_size_body_2" />
 
             </RelativeLayout>
 
@@ -103,7 +115,9 @@
                     android:gravity="start"
                     android:maxLines="1"
                     android:text="USD"
-                    android:textColor="?attr/textColor"/>
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif"/>
 
             </RelativeLayout>
 

@@ -59,8 +59,15 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         holder.title.text = article.title.toString()
         holder.category.text = article.primaryCategory.toString()
         holder.image.alpha = Float.MAX_VALUE
+
+        println(article.title.toString())
+        println(article.publishedAt)
+
         if (article.publishedAt != null)
             holder.date.text = Utils.getTimeFrom(article.publishedAt)
+        else
+            holder.date.text = "Just now"
+
         holder.length.text = Utils.getReadTime(article.words)
 
         if(Utils.isDarkTheme()) {

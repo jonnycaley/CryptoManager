@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.content.Context
 import com.jonnycaley.cryptomanager.data.CryptoCompareService
@@ -14,20 +14,20 @@ import com.pacoworks.rxpaper2.RxPaperBook
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class HomeDataManager private constructor(val UserPreferences: UserPreferences) {
+class PortfolioDataManager private constructor(val UserPreferences: UserPreferences) {
 
     companion object {
 
-        private var INSTANCE: HomeDataManager? = null
+        private var INSTANCE: PortfolioDataManager? = null
 
         private lateinit var context: Context
 
         private val TAG = "PortfolioData"
 
         @JvmStatic
-        fun getInstance(context: Context): HomeDataManager {
+        fun getInstance(context: Context): PortfolioDataManager {
             if (INSTANCE == null) {
-                INSTANCE = HomeDataManager(UserPreferences.getInstance(context))
+                INSTANCE = PortfolioDataManager(UserPreferences.getInstance(context))
                 this.context = context
             }
             return INSTANCE!!

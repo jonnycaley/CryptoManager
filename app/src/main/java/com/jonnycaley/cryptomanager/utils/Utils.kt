@@ -18,6 +18,8 @@ import com.thefinestartist.finestwebview.FinestWebView
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
 import android.os.Vibrator
+import android.widget.TextView
+import android.widget.Toolbar
 
 
 object Utils {
@@ -60,7 +62,7 @@ object Utils {
             articleTime = format.parse(date).time
         } catch (e: ParseException) {
             e.printStackTrace()
-            return ""
+            return "just now"
         }
 
         val currentTime = Date().time

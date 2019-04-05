@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="vertical">
@@ -39,7 +40,8 @@
                     android:maxLines="1"
                     android:text="BTC Buy Price"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_caption"
+                    android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/text_price"
@@ -50,7 +52,8 @@
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif" />
 
             </RelativeLayout>
 
@@ -67,7 +70,8 @@
                     android:maxLines="1"
                     android:text="Trading Pair"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_caption"
+                    android:fontFamily="sans-serif"/>
 
                 <TextView
                     android:id="@+id/text_pair"
@@ -78,7 +82,8 @@
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif" />
 
             </RelativeLayout>
 
@@ -95,7 +100,8 @@
                     android:maxLines="1"
                     android:text="Amount Bought"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_caption"
+                    android:fontFamily="sans-serif" />
 
                 <TextView
                     android:id="@+id/text_amount"
@@ -106,7 +112,8 @@
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/text_size_body_2"
+                    android:fontFamily="sans-serif" />
 
             </RelativeLayout>
 
@@ -137,7 +144,8 @@
                 android:maxLines="1"
                 android:text="Proceeds"
                 android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_caption"
+                android:fontFamily="sans-serif"/>
 
             <TextView
                 android:id="@+id/text_proceeds"
@@ -148,7 +156,8 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="?attr/textColor"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 
@@ -165,7 +174,8 @@
                 android:maxLines="1"
                 android:text="Cost"
                 android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_caption"
+                android:fontFamily="sans-serif" />
 
             <TextView
                 android:id="@+id/text_cost"
@@ -176,7 +186,8 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="?attr/textColor"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 
@@ -193,7 +204,8 @@
                 android:maxLines="1"
                 android:text="Worth"
                 android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_caption"
+                android:fontFamily="sans-serif" />
 
             <TextView
                 android:id="@+id/text_worth"
@@ -204,7 +216,8 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="?attr/textColor"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 
@@ -221,7 +234,8 @@
                 android:maxLines="1"
                 android:text="Change"
                 android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_caption"
+                android:fontFamily="sans-serif" />
 
             <TextView
                 android:id="@+id/text_change"
@@ -231,7 +245,8 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text=""
-                android:textSize="@dimen/small_text_size" />
+                android:textSize="@dimen/text_size_body_2"
+                android:fontFamily="sans-serif" />
 
         </RelativeLayout>
 

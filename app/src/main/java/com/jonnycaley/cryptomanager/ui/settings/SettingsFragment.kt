@@ -130,8 +130,8 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
 //      "Version $versionName"
 
         val settingsListGeneral: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_select_base_currency)))
-        val settingsListData: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_saved_articles), resources.getString(R.string.settings_delete_all_articles), resources.getString(R.string.settings_delete_portfolio), resources.getString(R.string.settings_transaction_history)))
-        val settingsListAbout: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_send_feedback), resources.getString(R.string.settings_share_app), resources.getString(R.string.settings_review_app), resources.getString(R.string.settings_version)))
+        val settingsListData: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_saved_articles), resources.getString(R.string.settings_transaction_history), resources.getString(R.string.settings_delete_all_articles), resources.getString(R.string.settings_delete_portfolio)))
+        val settingsListAbout: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_review_app), resources.getString(R.string.settings_share_app), resources.getString(R.string.settings_send_feedback) , resources.getString(R.string.settings_version)))
 
         //settings are loaded here and not in the onViewCreated as the presenter needs to be initialised first
         val mLayoutManagerAbout = androidx.recyclerview.widget.LinearLayoutManager(context)

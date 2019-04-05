@@ -24,10 +24,6 @@
             tools:targetApi="lollipop"
             android:background="?attr/backgroundcolor" >
 
-            <include
-                layout="@layout/layout_searchbar"
-                android:id="@+id/layout_searchbar" />
-
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -35,12 +31,14 @@
     <include layout="@layout/layout_progress"
         android:id="@+id/progress_bar_layout" />
 
-    <include layout="@layout/item_border" />
+    <include
+        layout="@layout/layout_searchbar"
+        android:id="@+id/layout_searchbar"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"/>
 
 </LinearLayout>

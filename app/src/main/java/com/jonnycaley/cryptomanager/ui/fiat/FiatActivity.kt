@@ -43,10 +43,6 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat)
 
-        if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-        }
-
         buttonAddTransaction.setOnClickListener(this)
 
         setupToolbar()
@@ -98,11 +94,17 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
         return args.fiat
     }
 
+    val title : TextView by lazy { findViewById<TextView>(R.id.title) }
+    val toolbar : Toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
+
     private fun setupToolbar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+
+        if(!Utils.isDarkTheme()) {
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+        }
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = args.fiat
+        title.text = args.fiat
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

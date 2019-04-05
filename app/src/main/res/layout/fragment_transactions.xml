@@ -35,7 +35,9 @@
                 android:layout_marginTop="@dimen/margin_base_vertical"
                 android:layout_marginBottom="@dimen/margin_base_vertical"
                 android:background="@drawable/border_primary"
-                android:textColor="?attr/colorPrimary" />
+                android:textColor="?attr/colorPrimary"
+                android:textSize="@dimen/text_size_button"
+                android:fontFamily="sans-serif-medium" />
 
             <include
                 layout="@layout/layout_border"

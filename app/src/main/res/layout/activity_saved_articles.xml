@@ -41,9 +41,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="No saved articles"
-            android:textSize="@dimen/extra_large_text_size"
             android:gravity="center"
-            android:textColor="?attr/textColorSecondary"/>
+            android:textColor="?attr/textColorSecondary"
+            android:textSize="@dimen/text_size_headline_4"
+            android:fontFamily="sans-serif"/>
 
     </RelativeLayout>
 

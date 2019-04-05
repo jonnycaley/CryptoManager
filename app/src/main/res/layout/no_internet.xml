@@ -16,7 +16,7 @@
             android:id="@+id/image_no_internet"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/no_internet_black" />
 
         <TextView
@@ -25,7 +25,8 @@
             android:text="No internet available"
             android:textColor="?attr/textColor"
             android:layout_marginBottom="20dp"
-            android:textSize="25dp"/>
+            android:textSize="@dimen/text_size_headline_5"
+            android:fontFamily="sans-serif"/>
 
         <TextView
             android:id="@+id/text_try_again"

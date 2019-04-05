@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
 
     <include
         android:id="@+id/layout_no_internet"
@@ -53,9 +54,9 @@
                     android:paddingEnd="@dimen/margin_base_horizontal"
                     android:text="Global data"
                     android:visibility="visible"
-                    android:textStyle="bold"
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/large_text_size"/>
+                    android:textSize="@dimen/text_size_subtitle_1"
+                    android:fontFamily="sans-serif-black"/>
 
 
                 <include
@@ -84,7 +85,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Market Cap"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_body_2"
+                            android:fontFamily="sans-serif"/>
 
                         <TextView
                             android:id="@+id/text_market_cap"
@@ -92,7 +95,8 @@
                             android:layout_height="wrap_content"
                             android:text="$120.65 B"
                             android:textColor="?attr/textColor"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/text_size_body_2"
+                            android:fontFamily="sans-serif"/>
 
                         <TextView
                             android:id="@+id/text_market_cap_percentage"
@@ -116,7 +120,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="24h Volume"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_body_2"
+                            android:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/text_volume"
@@ -124,7 +130,8 @@
                             android:layout_height="wrap_content"
                             android:text="$20.65 B"
                             android:textColor="?attr/textColor"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/text_size_body_2"
+                            android:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/text_volume_percentage"
@@ -149,7 +156,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="BTC Dominance"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_subtitle_2"
+                            android:fontFamily="sans-serif-medium" />
 
                         <TextView
                             android:id="@+id/text_btc_dominance"
@@ -157,7 +166,8 @@
                             android:layout_height="wrap_content"
                             android:text="53.21%"
                             android:textColor="?attr/textColor"
-                            android:textStyle="bold" />
+                            android:textSize="@dimen/text_size_body_2"
+                            android:fontFamily="sans-serif"/>
 
                         <TextView
                             android:id="@+id/text_btc_dominance_percentage"
@@ -198,10 +208,10 @@
                     android:paddingEnd="@dimen/margin_base_horizontal"
                     android:text="All cryptocurrencies"
                     android:visibility="visible"
-                    android:textStyle="bold"
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/large_text_size"
-                    android:background="?attr/backgroundcolor"/>
+                    android:background="?attr/backgroundcolor"
+                    android:textSize="@dimen/text_size_subtitle_1"
+                    android:fontFamily="sans-serif-black"/>
 
 
                 <include
@@ -262,7 +272,8 @@
                         android:gravity="center"
                         android:text="1H"
                         android:textColor="?attr/textColor"
-                        android:textStyle="bold" />
+                        android:fontFamily="sans-serif-medium"
+                        android:textSize="@dimen/text_size_button" />
 
                     <TextView
                         android:id="@+id/text_1D"
@@ -271,6 +282,8 @@
                         android:layout_weight="12"
                         android:gravity="center"
                         android:text="1D"
+                        android:textSize="@dimen/text_size_button"
+                        android:fontFamily="sans-serif-medium"
                         android:textColor="?attr/textColorSecondary" />
 
                     <TextView
@@ -280,6 +293,8 @@
                         android:layout_weight="12"
                         android:gravity="center"
                         android:text="1W"
+                        android:textSize="@dimen/text_size_button"
+                        android:fontFamily="sans-serif-medium"
                         android:textColor="?attr/textColorSecondary" />
 
 
@@ -324,7 +339,10 @@
                             android:paddingTop="@dimen/margin_base_vertical"
                             android:paddingBottom="@dimen/margin_base_vertical"
                             android:text="#▼"
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColor"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/text_size_overline"
+                            android:fontFamily="sans-serif-medium" />
 
 
                         <TextView
@@ -335,6 +353,9 @@
                             android:paddingBottom="@dimen/margin_base_vertical"
                             android:layout_weight="45"
                             android:text="Name"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/text_size_overline"
+                            android:fontFamily="sans-serif-medium"
                             android:textColor="?attr/textColorSecondary" />
 
                         <TextView
@@ -344,6 +365,7 @@
                             android:layout_toRightOf="@id/name"
                             android:text=" (Symbol)"
                             android:textColor="@color/light_grey"
+                            android:fontFamily="sans-serif-medium"
                             android:visibility="gone" />
 
                         <TextView
@@ -355,6 +377,9 @@
                             android:paddingTop="@dimen/margin_base_vertical"
                             android:paddingBottom="@dimen/margin_base_vertical"
                             android:gravity="end"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/text_size_overline"
+                            android:fontFamily="sans-serif-medium"
                             android:text="Price"
                             android:textColor="?attr/textColorSecondary" />
 
@@ -367,8 +392,11 @@
                             android:maxLines="1"
                             android:text="Change"
                             android:paddingTop="@dimen/margin_base_vertical"
+                            android:textAllCaps="true"
+                            android:textSize="@dimen/text_size_overline"
                             android:paddingBottom="@dimen/margin_base_vertical"
                             android:textAlignment="textEnd"
+                            android:fontFamily="sans-serif-medium"
                             android:textColor="?attr/textColorSecondary" />
 
                     </LinearLayout>
@@ -377,38 +405,6 @@
                         layout="@layout/layout_border"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
-
-                    <RelativeLayout
-                        android:id="@+id/layout_functions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/small_margin"
-                        android:layout_marginBottom="@dimen/small_margin"
-                        android:visibility="gone">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="Top 100"
-                            android:textColor="?attr/textColor" />
-
-                        <TextView
-                            android:id="@+id/text_markets"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_toStartOf="@id/text_gain"
-                            android:text="USD" />
-
-                        <TextView
-                            android:id="@+id/text_gain"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentEnd="true"
-                            android:text="Change" />
-
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"

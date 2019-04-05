@@ -28,8 +28,7 @@
 
     <include layout="@layout/no_transactions"
         android:id="@+id/layout_no_transactions"
-        android:visibility="gone"/>
-
+        android:visibility="visible"/>
 
     <include
         layout="@layout/item_border"

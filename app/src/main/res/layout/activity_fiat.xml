@@ -15,14 +15,8 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="?attr/textColor"
-            tools:targetApi="lollipop"
-            android:background="?attr/backgroundcolor" />
+        <include
+            layout="@layout/toolbar_title"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,7 +43,9 @@
                     android:paddingTop="@dimen/default_padding_top"
                     android:paddingBottom="@dimen/default_padding_bottom"
                     android:text="Available:"
-                    android:textColor="?attr/textColor" />
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/text_size_body_1"
+                    android:fontFamily="sans-serif" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,7 +68,9 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Total Deposited"
-                            android:textColor="?attr/textColorSecondary" />
+                            android:textColor="?attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_body_1"
+                            android:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/text_total_deposited"
@@ -81,7 +79,9 @@
                             android:layout_below="@id/total_deposited"
                             android:gravity="center"
                             android:text=""
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColor"
+                            android:textSize="@dimen/text_size_body_1"
+                            android:fontFamily="sans-serif"/>
 
 
                     </RelativeLayout>
@@ -99,7 +99,9 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="Total Withdrawn"
-                            android:textColor="?attr/textColorSecondary" />
+                            android:textColor="?attr/textColorSecondary"
+                            android:textSize="@dimen/text_size_body_1"
+                            android:fontFamily="sans-serif" />
 
                         <TextView
                             android:id="@+id/text_total_withdrawn"
@@ -108,7 +110,9 @@
                             android:layout_below="@id/total_withdrawn"
                             android:gravity="center"
                             android:text=""
-                            android:textColor="?attr/textColor" />
+                            android:textColor="?attr/textColor"
+                            android:textSize="@dimen/text_size_body_1"
+                            android:fontFamily="sans-serif" />
 
                     </RelativeLayout>
 
@@ -125,7 +129,9 @@
             android:layout_marginBottom="@dimen/margin_base_vertical"
             android:background="@drawable/border_primary"
             android:text="Add Transaction"
-            android:textColor="?attr/colorPrimary"  />
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_size_button"
+            android:fontFamily="sans-serif-medium" />
 
         <include
             layout="@layout/item_border"

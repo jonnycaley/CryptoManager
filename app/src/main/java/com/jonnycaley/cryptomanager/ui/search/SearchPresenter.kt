@@ -2,7 +2,7 @@ package com.jonnycaley.cryptomanager.ui.search
 
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
-import com.jonnycaley.cryptomanager.ui.home.HomeFragment
+import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,10 +26,10 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
         }
 
         when (view.getSearchType()) {
-            HomeFragment.CURRENCY_STRING -> {
+            PortfolioFragment.CURRENCY_STRING -> {
                 getAllCurrencies()
             }
-            HomeFragment.FIAT_STRING -> {
+            PortfolioFragment.FIAT_STRING -> {
                 getAllFiats()
             }
         }
@@ -72,7 +72,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
-                        view.showCurrencies(allCurrencies?.data, allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl)
+                        view.showCurrencies(allCurrencies?.data?.subList(0,100), allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl)
                         view.showSearchBar()
                         view.hideProgressLayout()
                     }

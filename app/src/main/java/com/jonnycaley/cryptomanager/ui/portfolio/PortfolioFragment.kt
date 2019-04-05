@@ -1,14 +1,10 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,11 +21,11 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
 
-class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.OnClickListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, TabInterface {
+class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.View, View.OnClickListener, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, TabInterface {
 
     lateinit var mView: View
 
-    private lateinit var presenter: HomeContract.Presenter
+    private lateinit var presenter: PortfolioContract.Presenter
 
     lateinit var holdingsAdapter: HoldingsAdapter
 
@@ -70,12 +66,12 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
     var isColdStartup = true
 
-    override fun setPresenter(presenter: HomeContract.Presenter) {
+    override fun setPresenter(presenter: PortfolioContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mView = inflater.inflate(R.layout.fragment_home, container, false)
+        mView = inflater.inflate(R.layout.fragment_portfolio, container, false)
         return mView
     }
 
@@ -109,7 +105,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
         setUpPortfolioTimeChoices()
 
-        presenter = HomePresenter(HomeDataManager.getInstance(context!!), this)
+        presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
 
@@ -240,19 +236,19 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
                 setTextColorPrimary(textSortName)
             }
             SORT_HOLDINGS_ASCENDING -> {
-                textSortHoldings.text = "Holdings▲"
+                textSortHoldings.text = "▲Holdings"
                 setTextColorPrimary(textSortHoldings)
             }
             SORT_HOLDINGS_DESCENDING -> {
-                textSortHoldings.text = "Holdings▼"
+                textSortHoldings.text = "▼Holdings"
                 setTextColorPrimary(textSortHoldings)
             }
             SORT_CHANGE_ASCENDING -> {
-                textSortChange.text = "Price▲"
+                textSortChange.text = "▲Price"
                 setTextColorPrimary(textSortChange)
             }
             SORT_CHANGE_DESCENDING -> {
-                textSortChange.text = "Price▼"
+                textSortChange.text = "▼Price"
                 setTextColorPrimary(textSortChange)
             }
         }
@@ -272,8 +268,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
     override fun onResume() {
         super.onResume()
-        //TODO: UNCOMMENT BELOW
-//        presenter.getTransactions(chosenPeriod)
+        presenter.getTransactions(chosenPeriod)
     }
 
     override fun showError() {
@@ -301,6 +296,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
     override fun stopRefreshing() {
         progressBarHorizontal.visibility = View.GONE
+        swipeLayout.isRefreshing = false
 //        swipeLayout.isRefreshing = false
     }
 
@@ -515,7 +511,7 @@ class HomeFragment : androidx.fragment.app.Fragment(), HomeContract.View, View.O
 
     companion object {
 
-        val TAG = "HomeFragment"
+        val TAG = "PortfolioFragment"
 
         val FIAT_STRING = "FIAT"
         val CURRENCY_STRING = "CURRENCY"

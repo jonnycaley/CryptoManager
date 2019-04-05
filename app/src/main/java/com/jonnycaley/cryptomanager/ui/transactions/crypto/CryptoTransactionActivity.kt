@@ -27,7 +27,7 @@ import com.rengwuxian.materialedittext.MaterialEditText
 import com.squareup.picasso.Picasso
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog
-import kotlinx.android.synthetic.main.activity_update_crypto_transaction.*
+import kotlinx.android.synthetic.main.activity_crypto_transaction.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -41,13 +41,16 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     val buttonDelete by lazy { findViewById<ImageView>(R.id.button_delete) }
 
+    val arrowExchange by lazy { findViewById<ImageView>(R.id.arrow_exchange) }
+    val arrowTradingPair by lazy { findViewById<ImageView>(R.id.arrow_trading_pair) }
+
     val layoutSell by lazy { findViewById<LinearLayout>(R.id.layout_sell_checked) }
     val layoutBuy by lazy { findViewById<LinearLayout>(R.id.layout_buy_checked) }
 
-    val progressButtonCreateBuy by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_buy) }
-    val progressButtonCreateSell by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_create_sell) }
-    val progressButtonUpdateBuy by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_buy) }
-    val progressButtonUpdateSell by lazy { findViewById<com.ekalips.fancybuttonproj.FancyButton>(R.id.progress_button_update_sell) }
+    val buttonCreateBuy by lazy { findViewById<TextView>(R.id.button_create_buy) }
+    val buttonCreateSell by lazy { findViewById<TextView>(R.id.button_create_sell) }
+    val buttonUpdateBuy by lazy { findViewById<TextView>(R.id.button_update_buy) }
+    val buttonUpdateSell by lazy { findViewById<TextView>(R.id.button_update_sell) }
 
     val textviewBuy by lazy { findViewById<TextView>(R.id.text_view_buy) }
     val textviewSell by lazy { findViewById<TextView>(R.id.text_view_sell) }
@@ -84,6 +87,9 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
 //    val textSubmit by lazy { findViewById<TextView>(R.id.text_view_update) }
 
+    val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
+    val title by lazy { findViewById<TextView>(R.id.title) }
+
     var transactionDate = Calendar.getInstance().time
 
     var isUpdateTransaction = false
@@ -97,17 +103,19 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         }
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_update_crypto_transaction)
+        setContentView(R.layout.activity_crypto_transaction)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
+            arrowExchange.setImageResource(R.drawable.next_white)
+            arrowTradingPair.setImageResource(R.drawable.next_white)
         }
 
-        progressButtonCreateBuy.visibility = View.GONE
-        progressButtonCreateSell.visibility = View.GONE
-        progressButtonUpdateBuy.visibility = View.GONE
-        progressButtonUpdateSell.visibility = View.GONE
+        buttonCreateBuy.visibility = View.GONE
+        buttonCreateSell.visibility = View.GONE
+        buttonUpdateBuy.visibility = View.GONE
+        buttonUpdateSell.visibility = View.GONE
 
         args.transaction?.let { transaction ->
 
@@ -229,10 +237,10 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         textSellAll.setOnClickListener(this)
         buttonDelete.setOnClickListener(this)
 
-        progressButtonCreateBuy.setOnClickListener(this)
-        progressButtonCreateSell.setOnClickListener(this)
-        progressButtonUpdateBuy.setOnClickListener(this)
-        progressButtonUpdateSell.setOnClickListener(this)
+        buttonCreateBuy.setOnClickListener(this)
+        buttonCreateSell.setOnClickListener(this)
+        buttonUpdateBuy.setOnClickListener(this)
+        buttonUpdateSell.setOnClickListener(this)
     }
 
     private fun setupToolbarUpdate(transaction: Transaction) {
@@ -240,14 +248,14 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        toolbar_title.text = "Edit ${transaction.name} Transaction"
+        title.text = "Edit ${transaction.name} Transaction"
     }
 
     private fun setupToolbarCreate(transaction: NotTransaction) {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar_title.text = "${transaction.currency.coinName} - ${transaction.currency.symbol}"
+        title.text = "${transaction.currency.coinName} - ${transaction.currency.symbol}"
     }
 
     private fun setupUpdate(transaction: Transaction) {
@@ -360,83 +368,83 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
                 textSellAll.id -> {
                     presenter.getAllHoldings(getSymbol())
                 }
-                progressButtonCreateBuy.id -> {
+                buttonCreateBuy.id -> {
                     startProcess(true)
                 }
-                progressButtonCreateSell.id -> {
+                buttonCreateSell.id -> {
                     startProcess(false)
                 }
-                progressButtonUpdateBuy.id -> {
+                buttonUpdateBuy.id -> {
                     startProcess(true)
                 }
-                progressButtonUpdateSell.id -> {
+                buttonUpdateSell.id -> {
                     startProcess(false)
                 }
             }
     }
 
     private fun hideCreateBuy() {
-        progressButtonCreateBuy.visibility = View.GONE
+        buttonCreateBuy.visibility = View.GONE
     }
 
     private fun showCreateSell() {
-        progressButtonCreateSell.visibility = View.VISIBLE
+        buttonCreateSell.visibility = View.VISIBLE
     }
 
     private fun hideUpdateBuy() {
-        progressButtonUpdateBuy.visibility = View.GONE
+        buttonUpdateBuy.visibility = View.GONE
     }
 
     private fun showUpdateSell() {
-        progressButtonUpdateSell.visibility = View.VISIBLE
+        buttonUpdateSell.visibility = View.VISIBLE
     }
 
     private fun hideCreateSell() {
-        progressButtonCreateSell.visibility = View.GONE
+        buttonCreateSell.visibility = View.GONE
     }
 
     private fun showCreateBuy() {
-        progressButtonCreateBuy.visibility = View.VISIBLE
+        buttonCreateBuy.visibility = View.VISIBLE
     }
 
     private fun hideUpdateSell() {
-        progressButtonUpdateSell.visibility = View.GONE
+        buttonUpdateSell.visibility = View.GONE
     }
 
     private fun showUpdateBuy() {
-        progressButtonUpdateBuy.visibility = View.VISIBLE
+        buttonUpdateBuy.visibility = View.VISIBLE
     }
 
     override fun startUpdateBuyProgress() {
-        progressButtonUpdateBuy.collapse()
+        buttonUpdateBuy.visibility = View.GONE
     }
 
     override fun startUpdateSellProgress() {
-        progressButtonUpdateSell.collapse()
+        buttonUpdateSell.visibility = View.GONE
     }
 
     override fun stopUpdateBuyProgress() {
-        progressButtonUpdateBuy.expand()
+        buttonCreateBuy.visibility = View.VISIBLE
     }
 
     override fun stopUpdateSellProgress() {
-        progressButtonUpdateSell.expand()
+        buttonCreateBuy.visibility = View.VISIBLE
     }
 
     override fun startCreateBuyProgress() {
-        progressButtonCreateBuy.collapse()
+        buttonCreateBuy.visibility = View.GONE
     }
 
     override fun startCreateSellProgress() {
-        progressButtonCreateSell.collapse()
+        buttonCreateSell.visibility = View.GONE
     }
 
     override fun stopCreateBuyProgress() {
-        progressButtonCreateBuy.expand()
+        buttonCreateBuy.visibility = View.VISIBLE
     }
 
     override fun stopCreateSellProgress() {
-        progressButtonCreateSell.expand()
+        buttonCreateBuy.visibility = View.VISIBLE
     }
 
     private fun startProcess(bool : Boolean) {

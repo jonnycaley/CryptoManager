@@ -33,6 +33,9 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
 
         var descriptionStart = ""
 
+        if(Utils.isDarkTheme())
+            holder.arrow.setImageResource(R.drawable.next_white)
+
         if(transaction.pairSymbol == null) {
             holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked)
             if(transaction.quantity > 0.toBigDecimal())
@@ -74,6 +77,7 @@ class TransactionsAdapter(val transactions: List<Transaction>?, val context: Con
         val pair = view.pair
         val description = view.description
         val type = view.view_transaction_type
+        val arrow = view.arrow
 
     }
 }

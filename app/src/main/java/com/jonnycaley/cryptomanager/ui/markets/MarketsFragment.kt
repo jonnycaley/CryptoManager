@@ -86,10 +86,10 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
 
         swipeRefreshLayout.setOnRefreshListener(this)
 
-        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+//        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
 
-        headerAllCurrencies.typeface = custom_font
-        headerGlobalData.typeface = custom_font
+//        headerAllCurrencies.typeface = custom_font
+//        headerGlobalData.typeface = custom_font
 
         textTryAgain.setOnClickListener(this)
         rank.setOnClickListener(this)
@@ -229,22 +229,22 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         when (filter) {
             FILTER_RANK_DOWN -> {
                 setTextColorPrimary(rank)
-                rank.setTypeface(rank.typeface, Typeface.BOLD)
+//                rank.setTypeface(rank.typeface, Typeface.BOLD)
                 rank.text = "#▼"
             }
             FILTER_RANK_UP -> {
                 setTextColorPrimary(rank)
-                rank.setTypeface(rank.typeface, Typeface.BOLD)
+//                rank.setTypeface(rank.typeface, Typeface.BOLD)
                 rank.text = "#▲"
             }
             FILTER_NAME_DOWN -> {
                 setTextColorPrimary(name)
-                name.setTypeface(name.typeface, Typeface.BOLD)
+//                name.setTypeface(name.typeface, Typeface.BOLD)
                 name.text = "Name▼"
             }
             FILTER_NAME_UP -> {
                 setTextColorPrimary(name)
-                name.setTypeface(name.typeface, Typeface.BOLD)
+//                name.setTypeface(name.typeface, Typeface.BOLD)
                 name.text = "Name▲"
             }
             FILTER_PRICE_DOWN -> {

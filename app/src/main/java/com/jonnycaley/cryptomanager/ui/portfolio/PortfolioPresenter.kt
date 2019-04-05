@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.home
+package com.jonnycaley.cryptomanager.ui.portfolio
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -12,7 +12,6 @@ import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.data.model.DataBase.Variables
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.utils.Constants
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -28,11 +27,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.View) : HomeContract.Presenter {
+class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: PortfolioContract.View) : PortfolioContract.Presenter {
 
     var compositeDisposable: CompositeDisposable? = null
 
-    val TAG = "HomePresenter"
+    val TAG = "PortfolioPresenter"
 
     var holdings: ArrayList<Holding> = ArrayList()
     var prices: ArrayList<Price> = ArrayList()
@@ -87,19 +86,25 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
     override fun getTransactions(timePeriod: String) {
 
-        println("getting transactions")
-
-        dataManager.getTransactions()
+        dataManager.readBaseFiat()
+                .map { response ->
+                    baseFiat = response
+                }
+                .flatMap { dataManager.getTransactions() }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ArrayList<Transaction>> {
 
                     override fun onSuccess(transactions: ArrayList<Transaction>) {
                         if (transactions.isEmpty()) {
+                            resetPortfolio()
                             view.showNoHoldingsLayout()
                             view.hideRefreshing()
                             view.hideInternetRequiredLayout()
                             view.hideProgressLayout()
+                            view.showBalance(baseFiat, 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal())
+                            view.showChange(baseFiat, 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal())
+                            view.showHoldings(ArrayList(), ArrayList(), baseFiat, ArrayList() )
                         } else {
                             getHistoricalBtcEthPrices(combineTransactions(transactions), transactions, timePeriod)
                         }
@@ -118,6 +123,17 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
                 })
     }
 
+    private fun resetPortfolio() {
+        balanceUsd = 0.toBigDecimal()
+        balanceBtc = 0.toBigDecimal()
+        balanceEth = 0.toBigDecimal()
+        changeUsd = 0.toBigDecimal()
+        changeBtc = 0.toBigDecimal()
+        changeEth = 0.toBigDecimal()
+        holdings.clear()
+        prices.clear()
+    }
+
     var priceBtcHistorical = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
     var priceEthHistorical = Price() //TODO: DO WE NEED TO DO THESE OR CAN WE SAVE THEM TO THE ACTIVITY LIKE WE DO AT THE END AND THEN REFERNENCE THEM THEN?
 
@@ -129,17 +145,17 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             var aggregateStr = ""
 
             when (timePeriod) {
-                HomeFragment.TIME_PERIOD_1H -> {
-                    timePeriodStr = HomeFragment.TIME_PERIOD_MINUTE; aggregateStr = HomeFragment.AGGREGATE_1H
+                PortfolioFragment.TIME_PERIOD_1H -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_MINUTE; aggregateStr = PortfolioFragment.AGGREGATE_1H
                 }
-                HomeFragment.TIME_PERIOD_1D -> {
-                    timePeriodStr = HomeFragment.TIME_PERIOD_HOUR; aggregateStr = HomeFragment.AGGREGATE_1D
+                PortfolioFragment.TIME_PERIOD_1D -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1D
                 }
-                HomeFragment.TIME_PERIOD_1W -> {
-                    timePeriodStr = HomeFragment.TIME_PERIOD_HOUR; aggregateStr = HomeFragment.AGGREGATE_1W
+                PortfolioFragment.TIME_PERIOD_1W -> {
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1W
                 }
                 else -> {
-                    timePeriodStr = HomeFragment.TIME_PERIOD_DAY; aggregateStr = HomeFragment.AGGREGATE_1M
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_DAY; aggregateStr = PortfolioFragment.AGGREGATE_1M
                 }
             }
 
@@ -210,7 +226,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 //
 ////                            transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
 ////                                    .forEach { transaction ->
-////                                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+////                                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 ////                                            Log.i(TAG, "quantity: ${transaction.quantity}, price: ${transaction.price}, isDeductedPriceUsd: ${transaction.isDeductedPriceUsd}, btcPrice: ${btcResponse.data?.get(0)?.close!!}, ")
 ////                                            newHoldingCostBtc += ((transaction.quantity * transaction.priceUSD) / btcResponse.data?.get(0)?.close!!)
 ////
@@ -227,7 +243,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 ////
 ////                            transactions.filter { (it.pairSymbol?.toUpperCase() == holding.symbol.toUpperCase()) && it.isDeducted }
 ////                                    .forEach { transaction ->
-////                                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+////                                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 ////                                            Log.i(TAG, "Secondary symbol ${transaction.pairSymbol}")
 ////                                            newHoldingCostBtc -= ((transaction.price * transaction.quantity * transaction.isDeductedPriceUsd) / (btcResponse.data?.get(0)?.close!!))
 ////                                            Log.i(TAG, "Bought before date -> get priceBtc at time as valid")
@@ -269,7 +285,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 ////
 ////                            transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
 ////                                    .forEach { transaction ->
-////                                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+////                                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 ////                                            newHoldingCostEth += ((transaction.quantity * transaction.price * transaction.isDeductedPriceUsd) / (ethResponse.data?.get(0)?.close!!))
 //////                                            Log.i(TAG, "Get price from before")
 //////                                            Log.i(TAG, transaction.priceUSD * transaction.quantity)
@@ -285,7 +301,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 ////
 ////                            transactions.filter { (it.pairSymbol?.toUpperCase() == holding.symbol.toUpperCase()) && it.isDeducted }
 ////                                    .forEach { transaction ->
-////                                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+////                                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 ////                                            newHoldingCostEth -= (transaction.price * transaction.quantity * transaction.isDeductedPriceUsd / (ethResponse.data?.get(0)?.close!!))
 //////                                            Log.i(TAG, "Get price from before")
 //////                                            print("price: " + transaction.price)
@@ -388,7 +404,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                     transactions.filter { it.symbol.toUpperCase() == cryptoSymbol?.toUpperCase() }
                             .forEach { transaction ->
-                                if (transaction.date < getDate(timePeriod) && (timePeriod != HomeFragment.TIME_PERIOD_ALL)) {
+                                if (transaction.date < getDate(timePeriod) && (timePeriod != PortfolioFragment.TIME_PERIOD_ALL)) {
                                     if (gson.uSD != null) //for fiat prices like usd/usd returns error with empty data
                                         newHoldingCost += (transaction.quantity * (gson.uSD
                                                 ?: 0.toBigDecimal()))
@@ -401,7 +417,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
                     transactions.filter { it.pairSymbol?.toUpperCase() == cryptoSymbol?.toUpperCase() && it.isDeducted }
                             .forEach { transaction ->
-                                if (transaction.date < getDate(timePeriod) && (timePeriod != HomeFragment.TIME_PERIOD_ALL)) {
+                                if (transaction.date < getDate(timePeriod) && (timePeriod != PortfolioFragment.TIME_PERIOD_ALL)) {
                                     if (gson.uSD != null) //for fiat prices like usd/usd returns error with empty data
                                         newHoldingCost -= (transaction.price * transaction.quantity * (gson.uSD
                                                 ?: 0.toBigDecimal()))
@@ -467,7 +483,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
 
             transactions.filter { it.symbol.toUpperCase() == holding.symbol.toUpperCase() }
                     .forEach { transaction ->
-                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 
                             var price = 1.toBigDecimal()
 
@@ -495,7 +511,7 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
             transactions.filter { (it.pairSymbol?.toUpperCase() == holding.symbol.toUpperCase()) && it.isDeducted }
                     .forEach { transaction ->
 
-                        if (transaction.date < getDate(timePeriod) && timePeriod != HomeFragment.TIME_PERIOD_ALL) {
+                        if (transaction.date < getDate(timePeriod) && timePeriod != PortfolioFragment.TIME_PERIOD_ALL) {
 
                             var price = 1.toBigDecimal()
 
@@ -647,16 +663,16 @@ class HomePresenter(var dataManager: HomeDataManager, var view: HomeContract.Vie
         val cal = Calendar.getInstance()
 
         when (timePeriod) {
-            HomeFragment.TIME_PERIOD_1H -> {
+            PortfolioFragment.TIME_PERIOD_1H -> {
                 cal.add(Calendar.HOUR, -1)
             }
-            HomeFragment.TIME_PERIOD_1D -> {
+            PortfolioFragment.TIME_PERIOD_1D -> {
                 cal.add(Calendar.DAY_OF_YEAR, -1)
             }
-            HomeFragment.TIME_PERIOD_1W -> {
+            PortfolioFragment.TIME_PERIOD_1W -> {
                 cal.add(Calendar.DAY_OF_YEAR, -7)
             }
-            HomeFragment.TIME_PERIOD_1M -> {
+            PortfolioFragment.TIME_PERIOD_1M -> {
                 cal.add(Calendar.DAY_OF_YEAR, -30)
             }
         }

@@ -5,27 +5,31 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="@dimen/margin_base_horizontal"
         android:paddingTop="@dimen/margin_base_vertical"
         android:paddingEnd="@dimen/margin_base_horizontal"
-        android:paddingBottom="@dimen/margin_base_vertical">
+        android:paddingBottom="@dimen/margin_base_vertical"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical">
 
         <View
             android:id="@+id/view_transaction_type"
             android:layout_width="5dp"
-            android:layout_height="match_parent"
+            android:layout_height="55dp"
             android:background="@drawable/button_checked"
-            android:layout_marginEnd="@dimen/margin_base_horizontal"/>
+            android:layout_marginEnd="@dimen/margin_base_horizontal"
+            android:layout_centerVertical="true"/>
 
         <LinearLayout
             android:id="@+id/layout_info"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_toEndOf="@id/view_transaction_type">
 
             <TextView
                 android:id="@+id/date"
@@ -42,7 +46,8 @@
                 android:layout_marginTop="@dimen/margin_item_vertical"
                 android:layout_marginBottom="@dimen/margin_item_vertical"
                 android:textColor="?attr/textColor"
-                android:text="BGN - AdiosMarket"/>
+                android:text="BGN - AdiosMarket"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/description"
@@ -54,7 +59,16 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/next_black"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
 
     <include
         layout="@layout/item_border"

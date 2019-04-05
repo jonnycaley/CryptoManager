@@ -88,11 +88,12 @@
                                     android:id="@+id/card_title"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text=""
+                                    android:text="The are loads of words in the titel here omf whe"
                                     android:maxLines="2"
                                     android:ellipsize="end"
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/large_text_size"
+                                    android:textSize="@dimen/text_size_subtitle_1"
+                                    android:fontFamily="sans-serif"
                                     android:textStyle="bold" />
 
                                 <TextView
@@ -104,7 +105,8 @@
                                     android:maxLines="3"
                                     android:text=""
                                     android:textColor="@color/white"
-                                    android:textSize="@dimen/medium_text_size"
+                                    android:textSize="@dimen/text_size_subtitle_2"
+                                    android:fontFamily="sans-serif"
                                     android:visibility="gone"/>
 
                                 <TextView
@@ -115,7 +117,8 @@
                                     android:layout_marginTop="6dp"
                                     android:layout_marginBottom="3dp"
                                     android:text=""
-                                    android:textSize="@dimen/small_text_size"
+                                    android:textSize="@dimen/text_size_caption"
+                                    android:fontFamily="sans-serif"
                                     android:textColor="@color/white" />
 
                                 <TextView
@@ -127,7 +130,8 @@
                                     android:layout_marginBottom="3dp"
                                     android:layout_toEndOf="@id/card_length"
                                     android:text=""
-                                    android:textSize="@dimen/small_text_size"
+                                    android:textSize="@dimen/text_size_caption"
+                                    android:fontFamily="sans-serif"
                                     android:textColor="@color/white" />
 
                                 <com.like.LikeButton
@@ -180,9 +184,9 @@
                         android:paddingEnd="@dimen/margin_base_horizontal"
                         android:text="Top currencies"
                         android:visibility="visible"
-                        android:textStyle="bold"
                         android:textColor="?attr/textColor"
-                        android:textSize="@dimen/large_text_size"
+                        android:textSize="@dimen/text_size_subtitle_1"
+                        android:fontFamily="sans-serif-black"
                         android:background="?attr/backgroundcolor"/>
 
                     <include
@@ -207,8 +211,7 @@
                             android:orientation="horizontal"
                             android:weightSum="4">
 
-                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                            <RelativeLayout
                                 android:id="@+id/card_1"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -217,8 +220,7 @@
                                 android:layout_weight="1"
                                 android:orientation="horizontal">
 
-                                <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                <androidx.cardview.widget.CardView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_margin="1dp"
@@ -243,7 +245,7 @@
                                             android:maxLines="1"
                                             android:text=""
                                             android:textColor="?attr/textColor"
-                                            android:textSize="@dimen/small_text_size"
+                                            android:textSize="@dimen/text_size_caption"
                                             android:textStyle="bold" />
 
                                         <LinearLayout
@@ -256,7 +258,7 @@
                                                 android:id="@+id/card_1_movement"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="match_parent"
-                                                android:text="" />
+                                                android:text=""/>
 
                                             <TextView
                                                 android:id="@+id/card_1_percentage"
@@ -266,7 +268,7 @@
                                                 android:gravity="center"
                                                 android:maxLines="1"
                                                 android:text=""
-                                                android:textAlignment="center" />
+                                                android:textAlignment="center"/>
 
                                         </LinearLayout>
 
@@ -277,8 +279,7 @@
                             </RelativeLayout>
 
 
-                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                            <RelativeLayout
                                 android:id="@+id/card_2"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -289,8 +290,6 @@
                                 android:orientation="horizontal">
 
                                 <androidx.cardview.widget.CardView
-                                    xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_margin="1dp"
@@ -315,7 +314,7 @@
                                             android:maxLines="1"
                                             android:text=""
                                             android:textColor="?attr/textColor"
-                                            android:textSize="@dimen/small_text_size"
+                                            android:textSize="@dimen/text_size_caption"
                                             android:textStyle="bold" />
 
                                         <LinearLayout
@@ -328,7 +327,7 @@
                                                 android:id="@+id/card_2_movement"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="match_parent"
-                                                android:text="" />
+                                                android:text=""/>
 
                                             <TextView
                                                 android:id="@+id/card_2_percentage"
@@ -338,7 +337,7 @@
                                                 android:gravity="center"
                                                 android:maxLines="1"
                                                 android:text=""
-                                                android:textAlignment="center" />
+                                                android:textAlignment="center"/>
 
                                         </LinearLayout>
 
@@ -386,7 +385,7 @@
                                             android:maxLines="1"
                                             android:text=""
                                             android:textColor="?attr/textColor"
-                                            android:textSize="@dimen/small_text_size"
+                                            android:textSize="@dimen/text_size_caption"
                                             android:textStyle="bold" />
 
                                         <LinearLayout
@@ -456,7 +455,7 @@
                                             android:maxLines="1"
                                             android:text=""
                                             android:textColor="?attr/textColor"
-                                            android:textSize="@dimen/small_text_size"
+                                            android:textSize="@dimen/text_size_caption"
                                             android:textStyle="bold" />
 
                                         <LinearLayout
@@ -831,9 +830,9 @@
                         android:paddingEnd="@dimen/margin_base_horizontal"
                         android:text="Trending news"
                         android:visibility="visible"
-                        android:textStyle="bold"
                         android:textColor="?attr/textColor"
-                        android:textSize="@dimen/large_text_size"
+                        android:textSize="@dimen/text_size_subtitle_1"
+                        android:fontFamily="sans-serif-black"
                         android:background="?attr/backgroundcolor"/>
 
 
