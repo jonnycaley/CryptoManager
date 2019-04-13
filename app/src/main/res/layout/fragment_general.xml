@@ -530,8 +530,7 @@
                 android:id="@+id/recycler_view_news"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:animateLayoutChanges="true"/>
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
 

@@ -136,7 +136,7 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "PickerExchangeActivity"
+        supportActionBar?.title = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

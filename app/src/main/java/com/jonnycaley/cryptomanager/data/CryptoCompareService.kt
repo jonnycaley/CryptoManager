@@ -22,7 +22,7 @@ interface CryptoCompareService {
     fun getCurrencyNews(@Query("categories") symbol: String): Observable<News>
 
     @GET("all/coinlist")
-    fun getAllCrypto(): Observable<String?>
+    fun getAllCrypto(): Observable<String>
 
     @GET("all/exchanges")
     fun getAllExchanges(): Observable<String>

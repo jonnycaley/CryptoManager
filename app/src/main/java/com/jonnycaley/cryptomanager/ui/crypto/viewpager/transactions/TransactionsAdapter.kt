@@ -43,6 +43,8 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
         holder.textPair.text = getTextPair(transaction)
 
+        holder.textTime.text = Utils.formatDate(transaction.date)
+
         holder.layoutBottomSell.visibility = getSellTransactionVisibility(transaction)
 
         holder.textAmount.text = Utils.getPriceTextAbs(getTextAmount(transaction).toDouble(), "")
@@ -67,10 +69,11 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
             var multiplier = 1.toBigDecimal()
 
             if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a buy transaction
-
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_green)
             }
             if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a sell transaction
                 multiplier = (-1).toBigDecimal()
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_red)
 //                holder.textProceeds.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)).toDouble(), symbol)
             }
 
@@ -91,11 +94,13 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
             var multiplier = 1.toBigDecimal()
 
-//            if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a sell transaction
-//            }
-//            if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a buy transaction
-//                multiplier = -1.toBigDecimal()
-//            }
+            if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a sell transaction
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_red)
+            }
+            if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a buy transaction
+                multiplier = -1.toBigDecimal()
+                holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_green)
+            }
 
 //            holder.textProceeds.text = Utils.getPriceTextAbs((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).toDouble(), symbol)
 //            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
@@ -235,6 +240,8 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         val titlePrice = view.title_price
         val textPrice = view.text_price
 
+        val textTime = view.text_time
+
         val titlePair = view.title_pair
         val textPair = view.text_pair
 
@@ -254,6 +261,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
         val titleProceeds = view.title_proceeds
         val textProceeds = view.text_proceeds
+
+        val type = view.view_transaction_type
+
     }
 
     companion object {

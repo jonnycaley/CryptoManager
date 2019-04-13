@@ -1,59 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?><!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--app:cardUseCompatPadding="true">-->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_base_horizontal"
-    android:layout_marginTop="@dimen/margin_base_vertical"
-    android:layout_marginRight="@dimen/margin_base_horizontal"
-    android:layout_marginBottom="@dimen/margin_base_vertical">
-
-    <LinearLayout
-        android:id="@+id/layout_top"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginLeft="@dimen/margin_base_horizontal"
+        android:layout_marginTop="@dimen/margin_base_vertical"
+        android:layout_marginRight="@dimen/margin_base_horizontal"
+        android:layout_marginBottom="@dimen/margin_base_vertical">
+
+        <View
+            android:id="@+id/view_transaction_type"
+            android:layout_width="5dp"
+            android:layout_height="95dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_base_horizontal"
+            android:background="@drawable/button_checked_green" />
 
         <LinearLayout
+            android:id="@+id/layout_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/small_margin"
+            android:layout_toEndOf="@id/view_transaction_type"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/small_margin">
+
+            <TextView
+                android:id="@+id/text_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="@dimen/text_size_caption" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/view_transaction_type"
+            android:orientation="vertical"
+            android:layout_below="@id/layout_time">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/small_margin"
+                android:weightSum="3">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/title_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="BTC Buy Price"
+                        android:textColor="?attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_caption" />
+
+                    <TextView
+                        android:id="@+id/text_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title_price"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/text_size_body_2" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/title_pair"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="Trading Pair"
+                        android:textColor="?attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_caption" />
+
+                    <TextView
+                        android:id="@+id/text_pair"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title_pair"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/text_size_body_2" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/title_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text="Amount Bought"
+                        android:textColor="?attr/textColorSecondary"
+                        android:textSize="@dimen/text_size_caption" />
+
+                    <TextView
+                        android:id="@+id/text_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/title_amount"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif"
+                        android:maxLines="1"
+                        android:text=""
+                        android:textColor="?attr/textColor"
+                        android:textSize="@dimen/text_size_body_2" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_top"
+            android:layout_toEndOf="@id/view_transaction_type"
+            android:visibility="visible"
             android:weightSum="3">
 
             <RelativeLayout
+                android:id="@+id/layout_bottom_sell"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="3"
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/title_price"
+                    android:id="@+id/title_proceeds"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
-                    android:text="BTC Buy Price"
+                    android:text="Proceeds"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/text_size_caption"
-                    android:fontFamily="sans-serif" />
+                    android:textSize="@dimen/text_size_caption" />
 
                 <TextView
-                    android:id="@+id/text_price"
+                    android:id="@+id/text_proceeds"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_price"
+                    android:layout_below="@id/title_proceeds"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/text_size_body_2"
-                    android:fontFamily="sans-serif" />
+                    android:textSize="@dimen/text_size_body_2" />
 
             </RelativeLayout>
 
@@ -63,27 +194,27 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/title_pair"
+                    android:id="@+id/title_cost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
-                    android:text="Trading Pair"
+                    android:text="Cost"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/text_size_caption"
-                    android:fontFamily="sans-serif"/>
+                    android:textSize="@dimen/text_size_caption" />
 
                 <TextView
-                    android:id="@+id/text_pair"
+                    android:id="@+id/text_cost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_pair"
+                    android:layout_below="@id/title_cost"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/text_size_body_2"
-                    android:fontFamily="sans-serif" />
+                    android:textSize="@dimen/text_size_body_2" />
 
             </RelativeLayout>
 
@@ -93,171 +224,67 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/title_amount"
+                    android:id="@+id/title_worth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
-                    android:text="Amount Bought"
+                    android:text="Worth"
                     android:textColor="?attr/textColorSecondary"
-                    android:textSize="@dimen/text_size_caption"
-                    android:fontFamily="sans-serif" />
+                    android:textSize="@dimen/text_size_caption" />
 
                 <TextView
-                    android:id="@+id/text_amount"
+                    android:id="@+id/text_worth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/title_amount"
+                    android:layout_below="@id/title_worth"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="?attr/textColor"
-                    android:textSize="@dimen/text_size_body_2"
-                    android:fontFamily="sans-serif" />
+                    android:textSize="@dimen/text_size_body_2" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/title_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text="Change"
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_caption" />
+
+                <TextView
+                    android:id="@+id/text_change"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_change"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="1"
+                    android:text=""
+                    android:textSize="@dimen/text_size_body_2" />
 
             </RelativeLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_top"
-        android:visibility="visible"
-        android:weightSum="3">
-
-        <RelativeLayout
-            android:id="@+id/layout_bottom_sell"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/title_proceeds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Proceeds"
-                android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/text_size_caption"
-                android:fontFamily="sans-serif"/>
-
-            <TextView
-                android:id="@+id/text_proceeds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_proceeds"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="?attr/textColor"
-                android:textSize="@dimen/text_size_body_2"
-                android:fontFamily="sans-serif" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/title_cost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Cost"
-                android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/text_size_caption"
-                android:fontFamily="sans-serif" />
-
-            <TextView
-                android:id="@+id/text_cost"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_cost"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="?attr/textColor"
-                android:textSize="@dimen/text_size_body_2"
-                android:fontFamily="sans-serif" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/title_worth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Worth"
-                android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/text_size_caption"
-                android:fontFamily="sans-serif" />
-
-            <TextView
-                android:id="@+id/text_worth"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_worth"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text=""
-                android:textColor="?attr/textColor"
-                android:textSize="@dimen/text_size_body_2"
-                android:fontFamily="sans-serif" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/title_change"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Change"
-                android:textColor="?attr/textColorSecondary"
-                android:textSize="@dimen/text_size_caption"
-                android:fontFamily="sans-serif" />
-
-            <TextView
-                android:id="@+id/text_change"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_change"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text=""
-                android:textSize="@dimen/text_size_body_2"
-                android:fontFamily="sans-serif" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
 
     <include
         layout="@layout/layout_border"
-        android:layout_height="0.5dp"
-        android:layout_width="match_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
 
 </LinearLayout>
 

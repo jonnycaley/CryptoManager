@@ -1,22 +1,20 @@
 package com.jonnycaley.cryptomanager.ui.splash
 
-import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchanges
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
-import com.jonnycaley.cryptomanager.ui.base.BaseArgs
 import com.jonnycaley.cryptomanager.utils.JsonModifiers
-import io.reactivex.Completable
 import io.reactivex.CompletableObserver
-import io.reactivex.Observer
+import io.reactivex.Observable
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function3
 import io.reactivex.schedulers.Schedulers
 
 class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContract.View) : SplashContract.Presenter{
@@ -44,7 +42,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                         if(isDarkTheme) {
                             view.setDarkTheme()
                         }
-                        Log.i("THEMEHERE", isDarkTheme.toString())
                         checkForStorage()
                     }
 

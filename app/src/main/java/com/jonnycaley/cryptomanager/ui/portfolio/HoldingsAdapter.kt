@@ -86,7 +86,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 
             when (chosenCurrency) {
                 PortfolioFragment.CURRENCY_BTC -> {
-                    symbol = "BTC"
+                    symbol = "฿"
                     val costBtcHistorical = holding.costBtc
                     val costBtcNow = holding.quantity * (prices.first { it.symbol?.toUpperCase() == holding.symbol.toUpperCase() }.prices?.uSD?.times(baseRate) ?: 0.toBigDecimal()) / (prices.first { it.symbol?.toUpperCase() == "BTC" }.prices?.uSD?.times(baseRate) ?: 1.toBigDecimal())
 //                    if (holding.quantity < 0)
@@ -212,12 +212,18 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
             holder.price.text = Utils.getPriceTextAbs(price?.toDouble(), symbol)
 
         }
+        var circle = R.drawable.circle_light
+
+        if(Utils.isDarkTheme()) {
+            circle = R.drawable.circle_dark
+        }
+
         Picasso.with(context)
                 .load(holding.imageUrl)
                 .fit()
                 .centerCrop()
                 .transform(CircleTransform())
-                .placeholder(R.drawable.circle)
+                .placeholder(circle)
                 .into(holder.image)
 
         if (!(holding.imageUrl != null && (holding.imageUrl?.contains("null")) != true)) {

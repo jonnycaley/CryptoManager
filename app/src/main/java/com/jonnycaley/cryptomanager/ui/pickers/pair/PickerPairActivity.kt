@@ -138,6 +138,7 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
