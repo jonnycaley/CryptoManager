@@ -34,23 +34,38 @@ class TransactionsDataManager private constructor(val userPreferences: UserPrefe
         }
     }
 
+    /*
+    Function returns the current internet status
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
 
+    /*
+    Function gets the crypto compare service
+    */
     fun getCryptoCompareService(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+    /*
+    Function gets the transactions from internal storage
+    */
     fun getTransactions(): Single<ArrayList<Transaction>> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
+    /*
+    Function gets the base fiat from internal storage
+    */
     fun getBaseFiat(): Single<Rate> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_BASE_RATE)
     }
 
+    /*
+    Function gets all cryptos from internal storage
+    */
     fun readAllCrytpos(): Single<Currencies> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_ALL_CRYPTOS)
     }

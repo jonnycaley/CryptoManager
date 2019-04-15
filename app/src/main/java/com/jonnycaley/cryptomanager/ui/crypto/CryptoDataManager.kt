@@ -27,13 +27,18 @@ class CryptoDataManager private constructor(val UserPreferences: UserPreferences
         }
     }
 
+    /*
+    Function gets the crypto compare service
+    */
     fun getCryptoCompareService(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofit(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
-
 }

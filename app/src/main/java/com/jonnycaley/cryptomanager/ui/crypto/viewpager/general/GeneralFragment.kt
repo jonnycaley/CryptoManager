@@ -1,18 +1,10 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.general
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.snackbar.Snackbar
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +18,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
 import com.github.mikephil.charting.data.CandleEntry
+import com.google.android.material.snackbar.Snackbar
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.GeneralData.Data
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.HistoricalData.HistoricalData
@@ -33,13 +26,10 @@ import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.data.model.Utils.Chart
 import com.jonnycaley.cryptomanager.ui.crypto.CryptoActivity
-import com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions.TransactionsFragment
 import com.jonnycaley.cryptomanager.utils.Utils
-import com.jonnycaley.cryptomanager.utils.interfaces.TabInterface
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import kotlin.collections.ArrayList
 import kotlin.math.absoluteValue
 
 class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -85,6 +75,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function notifies the crypto activity of no internet as you can display snackbar over multiple fragments in a tab layout
+    */
     override fun notifyActivityOfInternet() {
         (activity as CryptoActivity).connectionAvailable()
     }
@@ -96,6 +89,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
 
     var mLayoutManager : androidx.recyclerview.widget.LinearLayoutManager? = null
 
+    /*
+    Function updates the articles list of current saved articles for bookmarks button changing
+    */
     override fun updateSavedArticles(articles: ArrayList<Article>) {
         if(mLayoutManager != null){
             articlesVerticalAdapter.savedArticles = articles
@@ -103,6 +99,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function shows the no news layout
+    */
     override fun showNoNews() {
         layoutNoNews.visibility = View.VISIBLE
     }
@@ -124,6 +123,10 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         presenter = GeneralPresenter(GeneralDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
+
+    /*
+    Function shows no internet layout
+    */
     override fun showNoInternet() {
         showSnackBar(resources.getString(R.string.internet_required))
     }
@@ -143,14 +146,23 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         presenter.getData()
     }
 
+    /*
+    Function hides the refreshing
+    */
     override fun hideRefreshing() {
         scrollLayout.isRefreshing = false
     }
 
+    /*
+    Function returns the selected chart time frame
+    */
     override fun getSelectedChartTimeFrame(): Chart {
         return selectedChartFrame
     }
 
+    /*
+    Function shows the volume text for the crypto
+    */
     override fun showVolume(vOLUME24HOUR: String, baseFiat: Rate) {
 
         val rate = baseFiat.rate ?: 1.toBigDecimal()
@@ -162,6 +174,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         text24hVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}$formattedString"
     }
 
+    /*
+    Function shows the global data for the crypto
+    */
     @SuppressLint("SetTextI18n")
     override fun showGlobalData(data: Data?, baseFiat: Rate) {
 
@@ -182,8 +197,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         text24hChange.text = "${String.format("%.2f", data?.uSD?.cHANGEPCT24HOUR?.toDouble())}%"
     }
 
-
-
+    /*
+    Function loads the crypto news
+    */
     override fun loadCurrencyNews(news: Array<Article>, savedArticles: ArrayList<Article>) {
 
         val arrayNews = ArrayList<Article>()
@@ -208,12 +224,17 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function returns the crypto name
+    */
     override fun getName(): String {
 //        return symbol?.name.toString().replace(" ", "-").toLowerCase()
         return "TODO: getName()"
     }
 
-
+    /*
+    Function shows the current price
+    */
     @SuppressLint("SetTextI18n")
     override fun showCurrentPrice(close: BigDecimal?, baseFiat: Rate) {
 
@@ -222,6 +243,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         price.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${getPriceText(close?.times(rate)?.toDouble())}"
     }
 
+    /*
+    Function returns the current price text
+    */
     fun getPriceText(price: Double?): CharSequence? {
 
         var text = ""
@@ -238,7 +262,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         return text
     }
 
-
+    /*
+    Function formats the price text
+    */
     fun formatPrice(price: BigDecimal?, format : String): String {
 
         val formatter = DecimalFormat(format)
@@ -247,6 +273,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         return formattedString
     }
 
+    /*
+    Function shows the price change of the crypto
+    */
     override fun showPriceChange(open: BigDecimal, close: BigDecimal, baseFiat: Rate) {
         when {
             close > open -> {
@@ -272,6 +301,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function formats the percentage
+    */
     fun formatPercentage(percentChange24h: BigDecimal?): String {
 
         if(percentChange24h == null || percentChange24h == 0.toBigDecimal())
@@ -292,6 +324,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function shows the generala fragment data error
+    */
     override fun showGeneralDataError() {
         //TODO
     }
@@ -331,6 +366,10 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
 //
 //        return formatChange(priceChange?.toDouble())
 //    }
+
+    /*
+    Function formats the change text
+    */
     fun formatChange(priceAsDouble: BigDecimal, baseFiat: Rate): String {
 
         val price = Utils.toDecimals(priceAsDouble, 8).toDouble()
@@ -352,6 +391,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         return priceText
     }
 
+    /*
+    Function sets up the graph time choices on initialise
+    */
     private fun setUpGraphTimeChoices() {
         radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition ->
             presenter.clearChartDisposable()
@@ -393,10 +435,16 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function sets the label count for the xAxis of the chart
+    */
     private fun setChartBottomLabelCount(count: Int, forced: Boolean) {
         candleStickChart.xAxis.setLabelCount(count, forced)
     }
 
+    /*
+    Function sets up the graph candlesticks
+    */
     private fun setUpCandleStick() {
 
         candleStickChart.setDrawGridBackground(false)
@@ -432,6 +480,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         yAxisRight.isEnabled = false
     }
 
+    /*
+    Function loads the graph candlesticks
+    */
     override fun loadCandlestickChart(response: HistoricalData, chart: Chart, aggregate: Int, baseFiat: Rate) {
 
         val rate = baseFiat.rate ?: 1.toBigDecimal()
@@ -492,6 +543,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         candleStickChart.invalidate()
     }
 
+    /*
+    Function sets up the chart minimum and maximum values
+    */
     private fun setChartMinMax(lowest: Float, highest: Float, chart: Chart) {
 
         val difference = (highest - lowest)
@@ -535,6 +589,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         }
     }
 
+    /*
+    Function rounds a float to the lowest multiples of a given number
+    */
     private fun roundToLowest(lowest: Float, multiplesOf: Int): Float {
         var lowest10 = ((lowest.toInt() + (multiplesOf / 2)) / multiplesOf) * multiplesOf
         if (lowest10 > lowest.toInt())
@@ -542,6 +599,9 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         return lowest10.toFloat()
     }
 
+    /*
+    Function rounds a float to the highest multiples of a given number
+    */
     private fun roundToHighest(highest: Float, multiplesOf: Int): Float {
 
         val highestInt = Math.round(highest)
@@ -554,10 +614,16 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
         return highest10.toFloat()
     }
 
+    /*
+    Function returns the currency symbol
+    */
     override fun getSymbol(): String {
         return currencySymbol ?: ""
     }
 
+    /*
+    Function sets up the presenter
+    */
     override fun setPresenter(presenter: GeneralContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }

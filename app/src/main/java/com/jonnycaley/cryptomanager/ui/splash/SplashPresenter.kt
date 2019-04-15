@@ -32,6 +32,9 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
         checkTheme()
     }
 
+    /*
+    Function checks for theme
+    */
     private fun checkTheme() {
 
         dataManager.readTheme()
@@ -55,6 +58,9 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                 })
     }
 
+    /*
+    Function checks for storage
+    */
     private fun checkForStorage() {
 
         //checking for cryptos is long and if the exchanges is stored it is 99.9% likely the cryptos are as well as they are both done in the same stream
@@ -84,6 +90,9 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
 
     }
 
+    /*
+    Function gets currencies
+    */
     override fun getCurrencies() {
 
         //TODO: FINISH ERROR HANDLING
@@ -98,16 +107,16 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
                         dataManager.saveBaseRate(rate)
                     }
                     .flatMapCompletable { json ->
-                        dataManager.saveAllRates(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java))
+                        dataManager.saveAllRates(Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java)) //save rates
                     }
                     .andThen(dataManager.saveBaseRate(rate))
                     .andThen(dataManager.getCryptoCompareService().getAllCrypto())
                     .flatMapCompletable { response ->
-                        dataManager.saveAllCryptos(Gson().fromJson(JsonModifiers.jsonToCryptos(response), Currencies::class.java))
+                        dataManager.saveAllCryptos(Gson().fromJson(JsonModifiers.jsonToCryptos(response), Currencies::class.java)) //save cryptos
                     }
                     .andThen(dataManager.getCryptoCompareService().getAllExchanges())
                     .flatMapCompletable { response ->
-                        dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java))
+                        dataManager.saveAllExchanges(Gson().fromJson(JsonModifiers.jsonToExchanges(response), Exchanges::class.java)) //save exchanges
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {

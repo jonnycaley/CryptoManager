@@ -45,26 +45,26 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
         setContentView(R.layout.activity_picker_exchange)
 
         if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp) //change icon
         }
 
-        setupToolbar()
-        setupSearchBar()
+        setupToolbar() //set toolbar
+        setupSearchBar() //set search bar
 
-        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() { //add listener
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if(dy != 0)
-                    Utils.hideKeyboardFromActivity(this@PickerExchangeActivity)
+                    Utils.hideKeyboardFromActivity(this@PickerExchangeActivity) //hide keyboard
             }
         })
 
-        presenter = PickerExchangePresenter(PickerExchangeDataManager.getInstance(this), this)
+        presenter = PickerExchangePresenter(PickerExchangeDataManager.getInstance(this), this) //init presenter
         presenter.attachView()
     }
 
     private fun setupSearchBar() {
-        searchBar.setOnQueryTextListener(this)
+        searchBar.setOnQueryTextListener(this) //set listener
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -74,14 +74,14 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
 
     override fun onQueryTextChange(query: String?): Boolean {
         query?.let {
-            presenter.filterExchanges(it.trim())
+            presenter.filterExchanges(it.trim()) //filter exchanges
 
         }
         return true
     }
 
     override fun showSearchBar() {
-        searchBar.visibility = View.VISIBLE
+        searchBar.visibility = View.VISIBLE //change visibility
     }
 
     override fun getCrypto(): String? {
@@ -91,11 +91,11 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
     }
 
     override fun hideProgressBar() {
-        progressBarLayout.visibility = View.GONE
+        progressBarLayout.visibility = View.GONE //change visibility
     }
 
     override fun showProgressBar() {
-        progressBarLayout.visibility = View.VISIBLE
+        progressBarLayout.visibility = View.VISIBLE //change visibility
     }
 
     override fun showError() {
@@ -120,6 +120,9 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
         finish()
     }
 
+    /*
+    Function shows the exchanges
+    */
     override fun showExchanges(exchanges: List<Exchange>?) {
 
         println("Showing exchanges")

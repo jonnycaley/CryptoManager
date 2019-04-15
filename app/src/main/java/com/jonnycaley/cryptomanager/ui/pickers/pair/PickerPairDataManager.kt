@@ -30,10 +30,16 @@ class PickerPairDataManager private constructor(val UserPreferences: UserPrefere
         }
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
 
+    /*
+    Function gets the exchanges
+    */
     fun getExchanges(): Single<Exchanges> {
         return RxPaperBook.with(Schedulers.newThread()).read(Constants.PAPER_ALL_EXCHANGES)
     }

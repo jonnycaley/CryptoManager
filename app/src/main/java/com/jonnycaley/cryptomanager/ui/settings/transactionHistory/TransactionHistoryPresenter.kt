@@ -23,28 +23,31 @@ class TransactionHistoryPresenter(var dataManager: TransactionHistoryDataManager
         getTransactions()
     }
 
+    /*
+    The getTransactions method reads all transactions from internal storage.
+    The transactions are then displayed to the user.
+    If there are no transactions then a 'no transactions' layout is displayed instead
+     */
     override fun getTransactions() {
-        dataManager.getTransactions()
+        dataManager.getTransactions()                           //read the transactions from storage
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<ArrayList<Transaction>>{
                     override fun onSuccess(transactions: ArrayList<Transaction>) {
-                        if(transactions.isNotEmpty()) {
-                            view.hideNoTransactionsLayout()
-                            Log.i(TAG, transactions.size.toString())
-                            view.showTransactions(transactions)
-                        } else
-                            view.showNoTransactionsLayout()
+                        if(transactions.isNotEmpty()) {         //if the transactions list is NOT empty...
+                            view.hideNoTransactionsLayout()     //hide the no transactions layout
+                            view.showTransactions(transactions) //show the transactions
+                        } else                                  //if the transactions list is empty...
+                            view.showNoTransactionsLayout()     //show the no transactions layout
                     }
 
                     override fun onSubscribe(d: Disposable) {
-                        compositeDisposable?.add(d)
+                        compositeDisposable?.add(d)             //assign the disposable to prevent memory leaks
                     }
 
                     override fun onError(e: Throwable) {
-                        println("onError: ${e.message}")
+                        println("onError: ${e.message}")        //print the error to console for debugging
                     }
-
                 })
     }
 

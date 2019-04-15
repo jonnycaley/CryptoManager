@@ -22,7 +22,7 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
 
         if(Utils.isDarkTheme())
 
-        if(Utils.isDarkTheme()) {
+        if(Utils.isDarkTheme()) { //if dark theme
             setTheme(R.style.darktheme)
         }
 
@@ -33,26 +33,41 @@ class SplashActivity : AppCompatActivity(), SplashContract.View {
         presenter.attachView()
     }
 
+    /*
+    Function shows internet required snackbar
+    */
     override fun showInternetRequired() {
         showSnackBar(resources.getString(R.string.internet_required))
     }
 
+    /*
+    Function error snackbar
+    */
     override fun showError() {
         showSnackBar(resources.getString(R.string.error_occurred))
     }
 
+    /*
+    Function shows snackbar
+    */
     fun showSnackBar(message: String) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) { presenter.getCurrencies() }
                 .show()
     }
 
+    /*
+    Function sets dark theme
+    */
     override fun setDarkTheme() {
         Utils.setDarkMode()
         setTheme(R.style.darktheme)
         coordinatorLayout.setBackgroundColor(resources.getColor(R.color.black))
     }
 
+    /*
+    Function hides progress bar
+    */
     override fun hideProgressBar() {
         progressBar.visibility = View.GONE
     }

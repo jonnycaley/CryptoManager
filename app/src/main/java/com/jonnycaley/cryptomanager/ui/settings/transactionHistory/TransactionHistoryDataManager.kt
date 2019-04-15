@@ -34,6 +34,9 @@ class TransactionHistoryDataManager private constructor(val UserPreferences: Use
         }
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }

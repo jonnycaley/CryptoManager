@@ -27,14 +27,17 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
 
         when (view.getSearchType()) {
             PortfolioFragment.CURRENCY_STRING -> {
-                getAllCurrencies()
+                getAllCurrencies() //get all currencies
             }
             PortfolioFragment.FIAT_STRING -> {
-                getAllFiats()
+                getAllFiats() //get all fiats
             }
         }
     }
 
+    /*
+    Function gets all fiats
+    */
     override fun getAllFiats() {
 
         dataManager.getFiats()
@@ -44,17 +47,17 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
                         allFiats?.rates?.let { view.showFiats(it, true) }
-                        view.showSearchBar()
-                        view.hideProgressLayout()
+                        view.showSearchBar() //show searchbar
+                        view.hideProgressLayout() //hide progress
                     }
 
-                    override fun onSubscribe(d: Disposable) {
+                    override fun onSubscribe(d: Disposable) { //on subscribe
                         view.showProgressLayout()
                         println("Subscribed")
                         compositeDisposable?.add(d)
                     }
 
-                    override fun onError(e: Throwable) {
+                    override fun onError(e: Throwable) { //onerror
                         view.hideProgressLayout()
                         view.showError()
                         println("onErrorFiats: ${e.message}")
@@ -63,6 +66,9 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
 
     }
 
+    /*
+    Function gets all currencies
+    */
     override fun getAllCurrencies() {
 
         dataManager.getAllCrypto()
@@ -72,18 +78,18 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(na: Unit) {
-                        view.showCurrencies(allCurrencies?.data?.subList(0,100), allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl)
+                        view.showCurrencies(allCurrencies?.data?.subList(0,100), allCurrencies?.baseImageUrl, allCurrencies?.baseLinkUrl) //show currencies
                         view.showSearchBar()
                         view.hideProgressLayout()
                     }
 
-                    override fun onSubscribe(d: Disposable) {
+                    override fun onSubscribe(d: Disposable) { //on subscribe
                         view.showProgressLayout()
                         println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
-                    override fun onError(e: Throwable) {
+                    override fun onError(e: Throwable) { //on error
                         view.hideProgressLayout()
                         view.showError()
                         println("onError: ${e.message}")
@@ -93,7 +99,7 @@ class SearchPresenter(var dataManager: SearchDataManager, var view: SearchContra
 
     override fun showCurrencies(filter: String?) {
         allCurrencies?.let { currencies ->
-            view.showCurrencies(currencies.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter.toLowerCase()) }, currencies.baseImageUrl, currencies.baseLinkUrl)
+            view.showCurrencies(currencies.data?.filter { it.coinName?.toLowerCase()!!.contains(filter?.toLowerCase()!!) || it.symbol?.toLowerCase()!!.contains(filter.toLowerCase()) }, currencies.baseImageUrl, currencies.baseLinkUrl) //show currencies
         }
     }
 

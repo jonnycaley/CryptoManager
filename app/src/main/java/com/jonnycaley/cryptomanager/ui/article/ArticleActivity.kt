@@ -44,16 +44,16 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_detail)
 
-        if(!Utils.isDarkTheme()) {
+        if(!Utils.isDarkTheme()) { //configure dark theme
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
 
             likeButton.setLikeDrawable(resources.getDrawable(R.drawable.bookmark_fill_black))
             likeButton.setUnlikeDrawable(resources.getDrawable(R.drawable.bookmark_outlline_black))
         }
 
-        setupToolbar()
+        setupToolbar() //setup the toolbar
 
-        webview.webViewClient =  object : WebViewClient() {
+        webview.webViewClient =  object : WebViewClient() {  //setup the webview client
 
             override fun onPageFinished(view: WebView, url: String) {
                 webview.visibility = View.VISIBLE
@@ -61,55 +61,50 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
             }
             //TODO: HANDLE ERROR HERE WITH OVERRIDE METHOD
         }
-//        webview.webViewClient = obj
-        webview.loadUrl(args.article.url)
+        webview.loadUrl(args.article.url)  //load the url
         webview.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
 
-        likeButton.setOnLikeListener(this)
-//        if(args.article.similarArticles == null || args.article.similarArticles?.isEmpty()!!){
-//            recyclerviewSnap.visibility = View.GONE
-//
-//            val params = webview.layoutParams as ViewGroup.MarginLayoutParams
-//            params.bottomMargin = 0
-//            webview.layoutParams = params
-//
-//        } else {
-//            setupRelated()
-//        }
+        likeButton.setOnLikeListener(this)  //set the listener
+
         presenter = ArticlePresenter(ArticleDataManager.getInstance(this), this)
         presenter.attachView()
     }
 
 
+    /*
+    Function for when the article is liked
+     */
     override fun liked(p0: LikeButton?) {
-        println("liked")
         presenter.saveArticle(args.article)
     }
 
+
+    /*
+    Function for when the article is unLiked
+     */
     override fun unLiked(p0: LikeButton?) {
-        println("unLiked")
         presenter.removeArticle(args.article)
     }
 
+
+    /*
+    Function returns the article url
+     */
     override fun getArticleUrl(): String? {
         return args.article.url
     }
 
+    /*
+    Function sets the initial like button visibility
+     */
     override fun setLikeButton(isLiked: Boolean) {
         likeButton.visibility = View.VISIBLE
         likeButton.isLiked = isLiked
     }
 
-    private fun setupRelated() {
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
-
-        recyclerviewSnap.layoutManager = layoutManager
-        recyclerviewSnap.adapter = adapter
-        recyclerviewSnap.setOnSnapListener(OnSnapListener {
-            // do something with the position of the snapped view
-        })
-    }
-
+    /*
+    The setupToolbar method sets up the toolbar title
+     */
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -117,6 +112,9 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
 //        supportActionBar?.title = args.article.title
     }
 
+    /*
+    Function handles the back press button
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {
@@ -128,6 +126,9 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
         return false
     }
 
+    /*
+    Function initialises the presenter
+     */
     override fun setPresenter(presenter: ArticleContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }

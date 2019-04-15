@@ -46,10 +46,12 @@ class FiatTransactionDataManager private constructor(val UserPreferences: UserPr
         return retrofit.create(CryptoCompareService::class.java)
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
-
 
     fun getCryptoCompareServiceWithScalars(): CryptoCompareService {
         val retrofit = RetrofitHelper().createRetrofitWithScalars(Constants.CRYPTOCOMPARE_URL, Constants.CRYPTOCOMPARE_NAME, Constants.CRYPTOCOMPARE_KEY)

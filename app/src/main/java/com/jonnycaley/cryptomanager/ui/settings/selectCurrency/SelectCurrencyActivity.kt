@@ -34,12 +34,12 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
 
 
         if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp) //change icon to dark themed one
         }
 
-        setupToolbar()
+        setupToolbar() //setup toolbar
 
-        presenter = SelectCurrencyPresenter(SelectCurrencyDataManager.getInstance(this), this)
+        presenter = SelectCurrencyPresenter(SelectCurrencyDataManager.getInstance(this), this) //attach presenter
         presenter.attachView()
     }
 
@@ -53,7 +53,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
         val id = item.itemId
         when (id) {
             android.R.id.home -> {
-                super.onBackPressed()
+                super.onBackPressed() //back button press
                 return false
             }
         }
@@ -64,6 +64,9 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
         super.onBackPressed()
     }
 
+    /*
+    show fiats in list
+     */
     override fun showFiats(fiats: List<Rate>?, baseFiat: Rate) {
 
 //        val data = ArrayList<Datum>()
@@ -84,7 +87,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
 //            data.add(datum)
 //        }
 
-        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this) //attach layout manager
         recyclerView.layoutManager = mLayoutManager
         currenciesAdapter = SelectCurrenciesAdapter(fiats, presenter, this)
         recyclerView.adapter = currenciesAdapter

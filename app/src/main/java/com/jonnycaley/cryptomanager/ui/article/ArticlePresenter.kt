@@ -23,6 +23,9 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
         getSavedArticles()
     }
 
+    /*
+    Function gets the saved articles and sets the like button if the article is saved
+    */
     private fun getSavedArticles() {
         dataManager.getSavedArticles()
                 .subscribeOn(Schedulers.io())
@@ -42,7 +45,9 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
                 })
     }
 
-
+    /*
+    Function saves the article to internal storage
+    */
     override fun saveArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
@@ -50,7 +55,7 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
                 .observeOn(Schedulers.computation())
                 .map { savedArticles ->
                     if(savedArticles.none { it.url == topArticle.url })
-                        savedArticles.add(topArticle)
+                        savedArticles.add(topArticle) //add top article to saved articles
                     return@map savedArticles
                 }
                 .observeOn(Schedulers.io())
@@ -72,14 +77,17 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
 
     }
 
+    /*
+    Function removes the article from saved articles in internal storage
+    */
     override fun removeArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
-                .map { articles -> return@map articles.filter { it.url != topArticle.url } }
+                .map { articles -> return@map articles.filter { it.url != topArticle.url } } //remove the selected article and return array
                 .observeOn(Schedulers.io())
-                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) }
+                .flatMapCompletable { savedArticles -> dataManager.saveArticles(ArrayList(savedArticles)) } //save the array
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {

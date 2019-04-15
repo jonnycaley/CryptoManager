@@ -27,20 +27,23 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
         getAllFiats()
     }
 
+    /*
+    Function gets all fiats
+    */
     private fun getAllFiats() {
 
         var baseFiat = Rate()
 
-        dataManager.getBaseFiat()
+        dataManager.getBaseFiat() //get base fiat
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { fiat -> baseFiat = fiat }
                 .observeOn(Schedulers.io())
-                .flatMap { dataManager.getFiats() }
-                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap { dataManager.getFiats() } //get fiats
+                .observeOn(AndroidSchedulers.mainThread()) //main thread
                 .subscribe(object : SingleObserver<ExchangeRates> {
                     override fun onSuccess(fiats: ExchangeRates) {
-                        view.showFiats(fiats.rates?.sortedBy { it.fiat }, baseFiat)
+                        view.showFiats(fiats.rates?.sortedBy { it.fiat }, baseFiat) //show fiats
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -54,14 +57,17 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
                 })
     }
 
+    /*
+    Function saves base currency
+    */
     override fun saveBaseCurrency(symbol: Rate) {
 
         dataManager.saveBaseCurrency(symbol)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread()) //main thread
                 .subscribe(object : CompletableObserver {
                     override fun onComplete() {
-                        view.onCurrencySaved()
+                        view.onCurrencySaved() //on saved method called
                     }
 
                     override fun onSubscribe(d: Disposable) {

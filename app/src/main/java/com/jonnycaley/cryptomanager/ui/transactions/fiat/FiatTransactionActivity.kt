@@ -100,6 +100,67 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
         presenter.attachView()
     }
 
+    /*
+    Function sets up update
+    */
+    private fun setupUpdate() {
+
+        args.transaction?.let { transaction ->
+            if(transaction.quantity > 0.toBigDecimal() ){
+                showDepositChecked()
+                hideWithdrawlChecked()
+                buttonUpdateDeposit.visibility = View.VISIBLE
+            } else {
+                showWithdrawlChecked()
+                hideDepositChecked()
+                buttonUpdateWithdrawl.visibility = View.VISIBLE
+            }
+
+            buttonDelete.visibility = View.VISIBLE
+
+            layoutExchangeEmpty.visibility = View.GONE
+            layoutExchangeFilled.visibility = View.VISIBLE
+
+            layoutCurrencyEmpty.visibility = View.GONE
+            layoutCurrencyFilled.visibility = View.VISIBLE
+
+            requiredExchange.text = transaction.exchange
+            requiredCurrency.text = transaction.symbol
+            requiredQuantity.setText(String.format(transaction.quantity.abs().toString()))
+            requiredDate.text = Utils.formatDate(transaction.date)
+            buttonDelete.visibility = View.VISIBLE
+            setupToolbarUpdate(transaction)
+        }
+    }
+
+    /*
+    Function hides deposit checked
+    */
+    private fun hideDepositChecked() {
+        layoutDeposit.visibility = View.GONE
+    }
+
+    /*
+    Function hides withdrawal checked
+    */
+    private fun hideWithdrawlChecked() {
+        layoutWithdrawl.visibility = View.GONE
+    }
+
+    /*
+    Function shows withdrawal checked
+    */
+    private fun showWithdrawlChecked() {
+        layoutWithdrawl.visibility = View.VISIBLE
+    }
+
+    /*
+    Function shows deposit checked
+    */
+    private fun showDepositChecked() {
+        layoutDeposit.visibility = View.VISIBLE
+    }
+
     private fun AskOption(): AlertDialog {
 
         return AlertDialog.Builder(this)
@@ -172,52 +233,6 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     override fun showNoInternet() {
         Toast.makeText(this, resources.getString(R.string.internet_required), Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setupUpdate() {
-
-        args.transaction?.let { transaction ->
-            if(transaction.quantity > 0.toBigDecimal() ){
-                showDepositChecked()
-                hideWithdrawlChecked()
-                buttonUpdateDeposit.visibility = View.VISIBLE
-            } else {
-                showWithdrawlChecked()
-                hideDepositChecked()
-                buttonUpdateWithdrawl.visibility = View.VISIBLE
-            }
-
-            buttonDelete.visibility = View.VISIBLE
-
-            layoutExchangeEmpty.visibility = View.GONE
-            layoutExchangeFilled.visibility = View.VISIBLE
-
-            layoutCurrencyEmpty.visibility = View.GONE
-            layoutCurrencyFilled.visibility = View.VISIBLE
-
-            requiredExchange.text = transaction.exchange
-            requiredCurrency.text = transaction.symbol
-            requiredQuantity.setText(String.format(transaction.quantity.abs().toString()))
-            requiredDate.text = Utils.formatDate(transaction.date)
-            buttonDelete.visibility = View.VISIBLE
-            setupToolbarUpdate(transaction)
-        }
-    }
-
-    private fun hideDepositChecked() {
-        layoutDeposit.visibility = View.GONE
-    }
-
-    private fun hideWithdrawlChecked() {
-        layoutWithdrawl.visibility = View.GONE
-    }
-
-    private fun showWithdrawlChecked() {
-        layoutWithdrawl.visibility = View.VISIBLE
-    }
-
-    private fun showDepositChecked() {
-        layoutDeposit.visibility = View.VISIBLE
     }
 
     private fun fillFields() {

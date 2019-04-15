@@ -106,23 +106,23 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         setContentView(R.layout.activity_crypto_transaction)
 
         if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-            buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)
-            arrowExchange.setImageResource(R.drawable.next_white)
-            arrowTradingPair.setImageResource(R.drawable.next_white)
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)  //set icon black
+            buttonDelete.setImageResource(R.drawable.baseline_delete_black_24)  //set icon black
+            arrowExchange.setImageResource(R.drawable.next_white)  //set icon white
+            arrowTradingPair.setImageResource(R.drawable.next_white)  //set icon white
         }
 
-        buttonCreateBuy.visibility = View.GONE
-        buttonCreateSell.visibility = View.GONE
-        buttonUpdateBuy.visibility = View.GONE
-        buttonUpdateSell.visibility = View.GONE
+        buttonCreateBuy.visibility = View.GONE //hide view
+        buttonCreateSell.visibility = View.GONE //hide view
+        buttonUpdateBuy.visibility = View.GONE //hide view
+        buttonUpdateSell.visibility = View.GONE //hide view
 
         args.transaction?.let { transaction ->
 
             isUpdateTransaction = true
             setupUpdate(transaction)
-            setupToolbarUpdate(transaction)
-            setupHeaderUpdate(transaction)
+            setupToolbarUpdate(transaction) //set up toolbar update
+            setupHeaderUpdate(transaction) //set up header update
             requiredDate.text = transaction.date.let { Utils.formatDate(it) }
         }
 
@@ -132,8 +132,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
             backPressToPortfolio = transaction.backpressToPortfolio
 
             setupCreate(transaction)
-            setupToolbarCreate(transaction)
-            setupHeaderCreate(transaction)
+            setupToolbarCreate(transaction) //set up toolbar create
+            setupHeaderCreate(transaction) //set up header create
             requiredDate.text = Utils.formatDate(transactionDate)
         }
 
@@ -144,20 +144,59 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
     }
 
 
+    /*
+    Function sets up headers update
+    */
+    private fun setupHeaderUpdate(transaction: Transaction) {
+
+        Picasso.with(this)
+                .load(transaction.baseImageUrl) //load image url
+                .fit()
+                .centerCrop()
+                .transform(CircleTransform())
+                .into(headerImage)
+        headerName.text = transaction.symbol
+
+    }
+
+    /*
+    Function sets up headers create
+    */
+    private fun setupHeaderCreate(transaction: NotTransaction) {
+
+        Picasso.with(this)
+                .load(transaction.baseUrl + transaction.currency.imageUrl)
+                .fit()
+                .centerCrop()
+                .transform(CircleTransform())
+                .into(headerImage)
+        headerName.text = transaction.currency.symbol
+
+    }
+
+    /*
+    Function sets up create
+    */
+    private fun setupCreate(transaction: NotTransaction) {
+        buttonDelete.visibility = View.GONE //change view visibility
+        showCreateBuy()
+    }
+
+
     private fun hideSellLayout() {
-        layoutSell.visibility = View.GONE
+        layoutSell.visibility = View.GONE //change view visibility
     }
 
     private fun showBuyLayout() {
-        layoutBuy.visibility = View.VISIBLE
+        layoutBuy.visibility = View.VISIBLE //change view visibility
     }
 
     private fun hideBuyLayout() {
-        layoutBuy.visibility = View.GONE
+        layoutBuy.visibility = View.GONE //change view visibility
     }
 
     private fun showSellLayout() {
-        layoutSell.visibility = View.VISIBLE
+        layoutSell.visibility = View.VISIBLE //change view visibility
     }
 
     override fun disableTouchEvents() {
@@ -180,35 +219,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
         args.transaction?.let { return it.name }
         args.notTransactions?.let { return it.currency.coinName ?: it.currency.fullName ?: "" }
         return ""
-    }
-
-    private fun setupHeaderUpdate(transaction: Transaction) {
-
-        Picasso.with(this)
-                .load(transaction.baseImageUrl)
-                .fit()
-                .centerCrop()
-                .transform(CircleTransform())
-                .into(headerImage)
-        headerName.text = transaction.symbol
-
-    }
-
-    private fun setupHeaderCreate(transaction: NotTransaction) {
-
-        Picasso.with(this)
-                .load(transaction.baseUrl + transaction.currency.imageUrl)
-                .fit()
-                .centerCrop()
-                .transform(CircleTransform())
-                .into(headerImage)
-        headerName.text = transaction.currency.symbol
-
-    }
-
-    private fun setupCreate(transaction: NotTransaction) {
-        buttonDelete.visibility = View.GONE
-        showCreateBuy()
     }
 
     private fun setupBody() {

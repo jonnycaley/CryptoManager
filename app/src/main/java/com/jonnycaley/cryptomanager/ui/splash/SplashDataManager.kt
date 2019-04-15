@@ -48,6 +48,9 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return retrofit.create(ExchangeRatesService::class.java)
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
@@ -61,14 +64,11 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
 //    }
 
     fun saveAllRates(rates: ExchangeRates) : Completable {
-//        Paper.book().write(Constants.PAPER_ALL_RATES, jsonToCurrencies)
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_ALL_RATES, rates)
-
     }
 
     fun saveBaseRate(baseRate : Rate): Completable {
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_BASE_RATE, baseRate)
-//        Paper.book().write(Constants.PAPER_BASE_RATE, baseRate)
     }
 
     fun readAllExchanges(): Single<Exchanges> {

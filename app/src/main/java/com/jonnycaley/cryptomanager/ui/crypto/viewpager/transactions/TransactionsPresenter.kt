@@ -32,9 +32,13 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
     }
 
+    /*
+    Function gets the current crypto price
+    */
     override fun getCryptoPrice() {
 
         if (dataManager.checkConnection()) {
+
             dataManager.getCryptoCompareService().getCurrentPrice(view.getSymbol(), "USD")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -61,6 +65,9 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
         }
     }
 
+    /*
+    Function executes when the fragment resumes
+    */
     override fun onResume() {
         if(price != null)
             getTransactions(price)
@@ -69,7 +76,10 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
             getCryptoPrice()
     }
 
-    override fun getAllCurrencies() {
+    /*
+    Function starts a transaction for the crypto
+    */
+    override fun startTransaction() {
 
         dataManager.readAllCrytpos()
                 .subscribeOn(Schedulers.io())
@@ -90,6 +100,9 @@ class TransactionsPresenter(var dataManager: TransactionsDataManager, var view: 
 
     }
 
+    /*
+    Function gets and loads all transactions for the crypto
+    */
     private fun getTransactions(basePrice: Double?) {
 
         val symbol = view.getSymbol()

@@ -1,11 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.crypto.viewpager.transactions
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.core.widget.NestedScrollView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,10 +52,16 @@ class TransactionsFragment : androidx.fragment.app.Fragment(), TransactionsContr
         presenter.attachView()
     }
 
+    /*
+    Function executes when the refresh layout is refreshed
+    */
     override fun onRefresh() {
         presenter.onResume()
     }
 
+    /*
+    Function hides the refreshing icon
+    */
     override fun hideRefreshing() {
         swipeLayout.isRefreshing = false
     }
@@ -67,22 +69,31 @@ class TransactionsFragment : androidx.fragment.app.Fragment(), TransactionsContr
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddTransaction.id -> {
-                presenter.getAllCurrencies()
+                presenter.startTransaction()
             }
         }
     }
 
+    /*
+    Function executes when the fragment resumes
+    */
     override fun onResume() {
         super.onResume()
         presenter.onResume() //notice how i don't call the presenter.getCryptoPrices() here as it is quite unnecessary to load a new set of prices when this would only run when coming from a transaction detail page which is more than likely not long after the prices are obtained in the first place therefore not worth the loading time wait again for update
     }
 
+    /*
+    Function starts the crypto transaction activity
+    */
     override fun startTransaction(currency: Datum?, baseImageUrl: String?, baseLinkUrl: String?) {
 
         val notTransaction = currency?.let { NotTransaction(it, currency.imageUrl, baseImageUrl, false) }
         CryptoTransactionArgs(null, notTransaction, false).launch(context!!)
     }
 
+    /*
+    Function loads the crypto transactions into the list
+    */
     override fun loadTransactions(transactions: List<Transaction>, currentUsdPrice: Double?, baseFiat: Rate) {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
@@ -91,6 +102,9 @@ class TransactionsFragment : androidx.fragment.app.Fragment(), TransactionsContr
         recyclerView.adapter = transactionsAdapter
     }
 
+    /*
+    Function returns the crypto symbol
+    */
     override fun getSymbol(): String {
         return currencySymbol
     }

@@ -39,6 +39,10 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
         compositeDisposable?.dispose()
     }
 
+
+    /*
+    Function updates a crypot transaciont
+    */
     override fun updateCryptoTransaction(transaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date, isDeducted: Boolean, notes: String) {
 
         var correctQuantity = quantity.toBigDecimal()
@@ -204,6 +208,10 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
         }
     }
 
+
+    /*
+    Function gets the current price
+    */
     override fun getCurrentPrice(transactionSymbol: String, pair: String) {
 
         if(dataManager.checkConnection()){
@@ -275,6 +283,9 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
 //
 //    }
 
+    /*
+    Function deletes a transaction
+    */
     override fun deleteTransaction(transaction: Transaction) {
 
         dataManager.getTransactions()

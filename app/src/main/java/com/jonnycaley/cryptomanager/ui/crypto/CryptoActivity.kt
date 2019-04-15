@@ -45,32 +45,43 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto)
 
-        setupViewPager()
-        setupToolbar()
+        setupViewPager() //set up viewpager
+        setupToolbar() //set up toolbar
 
         presenter = CryptoPresenter(CryptoDataManager.getInstance(this), this)
-        presenter.attachView()
+        presenter.attachView() //attach the presenter
     }
 
+    /*
+    Function loads the crypto color scheme
+    */
     override fun connectionAvailable() {
         if(!isPicassoLoaded){
-            presenter.getCoinColorScheme()
+            presenter.getCoinColorScheme() //get the color scheme
         }
     }
 
+    /*
+    Function gets the crypto symbol
+    */
     override fun getSymbol(): String {
         if(args.currencySymbol == "MIOTA")
             return "IOTA"
         return args.currencySymbol
     }
 
+    /*
+    Function shows the no internet snackbar
+    */
     override fun showNoInternet() {
         showSnackBar(resources.getString(R.string.internet_required))
     }
 
-
     var snackBar : Snackbar? = null
 
+    /*
+    Function shows the snackbar with the input message
+    */
     fun showSnackBar(message: String) {
 
         snackBar = Snackbar.make(viewPager, message, Snackbar.LENGTH_INDEFINITE)
@@ -82,11 +93,14 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     var isPicassoLoaded = false
 
+    /*
+    Function loads the crypto theme
+    */
     override fun loadTheme(info: GeneralInfo) {
 
         isPicassoLoaded = true
 
-        if(info.data?.isNotEmpty() == true) {
+        if(info.data?.isNotEmpty() == true) { //if there is data
 
             Picasso.with(this)
                     .load("https://www.cryptocompare.com" + info.data?.first()?.coinInfo?.imageUrl)
@@ -115,6 +129,9 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         }
     }
 
+    /*
+    Function gets the dominant color of the crypot icon
+    */
     fun getDominantColor(bitmap: Bitmap): Int {
         val swatchesTemp = androidx.palette.graphics.Palette.from(bitmap).generate().swatches
         val swatches = ArrayList(swatchesTemp)
@@ -124,11 +141,14 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     var myPagerAdapter : CryptoActivity.MyPagerAdapter? = null
 
+    /*
+    Function sets up the viewpager
+    */
     override fun setupViewPager() {
 
         myPagerAdapter = MyPagerAdapter(supportFragmentManager)
         viewPager.adapter = myPagerAdapter
-        tabLayout.setupWithViewPager(viewPager)
+        tabLayout.setupWithViewPager(viewPager) //set up with view pager
         tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.theme_color)) //Set the initial tab color to background so you cant see it so it looks neat when loading in
 
     }
@@ -138,21 +158,27 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
 
     val toolbar : Toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
 
+    /*
+    Function sets up the toolbar title and arrow color
+    */
     fun setupToolbar() {
 
         if(!Utils.isDarkTheme()) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
+            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp) //set up icon
         }
 
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        if(args.currencyName != "")
+        if(args.currencyName != "") //set titles
             title.text = args.currencyName
         else
             title.text = args.currencySymbol
     }
 
+    /*
+    Function handles the toolbar item presses
+    */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {
@@ -164,10 +190,16 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
         return false
     }
 
+    /*
+    Function shows the no data available toast
+    */
     override fun showNoDataAvailable() {
         Toast.makeText(this, "No data available for ${args.currencyName}", Toast.LENGTH_SHORT).show()
     }
 
+    /*
+    Adapter class
+    */
     inner class MyPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
         val NUM_PAGES = 2
@@ -196,12 +228,9 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
                 }
             }
         }
-
-
     }
 
     override fun setPresenter(presenter: CryptoContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
-
 }

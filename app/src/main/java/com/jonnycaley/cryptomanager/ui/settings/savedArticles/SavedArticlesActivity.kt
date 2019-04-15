@@ -38,45 +38,63 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_articles)
 
-        if(!Utils.isDarkTheme()) {
+        if(!Utils.isDarkTheme()) { // is dark theme
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
-        overridePendingTransition(R.anim.new_activity_open,R.anim.old_activity_close)
+        overridePendingTransition(R.anim.new_activity_open,R.anim.old_activity_close) // override transactions
 
-        setupToolbar()
+        setupToolbar() // setup toolbar
 
-        presenter = SavedArticlesPresenter(SavedArticlesDataManager.getInstance(this), this)
+        presenter = SavedArticlesPresenter(SavedArticlesDataManager.getInstance(this), this) // set up presenter
         presenter.attachView()
     }
 
+    /*
+    Function executes on pause
+    */
     override fun onPause() {
         super.onPause()
     }
 
+    /*
+    Function hides progress layout
+    */
     override fun hideProgressLayout() {
-        progressLayout.visibility = View.GONE
+        progressLayout.visibility = View.GONE //change visibility
     }
 
+    /*
+    Function shows progress layout
+    */
     override fun showProgressLayout() {
-        progressLayout.visibility = View.VISIBLE
+        progressLayout.visibility = View.VISIBLE //change visibility
     }
 
+    /*
+    Function shows error
+    */
     override fun showError() {
-        showSnackBar(resources.getString(R.string.error_occurred))
+        showSnackBar(resources.getString(R.string.error_occurred)) //show error
     }
 
+    /*
+    Function shows snackbar
+    */
     fun showSnackBar(message: String) {
         Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) { presenter.loadSavedArticles() }
                 .show()
     }
 
+    /*
+    Function shows no articles layout
+    */
     override fun showNoArticles() {
-        layoutNoArticles.visibility = View.VISIBLE
+        layoutNoArticles.visibility = View.VISIBLE //change visibility
     }
 
     override fun hideNoArticles() {
-        layoutNoArticles.visibility = View.GONE
+        layoutNoArticles.visibility = View.GONE //change visibility
     }
 
     override fun showSavedNews(news: ArrayList<Article>) {

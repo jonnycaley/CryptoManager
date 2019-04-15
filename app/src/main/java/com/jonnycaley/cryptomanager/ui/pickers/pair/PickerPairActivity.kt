@@ -43,22 +43,22 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
         setContentView(R.layout.activity_picker_pair)
 
 
-        if(!Utils.isDarkTheme()) {
+        if(!Utils.isDarkTheme()) { //dark theme
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
 
-        setupToolbar()
-        setupSearchBar()
+        setupToolbar() //toolbar setup
+        setupSearchBar() //search bar setup
 
-        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() { //add listener
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if(dy != 0)
-                    Utils.hideKeyboardFromActivity(this@PickerPairActivity)
+                    Utils.hideKeyboardFromActivity(this@PickerPairActivity) //hide keyboard
             }
         })
 
-        presenter = PickerPairPresenter(PickerPairDataManager.getInstance(this), this)
+        presenter = PickerPairPresenter(PickerPairDataManager.getInstance(this), this) //attach presenter
         presenter.attachView()
     }
 
@@ -67,11 +67,11 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
     }
 
     private fun setupSearchBar() {
-        searchBar.setOnQueryTextListener(this)
+        searchBar.setOnQueryTextListener(this) //hide keyboard
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        Utils.hideKeyboardFromActivity(this)
+        Utils.hideKeyboardFromActivity(this) //hide keyboard
         return true
     }
 
@@ -84,7 +84,7 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
     }
 
     override fun showSearchbar() {
-        searchBar.visibility = View.VISIBLE
+        searchBar.visibility = View.VISIBLE //change visibility
     }
 
     var snackBar : Snackbar? = null
@@ -98,6 +98,9 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
         snackBar.let { it?.show() }
     }
 
+    /*
+    Function shows the pairs
+    */
     override fun showPairs(pairs: List<String>?) {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
@@ -115,11 +118,11 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
     }
 
     override fun showProgressBar() {
-        progressBarLayout.visibility = View.VISIBLE
+        progressBarLayout.visibility = View.VISIBLE //change visibility
     }
 
     override fun hideProgressBar() {
-        progressBarLayout.visibility = View.GONE
+        progressBarLayout.visibility = View.GONE //change visibility
     }
 
     override fun getExchange(): String? {

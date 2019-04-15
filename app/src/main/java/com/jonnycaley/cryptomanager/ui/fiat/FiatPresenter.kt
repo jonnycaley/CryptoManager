@@ -26,6 +26,9 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         getTransactions(view.getFiatCode())
     }
 
+    /*
+    Function gets the transactions, calculates and displays the various amounts
+    */
     override fun getTransactions(fiatSymbol: String) {
 
         val filteredTrans = ArrayList<Transaction>()
@@ -39,9 +42,9 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                 .observeOn(Schedulers.computation())
                 .map { transactions -> filteredTrans.addAll(transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) }.sortedBy { it.date }.asReversed()) }
                 .map { symbol = Utils.getFiatSymbol(view.getFiatCode()) }
-                .map { withdrawnFiatCount = getWithdrawnFiatCount(filteredTrans, fiatSymbol) }
-                .map { depositedFiatCount = getDepositedFiatCount(filteredTrans, fiatSymbol) }
-                .map { availableFiatCount = getAvailableFiatCount(filteredTrans, fiatSymbol) }
+                .map { withdrawnFiatCount = getWithdrawnFiatCount(filteredTrans, fiatSymbol) } // show withdrawn count
+                .map { depositedFiatCount = getDepositedFiatCount(filteredTrans, fiatSymbol) } // show deposited count
+                .map { availableFiatCount = getAvailableFiatCount(filteredTrans, fiatSymbol) } // show available count
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit> {
 
@@ -62,6 +65,9 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                 })
     }
 
+    /*
+    Function calculates the withdrawn fiat amount
+    */
     private fun getWithdrawnFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
         var depositedFiat = 0.toBigDecimal()
         transactions.forEach { println(it.symbol+"/"+it.pairSymbol+" - Price: "+ it.price + " - Quantity: " + it.quantity) }
@@ -72,6 +78,9 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         return depositedFiat
     }
 
+    /*
+    Function calculates the deposited fiat amount
+    */
     private fun getDepositedFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
         var depositedFiat = 0.toBigDecimal()
 
@@ -81,6 +90,9 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         return depositedFiat
     }
 
+    /*
+    Function calculates the available fiat amount
+    */
     private fun getAvailableFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
         var availableFiat = 0.toBigDecimal()
 
@@ -93,5 +105,4 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
     override fun detachView() {
         compositeDisposable?.dispose()
     }
-
 }

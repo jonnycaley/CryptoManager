@@ -44,6 +44,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         getData()
     }
 
+    /*
+    Function starts the get data process if there is internet, if not it shows a no internet layout
+    */
     override fun getData() {
         clearChartDisposable()
         clearDisposable()
@@ -60,6 +63,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
+    /*
+    Function gets the currency general data and displays it
+    */
     private fun getCurrencyGeneralData(symbol: String) {
 
         var data: Data? = null
@@ -69,8 +75,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { json ->
-                        println(JsonModifiers.jsonToGeneral(json))
-
                         JsonModifiers.jsonToGeneral(json)
                     }
                     .map { json -> data = Gson().fromJson(json, Data::class.java) }
@@ -101,6 +105,10 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
+    /*
+    Function runs when the onresume of the activity is fired
+    Updates the saved articles
+    */
     override fun onResume() {
 
         dataManager.getSavedArticles()
@@ -123,6 +131,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 })
     }
 
+    /*
+    Function gets the currency chart data and loads it
+    */
     override fun getCurrencyChart(chart: Chart, symbol: String, conversion: String) {
 
         if (dataManager.checkConnection()) {
@@ -171,6 +182,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
+    /*
+    Function gets the currency news and displays it
+    */
     private fun getCurrencyNews(symbol: String) {
 
         if (dataManager.checkConnection()) {
@@ -218,6 +232,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
         }
     }
 
+    /*
+    Function saves an article to storage
+    */
     override fun saveArticle(topArticle: Article) {
         dataManager.getSavedArticles()
                 .map { savedArticles ->
@@ -242,6 +259,9 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 })
     }
 
+    /*
+    Function removes an article from storage
+    */
     override fun removeArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
@@ -264,14 +284,23 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                 })
     }
 
+    /*
+    Function clears the disposable
+    */
     private fun clearDisposable() {
         compositeDisposable?.clear()
     }
 
+    /*
+    Function clears the chart disposable
+    */
     override fun clearChartDisposable() {
         chartDisposable?.clear()
     }
 
+    /*
+    Function disposes the disposables when the activity finishes to prevent memory leaks
+    */
     override fun detachView() {
         compositeDisposable?.dispose()
         chartDisposable?.dispose()
@@ -280,11 +309,6 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
     companion object {
         val TAG = "GeneralPresenter"
 
-
         val conversionUSD = "USD"
-        val conversionGBP = "GBP"
-        val conversionBTC = "BTC"
-
     }
-
 }

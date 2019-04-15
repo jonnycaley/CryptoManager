@@ -23,27 +23,30 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
 
     val converters = ArrayList<String>()
 
+    /*
+    Function gets the pairs
+    */
     override fun getPairs(exchange: String?, crytpoSymbol: String?) {
 
-        dataManager.getExchanges()
+        dataManager.getExchanges() //get exchanges
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { exchanges ->
                     if(exchange != "" && exchange != null) {
-                        exchanges.exchanges?.filter { it.name?.toLowerCase() == exchange.toLowerCase() }
+                        exchanges.exchanges?.filter { it.name?.toLowerCase() == exchange.toLowerCase() } //get correct exchanges
                     }
                     else {
-                        exchanges.exchanges
+                        exchanges.exchanges //show all
                     }
                 }
                 .map { exchanges ->
 
-                    exchanges.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } }
+                    exchanges.forEach { it.symbols?.filter { it.symbol?.toLowerCase() == crytpoSymbol?.toLowerCase() }?.forEach { converterz -> ArrayList<String>(converterz.converters).forEach { converters.add(it) } } } //filter exchanges
 
                     val hashSet = HashSet<String>()
                     hashSet.addAll(converters)
                     converters.clear()
-                    converters.addAll(hashSet)
+                    converters.addAll(hashSet) //add all exchanges
 
                     return@map converters
                 }
@@ -52,8 +55,8 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
 
                     override fun onSuccess(converters: ArrayList<String>) {
                         view.showPairs(converters)
-                        view.hideProgressBar()
-                        view.showSearchbar()
+                        view.hideProgressBar() //hide progress
+                        view.showSearchbar() //show search bar
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -69,6 +72,9 @@ class PickerPairPresenter (var dataManager: PickerPairDataManager, var view: Pic
                 })
     }
 
+    /*
+    Function filters the pairs
+    */
     override fun filterPairs(trim: String) {
         view.showPairs(converters.filter { it.toLowerCase().contains(trim.toLowerCase()) })
     }

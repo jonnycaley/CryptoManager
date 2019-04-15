@@ -32,6 +32,9 @@ class FiatTransactionPresenter(var dataManager: FiatTransactionDataManager, var 
         }
     }
 
+    /*
+    Function updates fiat transactions
+     */
     override fun updateFiatTransaction(oldTransaction: Transaction, exchange: String, currency: String, quantity: Float, date: Date, notes: String) {
 
         var priceUsd = 1.toBigDecimal()

@@ -24,6 +24,9 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
         loadSavedArticles()
     }
 
+    /*
+    Function loads saved articles
+    */
     override fun loadSavedArticles() {
         dataManager.getArticles()
                 .subscribeOn(Schedulers.io())
@@ -31,21 +34,21 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
                 .subscribe(object : SingleObserver<ArrayList<Article>> {
                     override fun onSuccess(news: ArrayList<Article>) {
                         if(news.isEmpty()){
-                            view.showNoArticles()
+                            view.showNoArticles() //show no articles
                         } else {
-                            view.hideNoArticles()
-                            view.showSavedNews(news)
+                            view.hideNoArticles() //hide no articles
+                            view.showSavedNews(news) //show saved articles
                         }
                         view.hideProgressLayout()
                     }
 
-                    override fun onSubscribe(d: Disposable) {
+                    override fun onSubscribe(d: Disposable) { //on subscribe
                         view.showProgressLayout()
                         println("onSubscribe")
                         compositeDisposable?.add(d)
                     }
 
-                    override fun onError(e: Throwable) {
+                    override fun onError(e: Throwable) { //on error
                         println("onError: ${e.message}")
                         view.hideProgressLayout()
                         view.hideNoArticles()
@@ -54,9 +57,12 @@ class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view
                 })
     }
 
+    /*
+    Function removes article
+    */
     override fun removeArticle(savedArticles : ArrayList<Article>?, article: Article) {
 
-        dataManager.saveArticles(savedArticles?.filter { it.url != article.url } as ArrayList<Article>)
+        dataManager.saveArticles(savedArticles?.filter { it.url != article.url } as ArrayList<Article>) //save articles without article
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : CompletableObserver {

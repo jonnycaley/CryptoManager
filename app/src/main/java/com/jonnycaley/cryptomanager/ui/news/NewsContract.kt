@@ -8,7 +8,7 @@ import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 interface NewsContract {
     interface View : BaseView<Presenter> {
         fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
-        fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate : Boolean)
+        fun showTop8Changes(sortedBy: ArrayList<Currency>, illuminate : Boolean)
         fun hideProgressBar()
         fun showScrollLayout()
         fun showProgressBar()

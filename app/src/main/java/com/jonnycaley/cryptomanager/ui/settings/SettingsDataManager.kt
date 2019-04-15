@@ -30,6 +30,9 @@ class SettingsDataManager private constructor(val UserPreferences: UserPreferenc
         }
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }

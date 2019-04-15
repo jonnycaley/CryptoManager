@@ -115,6 +115,9 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View,
         progressBarLayout.visibility = View.VISIBLE
     }
 
+    /*
+    Function shows the fiats
+    */
     override fun showFiats(fiats: List<Rate>?) {
 
         val data = ArrayList<Datum>()
@@ -146,6 +149,9 @@ class PickerCurrencyActivity : AppCompatActivity(), PickerCurrencyContract.View,
         layoutNoInternet.visibility = View.VISIBLE
     }
 
+    /*
+    Function notifies of picket chosen
+    */
     override fun onPickerChosen(symbol: String?) {
         val intent = Intent()
         intent.putExtra("data", symbol)

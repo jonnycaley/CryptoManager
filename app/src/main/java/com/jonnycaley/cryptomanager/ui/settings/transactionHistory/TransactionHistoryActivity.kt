@@ -38,26 +38,35 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
 
-        setupToolbar()
+        setupToolbar() //set up toolbar
 
-        presenter = TransactionHistoryPresenter(TransactionHistoryDataManager.getInstance(this), this)
+        presenter = TransactionHistoryPresenter(TransactionHistoryDataManager.getInstance(this), this) //attach presenter
         presenter.attachView()
     }
 
+    /*
+    Function shows transactions list
+    */
     override fun showTransactions(transactions: ArrayList<Transaction>) {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), this)
+        transactionsAdapter = TransactionsAdapter(transactions.sortedBy { it.date }.asReversed(), this) //attach adapter
         recyclerView.adapter = transactionsAdapter
     }
 
+    /*
+    Function hides no transactions layout
+    */
     override fun hideNoTransactionsLayout() {
-        layoutNoTransactions.visibility = View.GONE
+        layoutNoTransactions.visibility = View.GONE //change visibility
     }
 
+    /*
+    Function shows no transactions layout
+    */
     override fun showNoTransactionsLayout() {
-        layoutNoTransactions.visibility = View.VISIBLE
+        layoutNoTransactions.visibility = View.VISIBLE //change visibility
     }
 
     override fun onResume() {
@@ -69,6 +78,9 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
         this.presenter = checkNotNull(presenter)
     }
 
+    /*
+    Function sets up toolbar title
+    */
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)

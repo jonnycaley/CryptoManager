@@ -25,6 +25,9 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
         getCoinColorScheme()
     }
 
+    /*
+    Function gets the coin color scheme and loads the theme with the response
+    */
     override fun getCoinColorScheme() {
 
         if(dataManager.checkConnection()){
@@ -37,7 +40,7 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
 
                         override fun onNext(info: GeneralInfo) {
 //                            Log.i(TAG, "Loading Theme: ${info.data?.first()?.coinInfo?.imageUrl}")
-                            view.loadTheme(info)
+                            view.loadTheme(info) //load the theme
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -46,7 +49,7 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
 
                         override fun onError(e: Throwable) {
                             view.showNoDataAvailable()
-                            view.onBackPressed()
+                            view.onBackPressed() //backpressed to previous activity
                             println("onError11: ${e.message}")
                         }
                     })
@@ -57,10 +60,12 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
         }
     }
 
+    /*
+    Function returns the internet connection status
+    */
     override fun checkInternet(): Boolean {
         return dataManager.checkConnection()
     }
-
 
     override fun detachView() {
         compositeDisposable?.dispose()

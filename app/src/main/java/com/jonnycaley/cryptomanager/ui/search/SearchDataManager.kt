@@ -38,6 +38,9 @@ class SearchDataManager private constructor(val UserPreferences: UserPreferences
         return retrofit.create(ExchangeRatesService::class.java)
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }

@@ -35,18 +35,22 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
     private var currentFragment: androidx.fragment.app.Fragment? = null
 
+
+    /*
+    Function updates the theme when it is changed
+    */
     override fun updateThemeChanged() {
-        if(Utils.isDarkTheme()) {
+        if(Utils.isDarkTheme()) {  //dark theme
             navigation.background = resources.getDrawable(R.color.black)
         }
-        else {
+        else { //light theme
             navigation.background = resources.getDrawable(R.color.white)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        if(Utils.isDarkTheme()) {
+        if(Utils.isDarkTheme()) { //dark theme
             setTheme(R.style.darktheme)
         }
 
@@ -73,7 +77,7 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
         navigation.setPadding(0,15,0,15)
         navigation.setTextSize(10F)
 
-        navigation.onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        navigation.onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item -> //set the navigations
             when (item.itemId) {
                 R.id.navigation_portfolio -> {
                     if(fm.findFragmentByTag(fragment1TAG) == null)
@@ -122,11 +126,14 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 //        loadFragment(args.fragment)
     }
 
+    /*
+    Function loads a new fragment if it is not already there, otherwise it just shows the already created one
+    */
     private fun loadFragmentNew(fragment: Int) {
 
         var selectedItem = 0
 
-        when(fragment){
+        when(fragment){ //load the corresponding fragments
             0 -> {
                 if(fm.findFragmentByTag(fragment1TAG) == null)
                     fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).commit()
@@ -159,73 +166,11 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
         navigation.selectedItemId = selectedItem
     }
 
+    /*
+    Function handles the back pressed button and stops it from going back to the splash screen
+    */
     override fun onBackPressed() {
 
     }
-
-//    private fun replaceFragment(fragment: Fragment, tag: String) {
-//        if (fragment != currentFragment) {
-//            fragmentManager
-//                    ?.beginTransaction()
-//                    ?.replace(R.id.frame_placeholder, fragment, tag)
-//                    ?.commit()
-//            currentFragment = fragment
-//        }
-//    }
-
-//    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-//
-//        val fragmentManager: FragmentManager = supportFragmentManager
-//
-//        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-//
-//        when (item.itemId) {
-//            R.id.navigation_home -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, NewsFragment()).commit()
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_markets -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, MarketsFragment()).commit()
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_portfolio -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, PortfolioFragment()).commit()
-//                return@OnNavigationItemSelectedListener true
-//            }
-//            R.id.navigation_settings -> {
-//                fragmentTransaction.replace(R.id.frame_placeholder, SettingsFragment()).commit()
-//                return@OnNavigationItemSelectedListener true
-//            }
-//        }
-//        false
-//    }
-
-//    private fun loadFragment(fragment: Int) {
-//
-//        var selectedItem = 0
-//
-//        val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
-//        when(fragment){
-//            0 -> {
-//                this.fragment = NewsFragment().newInstance("Home")/* parcelable */
-//                selectedItem = R.id.navigation_home
-//            }
-//            1 -> {
-//                this.fragment = MarketsFragment().newInstance("Markets")/* parcelable */
-//                selectedItem = R.id.navigation_markets
-//            }
-//            2 -> {
-//                this.fragment = PortfolioFragment().newInstance("Portfolio")/* parcelable */
-//                selectedItem = R.id.navigation_portfolio
-//            }
-//            3 -> {
-//                this.fragment = SettingsFragment().newInstance("Settings")/* parcelable */
-//                selectedItem = R.id.navigation_settings
-//            }
-//        }
-//        transaction.replace(R.id.frame_placeholder, this.fragment)
-//        transaction.commit()
-//        navigation.selectedItemId = selectedItem
-//    }
 
 }

@@ -33,6 +33,9 @@ class SelectCurrencyDataManager private constructor(val UserPreferences: UserPre
         }
     }
 
+    /*
+    Function returns the current status of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }

@@ -19,7 +19,9 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_currency_list, parent, false))
     }
 
-
+    /*
+    Function swaps the current currencies with new ones
+    */
     fun swap(currencies: ArrayList<Currency>, baseFiat: Rate) {
 
         this.currencies.clear()
@@ -30,6 +32,9 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
 
     }
 
+    /*
+    Function sorts the currencies by the given filter
+    */
     fun sort(filter: String) {
 
         //TODO: IDEALLY THIS NEEDS TO BE DONE ON COMPUTATION THREAD (MAYBE IN PRESENTER) BUT LOOOOOOOOONG

@@ -321,6 +321,9 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
 //        view.text = "$symbol$priceText"
 //    }
 
+    /*
+    Function when the sort is changes sorts the items
+    */
     fun onSortChanged(sort : String){
 
         var tempHoldings = ArrayList<Holding>()

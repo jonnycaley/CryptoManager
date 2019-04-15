@@ -130,14 +130,23 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the worth of a transaction
+    */
     private fun getWorth(transaction: Transaction): BigDecimal? {
         return currentUSDPrice?.times(baseFiat.rate ?: 1.toBigDecimal())?.times(getTextAmount(transaction))
     }
 
+    /*
+    Function gets the change of a transaction
+    */
     private fun getChange(transaction: Transaction): BigDecimal? {
         return ((getWorth(transaction)?.minus(getCost(transaction)!!))?.div(getCost(transaction)))?.times(100.toBigDecimal())
     }
 
+    /*
+    Function gets the cost of a transaction
+    */
     fun getCost(transaction: Transaction): BigDecimal {
         if(transaction.symbol == currency) { // btc/eth
             return transaction.isDeductedPriceUsd.times((transaction.price.times(baseFiat.rate?: 1.toBigDecimal()) * transaction.quantity)).abs()
@@ -146,7 +155,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
-
+    /*
+    Function gets the price of a transaction
+    */
     fun getPrice(transaction: Transaction): Double {
         return if (transaction.symbol == currency) {
           transaction.isDeductedPriceUsd.times(transaction.price).toDouble()
@@ -156,6 +167,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the amount of a transaction
+    */
     private fun getTextAmount(transaction: Transaction): BigDecimal {
         if(transaction.symbol == currency) {
             return transaction.quantity.abs()
@@ -164,6 +178,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the sell transaction visibility
+    */
     fun getSellTransactionVisibility(transaction: Transaction): Int {
         if(transaction.symbol == currency) {
             if(transaction.quantity > 0.toBigDecimal()){
@@ -180,6 +197,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the title for the pair title
+    */
     fun getTitlePair(transaction: Transaction): CharSequence {
         return if (transaction.symbol == currency) {
             "Trading Pair"
@@ -192,6 +212,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the title for the amount
+    */
     fun getTitleAmount(transaction: Transaction): CharSequence {
         return if (transaction.symbol == currency) {
             if(transaction.quantity > 0.toBigDecimal()) {
@@ -208,6 +231,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the text for the pair title
+    */
     fun getTextPair(transaction: Transaction): CharSequence {
         return if(transaction.symbol == currency) {
             "${transaction.symbol}/${transaction.pairSymbol}"
@@ -216,6 +242,9 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
         }
     }
 
+    /*
+    Function gets the title for the price title
+    */
     fun getTitlePrice(transaction: Transaction): CharSequence {
         if(transaction.symbol == currency) {
             if(transaction.quantity > 0.toBigDecimal()){

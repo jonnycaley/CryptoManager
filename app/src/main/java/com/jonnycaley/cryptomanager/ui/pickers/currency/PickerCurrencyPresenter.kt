@@ -29,6 +29,9 @@ class PickerCurrencyPresenter (var dataManager: PickerCurrencyDataManager, var v
 
     var fiatz : ExchangeRates? = null
 
+    /*
+    Function returns the fiats from storage
+    */
     override fun getFiats() {
         if(dataManager.checkConnection()){
 

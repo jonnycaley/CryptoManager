@@ -84,6 +84,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
         rates?.forEach { allFiats.add(it) }
     }
 
+    /*
+    Function gets the transactions
+    */
     override fun getTransactions(timePeriod: String) { //gets all the transactions made
 
         dataManager.readBaseFiat() //gets the base fiat
@@ -98,10 +101,10 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                     override fun onSuccess(transactions: ArrayList<Transaction>) {
                         if (transactions.isEmpty()) { //if the portfolio is empty
                             resetPortfolio()
-                            view.showNoHoldingsLayout()
-                            view.hideRefreshing()
-                            view.hideInternetRequiredLayout()
-                            view.hideProgressLayout()
+                            view.showNoHoldingsLayout() //change layout
+                            view.hideRefreshing() //change layout
+                            view.hideInternetRequiredLayout() //change layout
+                            view.hideProgressLayout() //change layout
                             view.showBalance(baseFiat, 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal())
                             view.showChange(baseFiat, 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal(), 0.toBigDecimal())
                             view.showHoldings(ArrayList(), ArrayList(), baseFiat, ArrayList() )
@@ -123,6 +126,9 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 })
     }
 
+    /*
+    Function resets the portfolio
+    */
     private fun resetPortfolio() {
         balanceUsd = 0.toBigDecimal()
         balanceBtc = 0.toBigDecimal()
@@ -146,21 +152,21 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 
             when (timePeriod) {
                 PortfolioFragment.TIME_PERIOD_1H -> {
-                    timePeriodStr = PortfolioFragment.TIME_PERIOD_MINUTE; aggregateStr = PortfolioFragment.AGGREGATE_1H
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_MINUTE; aggregateStr = PortfolioFragment.AGGREGATE_1H //time period configure
                 }
                 PortfolioFragment.TIME_PERIOD_1D -> {
-                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1D
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1D //time period configure
                 }
                 PortfolioFragment.TIME_PERIOD_1W -> {
-                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1W
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_HOUR; aggregateStr = PortfolioFragment.AGGREGATE_1W //time period configure
                 }
                 else -> {
-                    timePeriodStr = PortfolioFragment.TIME_PERIOD_DAY; aggregateStr = PortfolioFragment.AGGREGATE_1M
+                    timePeriodStr = PortfolioFragment.TIME_PERIOD_DAY; aggregateStr = PortfolioFragment.AGGREGATE_1M //time period configure
                 }
             }
 
-            val getBtcPrice: Observable<HistoricalData> = dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "BTC", "USD", aggregateStr)
-            val getEthPrice: Observable<HistoricalData> = dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "ETH", "USD", aggregateStr)
+            val getBtcPrice: Observable<HistoricalData> = dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "BTC", "USD", aggregateStr) //get btc price
+            val getEthPrice: Observable<HistoricalData> = dataManager.getCryptoCompareService().getPriceAt(timePeriodStr, "ETH", "USD", aggregateStr) //get eth price
 
             Observable.zip(getBtcPrice, getEthPrice, BiFunction<HistoricalData, HistoricalData, Unit> { btcResponse, ethResponse ->
 
@@ -169,14 +175,14 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
                 val tempPricesBtc = Prices()
                 tempPricesBtc.uSD = btcResponse.data?.first()?.close
                 tempPriceBtc.prices = tempPricesBtc
-                priceBtcHistorical = tempPriceBtc
+                priceBtcHistorical = tempPriceBtc //set btc price
 
                 val tempPriceEth = Price()
                 tempPriceEth.symbol = "ETH"
                 val tempPricesEth = Prices()
                 tempPricesEth.uSD = ethResponse.data?.first()?.close
                 tempPriceEth.prices = tempPricesEth
-                priceEthHistorical = tempPriceEth
+                priceEthHistorical = tempPriceEth //set eth price
 
             })
                     .subscribeOn(Schedulers.io())
@@ -623,6 +629,7 @@ class PortfolioPresenter(var dataManager: PortfolioDataManager, var view: Portfo
 //                        }
 //                    })
         } else {
+
             view.hideRefreshing()
             view.showNoInternet()
         }

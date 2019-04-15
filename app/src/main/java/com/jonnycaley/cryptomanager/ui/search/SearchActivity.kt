@@ -45,30 +45,42 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         }
         setupToolbar()
         setupSearchBar()
-        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() { //add listener
             override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if(dy != 0)
-                    Utils.hideKeyboardFromActivity(this@SearchActivity)
+                    Utils.hideKeyboardFromActivity(this@SearchActivity) //hide keyboard
             }
         })
 
-        presenter = SearchPresenter(SearchDataManager.getInstance(this), this)
+        presenter = SearchPresenter(SearchDataManager.getInstance(this), this) //attach presenter
         presenter.attachView()
     }
 
+    /*
+    Function shows the progress bar layout
+    */
     override fun showProgressLayout() {
-        layoutProgressBar.visibility = View.VISIBLE
+        layoutProgressBar.visibility = View.VISIBLE //change visibility
     }
 
+    /*
+    Function hides the progress bar layout
+    */
     override fun hideProgressLayout() {
-        layoutProgressBar.visibility = View.GONE
+        layoutProgressBar.visibility = View.GONE //change visibility
     }
 
+    /*
+    Function shows the error
+    */
     override fun showError() {
         showSnackBar(resources.getString(R.string.error_occurred))
     }
 
+    /*
+    Function shows the snackbar
+    */
     fun showSnackBar(message: String) {
         Snackbar.make(layout, message, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.retry) {
@@ -84,19 +96,28 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
                 .show()
     }
 
+    /*
+    Function shows the searchbar
+    */
     override fun showSearchBar() {
-        searchBar.visibility = View.VISIBLE
+        searchBar.visibility = View.VISIBLE //change visibility
     }
 
+    /*
+    Function shows the currencies
+    */
     override fun showCurrencies(currencies: List<Datum>?, baseImageUrl: String?, baseLinkUrl: String?) {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        currenciesAdapter = SearchCurrenciesAdapter(currencies?.sortedBy { it.sortOrder?.toInt() }, baseImageUrl, baseLinkUrl, this)
+        currenciesAdapter = SearchCurrenciesAdapter(currencies?.sortedBy { it.sortOrder?.toInt() }, baseImageUrl, baseLinkUrl, this) //attach adapter
         recyclerView.adapter = currenciesAdapter
 
     }
 
+    /*
+    Function gets the search type
+    */
     override fun getSearchType(): String? {
         return args.transactionString
     }
@@ -135,9 +156,9 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
             }
         }
 
-        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this) //attach layout manager
         recyclerView.layoutManager = mLayoutManager
-        currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this)
+        currenciesAdapter = SearchCurrenciesAdapter(data, null, null, this) //attach adapter
         recyclerView.adapter = currenciesAdapter
     }
 

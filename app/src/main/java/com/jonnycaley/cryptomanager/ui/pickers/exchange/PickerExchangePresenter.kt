@@ -28,26 +28,28 @@ class PickerExchangePresenter(var dataManager: PickerExchangeDataManager, var vi
 
     var exchanges = ArrayList<Exchange>()
 
+    /*
+    Function gets the exchanges from storage
+    */
     override fun getExchanges(crypto: String?) {
 
-        dataManager.readAllExchanges()
+        dataManager.readAllExchanges() //read exchanges
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
                 .map { gson ->
                     exchanges.clear()
                     if(crypto != null) {
-                        gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ exchanges?.add(exchange) } } }
+                        gson.exchanges?.forEach { exchange -> exchange.symbols?.forEach { symbol -> if (symbol.symbol == crypto){ exchanges?.add(exchange) } } } //get corrrect exchanges
                     } else {
-                        println("2")
-                        exchanges = gson.exchanges as ArrayList<Exchange>
+                        exchanges = gson.exchanges as ArrayList<Exchange> //convert to arraylist
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : SingleObserver<Unit?> {
                     override fun onSuccess(gson: Unit) {
-                        view.showExchanges(exchanges)
-                        view.showSearchBar()
-                        view.hideProgressBar()
+                        view.showExchanges(exchanges) //show exchanges
+                        view.showSearchBar() //show search bar
+                        view.hideProgressBar() //hide progress
                     }
 
                     override fun onSubscribe(d: Disposable) {

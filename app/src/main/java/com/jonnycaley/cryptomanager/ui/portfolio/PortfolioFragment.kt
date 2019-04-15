@@ -87,28 +87,31 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
 
         textPortfolioBalance.typeface = custom_font
 
-        buttonAddCurrency.setOnClickListener(this)
-        buttonAddFiat.setOnClickListener(this)
-        swipeLayout.setOnRefreshListener(this)
-        textBalance.setOnClickListener(this)
-        textChange.setOnClickListener(this)
+        buttonAddCurrency.setOnClickListener(this) //set listener
+        buttonAddFiat.setOnClickListener(this) //set listener
+        swipeLayout.setOnRefreshListener(this) //set listener
+        textBalance.setOnClickListener(this) //set listener
+        textChange.setOnClickListener(this) //set listener
 
-        textSortName.setOnClickListener(this)
-        textSortHoldings.setOnClickListener(this)
-        textSortChange.setOnClickListener(this)
-        textTryAgain.setOnClickListener(this)
+        textSortName.setOnClickListener(this) //set listener
+        textSortHoldings.setOnClickListener(this) //set listener
+        textSortChange.setOnClickListener(this) //set listener
+        textTryAgain.setOnClickListener(this) //set listener
 
         if(Utils.isDarkTheme())
-            imageNoInternet.setImageResource(R.drawable.no_internet_white)
+            imageNoInternet.setImageResource(R.drawable.no_internet_white) //change icon
         else
-            imageNoInternet.setImageResource(R.drawable.no_internet_black)
+            imageNoInternet.setImageResource(R.drawable.no_internet_black) //change icon
 
-        setUpPortfolioTimeChoices()
+        setUpPortfolioTimeChoices() //set choices
 
-        presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this)
+        presenter = PortfolioPresenter(PortfolioDataManager.getInstance(context!!), this) //attach presenter
         presenter.attachView()
     }
 
+    /*
+    Function when a tab is clicked
+    */
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
         if (isTabAlreadyClicked)
             nestedScrollView.scrollTo(0, 0)
@@ -117,25 +120,28 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
         Log.i(TAG, "onTabClicked()")
     }
 
+    /*
+    Function sets up the portfolio time choices
+    */
     private fun setUpPortfolioTimeChoices() {
 
-        radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition ->
+        radioGroup.setOnPositionChangedListener { button, currentPosition, lastPosition -> //set listener
             presenter.clearDisposable()
             when (currentPosition) {
                 0 -> {
-                    chosenPeriod = TIME_PERIOD_1H
+                    chosenPeriod = TIME_PERIOD_1H //time period config
                 }
                 1 -> {
-                    chosenPeriod = TIME_PERIOD_1D
+                    chosenPeriod = TIME_PERIOD_1D //time period config
                 }
                 2 -> {
-                    chosenPeriod = TIME_PERIOD_1W
+                    chosenPeriod = TIME_PERIOD_1W //time period config
                 }
                 3 -> {
-                    chosenPeriod = TIME_PERIOD_1M
+                    chosenPeriod = TIME_PERIOD_1M //time period config
                 }
                 4 -> {
-                    chosenPeriod = TIME_PERIOD_ALL
+                    chosenPeriod = TIME_PERIOD_ALL //time period config
                 }
             }
             presenter.getTransactions(chosenPeriod)
@@ -198,6 +204,9 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
         }
     }
 
+    /*
+    Function sets the text color secondary
+    */
     fun setTextColorSecondary(textView: TextView) {
         if(Utils.isDarkTheme()){
             textView.setTextColor(resources.getColor(R.color.dark_text_color_secondary))
@@ -207,6 +216,9 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
     }
 
 
+    /*
+    Function sets the text color primary
+    */
     fun setTextColorPrimary(textView: TextView) {
         if(Utils.isDarkTheme()){
             textView.setTextColor(resources.getColor(R.color.dark_text_color))
@@ -300,6 +312,9 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
 //        swipeLayout.isRefreshing = false
     }
 
+    /*
+    Function shows the balance text
+    */
     @SuppressLint("SetTextI18n")
     override fun showBalance(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal) {
 
@@ -320,6 +335,9 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
         }
     }
 
+    /*
+    Function shows the change texts
+    */
     @SuppressLint("SetTextI18n")
     override fun showChange(baseFiat: Rate, balanceUsd: BigDecimal, balanceBtc: BigDecimal, balanceEth: BigDecimal, changeUsd: BigDecimal, changeBtc: BigDecimal, changeEth: BigDecimal) {
 
@@ -434,6 +452,9 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
         }
     }
 
+    /*
+    Function formats the percentage
+    */
     fun formatPercentage(percentChange24h: BigDecimal, view: TextView) {
 
         if (percentChange24h.compareTo(0.toBigDecimal()) == 0) {

@@ -29,10 +29,16 @@ class FiatDataManager private constructor(val UserPreferences: UserPreferences) 
         }
     }
 
+    /*
+    Function reads the transactions from storage
+    */
     fun getTransactions(): Single<ArrayList<Transaction>> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_TRANSACTIONS, ArrayList())
     }
 
+    /*
+    Function returns the current state of the internet connection
+    */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }

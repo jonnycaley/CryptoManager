@@ -205,12 +205,16 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
+//            context?.let { context -> ArticleArgs(article).launch(context) }
             val builder = context?.let { context -> Utils.webViewBuilder(context) }
             article.url?.let { url -> builder?.show(url) }
 
         }
     }
 
+    /*
+    Function swaps items in the adapter
+    */
     fun swap(newsItems: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
 
         val newUrls = ArrayList<String>()
@@ -223,8 +227,6 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 
         if((newsItems != this.newsItems) || (newUrls.sorted() != oldUrls.sorted())) {
 
-            Log.i(TAG, "Updating")
-
             this.newsItems.clear()
             this.savedArticles.clear()
             this.newsItems.putAll(newsItems)
@@ -232,7 +234,6 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
 
             this.notifyDataSetChanged()
         } else {
-            Log.i(TAG, "Not updating")
         }
     }
 

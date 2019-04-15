@@ -30,14 +30,23 @@ class ArticleDataManager private constructor(val UserPreferences: UserPreference
         }
     }
 
+    /*
+    Function returns the connection status
+     */
     fun checkConnection(): Boolean {
         return Utils.isNetworkConnected(context)
     }
 
+    /*
+    Function gets the saved articles from storage
+     */
     fun getSavedArticles(): Single<ArrayList<Article>> {
         return RxPaperBook.with(Schedulers.io()).read(Constants.PAPER_SAVED_ARTICLES, ArrayList())
     }
 
+    /*
+    Function saves the articles to storage
+     */
     fun saveArticles(savedArticles: ArrayList<Article>) : Completable {
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_SAVED_ARTICLES, savedArticles)
     }

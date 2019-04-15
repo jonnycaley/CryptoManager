@@ -15,6 +15,9 @@ class XAxisValueFormatter(private val chart : Chart, private val aggregate : Int
         return (indexToEpoch(value.toLong()))
     }
 
+    /*
+    Function converts index to epoch time
+    */
     fun indexToEpoch(index: Long): String {
 
 //      please note - index starts at 0 - 30 from candles left to right.
@@ -90,6 +93,9 @@ class XAxisValueFormatter(private val chart : Chart, private val aggregate : Int
         return ""
     }
 
+    /*
+    Function converts epoch to date string
+    */
     fun epoch2DateString(epochSeconds: Long, formatString: String): String {
         val updatedate = Date(epochSeconds * 1000)
         val format = SimpleDateFormat(formatString)

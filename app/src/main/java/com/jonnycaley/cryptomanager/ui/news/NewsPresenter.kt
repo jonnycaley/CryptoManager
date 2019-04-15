@@ -34,11 +34,13 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
         getNews(true)
     }
 
-
+    /*
+    Function executes on refresh
+    */
     override fun onRefresh() {
         //TODO: changing theme and then navigating to the home fragment forces a reload because the data held with the activity is overwritten. check storage if activity data is empty too?
         //TODO: clicking too and from quickly breaks at linkCryptoToArticles
-        getNews(false)
+        getNews(false) //get the news
 //        var linkedCryptos = HashMap<Article, Currency?>()
 
 //        Log.i(TAG, "Loading old news")
@@ -72,7 +74,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //                    override fun onSuccess(t: Unit) {
 //                        if(linkedCryptos.isNotEmpty()) {
 //                            view.showNews(linkedCryptos, savedArticles)
-//                            view.showTop100Changes(top100, false)
+//                            view.showTop8Changes(top100, false)
 //                            Log.i(TAG, "ShowingNewsssssss")
 //                            view.hideProgressBar()
 //                            view.showScrollLayout()
@@ -125,6 +127,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //
     }
 
+    /*
+    Function shows the top 8 changes cards
+    */
     override fun getNews(showProgressLayout : Boolean) {
 
 //        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -138,21 +143,21 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //                    .map { if(this.news.isNotEmpty())
 //                        view.showNews(this.news, savedArticles)
 //                    }
-            dataManager.getCryptoControlService().getTopNews()
+            dataManager.getCryptoControlService().getTopNews() //get top news
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
                     .map { news ->
                         this.news.clear()
-                        news.filter { it.thumbnail != null }.sortedBy { it.publishedAt }.forEach { this.news.add(it) }
+                        news.filter { it.thumbnail != null }.sortedBy { it.publishedAt }.forEach { this.news.add(it) } //filter for ones with an image
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable {
-                        dataManager.saveTopNews(this.news)
+                        dataManager.saveTopNews(this.news) //save the news
                     }
                     .observeOn(Schedulers.computation())
                     .subscribe(object : CompletableObserver {
                         override fun onComplete() {
-                            getTop100()
+                            getTop100() //get top 100
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -207,7 +212,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //                            top100.forEach { this.top100.add(it) }
 //                            linkedCryptos = linkCryptoToArticles(this.news, this.top100)
 ////                            view.showNews(linkCryptoToArticles(this.news, this.topcurrencies), savedArticles)
-////                            view.showTop100Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseRate.toLowerCase() })
+////                            view.showTop8Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseRate.toLowerCase() })
 //                        }
 //                    }
 //                    .filter { this.top100.isEmpty() }
@@ -238,6 +243,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
         }
     }
 
+    /*
+    Function executes on resume of fragment
+    */
     override fun onResume() {
 //        if(top100.isNotEmpty() && news.isNotEmpty())
         Log.i(TAG, "onResume")
@@ -259,7 +267,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                     override fun onSuccess(t: Unit) {
 //                        if(linkedCryptos?.isNotEmpty()!!) {
 //                            view.showNews(linkedCryptos, savedArticles)
-//                            view.showTop100Changes(top100, false)
+//                            view.showTop8Changes(top100, false)
 //                            Log.i(TAG, "ShowingNewsssssss")
 //                            view.hideProgressBar()
 //                            view.showScrollLayout()
@@ -282,6 +290,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                 })
     }
 
+    /*
+    Function gets the top 100 cryptos
+    */
     fun getTop100() {
 
         if (dataManager.checkConnection()) {
@@ -316,7 +327,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //                    }
 //                    .observeOn(AndroidSchedulers.mainThread())
 //                    .map { baseRate ->
-//                        view.showTop100Changes(savedCurrencies?.data, baseRate) //?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
+//                        view.showTop8Changes(savedCurrencies?.data, baseRate) //?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
 //                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
@@ -324,7 +335,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                             Log.i(TAG, "onComplete1")
                             view.hideNoInternetLayout()
                             view.showNews(linkedCryptos, savedArticles)
-                            view.showTop100Changes(top100, true)
+                            view.showTop8Changes(top100, true)
                             view.showScrollLayout()
                             view.hideProgressBar()
                         }
@@ -345,6 +356,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
         }
     }
 
+    /*
+    Function gets more articles
+    */
     override fun getMoreArticles(size: Int) {
 
 //        if(dataManager.checkConnection()){
@@ -383,6 +397,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
 //        }
     }
 
+    /*
+    Function saves article to internal storage
+    */
     override fun saveArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
@@ -411,6 +428,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                 })
     }
 
+    /*
+    Function removes article from internal storage
+    */
     override fun removeArticle(topArticle: Article) {
 
         dataManager.getSavedArticles()
@@ -435,6 +455,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                 })
     }
 
+    /*
+    Function links the crypto to articles for crypto icon if possible
+    */
     private fun linkCryptoToArticles(newsItems: ArrayList<Article>, top100: ArrayList<Currency>): HashMap<Article, Currency?> {
 
         val map = HashMap<Article, Currency?>() //put in it

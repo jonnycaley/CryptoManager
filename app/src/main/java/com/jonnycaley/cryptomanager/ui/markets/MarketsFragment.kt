@@ -69,10 +69,16 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         return root
     }
 
+    /*
+    Function shows the no internet layout
+    */
     override fun showNoInternetLayout() {
         layoutNoInternet.visibility = View.VISIBLE
     }
 
+    /*
+    Function hides the no internet layout
+    */
     override fun hideNoInternetLayout() {
         layoutNoInternet.visibility = View.GONE
     }
@@ -80,32 +86,32 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //set all of the saved data from the onCreate attachview
         super.onViewCreated(view, savedInstanceState)
 
-        if(Utils.isDarkTheme()){
+        if(Utils.isDarkTheme()){ //is is dark theme
             imageNoInternet.setImageResource(R.drawable.no_internet_white)
         }
 
-        swipeRefreshLayout.setOnRefreshListener(this)
+        swipeRefreshLayout.setOnRefreshListener(this) //set onrefresh
 
 //        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
 
 //        headerAllCurrencies.typeface = custom_font
 //        headerGlobalData.typeface = custom_font
 
-        textTryAgain.setOnClickListener(this)
-        rank.setOnClickListener(this)
-        name.setOnClickListener(this)
-        price.setOnClickListener(this)
-        change.setOnClickListener(this)
+        textTryAgain.setOnClickListener(this) //set onclick
+        rank.setOnClickListener(this) //set onclick
+        name.setOnClickListener(this) //set onclick
+        price.setOnClickListener(this) //set onclick
+        change.setOnClickListener(this) //set onclick
 
-        text1H.setOnClickListener(this)
-        text1D.setOnClickListener(this)
-        text1W.setOnClickListener(this)
+        text1H.setOnClickListener(this) //set onclick
+        text1D.setOnClickListener(this) //set onclick
+        text1W.setOnClickListener(this) //set onclick
 
         presenter = MarketsPresenter(MarketsDataManager.getInstance(context!!), this)
         presenter.attachView()
     }
 
-    override fun onClick(v: View?) {
+    override fun onClick(v: View?) { //run onclick functions
         when (v?.id) {
             rank.id -> {
                 if (filter == FILTER_RANK_DOWN)
@@ -113,8 +119,8 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
                 else
                     filter = FILTER_RANK_DOWN
 
-                changeSortText()
-                notifyFilterChanged()
+                changeSortText() //change sort text
+                notifyFilterChanged() //notify changed
             }
             name.id -> {
                 if (filter == FILTER_NAME_DOWN)
@@ -122,8 +128,8 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
                 else
                     filter = FILTER_NAME_DOWN
 
-                changeSortText()
-                notifyFilterChanged()
+                changeSortText() //change sort text
+                notifyFilterChanged() //notify changed
             }
             price.id -> {
                 if (filter == FILTER_PRICE_DOWN)
@@ -131,16 +137,16 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
                 else
                     filter = FILTER_PRICE_DOWN
 
-                changeSortText()
-                notifyFilterChanged()
+                changeSortText() //change sort text
+                notifyFilterChanged() //notify changed
             }
             change.id -> {
                 if (filter == FILTER_CHANGE_DOWN)
                     filter = FILTER_CHANGE_UP
                 else
                     filter = FILTER_CHANGE_DOWN
-                changeSortText()
-                notifyFilterChanged()
+                changeSortText() //change sort text
+                notifyFilterChanged() //notify changed
             }
             text1H.id -> {
                 timeframe = TIMEFRAME_1H
@@ -163,15 +169,18 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
+    /*
+    Function changes the time frame text
+    */
     private fun changeTimeFrameText() {
 
 //        text1H.setTypeface(null, Typeface.NORMAL)
 //        text1D.setTypeface(null, Typeface.NORMAL)
 //        text1W.setTypeface(null, Typeface.NORMAL)
 
-        setTextColorSecondary(text1H)
-        setTextColorSecondary(text1D)
-        setTextColorSecondary(text1W)
+        setTextColorSecondary(text1H) //reset time frame
+        setTextColorSecondary(text1D) //reset time frame
+        setTextColorSecondary(text1W) //reset time frame
 
         when (timeframe) {
             TIMEFRAME_1H -> {
@@ -189,6 +198,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
+    /*
+    Function sets the text secondary color for the theme
+    */
     fun setTextColorSecondary(textView: TextView) {
         if(Utils.isDarkTheme()){
             textView.setTextColor(resources.getColor(R.color.dark_text_color_secondary))
@@ -197,7 +209,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
-
+    /*
+    Function sets the text primary color for the theme
+    */
     fun setTextColorPrimary(textView: TextView) {
         if(Utils.isDarkTheme()){
             textView.setTextColor(resources.getColor(R.color.dark_text_color))
@@ -206,6 +220,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
+    /*
+    Function notifies that the time frame has been changed
+    */
     private fun notifyTimeFrameChanged() {
         //change the percentage that shows
         if (mLayoutManager != null) {
@@ -215,6 +232,9 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
+    /*
+    Function changes the sort texts for when a new one is clicked
+    */
     private fun changeSortText() {
         rank.text = "#"
         name.text = "Name"
@@ -266,32 +286,35 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
     }
 
+    /*
+    Function notifies when the filter has been changed
+    */
     private fun notifyFilterChanged() {
         if (mLayoutManager != null)
             currenciesAdapter.sort(filter)
     }
 
+    /*
+    Function shows the market data
+    */
     @SuppressLint("SetTextI18n")
     override fun showMarketData(marketData: Market, baseFiat: Rate) {
 
         //TODO: MARKET DATA COMES BACK NULL SOMETIMES WTF
-
-        println("See here")
-
-        println(marketData.data?.quote?.uSD?.totalMarketCap)
-        println(marketData.data?.quote?.uSD?.totalVolume24h)
-        println(marketData.data?.btcDominance)
 
         textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${marketData.data?.quote?.uSD?.totalMarketCap?.let { baseFiat.rate?.let { it1 -> truncateNumber(it*it1)  }}}"
 
         textVolume.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${marketData.data?.quote?.uSD?.totalVolume24h?.let { truncateNumber(it) }}"
 
         textBTCDominance.text = Utils.formatPercentage(marketData.data?.btcDominance?.toBigDecimal()).substring(1)
-
     }
 
     var mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
+
+    /*
+    Function returns the number of currencies in the adapter or 100
+    */
     override fun getCurrenciesAdapterCount(): Int {
         if (mLayoutManager == null)
             return 100
@@ -299,19 +322,22 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
             return currenciesAdapter.itemCount
     }
 
+    /*
+    Function returns the current filter
+    */
     override fun getSort(): String {
         return filter
     }
 
-
+    /*
+    Function shows the top 100 changes
+    */
     @RequiresApi(Build.VERSION_CODES.M)
     override fun showTop100Changes(currencies: ArrayList<Currency>, baseFiat: Rate, resultsCount: Int) {
 
         isLoading = false
 
         if (mLayoutManager == null) {
-
-            Log.i(TAG, currencies.size.toString() + " S E E  H E R E2")
 
             mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
             recyclerViewCurrencies.layoutManager = mLayoutManager
@@ -338,10 +364,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
             }
 
         } else {
-
-            Log.i(TAG, currencies.size.toString() + " S E E  H E R E3")
-            Log.i(TAG, resultsCount.toString())
-            Log.i(TAG, currenciesAdapter.currencies.size.toString())
 
             currenciesAdapter.swap(ArrayList(currencies), baseFiat)
 
@@ -377,7 +399,7 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     }
 
 
-//    override fun showTop100Changes(currencies: List<Currency>?, baseRate: Rate, resultsCount: Int) {
+//    override fun showTop8Changes(currencies: List<Currency>?, baseRate: Rate, resultsCount: Int) {
 //
 //        isLoading = false
 //
@@ -470,20 +492,32 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
 
     var layoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
+    /*
+    Function executes when the list is reached the bottom
+    */
     override fun onRefresh() {
         presenter.loadMoreItems(null, presenter.getResultsCounter() - currenciesAdapter.itemCount, searchView.query.trim())
     }
 
+    /*
+    Function stops the refreshing
+    */
     override fun stopRefreshing() {
         swipeRefreshLayout.isRefreshing = false
     }
 
+    /*
+    Function executes when the fragment resumes
+    */
     override fun onResume() {
         super.onResume()
         if(mLayoutManager != null)
             presenter.onResume()
     }
 
+    /*
+    Function handles when the tab button is clicked to scroll up to the top and stop current scrolling motion
+    */
     override fun onTabClicked(isTabAlreadyClicked: Boolean) {
         if (isTabAlreadyClicked) {
             nestedScrollView.scrollTo(0, 0)
@@ -497,16 +531,21 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
 //            presenter.refresh()
     }
 
+    /*
+    Function hides the progress bar layout
+    */
     override fun hideProgressBarLayout() {
         progressBarLayout.visibility = View.GONE
         swipeRefreshLayout.isRefreshing = false
-        Log.i(TAG, "${swipeRefreshLayout.isRefreshing}")
     }
 
     val MILLION = 1000000L.toBigDecimal()
     val BILLION = 1000000000L.toBigDecimal()
     val TRILLION = 1000000000000.toBigDecimal()
 
+    /*
+    Function truncates a number
+    */
     fun truncateNumber(x: BigDecimal): String {
         return if (x < MILLION)
             x.toString()
@@ -518,28 +557,32 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
             String.format("%.2f", x / TRILLION) + " T"
     }
 
+    /*
+    Function shows the swipe refresh layout
+    */
     override fun showContentLayout() {
         swipeRefreshLayout.visibility = View.VISIBLE
     }
 
+    /*
+    Function shows the progress bar layout
+    */
     override fun showProgressBarLayout() {
         progressBarLayout.visibility = View.VISIBLE
     }
 
+    /*
+    Function hides the swipe refresh layout
+    */
     override fun hideContentLayout() {
         swipeRefreshLayout.visibility = View.GONE
     }
 
+    /*
+    Function returns the searchview for the listener
+    */
     override fun getCurrencySearchView(): SearchView {
         return searchView
-    }
-
-    fun newInstance(headerStr: String): MarketsFragment {
-        val fragmentDemo = MarketsFragment()
-        val args = Bundle()
-        args.putString("headerStr", headerStr)
-        fragmentDemo.arguments = args
-        return fragmentDemo
     }
 
     companion object {

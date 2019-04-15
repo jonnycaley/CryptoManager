@@ -25,21 +25,24 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
         loadSettings()
     }
 
+    /*
+    Function saves theme preferences
+    */
     override fun saveThemePreference(checked: Boolean) {
 
-        dataManager.saveThemePreference(checked)
+        dataManager.saveThemePreference(checked)  //save preferences
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe (object : CompletableObserver{
                     override fun onComplete() {
-                        view.updateTheme()
+                        view.updateTheme() //update theme
                     }
 
-                    override fun onSubscribe(d: Disposable) {
+                    override fun onSubscribe(d: Disposable) { //on subscribe
                         compositeDisposable?.add(d)
                     }
 
-                    override fun onError(e: Throwable) {
+                    override fun onError(e: Throwable) { //on error
                         view.showPortfolioDeletedError()
                     }
 
@@ -47,17 +50,20 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
 
     }
 
+    /*
+    Function loads settings
+    */
     override fun loadSettings() {
 
-        dataManager.getBaseFiat()
+        dataManager.getBaseFiat() //get base fiat
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { rate ->
-                    view.loadSettings(rate)
+                    view.loadSettings(rate) //load settings
                 }
                 .subscribe (object : SingleObserver<Unit>{
                     override fun onSuccess(rate: Unit) {
-                        view.hideProgressLayout()
+                        view.hideProgressLayout() //hide progress
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -65,7 +71,7 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
                     }
 
                     override fun onError(e: Throwable) {
-                        view.showPortfolioDeletedError()
+                        view.showPortfolioDeletedError() //show portfolio
                     }
 
                 })
@@ -91,13 +97,16 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
 //                })
     }
 
+    /*
+    Function deletes portfolio
+    */
     override fun deletePortfolio() {
-        dataManager.deletePortfolio()
+        dataManager.deletePortfolio() //delete portfolio
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe (object : CompletableObserver{
                     override fun onComplete() {
-                        view.showPortfolioDeleted()
+                        view.showPortfolioDeleted() //show portfolio
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -112,13 +121,16 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
 
     }
 
+    /*
+    Function deletes all articles
+    */
     override fun deleteSavedArticles() {
-        dataManager.deleteSavedArticles()
+        dataManager.deleteSavedArticles() //delete saved articles
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe (object : CompletableObserver{
                     override fun onComplete() {
-                        view.showSavedArticlesDeleted()
+                        view.showSavedArticlesDeleted() //show saved articles
                     }
 
                     override fun onSubscribe(d: Disposable) {

@@ -43,44 +43,60 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat)
 
-        buttonAddTransaction.setOnClickListener(this)
+        buttonAddTransaction.setOnClickListener(this) //add transaction button listener
 
-        setupToolbar()
+        setupToolbar() //set up toolbar
 
         presenter = FiatPresenter(FiatDataManager.getInstance(this), this)
-        presenter.attachView()
+        presenter.attachView() //set up presenter
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             buttonAddTransaction.id -> {
-                FiatTransactionArgs(null, args.fiat, false).launch(this)
+                FiatTransactionArgs(null, args.fiat, false).launch(this) //set up transaction button
             }
         }
     }
 
+    /*
+    Function displays the progress bar - none atm as its quick
+    */
     override fun showProgressBar() {
-
     }
 
+    /*
+    Function shows the available fiat text
+    */
     override fun showAvailableFiat(fiatSymbol: String, availableFiatCount: BigDecimal) {
         textAvailable.text = "Available: ${Utils.getPriceTextAbs(availableFiatCount.toDouble(), fiatSymbol)}"
     }
 
+    /*
+    Function shows the deposited fiat text
+    */
     override fun showDepositedFiat(fiatSymbol: String, depositedFiatCount: BigDecimal) {
         textDeposited.text = "${Utils.getPriceTextAbs(depositedFiatCount.toDouble(), fiatSymbol)}"
     }
 
+    /*
+    Function shows the withdrawn fiat text
+    */
     override fun showWithdrawnFiat(fiatSymbol: String, withdrawnFiatCount: BigDecimal) {
         textWithdrawn.text = "${Utils.getPriceTextAbs(withdrawnFiatCount.toDouble().absoluteValue, fiatSymbol)}"
     }
 
-
+    /*
+    Function executes when the activity resumes and refreshes the transactions
+    */
     override fun onResume() {
         presenter.getTransactions(args.fiat)
         super.onResume()
     }
 
+    /*
+    Function shows the transactions list
+    */
     override fun showTransactions(fiatSymbol: String, transactions: List<Transaction>) {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
@@ -90,6 +106,9 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
 
     }
 
+    /*
+    Function returns the fiat code
+    */
     override fun getFiatCode(): String {
         return args.fiat
     }
@@ -97,6 +116,9 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
     val title : TextView by lazy { findViewById<TextView>(R.id.title) }
     val toolbar : Toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
 
+    /*
+    Function sets up the toolbar text and arrow color for different themes
+    */
     private fun setupToolbar() {
 
         if(!Utils.isDarkTheme()) {
@@ -107,6 +129,9 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
         title.text = args.fiat
     }
 
+    /*
+    Function handles the toolbar buttons clicked
+    */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         when (id) {

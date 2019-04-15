@@ -117,23 +117,32 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         return mView
     }
 
+    /*
+    Function saves the top news to storage
+    */
     override fun hideNoInternetLayout() {
         layoutNoInternet.visibility = View.GONE
     }
 
+    /*
+    Function shows the snackbar with an error
+    */
     override fun showError() {
         showSnackBar(resources.getString(R.string.error_occurred))
     }
 
     var snackBar : Snackbar? = null
 
+    /*
+    Function shows the snackbar
+    */
     fun showSnackBar(message: String) {
 
         snackBar = Snackbar.make(scrollLayout, message, Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry) {
                     presenter.onRefresh()
                 }
-        snackBar.let { it?.show() }
+        snackBar.let { it?.show() } //show snack bar
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -147,9 +156,9 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 //        headerTopNews.typeface = custom_font
 //        headerTrendingNews.typeface = custom_font
 //
-        textRetry.setOnClickListener(this)
-        cardStar.setOnLikeListener(this)
-        swipeLayout.setOnRefreshListener(this)
+        textRetry.setOnClickListener(this) //set onclick
+        cardStar.setOnLikeListener(this) //set onclick
+        swipeLayout.setOnRefreshListener(this) //set onclick
 
         presenter = NewsPresenter(NewsDataManager.getInstance(context!!), this)
         presenter.attachView() //runs on first creation of fragment
@@ -158,13 +167,13 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     override fun onClick(v: View?) {
         when(v?.id) {
             textRetry.id -> {
-                presenter.onRefresh()
+                presenter.onRefresh() //run button click
             }
         }
     }
 
     override fun onRefresh() {
-        presenter.onRefresh()
+        presenter.onRefresh() //refresh presenter
     }
 
     override fun onTabClicked(isTabAlreadyClicked : Boolean) {
@@ -173,7 +182,7 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
             scrollLayout.scrollTo(0, 0)
             scrollLayout.fling(0)
         } else {
-            if(layoutNoInternet.visibility == View.VISIBLE && Utils.isNetworkConnected(context!!))
+            if(layoutNoInternet.visibility == View.VISIBLE && Utils.isNetworkConnected(context!!)) //if currently visible
                 presenter.onRefresh()
             else
                 presenter.onResume()
@@ -181,12 +190,10 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     }
 
     override fun liked(p0: LikeButton?) {
-        println("liked")
         presenter.saveArticle(topArticle)
     }
 
     override fun unLiked(p0: LikeButton?) {
-        println("unLiked")
         presenter.removeArticle(topArticle)
     }
 
@@ -195,18 +202,15 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     }
 
     override fun hideProgressBar() {
-        Log.i(TAG, "hideProgressBar")
         progressBarLayout.visibility = View.GONE
         swipeLayout.isRefreshing = false
     }
 
     override fun showScrollLayout() {
-        Log.i(TAG, "showScrollLayout")
         swipeLayout.visibility = View.VISIBLE
     }
 
     override fun showProgressBar() {
-        Log.i(TAG, "showProgressBar")
         progressBarLayout.visibility = View.VISIBLE
     }
 
@@ -215,6 +219,9 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     var isLastPage: Boolean = false
     var isLoading: Boolean = false
 
+    /*
+    Function shows the list of news
+    */
     override fun showNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
 
         val headerArticle = news.keys.first()
@@ -297,6 +304,9 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         isLoading = false
     }
 
+    /*
+    Function shows the top news article
+    */
     private fun showTopNewsArticle(article: Article) {
 
         layoutTopArticle.setOnClickListener {
@@ -318,7 +328,10 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 
     var layoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 
-    override fun showTop100Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
+    /*
+    Function shows the top 8 changes cards
+    */
+    override fun showTop8Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
 //        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
 //                Color.WHITE)
 //        animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
@@ -446,7 +459,7 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
                 }
             }
         }
-//        Log.i(TAG, "showTop100Changes")
+//        Log.i(TAG, "showTop8Changes")
 //        Log.i(TAG, (baseCurrency.fiat == null).toString())
 //
 //        val arrayList = ArrayList<Currency>()
@@ -467,14 +480,6 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
 //            topMoversAdapter.baseRate = baseCurrency
 //            topMoversAdapter.notifyDataSetChanged()
 //        }
-    }
-
-    fun newInstance(headerStr: String): NewsFragment {
-        val fragmentDemo = NewsFragment()
-        val args = Bundle()
-        args.putString("headerStr", headerStr)
-        fragmentDemo.arguments = args
-        return fragmentDemo
     }
 
     companion object {

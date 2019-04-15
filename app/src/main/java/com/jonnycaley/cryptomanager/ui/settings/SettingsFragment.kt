@@ -63,7 +63,7 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         else
             context?.setTheme(R.style.AppTheme)
 
-        mView  = inflater.inflate(R.layout.fragment_settings, container, false)
+        mView  = inflater.inflate(R.layout.fragment_settings, container, false) //inflate layout
         return mView
     }
 
@@ -72,28 +72,31 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         //view setup should occur here
 
         if(Utils.isDarkTheme()) {
-            switchTheme.isChecked = true
+            switchTheme.isChecked = true //switch theme
         }
 
-        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
+        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf") //init fonts
 
-        textGeneral.typeface = custom_font
-        textData.typeface = custom_font
-        textAbout.typeface = custom_font
+        textGeneral.typeface = custom_font //change font
+        textData.typeface = custom_font //change font
+        textAbout.typeface = custom_font //change font
 
-        switchTheme.setOnCheckedChangeListener { buttonView, isChecked ->
+        switchTheme.setOnCheckedChangeListener { buttonView, isChecked -> // switch theme
             if(isChecked){
-                Utils.setDarkMode()
+                Utils.setDarkMode() //set theme
             } else {
-                Utils.setLightMode()
+                Utils.setLightMode() //set theme
             }
             presenter.saveThemePreference(isChecked)
         }
 
-        presenter = SettingsPresenter(SettingsDataManager.getInstance(context!!), this)
+        presenter = SettingsPresenter(SettingsDataManager.getInstance(context!!), this) //attach presenter
         presenter.attachView()
     }
 
+    /*
+    Function updates the theme
+    */
     override fun updateTheme() {
         context?.let { Utils.vibrate(it) }
 
@@ -104,6 +107,9 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
 //        presenter.loadSettings()
     }
 
+    /*
+    Function vibrates the phone
+    */
     fun vibratePhone() {
         val vibrator = context?.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= 26) {
@@ -122,6 +128,9 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         presenter.loadSettings()
     }
 
+    /*
+    Function loads the settings
+    */
     override fun loadSettings(baseFiat: Rate) {
 
         val versionName = BuildConfig.VERSION_NAME
@@ -138,17 +147,17 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         val mLayoutManagerData = androidx.recyclerview.widget.LinearLayoutManager(context)
         val mLayoutManagerGeneral = androidx.recyclerview.widget.LinearLayoutManager(context)
 
-        recyclerViewAbout.layoutManager = mLayoutManagerAbout
-        recyclerViewData.layoutManager = mLayoutManagerData
-        recyclerViewGeneral.layoutManager = mLayoutManagerGeneral
+        recyclerViewAbout.layoutManager = mLayoutManagerAbout //init recyclerview
+        recyclerViewData.layoutManager = mLayoutManagerData //init recyclerview
+        recyclerViewGeneral.layoutManager = mLayoutManagerGeneral //init recyclerview
 
-        settingsAdapterGeneral = SettingsAdapter(settingsListGeneral, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        settingsAdapterGeneral = SettingsAdapter(settingsListGeneral, baseFiat.fiat, baseFiat.rate, versionName, presenter, context) //attach recyclerview
         recyclerViewGeneral.adapter = settingsAdapterGeneral
 
-        settingsAdapterData = SettingsAdapter(settingsListData, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        settingsAdapterData = SettingsAdapter(settingsListData, baseFiat.fiat, baseFiat.rate, versionName, presenter, context) //attach recyclerview
         recyclerViewData.adapter = settingsAdapterData
 
-        settingsAdapterAbout = SettingsAdapter(settingsListAbout, baseFiat.fiat, baseFiat.rate, versionName, presenter, context)
+        settingsAdapterAbout = SettingsAdapter(settingsListAbout, baseFiat.fiat, baseFiat.rate, versionName, presenter, context) //attach recyclerview
         recyclerViewAbout.adapter = settingsAdapterAbout
 
     }
