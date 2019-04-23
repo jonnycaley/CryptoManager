@@ -1,6 +1,5 @@
 package com.jonnycaley.cryptomanager.ui.transactions.crypto
 
-import android.annotation.SuppressLint
 import android.util.Log
 import com.google.gson.Gson
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Currencies
@@ -14,7 +13,6 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Function4
 import io.reactivex.functions.Function6
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
@@ -124,90 +122,10 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                             println("onError: ${e.message}")
                         }
                     })
-//                    dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date?.time.toString().substring(0, date.time.toString().length - 3))
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.computation())
-//                    .map {
-//                        json ->
-//
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { btcPrice = it }
-//
-//                        println("btcPrice PRICE: $btcPrice")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { ethPrice = it }
-//
-//                        println("ethPrice PRICE: $ethPrice")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(pair, "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { isDeductedPriceUsd = it }
-//
-//                        println("isDeductedPriceUsd PRICE: $isDeductedPriceUsd")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(view.getSymbol(), "USD", date?.time.toString().substring(0, date?.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { priceUsd = it }
-//
-//                        println("priceUsd PRICE: $priceUsd ")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapSingle { dataManager.getAllCryptos() }
-//                    .observeOn(Schedulers.computation())
-//                    .map { cryptos -> allCryptos = cryptos }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapSingle { dataManager.getTransactions() }
-//                    .observeOn(Schedulers.computation())
-//                    .map { transactions ->
-//
-//                        transactions.forEach { Log.i(TAG, it.date.time.toString()) }
-//
-//                        val newTransaction = Transaction(exchange, view.getSymbol(), transaction.name, pair, correctQuantity, price.toBigDecimal(), priceUsd, date, notes, isDeducted, isDeductedPriceUsd, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
-//                        transactions.remove(transaction)
-//
-//                        transactions.add(newTransaction)
-//
-//                        return@map transactions
-//                    }
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : Observer<java.util.ArrayList<Transaction>> {
-//
-//                        override fun onComplete() {
-//                        }
-//
-//                        override fun onNext(transactions: java.util.ArrayList<Transaction>) {
-//                            saveTransactions(transactions)
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            println("onError: ${e.message}")
-//                        }
-//                    })
         } else {
             view.showNoInternet()
         }
     }
-
 
     /*
     Function gets the current price
@@ -228,7 +146,11 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                         }
 
                         override fun onNext(price: String) {
-                            view.showCurrentPrice(price)
+
+                            if(price.toDouble() > 1)
+                                view.showCurrentPrice(com.jonnycaley.cryptomanager.utils.Utils.toDecimals(price.toBigDecimal(), 2))
+                            else
+                                view.showCurrentPrice(com.jonnycaley.cryptomanager.utils.Utils.toDecimals(price.toBigDecimal(), 6))
                         }
 
                         override fun onSubscribe(d: Disposable) {
@@ -244,44 +166,6 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
 
         }
     }
-
-//    private fun updateTransaction(originalTransaction: Transaction, isBuy: Boolean, exchange: String, pair: String, price: Float, quantity: Float, date: Date?, notes: String, isDeductedPriceUsd: Double?) {
-//
-//        var correctQuantity = quantity
-//        if (!isBuy)
-//            correctQuantity *= -1
-//
-//        var priceUsd = 1.toDouble()
-//
-//        dataManager.getCryptoCompareServiceWithScalars().getPriceAtMinute(view.getSymbol(), "USD", "1", "1", date?.time.toString())
-//                .map { response ->
-//                    if (!response.data?.isEmpty()!!)
-//                        priceUsd = response.data?.get(1)?.close!!
-//                }
-//                .flatMap { dataManager.getHoldings() }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(object : SingleObserver<ArrayList<Transaction>> {
-//                    override fun onSuccess(holdings: ArrayList<Transaction>) {
-//
-//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, correctQuantity, price, priceUsd, date!!, notes, isDeductedPriceUsd)
-//                        holdings.remove(originalTransaction)
-//                        holdings.add(newTransaction)
-//
-//                        saveTransactions(holdings)
-//                    }
-//
-//                    override fun onSubscribe(d: Disposable) {
-//                        compositeDisposable?.add(d)
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        println("onError: ${e.message}")
-//                    }
-//
-//                })
-//
-//    }
 
     /*
     Function deletes a transaction
@@ -390,78 +274,6 @@ class CryptoTransactionPresenter(var dataManager: CryptoTransactionDataManager, 
                             println("onError: ${e.message}")
                         }
                     })
-
-//            dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("BTC", "USD", date.time.toString().substring(0, date.time.toString().length - 3))
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.computation())
-//                    .map {
-//                        json ->
-//
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { btcPrice = it }
-//
-//                        println("btcPrice PRICE: $btcPrice")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp("ETH", "USD", date.time.toString().substring(0, date.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { ethPrice = it }
-//
-//                        println("ethPrice PRICE: $ethPrice")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(pair, "USD", date.time.toString().substring(0, date.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { isDeductedPriceUsd = it }
-//
-//                        println("isDeductedPriceUsd PRICE: $isDeductedPriceUsd")
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMap { dataManager.getCryptoCompareServiceWithScalars().getPriceAtTimestamp(view.getSymbol(), "USD", date.time.toString().substring(0, date.time.toString().length - 3)) }
-//                    .observeOn(Schedulers.computation())
-//                    .map { json ->
-//                        val gson = Gson().fromJson(JsonModifiers.jsonToTimeStampPrice(json), Price::class.java)
-//
-//                        gson.uSD?.let { priceUsd = it }
-//
-//                        println("priceUsd PRICE: $priceUsd ")
-//                    } //TODO: CHECK THIS LMAO :((((((((
-//                    .observeOn(Schedulers.io())
-//                    .flatMapSingle { dataManager.getAllCryptos() }
-//                    .observeOn(Schedulers.computation())
-//                    .map { currencies -> allCryptos = currencies }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapSingle { dataManager.getTransactions() }
-//                    .observeOn(Schedulers.computation())
-//                    .map { transactions ->
-//                        val newTransaction = Transaction(exchange, view.getSymbol(), pair, view.getName(), correctQuantity.toBigDecimal(), price.toBigDecimal(), priceUsd, date, notes, isDeducted, isDeductedPriceUsd, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == view.getSymbol() }?.imageUrl, allCryptos?.baseImageUrl + allCryptos?.data?.firstOrNull { it.symbol == pair }?.imageUrl, btcPrice, ethPrice)
-//                        transactions.add(newTransaction)
-//                        return@map transactions
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapCompletable { transactions -> dataManager.saveTransactions(transactions) }
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : CompletableObserver {
-//                        override fun onComplete() {
-//                            view.onTransactionComplete()
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            println("onError: ${e.message}")
-//                        }
-//                    })
         } else {
             view.showNoInternet()
         }

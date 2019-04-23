@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_transaction_history.*
 
 class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContract.View {
@@ -37,6 +38,8 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
+
+        Slidr.attach(this)
 
         setupToolbar() //set up toolbar
 
@@ -85,6 +88,7 @@ class TransactionHistoryActivity : AppCompatActivity(), TransactionHistoryContra
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -68,7 +68,6 @@
                                 android:layout_height="200dp"
                                 android:foreground="@drawable/gradient"/>
 
-                            <!--TODO: try and gradient this and make like twitter news feed cya!-->
 
                             <!--<View-->
                                 <!--android:layout_width="match_parent"-->

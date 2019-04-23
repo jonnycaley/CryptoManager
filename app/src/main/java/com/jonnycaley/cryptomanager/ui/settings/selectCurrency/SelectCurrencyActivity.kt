@@ -12,6 +12,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_select_currency.*
 
 
@@ -32,6 +33,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_currency)
 
+        Slidr.attach(this)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp) //change icon to dark themed one
@@ -47,6 +49,7 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -68,24 +71,6 @@ class SelectCurrencyActivity : AppCompatActivity(), SelectCurrencyContract.View 
     show fiats in list
      */
     override fun showFiats(fiats: List<Rate>?, baseFiat: Rate) {
-
-//        val data = ArrayList<Datum>()
-//
-//        val datum = Datum()
-//
-//        datum.coinName = "United States Dollar"
-//        datum.symbol = "USD"
-//
-//        data.add(datum)
-//
-//        fiats.rates?.forEach {
-//            val datum = Datum()
-//
-//            datum.coinName = Utils.getFiatName(it.fiat)
-//            datum.symbol = it.fiat
-//
-//            data.add(datum)
-//        }
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this) //attach layout manager
         recyclerView.layoutManager = mLayoutManager

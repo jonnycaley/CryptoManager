@@ -16,8 +16,6 @@
         layout="@layout/layout_progress"
         android:visibility="visible" />
 
-    <!--TODO: change above to true-->
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipelayout"
         android:layout_width="match_parent"

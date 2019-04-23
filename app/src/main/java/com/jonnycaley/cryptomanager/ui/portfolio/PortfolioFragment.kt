@@ -284,7 +284,7 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
     }
 
     override fun showError() {
-        //TODO
+
     }
 
     override fun hideProgressLayout() {
@@ -322,7 +322,7 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
 
         Log.i(TAG, "BAL"+balanceUsd.toString())
 
-        when (this.chosenCurrency) { //TODO: HAVE HAVE A PROBLEM HERE WITH TAPPING QUICKLY (UPDATING FAST ENOUGH?)
+        when (this.chosenCurrency) {
             CURRENCY_FIAT -> {
                 textBalance.text = Utils.getPriceTextAbs((balanceUsd * (baseFiat.rate ?: 1.toBigDecimal())).toDouble(), fiat)
             }
@@ -366,7 +366,7 @@ class PortfolioFragment : androidx.fragment.app.Fragment(), PortfolioContract.Vi
                     } else {
 
                         val changePct = change / absBalance
-                        //TODO: absBalance can still be 0 somehow lmao
+
                         formatPercentage(changePct * 100.toBigDecimal(), textChange)
                     }
 //                    if ((this.balanceUsd.toDouble() == this.changeUsd.toDouble()) || (this.balanceUsd - this.changeUsd < 0.toBigDecimal())) {

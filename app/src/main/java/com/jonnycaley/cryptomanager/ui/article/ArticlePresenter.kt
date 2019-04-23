@@ -26,7 +26,7 @@ class ArticlePresenter (var dataManager: ArticleDataManager, var view: ArticleCo
     /*
     Function gets the saved articles and sets the like button if the article is saved
     */
-    private fun getSavedArticles() {
+    fun getSavedArticles() {
         dataManager.getSavedArticles()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

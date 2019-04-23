@@ -10,12 +10,9 @@ class Rate : Serializable {
     @SerializedName("fiat")
     @Expose
     var fiat: String? = null
+
     @SerializedName("rate")
     @Expose
     var rate: BigDecimal? = null
-
-    companion object {
-        private const val serialVersionUID = 1944469845247308751L
-    }
 
 }

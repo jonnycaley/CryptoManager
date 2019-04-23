@@ -23,6 +23,7 @@ import com.jonnycaley.cryptomanager.ui.pickers.exchange.PickerExchangeActivity
 import com.jonnycaley.cryptomanager.ui.pickers.pair.PickerPairActivity
 import com.jonnycaley.cryptomanager.utils.CircleTransform
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.squareup.picasso.Picasso
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
@@ -85,8 +86,6 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
     val edittextNotes by lazy { findViewById<MaterialEditText>(R.id.edit_text_notes) }
 
-//    val textSubmit by lazy { findViewById<TextView>(R.id.text_view_update) }
-
     val toolbar by lazy { findViewById<Toolbar>(R.id.toolbar) }
     val title by lazy { findViewById<TextView>(R.id.title) }
 
@@ -104,6 +103,8 @@ class CryptoTransactionActivity : AppCompatActivity(), CryptoTransactionContract
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crypto_transaction)
+
+        Slidr.attach(this)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)  //set icon black

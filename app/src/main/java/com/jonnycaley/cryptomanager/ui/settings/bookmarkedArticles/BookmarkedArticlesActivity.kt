@@ -1,12 +1,9 @@
-package com.jonnycaley.cryptomanager.ui.settings.savedArticles
+package com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
@@ -15,13 +12,14 @@ import android.widget.RelativeLayout
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_saved_articles.*
 
-class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
+class BookmarkedArticlesActivity : AppCompatActivity(), BookmarkedArticlesContract.View {
 
-    private lateinit var presenter : SavedArticlesContract.Presenter
+    private lateinit var presenter : BookmarkedArticlesContract.Presenter
 
-    lateinit var newsAdapter : SavedArticlesAdapter
+    lateinit var newsAdapter : BookmarkedArticlesAdapter
 
     val recyclerView by lazy { findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view) }
     val layoutNoArticles by lazy { findViewById<RelativeLayout>(R.id.layout_no_articles) }
@@ -38,6 +36,8 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_articles)
 
+        Slidr.attach(this)
+
         if(!Utils.isDarkTheme()) { // is dark theme
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
@@ -45,7 +45,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
         setupToolbar() // setup toolbar
 
-        presenter = SavedArticlesPresenter(SavedArticlesDataManager.getInstance(this), this) // set up presenter
+        presenter = BookmarkedArticlesPresenter(BookmarkedArticlesDataManager.getInstance(this), this) // set up presenter
         presenter.attachView()
     }
 
@@ -101,7 +101,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
 
         val mLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerView.layoutManager = mLayoutManager
-        newsAdapter = SavedArticlesAdapter(news, this, presenter)
+        newsAdapter = BookmarkedArticlesAdapter(news, this, presenter)
         recyclerView.adapter = newsAdapter
     }
 
@@ -110,6 +110,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.title = ""
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -124,7 +125,7 @@ class SavedArticlesActivity : AppCompatActivity(), SavedArticlesContract.View {
         return false
     }
 
-    override fun setPresenter(presenter: SavedArticlesContract.Presenter) {
+    override fun setPresenter(presenter: BookmarkedArticlesContract.Presenter) {
         this.presenter = checkNotNull(presenter)
     }
 }

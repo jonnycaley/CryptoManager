@@ -84,9 +84,6 @@ class XAxisValueFormatter(private val chart : Chart, private val aggregate : Int
                     GeneralFragment.aggregate1Y -> {
                         return epoch2DateString(timeStamp, "MMM yyyy")
                     }
-//                    GeneralPresenter.aggregateAll -> {
-//                        return epoch2DateString(timeStamp, "HH:mm")
-//                    }
                 }
             }
         }

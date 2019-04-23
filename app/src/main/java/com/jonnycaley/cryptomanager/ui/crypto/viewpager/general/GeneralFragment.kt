@@ -114,7 +114,6 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        setUpTextViews()
         setUpGraphTimeChoices()
         setUpCandleStick()
 
@@ -228,7 +227,6 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
     Function returns the crypto name
     */
     override fun getName(): String {
-//        return symbol?.name.toString().replace(" ", "-").toLowerCase()
         return "TODO: getName()"
     }
 
@@ -328,44 +326,7 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
     Function shows the generala fragment data error
     */
     override fun showGeneralDataError() {
-        //TODO
     }
-
-    private fun setUpTextViews() {
-//        symbol.text = symbol?.symbol
-//        when {
-//            symbol?.quote?.uSD?.percentChange24h > 0 -> {
-//                change.setTextColor(context?.resources?.getColor(R.color.green))
-//            }
-//            symbol?.quote?.uSD?.percentChange24h < 0 -> {
-//                change.setTextColor(context?.resources?.getColor(R.color.red))
-//            }
-//            else -> {
-//
-//            }
-//        }
-//        price.text = "$${Utils.formatPrice(symbol?.quote?.uSD?.price?.toDouble())}"
-//
-//        val percentage2DP = Utils.formatPercentage(symbol.quote?.uSD?.percentChange24h)
-//
-//        when {
-//            percentage2DP.substring(0, 1) == "$" -> {
-//            }
-//            percentage2DP.substring(0, 1) == "+" -> {
-//                change.setTextColor(context?.resources?.getColor(R.color.green))
-//            }
-//            else -> {
-//                change.setTextColor(context?.resources?.getColor(R.color.red))
-//            }
-//        }
-//        change.text = "${getPriceChange(symbol?.quote?.uSD?.percentChange24h, symbol?.quote?.uSD?.price)} ($percentage2DP)"
-    }
-//    private fun getPriceChange(percentChange24h: Float?, price: Float?): String {
-//
-//        val priceChange = price?.minus(price.div((1 + (percentChange24h?.div(100)))))
-//
-//        return formatChange(priceChange?.toDouble())
-//    }
 
     /*
     Function formats the change text
@@ -582,8 +543,6 @@ class GeneralFragment : androidx.fragment.app.Fragment(), GeneralContract.View, 
             candleStickChart.axisLeft.axisMinimum = roundToLowest(lowest, multiplesOf)
             candleStickChart.axisLeft.axisMaximum = roundToHighest(highest, multiplesOf)
         } else {
-//            candleStickChart.axisLeft.resetAxisMinimum()
-//            if(candleStickChart.axisLeft.axisMinimum < 0)
             if(chart.aggregate == aggregate1Y)
                 candleStickChart.axisLeft.axisMinimum = 0F
         }

@@ -28,18 +28,6 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         val article = newsItems.keys.toTypedArray()[position]
         val relatedCrypto = newsItems.values.toTypedArray()[position]
 
-//        if(((position + 1 ) % 3 == 0 ) && (article.originalImageUrl != null)){
-//
-//            holder.image.visibility = View.GONE
-//            holder.imageEnlarged.visibility = View.VISIBLE
-//
-//            Picasso.with(context)
-//                    .load(article.originalImageUrl)
-//                    .fit()
-//                    .centerCrop()
-//                    .into(holder.imageEnlarged)
-//
-//        } else {
             holder.imageEnlarged.visibility = View.GONE
             holder.image.visibility = View.VISIBLE
 
@@ -54,7 +42,6 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
                         .centerCrop()
                         .into(holder.image)
             }
-//        }
 
         holder.title.text = article.title.toString()
         holder.category.text = article.primaryCategory.toString()
@@ -80,37 +67,16 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         if (relatedCrypto != null) {
 
             val percentage2DP = Utils.formatPercentage(relatedCrypto.quote?.uSD?.percentChange24h?.toBigDecimal())
-//                val animRed = ObjectAnimator.ofInt(holder.layoutStockRed, "backgroundColor", Color.WHITE, Color.RED,
-//                        Color.WHITE)
-//                val animGreen = ObjectAnimator.ofInt(holder.layoutStockGreen, "backgroundColor", Color.WHITE, Color.GREEN,
-//                        Color.WHITE)
-//
-//                animRed.duration = 1000
-//                animRed.setEvaluator(ArgbEvaluator())
-//                animRed.repeatMode = ValueAnimator.REVERSE
-//
-//                animGreen.duration = 1000
-//                animGreen.setEvaluator(ArgbEvaluator())
-//                animGreen.repeatMode = ValueAnimator.REVERSE
             when {
                 percentage2DP.substring(0, 1) == "+" -> {
-//                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
-
                     holder.layoutStockGreen.visibility = View.VISIBLE
                     holder.stockNameGreen.text = relatedCrypto.symbol?.toUpperCase()
                     holder.stockPercentageGreen.text = percentage2DP
-//                        animGreen.start()//does not work as changes background permanently :(
-//                holder.movement.text = "▲"
                 }
                 else -> {
-//                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
                     holder.layoutStockRed.visibility = View.VISIBLE
                     holder.stockNameRed.text = relatedCrypto.symbol?.toUpperCase()
                     holder.stockPercentageRed.text = percentage2DP
-
-//                        animRed.start()
-//                holder.movement.text = "▼"
-//                holder.movement.setTextColor(Color.parseColor("#66FF2600"))
                 }
             }
 
@@ -120,77 +86,7 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             holder.layoutStockRed.setOnClickListener {
                 context?.let { context -> relatedCrypto.symbol?.let { symbol -> relatedCrypto.name?.let { name -> CryptoArgs(symbol, name).launch(context) } } }
             }
-    }
-
-//        topcurrencies.forEach { crypto ->
-//            var bool = false
-//            if((item?.title?.toUpperCase()?.contains(crypto.name!!.toUpperCase())!!   ||   item.title?.toUpperCase()?.contains(crypto.symbol!!.toUpperCase())!! )
-//                    && (item.coins!!.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() })){
-//
-//                if(position != 0){
-//                    if((!((currencies?.get(position -1)?.title?.toUpperCase()?.contains(crypto.name!!.toUpperCase())!!   ||   currencies?.get(position -1)?.title?.toUpperCase()?.contains(crypto.symbol!!.toUpperCase())!! )
-//                            && (currencies?.get(position -1)?.coins!!.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() })))){
-//
-//                        bool = true
-//
-//                    }
-//
-//                } else {
-//
-//                    bool = true
-//                }
-//            }
-//
-//            if(bool){
-//
-//                val percentage2DP = Utils.formatPercentage(crypto.quote?.uSD?.percentChange24h?.toBigDecimal())
-//
-////                val animRed = ObjectAnimator.ofInt(holder.layoutStockRed, "backgroundColor", Color.WHITE, Color.RED,
-////                        Color.WHITE)
-////                val animGreen = ObjectAnimator.ofInt(holder.layoutStockGreen, "backgroundColor", Color.WHITE, Color.GREEN,
-////                        Color.WHITE)
-////
-////                animRed.duration = 1000
-////                animRed.setEvaluator(ArgbEvaluator())
-////                animRed.repeatMode = ValueAnimator.REVERSE
-////
-////                animGreen.duration = 1000
-////                animGreen.setEvaluator(ArgbEvaluator())
-////                animGreen.repeatMode = ValueAnimator.REVERSE
-//
-//                when {
-//                    percentage2DP.substring(0,1) == "+" -> {
-////                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
-//
-//                        holder.layoutStockGreen.visibility = View.VISIBLE
-//                        holder.stockNameGreen.text = crypto.symbol?.toUpperCase()
-//                        holder.stockPercentageGreen.text = percentage2DP
-//
-////                        animGreen.start()//does not work as changes background permanently :(
-////                holder.movement.text = "▲"
-//                    }
-//                    else -> {
-////                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
-//
-//                        holder.layoutStockRed.visibility = View.VISIBLE
-//                        holder.stockNameRed.text = crypto.symbol?.toUpperCase()
-//                        holder.stockPercentageRed.text = percentage2DP
-//
-////                        animRed.start()
-////                holder.movement.text = "▼"
-////                holder.movement.setTextColor(Color.parseColor("#66FF2600"))
-//                    }
-//                }
-//
-//                holder.layoutStockGreen.setOnClickListener{
-//                    CryptoArgs(crypto.symbol!!).launch(context!!)
-//                }
-//                holder.layoutStockRed.setOnClickListener{
-//                    CryptoArgs(crypto.symbol!!).launch(context!!)
-//                }
-//            }
-//        }
-
+        }
         holder.likeButton.setOnLikeListener(object : OnLikeListener {
 
             override fun liked(p0: LikeButton?) {
@@ -205,7 +101,6 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
         holder.setIsRecyclable(false)
 
         holder.itemView.setOnClickListener {
-//            context?.let { context -> ArticleArgs(article).launch(context) }
             val builder = context?.let { context -> Utils.webViewBuilder(context) }
             article.url?.let { url -> builder?.show(url) }
 

@@ -28,6 +28,13 @@ class ArticleDataManager private constructor(val UserPreferences: UserPreference
             }
             return INSTANCE!!
         }
+
+        /*
+        Function returns the connection status
+        */
+        fun checkConnection(): Boolean {
+            return Utils.isNetworkConnected(context)
+        }
     }
 
     /*

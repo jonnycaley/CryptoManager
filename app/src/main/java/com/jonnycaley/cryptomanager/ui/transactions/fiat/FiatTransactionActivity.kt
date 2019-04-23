@@ -23,6 +23,7 @@ import android.content.DialogInterface
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_fiat_transaction.*
 
 class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.View, View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -65,8 +66,6 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
     val layoutDate by lazy { findViewById<RelativeLayout>(R.id.layout_date) }
 
-//    val chosenDate by lazy { args.transaction.date }
-
     var transactionDate = Calendar.getInstance().time
 
     var isDateChanged = false
@@ -79,6 +78,8 @@ class FiatTransactionActivity : AppCompatActivity(), FiatTransactionContract.Vie
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat_transaction)
+
+        Slidr.attach(this)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)

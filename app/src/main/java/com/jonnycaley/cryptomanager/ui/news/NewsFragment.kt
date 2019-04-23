@@ -54,10 +54,6 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     val progressBarLayout by lazy { mView.findViewById<ConstraintLayout>(R.id.progress_bar_layout) }
 
     val recyclerViewShimmerNews by lazy { mView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.shimmer_recycler_view) }
-//    val recyclerViewTopMovers by lazy { mView.findViewById<RecyclerView>(R.id.recycler_view_top_movers) }
-
-    val headerTopNews by lazy { mView.findViewById<TextView>(R.id.header_top_currencies) }
-    val headerTrendingNews by lazy { mView.findViewById<TextView>(R.id.header_trending_news) }
 
     val layoutTopArticle by lazy { mView.findViewById<RelativeLayout>(R.id.layout_top) }
 
@@ -151,11 +147,6 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         if(Utils.isDarkTheme())
             imageNoInternet.setImageResource(R.drawable.no_internet_white)
 
-//        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
-//
-//        headerTopNews.typeface = custom_font
-//        headerTrendingNews.typeface = custom_font
-//
         textRetry.setOnClickListener(this) //set onclick
         cardStar.setOnLikeListener(this) //set onclick
         swipeLayout.setOnRefreshListener(this) //set onclick
@@ -247,59 +238,9 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
         } else {
             articlesVerticalAdapter.swap(templist, savedArticles)
         }
-//            swipeRefreshLayout.setOnScrollChangeListener(object : PaginationScrollListener(newsLayoutManager!!){
-//                override fun isLastPage(): Boolean {
-//                    return isLastPage
-//                }
-//
-//                override fun isLoading(): Boolean {
-//                    return isLoading
-//                }
-//
-//                override fun loadMoreItems() {
-//                    isLoading = true
-//                    getMoreItems()
-//                }
-//
-//            })
-//        } else {
-//
-//            Log.i(TAG, "Loading old layout manager")
-//            Log.i(TAG, "news size: ${news.size}")
-//            Log.i(TAG, "savedArticles size: ${savedArticles.size}")
-//
-//            articlesVerticalAdapter.swap(news, savedArticles)
-//
-//            recyclerViewShimmerNews.adapter.notifyDataSetChanged()
-//        }
         showTopNewsArticle(headerArticle)
-//        if(newsLayoutManager == null) {
-//            Log.i(TAG, "1")
-//            newsLayoutManager = LinearLayoutManager(context)
-//            recyclerViewShimmerNews.layoutManager = newsLayoutManager
-//            articlesVerticalAdapter = NewsArticlesVerticalAdapter(news, savedArticles, context, presenter)
-//            recyclerViewShimmerNews.adapter = articlesVerticalAdapter
-//        } else {
-//            Log.i(TAG, "2")
-//            articlesVerticalAdapter.currencies = news
-//            articlesVerticalAdapter.savedArticles = savedArticles
-//            articlesVerticalAdapter.notifyDataSetChanged()
-////            articlesVerticalAdapter.currencies?.forEach { articlesVerticalAdapter.notifyItemChanged(it) }
-//        }
     }
-//    override fun showMoreNews(news: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>) {
-//
-//        val headerArticle = news.keys.first()
-//
-//        news.remove(headerArticle)
-//
-//        topArticle = headerArticle
-//
-//        cardStar.isLiked = savedArticles.any { it.url == topArticle.url }
-//
-//        articlesVerticalAdapter.swap(news, savedArticles)
-//
-//    }
+
     override fun setIsLoading(b: Boolean) {
         isLoading = false
     }
@@ -332,10 +273,6 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
     Function shows the top 8 changes cards
     */
     override fun showTop8Changes(sortedBy: ArrayList<Currency>, illuminate: Boolean) {
-//        animRed = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.RED,
-//                Color.WHITE)
-//        animGreen = ObjectAnimator.ofInt(holder.layout, "backgroundColor", Color.WHITE, Color.GREEN,
-//                Color.WHITE)
         Log.i(TAG, sortedBy.size.toString())
         if (sortedBy.size > 7) {
             for (i in 0..7) {
@@ -459,27 +396,6 @@ class NewsFragment : androidx.fragment.app.Fragment(), TabInterface, NewsContrac
                 }
             }
         }
-//        Log.i(TAG, "showTop8Changes")
-//        Log.i(TAG, (baseCurrency.fiat == null).toString())
-//
-//        val arrayList = ArrayList<Currency>()
-//
-//        sortedBy?.forEach { arrayList.add(it) }
-//
-//        Log.i(TAG, baseCurrency.rate.toString())
-//
-//        if (layoutManager == null) {
-//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            recyclerViewTopMovers.layoutManager = layoutManager
-//            topMoversAdapter = TopMoversAdapter(arrayList, baseCurrency, context)
-//            recyclerViewTopMovers.adapter = topMoversAdapter
-//
-//        } else {
-//
-//            topMoversAdapter.articles = arrayList
-//            topMoversAdapter.baseRate = baseCurrency
-//            topMoversAdapter.notifyDataSetChanged()
-//        }
     }
 
     companion object {

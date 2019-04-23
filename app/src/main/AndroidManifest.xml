@@ -101,13 +101,13 @@
         <activity
             android:name=".ui.fiat.FiatActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/fiat_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.transactions.fiat.FiatTransactionActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/fiat_transaction_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -116,19 +116,19 @@
             android:label="@string/crypto_transaction_activity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.settings.savedArticles.SavedArticlesActivity"
+        <activity android:name=".ui.settings.bookmarkedArticles.BookmarkedArticlesActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/saved_articles_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ui.settings.selectCurrency.SelectCurrencyActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/select_currency_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ui.settings.transactionHistory.TransactionHistoryActivity"
             android:alwaysRetainTaskState="true"
-            android:label="@string/transaction_history_activity"
+            android:label="@string/none"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 

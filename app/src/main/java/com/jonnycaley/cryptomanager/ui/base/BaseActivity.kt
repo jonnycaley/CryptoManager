@@ -59,16 +59,6 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
 
         this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
 
-//        fm.beginTransaction().add(R.id.frame_placeholder, fragment4, fragment4TAG).hide(fragment4).commit()
-//        fm.beginTransaction().add(R.id.frame_placeholder, fragment3, fragment3TAG).hide(fragment3).commit()
-//        fm.beginTransaction().add(R.id.frame_placeholder, fragment2, fragment2TAG).hide(fragment2).commit()
-//        fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
-
-//        if(fm.findFragmentByTag(fragment1TAG) == null)
-//            fm.beginTransaction().add(R.id.frame_placeholder, fragment1, fragment1TAG).hide(fragment1).commit()
-//        fm.beginTransaction().hide(active).show(fragment1).commit()
-//        active = fragment1
-
         loadFragmentNew(args.fragment)
 
         navigation.enableItemShiftingMode(false)
@@ -121,9 +111,6 @@ class BaseActivity : AppCompatActivity(), OnThemeChangedListener {
             }
             false
         }
-
-//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-//        loadFragment(args.fragment)
     }
 
     /*

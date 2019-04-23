@@ -37,8 +37,6 @@ class CurrenciesAdapter(var currencies: ArrayList<Currency>, var baseFiat: Rate,
     */
     fun sort(filter: String) {
 
-        //TODO: IDEALLY THIS NEEDS TO BE DONE ON COMPUTATION THREAD (MAYBE IN PRESENTER) BUT LOOOOOOOOONG
-
         var tempCurrencies : List<Currency>? = null
 
         when (filter) {

@@ -32,6 +32,9 @@
         <item name="android:textColorHint">@color/dark_text_color_secondary</item>
         <item name="android:editTextColor">@color/dark_text_color</item>
 
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+
         <!--<item name="tintcolor">#ffffff</item>-->
         <!--<item name="navigationBorder">#5E989F</item>-->
         <!--<item name="colorControlNormal">#000000</item>-->
@@ -74,6 +77,9 @@
 
         <item name="android:textColorHint">@color/dark_text_color_secondary</item>
         <item name="android:editTextColor">@color/light_text_color</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
 
         <!--<item name="tintcolor">#ffffff</item>-->
         <!--<item name="navigationBorder">#5E989F</item>-->

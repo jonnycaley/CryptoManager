@@ -55,14 +55,6 @@ class   SplashDataManager private constructor(val UserPreferences: UserPreferenc
         return Utils.isNetworkConnected(context)
     }
 
-//    fun writeToStorage(key: String, data: String) {
-//        Paper.book().write(key, data)
-//    }
-
-//    fun readStorage(key : String) : Single<String?> {
-//        return RxPaperBook.with(Schedulers.computation()).read(key, "")
-//    }
-
     fun saveAllRates(rates: ExchangeRates) : Completable {
         return RxPaperBook.with(Schedulers.io()).write(Constants.PAPER_ALL_RATES, rates)
     }

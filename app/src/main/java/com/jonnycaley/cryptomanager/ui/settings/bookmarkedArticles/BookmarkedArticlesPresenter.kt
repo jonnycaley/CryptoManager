@@ -1,4 +1,4 @@
-package com.jonnycaley.cryptomanager.ui.settings.savedArticles
+package com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles
 
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import io.reactivex.CompletableObserver
@@ -8,7 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class SavedArticlesPresenter(var dataManager: SavedArticlesDataManager, var view: SavedArticlesContract.View) : SavedArticlesContract.Presenter{
+class BookmarkedArticlesPresenter(var dataManager: BookmarkedArticlesDataManager, var view: BookmarkedArticlesContract.View) : BookmarkedArticlesContract.Presenter{
 
     var compositeDisposable: CompositeDisposable? = null
 

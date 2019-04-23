@@ -110,21 +110,10 @@ class CryptoActivity : AppCompatActivity(), CryptoContract.View {
                     .placeholder(R.drawable.circle)
                     .into(image, object : Callback {
                         override fun onSuccess() {
-
-//                            TODO: RETHINK THEME AS IT CHANGES THE TOOLBAR COLOR GLOBALLY
-//                            val drawable = image.drawable as BitmapDrawable
-//                            val bitmap = drawable.bitmap
-//
-//                            tabLayout.setSelectedTabIndicatorColor(getDominantColor(bitmap))
-//                            title.setTextColor(getDominantColor(bitmap))
-//
-//                            toolbar.navigationIcon?.setColorFilter(getDominantColor(bitmap), PorterDuff.Mode.SRC_ATOP)
                         }
 
                         override fun onError() {
-                            TODO("not implemented")
                         }
-
                     })
         }
     }

@@ -30,12 +30,6 @@ class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, v
 
         holder.name.text = item.name.toString()
 
-//        Picasso.with(context)
-//                .load(item?.thumbnail)
-//                .fit()
-//                .centerCrop()
-//                .into(holder.image)
-
         val price = baseFiat.rate?.toDouble()?.let { item.quote?.uSD?.price?.toDouble()?.times(it) }
 
         val symbol = Utils.getFiatSymbol(baseFiat.fiat)
@@ -62,21 +56,15 @@ class TopMoversAdapter(var articles: ArrayList<Currency>, var baseFiat : Rate, v
         when {
             percentage2DP.substring(0,1) == "$" -> {
                 holder.percentage.text = "$percentage2DP%"
-//                holder.movement.text = "-"
             }
             percentage2DP.substring(0,1) == "+" -> {
-//                holder.percentage.setBackgroundColor(Color.parseColor("#3300F900"))
                 context?.resources?.getColor(R.color.green)?.let { holder.percentage.setTextColor(it) }
                 animGreen.start()
-//                holder.movement.text = "▲"
                 holder.movement.setTextColor(Color.parseColor("#6600F900"))
             }
             else -> {
-//                holder.percentage.setBackgroundColor(Color.parseColor("#33FF2600"))
                 context?.resources?.getColor(R.color.red)?.let { holder.percentage.setTextColor(it) }
                 animRed.start()
-//                holder.movement.text = "▼"
-//                holder.movement.setTextColor(Color.parseColor("#66FF2600"))
             }
         }
 

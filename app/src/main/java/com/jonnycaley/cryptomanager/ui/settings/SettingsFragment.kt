@@ -101,10 +101,6 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
         context?.let { Utils.vibrate(it) }
 
         BaseArgs(3).launch(context!!)
-
-        //TODO: RESTART ACTIVITY OF RE-LOAD ALL VIEWS IN FRAGMENT? :S
-//        (activity as BaseActivity).updateThemeChanged()
-//        presenter.loadSettings()
     }
 
     /*
@@ -134,9 +130,6 @@ class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View
     override fun loadSettings(baseFiat: Rate) {
 
         val versionName = BuildConfig.VERSION_NAME
-
-//      "Select Base Currency (${baseFiat.fiat} ${baseFiat.rate})"
-//      "Version $versionName"
 
         val settingsListGeneral: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_select_base_currency)))
         val settingsListData: ArrayList<String> = ArrayList(Arrays.asList(resources.getString(R.string.settings_saved_articles), resources.getString(R.string.settings_transaction_history), resources.getString(R.string.settings_delete_all_articles), resources.getString(R.string.settings_delete_portfolio)))

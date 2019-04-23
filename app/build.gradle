@@ -8,8 +8,8 @@ android {
         applicationId "com.jonnycaley.cryptomanager"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0.0.0"
+        versionCode 3
+        versionName "1.0.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -127,5 +127,8 @@ dependencies {
 
 //  loading button
     implementation 'com.ekalips.android:fancyprogressbutton:1.2.1'
+
+//  sliding activity
+    implementation 'com.r0adkll:slidableactivity:2.0.6'
 
 }

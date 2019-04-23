@@ -15,6 +15,7 @@ import android.widget.*
 import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_picker_pair.*
 
 class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchView.OnQueryTextListener {
@@ -42,10 +43,11 @@ class PickerPairActivity : AppCompatActivity(), PickerPairContract.View, SearchV
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_pair)
 
-
         if(!Utils.isDarkTheme()) { //dark theme
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
+
+        Slidr.attach(this)
 
         setupToolbar() //toolbar setup
         setupSearchBar() //search bar setup

@@ -3,7 +3,6 @@ package com.jonnycaley.cryptomanager.ui.settings
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,9 @@ import kotlinx.android.synthetic.main.item_settings.view.*
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.ContextCompat.startActivity
-import com.jonnycaley.cryptomanager.ui.settings.savedArticles.SavedArticlesActivity
+import com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles.BookmarkedArticlesActivity
 import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.utils.Utils
 import java.math.BigDecimal
 
@@ -57,7 +53,7 @@ class SettingsAdapter(val settings: ArrayList<String>, val fiatString: String?, 
         holder.itemView.setOnClickListener {
             when(setting){
                 context?.resources?.getString(R.string.settings_saved_articles) -> {
-                    context.let { context -> startActivity(context, Intent(context, SavedArticlesActivity::class.java), null) }
+                    context.let { context -> startActivity(context, Intent(context, BookmarkedArticlesActivity::class.java), null) }
                 }
                 context?.resources?.getString(R.string.settings_delete_all_articles) ->{
                     showDeletePArticlesConfirmation()
@@ -82,13 +78,17 @@ class SettingsAdapter(val settings: ArrayList<String>, val fiatString: String?, 
                 context?.resources?.getString(R.string.settings_share_app) ->{
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
-                    val shareBody = "Crypto Manager - Manager your protfolio, track live prices & follow the latest news all in one place! https://play.google.com/store/apps/details?id=com.instagram.android&hl=en_GB"
+                    val shareBody = "Crypto Manager - Manager your protfolio, track live prices & follow the latest news all in one place! https://play.google.com/store/apps/details?id=com.jonnycaley.cryptomanager&hl=en_GB"
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
                     context.let { context -> startActivity(context, Intent.createChooser(sharingIntent, "Share via"), null) }
                 }
+                context?.resources?.getString(R.string.settings_predictor) ->{
+                    val builder = Utils.webViewBuilder(context)
+                    builder.show("https://jonnycaley.github.io/Crypto.html")
+                }
                 context?.resources?.getString(R.string.settings_review_app) ->{
                     val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse("market://details?id=com.instagram.android")
+                    intent.data = Uri.parse("market://details?id=com.jonnycaley.cryptomanager")
                     context.let { context -> startActivity(context, intent, null) }
                 }
             }

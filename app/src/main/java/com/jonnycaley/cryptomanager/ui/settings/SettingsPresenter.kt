@@ -75,26 +75,6 @@ class SettingsPresenter(var dataManager: SettingsDataManager, var view: Settings
                     }
 
                 })
-
-//        view.loadSettings(dataManager.getBaseRate())
-//                .map { json ->
-//                    Gson().fromJson(json, Rate::class.java) }
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe (object : SingleObserver<Rate>{
-//                    override fun onSuccess(fiat: Rate) {
-//                        view.loadSettings(fiat)
-//                    }
-//
-//                    override fun onSubscribe(d: Disposable) {
-//                        compositeDisposable?.add(d)
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        println("onError: ${e.message}")
-//                    }
-//
-//                })
     }
 
     /*

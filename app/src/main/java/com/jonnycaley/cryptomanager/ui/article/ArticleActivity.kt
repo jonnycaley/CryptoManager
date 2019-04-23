@@ -59,7 +59,6 @@ class ArticleActivity : AppCompatActivity(), ArticleContract.View, OnLikeListene
                 webview.visibility = View.VISIBLE
                 progressBarLayout.visibility = View.GONE
             }
-            //TODO: HANDLE ERROR HERE WITH OVERRIDE METHOD
         }
         webview.loadUrl(args.article.url)  //load the url
         webview.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)

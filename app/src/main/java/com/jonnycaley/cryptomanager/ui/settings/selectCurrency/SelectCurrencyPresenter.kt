@@ -79,23 +79,6 @@ class SelectCurrencyPresenter(var dataManager: SelectCurrencyDataManager, var vi
                         println("onErrorFiats: ${e.message}")
                     }
                 })
-//        dataManager.saveBaseCurrency(symbol)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(object : CompletableObserver {
-//                    override fun onComplete() {
-//                        view.onCurrencySaved()
-//                    }
-//
-//                    override fun onSubscribe(d: Disposable) {
-//                        println("Subscribed")
-//                        compositeDisposable?.add(d)
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        println("onErrorFiats: ${e.message}")
-//                    }
-//                })
     }
 
     override fun detachView() {

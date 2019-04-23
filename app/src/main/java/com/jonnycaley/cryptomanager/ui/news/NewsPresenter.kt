@@ -29,8 +29,6 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
         if (compositeDisposable == null || (compositeDisposable as CompositeDisposable).isDisposed) {
             compositeDisposable = CompositeDisposable()
         }
-//        getNews()
-//        TODO: UNCOMMENT BELOW
         getNews(true)
     }
 
@@ -38,93 +36,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
     Function executes on refresh
     */
     override fun onRefresh() {
-        //TODO: changing theme and then navigating to the home fragment forces a reload because the data held with the activity is overwritten. check storage if activity data is empty too?
-        //TODO: clicking too and from quickly breaks at linkCryptoToArticles
         getNews(false) //get the news
-//        var linkedCryptos = HashMap<Article, Currency?>()
-
-//        Log.i(TAG, "Loading old news")
-//        dataManager.getSavedArticles()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(Schedulers.computation())
-//                .map { savedArticles ->
-//                    this.savedArticles = savedArticles
-//                }
-//                .observeOn(Schedulers.io())
-//                .flatMap {
-//                    dataManager.readTopNews()
-//                }
-//                .observeOn(Schedulers.computation())
-//                .map{ news ->
-//                    this.news = news
-//                }
-//                .observeOn(Schedulers.io())
-//                .flatMap {
-//                    dataManager.readTop100()
-//                }
-//                .observeOn(Schedulers.computation())
-//                .map { t100 ->
-//                    this.top100 = ArrayList(t100)
-//
-//                    if(!this.news.isEmpty() && !this.top100.isEmpty())
-//                        linkedCryptos = linkCryptoToArticles(this.news, this.top100)
-//                }
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(object : SingleObserver<Unit> {
-//                    override fun onSuccess(t: Unit) {
-//                        if(linkedCryptos.isNotEmpty()) {
-//                            view.showNews(linkedCryptos, savedArticles)
-//                            view.showTop8Changes(top100, false)
-//                            Log.i(TAG, "ShowingNewsssssss")
-//                            view.hideProgressBar()
-//                            view.showScrollLayout()
-//                        }
-//                        if (news.isEmpty() || top100.isEmpty()) {
-////                            Log.i(TAG, "Getting news")
-//                            getNews()
-//                        } else {
-//                            getTop100()
-//                        }
-//                    }
-//
-//                    override fun onSubscribe(d: Disposable) {
-//                        compositeDisposable?.add(d)
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        Log.i(TAG, "onError: ${e.message}")
-//                    }
-//
-//                })
-
-//            dataManager.readStorage(Constants.PAPER_HOME_TOP_NEWS)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { json ->
-//                        if (json == "") {
-//                            view.showNoInternet()
-//                        } else {
-//                            val news = Gson().fromJson(json, ArrayList<Article>()::class.java)
-//                            this.news = news
-//                        }
-//                    }
-//                    .flatMap { dataManager.getSavedArticles() }
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : SingleObserver<ArrayList<Article>> {
-//                        override fun onSuccess(savedArticles: ArrayList<Article>) {
-//                            view.showNews(news, savedArticles)
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            Log.i(TAG, "onError: ${e.message}")
-//                        }
-//
-//
     }
 
     /*
@@ -132,17 +44,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
     */
     override fun getNews(showProgressLayout : Boolean) {
 
-//        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-//        StrictMode.setThreadPolicy(policy)
-
         if (dataManager.checkConnection()) {
-//            dataManager.getSavedArticles()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { articles -> savedArticles = articles }
-//                    .map { if(this.news.isNotEmpty())
-//                        view.showNews(this.news, savedArticles)
-//                    }
             dataManager.getCryptoControlService().getTopNews() //get top news
                     .subscribeOn(Schedulers.io())
                     .observeOn(Schedulers.computation())
@@ -177,69 +79,6 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                 view.showNoInternetLayout()
             else
                 view.hideProgressBar()
-//            dataManager.getSavedArticles()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { articles -> savedArticles = articles }
-//                    .map {
-//                        if (this.news.isNotEmpty())
-//                            view.showNews(this.news, savedArticles)
-//                    }
-//                    .flatMap {
-
-//            dataManager.readTopNews()
-//                    .toObservable()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { gsonNews ->
-//                        if (gsonNews.isEmpty()) {
-//                            view.showNoInternetLayout()
-//                        } else {
-//                            this.news.clear()
-//                            this.news.addAll(gsonNews.sortedBy { it.hotness })
-//                        }
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapSingle {
-//                        dataManager.readTop100()
-//                    }
-//                    .observeOn(Schedulers.computation())
-//                    .map { top100 ->
-//                        if (top100.isEmpty() || top100.isEmpty()) {
-//                            view.showNoInternetLayout()
-//                        } else {
-//                            this.top100.clear()
-//                            top100.forEach { this.top100.add(it) }
-//                            linkedCryptos = linkCryptoToArticles(this.news, this.top100)
-////                            view.showNews(linkCryptoToArticles(this.news, this.topcurrencies), savedArticles)
-////                            view.showTop8Changes(currencies.data?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed(), exchangeRates.rates.filter { it.fiat.toLowerCase() == baseRate.toLowerCase() })
-//                        }
-//                    }
-//                    .filter { this.top100.isEmpty() }
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(object : Observer<Any> {
-//                        override fun onComplete() {
-//                            if(linkedCryptos.isNotEmpty()) {
-//                                view.showNews(linkedCryptos, savedArticles)
-//                                view.hideNoInternetLayout()
-//                            }
-//                            view.hideProgressBar()
-//                            view.showScrollLayout()
-//                        }
-//
-//                        override fun onNext(t: Any) {
-//                        }
-//
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//
-//                        override fun onError(e: Throwable) {
-//                            Log.i(TAG, "onError: ${e.message}")
-//                            view.hideNoInternetLayout()
-//                            view.showError()
-//                        }
-//                    })
         }
     }
 
@@ -265,19 +104,6 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                 }
                 .subscribe(object : SingleObserver<Unit> {
                     override fun onSuccess(t: Unit) {
-//                        if(linkedCryptos?.isNotEmpty()!!) {
-//                            view.showNews(linkedCryptos, savedArticles)
-//                            view.showTop8Changes(top100, false)
-//                            Log.i(TAG, "ShowingNewsssssss")
-//                            view.hideProgressBar()
-//                            view.showScrollLayout()
-//                        }
-//                        if (news.isEmpty() || top100.isEmpty()) {
-////                            Log.i(TAG, "Getting news")
-//                            getNews()
-//                        } else {
-//                            getTop100()
-//                        }
                     }
 
                     override fun onSubscribe(d: Disposable) {
@@ -310,25 +136,6 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                     .flatMapCompletable { currencies ->
                         dataManager.saveTop100(currencies.data)
                     }
-//                    .observeOn(Schedulers.computation())
-//                    .andThen { articles = linkCryptoToArticles(news, topcurrencies) }
-//                    .flatMapCompletable { currencies ->
-//                        savedCurrencies = currencies
-//                        dataManager.saveTop100(currencies)
-//                    }
-//                    .andThen(
-//                            dataManager.getExchangeRateService().getExchangeRates()
-//                    )
-//                    .map { json ->
-//                        exchangeRates = Gson().fromJson(JsonModifiers.jsonToCurrencies(json), ExchangeRates::class.java)
-//                    }
-//                    .flatMapSingle {
-//                        dataManager.getBaseRate()
-//                    }
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .map { baseRate ->
-//                        view.showTop8Changes(savedCurrencies?.data, baseRate) //?.sortedBy { it.quote?.uSD?.percentChange24h }?.asReversed()
-//                    }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
                         override fun onComplete() {
@@ -360,41 +167,6 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
     Function gets more articles
     */
     override fun getMoreArticles(size: Int) {
-
-//        if(dataManager.checkConnection()){
-//
-//            val moreNews = size+8
-//            Log.i(TAG, "newsSizerequest: $moreNews")
-//            dataManager.getCryptoControlService().getTopNews()
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(Schedulers.computation())
-//                    .map { news ->
-//                        this.news.clear()
-//                        news.sortedBy { it.hotness }.forEach { this.news.add(it) }
-//                        linkedCryptos = linkCryptoToArticles(this.news, top100)
-//                    }
-//                    .observeOn(Schedulers.io())
-//                    .flatMapCompletable {
-//                        dataManager.saveTopNews(this.news)
-//                    }
-//                    .observeOn(Schedulers.computation())
-//                    .subscribe(object : CompletableObserver {
-//                        override fun onComplete() {
-//                            Log.i(TAG, "linkedCrypto: ${linkedCryptos.size}")
-//                            Log.i(TAG, "savedArticles: ${savedArticles.size}")
-//                            view.showNews(linkedCryptos, savedArticles)
-//                            view.setIsLoading(false)
-//                        }
-//                        override fun onSubscribe(d: Disposable) {
-//                            compositeDisposable?.add(d)
-//                        }
-//                        override fun onError(e: Throwable) {
-//                            Log.i(TAG, "onErrorGetNews: ${e.message}")
-//                        }
-//                    })
-//        } else {
-//
-//        }
     }
 
     /*
@@ -468,17 +240,14 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
             val position = i
             var cryptoOrNull: Currency? = null
             top100.forEach { crypto ->
-                if ((item.title?.toUpperCase()?.contains(crypto.name?.toUpperCase() ?: "") == true || item.title?.toUpperCase()?.contains(crypto.symbol?.toUpperCase()?: "") == true)
+                if ((item.title?.toUpperCase()?.contains(crypto.name?.toUpperCase() ?: "") == true || item.title?.toUpperCase()?.contains(crypto.symbol?.toUpperCase()?: "") == true) //if the item contains the crypto
                         && (item.coins?.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() }) == true) {
-                    if (position != 0) {
+                    if (position != 0) { //if its not the header item
                         if ((!((newsItems.get(position - 1).title?.toUpperCase()?.contains(crypto.name?.toUpperCase() ?: "") == true || newsItems.get(position - 1).title?.toUpperCase()?.contains(crypto.symbol?.toUpperCase() ?: "") == true)
                                         && (newsItems[position - 1].coins?.any { it.tradingSymbol?.toUpperCase() == crypto.symbol?.toUpperCase() } == true)))) {
-                            cryptoOrNull = crypto
-
+                            cryptoOrNull = crypto //add the crypto
                         }
-
                     } else {
-
                         cryptoOrNull = crypto
                     }
                 }
@@ -496,7 +265,3 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
         val TAG = "NewsPresenter"
     }
 }
-
-//TODO: THINGS TO CONSIDER
-//TODO: CAN WE LOAD DATA BEFORE SAVING IT TO SAVE TIME
-//TODO: CAN WE MAKE REQUESTS AT THE SAME TIME INSTEAD OF IN A CHAIN

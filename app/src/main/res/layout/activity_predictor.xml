@@ -27,31 +27,5 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/layout_progress"
-        android:id="@+id/progress_bar_layout"/>
-
-    <RelativeLayout
-        android:id="@+id/layout_no_articles"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="No saved articles"
-            android:gravity="center"
-            android:textColor="?attr/textColorSecondary"
-            android:textSize="@dimen/text_size_headline_4"
-            android:layout_marginBottom="@dimen/layout_empty"
-            android:fontFamily="sans-serif"/>
-
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </LinearLayout>

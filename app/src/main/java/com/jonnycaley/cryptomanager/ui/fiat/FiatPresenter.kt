@@ -8,6 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.math.BigDecimal
+import java.util.*
 
 
 class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.View) : FiatContract.Presenter{
@@ -40,7 +41,10 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
         dataManager.getTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
-                .map { transactions -> filteredTrans.addAll(transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) }.sortedBy { it.date }.asReversed()) }
+                .map { transactions ->
+                    println("SeeHereeee: "+transactions.toString())
+
+                    filteredTrans.addAll(transactions.filter { it.symbol == fiatSymbol || (it.pairSymbol == fiatSymbol && it.isDeducted) }.sortedBy { it.date }.asReversed()) }
                 .map { symbol = Utils.getFiatSymbol(view.getFiatCode()) }
                 .map { withdrawnFiatCount = getWithdrawnFiatCount(filteredTrans, fiatSymbol) } // show withdrawn count
                 .map { depositedFiatCount = getDepositedFiatCount(filteredTrans, fiatSymbol) } // show deposited count
@@ -65,41 +69,41 @@ class FiatPresenter(var dataManager: FiatDataManager, var view: FiatContract.Vie
                 })
     }
 
-    /*
-    Function calculates the withdrawn fiat amount
-    */
-    private fun getWithdrawnFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
-        var depositedFiat = 0.toBigDecimal()
-        transactions.forEach { println(it.symbol+"/"+it.pairSymbol+" - Price: "+ it.price + " - Quantity: " + it.quantity) }
+    companion object { //function ovjects used for testing
+        /*
+        Function calculates the deposited fiat amount
+         */
+        fun getDepositedFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
+            var depositedFiat = 0.toBigDecimal()
 
-        transactions.filter { it.symbol == fiatSymbol && it.quantity < 0.toBigDecimal() }.forEach { depositedFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity > 0.toBigDecimal()) }.forEach{ depositedFiat -= (it.price * it.quantity) }
+            transactions.filter { it.symbol == fiatSymbol && it.quantity > 0.toBigDecimal() }.forEach { depositedFiat += it.quantity }
+            transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity < 0.toBigDecimal())}.forEach{ depositedFiat -= (it.price * it.quantity) }
 
-        return depositedFiat
-    }
+            return depositedFiat
+        }
 
-    /*
-    Function calculates the deposited fiat amount
-    */
-    private fun getDepositedFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
-        var depositedFiat = 0.toBigDecimal()
+        /*
+        Function calculates the available fiat amount
+        */
+        fun getAvailableFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
+            var availableFiat = 0.toBigDecimal()
 
-        transactions.filter { it.symbol == fiatSymbol && it.quantity > 0.toBigDecimal() }.forEach { depositedFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity < 0.toBigDecimal())}.forEach{ depositedFiat -= (it.price * it.quantity) }
+            transactions.filter { it.symbol == fiatSymbol }.forEach { availableFiat += it.quantity }
+            transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) }.forEach{ availableFiat -= (it.price * it.quantity) }
 
-        return depositedFiat
-    }
+            return availableFiat
+        }
+        /*
+        Function calculates the withdrawn fiat amount
+        */
+        fun getWithdrawnFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
+            var depositedFiat = 0.toBigDecimal()
 
-    /*
-    Function calculates the available fiat amount
-    */
-    private fun getAvailableFiatCount(transactions: List<Transaction>, fiatSymbol : String): BigDecimal {
-        var availableFiat = 0.toBigDecimal()
+            transactions.filter { it.symbol == fiatSymbol && it.quantity < 0.toBigDecimal() }.forEach { depositedFiat += it.quantity }
+            transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) && (it.quantity > 0.toBigDecimal()) }.forEach{ depositedFiat -= (it.price * it.quantity) }
 
-        transactions.filter { it.symbol == fiatSymbol }.forEach { availableFiat += it.quantity }
-        transactions.filter { (it.pairSymbol == fiatSymbol) && (it.isDeducted) }.forEach{ availableFiat -= (it.price * it.quantity) }
-
-        return availableFiat
+            return depositedFiat
+        }
     }
 
     override fun detachView() {

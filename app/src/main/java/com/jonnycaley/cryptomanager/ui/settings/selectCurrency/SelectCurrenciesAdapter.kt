@@ -31,9 +31,6 @@ class SelectCurrenciesAdapter(var currencies: List<Rate>?, var presenter: Select
             holder.image.setImageResource(R.drawable.circle_dark)
 
         holder.itemView.setOnClickListener {
-//            var rate = Rate()
-//            rate.fiat = item.symbol
-//            rate.rate = item.
             presenter.saveBaseCurrency(item!!)
         }
 

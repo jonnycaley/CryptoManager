@@ -48,7 +48,6 @@ class ArticlesHorizontalAdapter(var latestArticles : ArrayList<Article>?, var sa
         holder.itemView.setOnClickListener {
             val builder = context?.let { context -> Utils.webViewBuilder(context) }
             item?.url?.let { it1 -> builder?.show(it1) }
-//            ArticleArgs(item!!).launch(context!!)
         }
 
     }

@@ -1,9 +1,6 @@
-package com.jonnycaley.cryptomanager.ui.settings.savedArticles
+package com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles
 
 import android.content.Context
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +10,10 @@ import com.jonnycaley.cryptomanager.utils.Utils
 import com.like.LikeButton
 import com.like.OnLikeListener
 import com.squareup.picasso.Picasso
-import com.thefinestartist.finestwebview.FinestWebView
 import kotlinx.android.synthetic.main.item_news_vertical.view.*
 
 
-class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Context?, val presenter: SavedArticlesContract.Presenter) : androidx.recyclerview.widget.RecyclerView.Adapter<SavedArticlesAdapter.ViewHolder>() {
+class BookmarkedArticlesAdapter(val articles: ArrayList<Article>?, val context: Context?, val presenter: BookmarkedArticlesContract.Presenter) : androidx.recyclerview.widget.RecyclerView.Adapter<BookmarkedArticlesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_vertical, parent, false))
@@ -69,7 +65,6 @@ class SavedArticlesAdapter(val articles: ArrayList<Article>?, val context: Conte
                     builder.show(url)
                 }
             }
-//            ArticleArgs(item!!).launch(context!!)
         }
     }
 

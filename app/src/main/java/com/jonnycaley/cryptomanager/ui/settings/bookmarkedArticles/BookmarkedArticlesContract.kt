@@ -1,10 +1,10 @@
-package com.jonnycaley.cryptomanager.ui.settings.savedArticles
+package com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles
 
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.utils.mvp.BasePresenter
 import com.jonnycaley.cryptomanager.utils.mvp.BaseView
 
-interface SavedArticlesContract {
+interface BookmarkedArticlesContract {
     interface View : BaseView<Presenter> {
         fun showSavedNews(news: ArrayList<Article>)
         fun showNoArticles()

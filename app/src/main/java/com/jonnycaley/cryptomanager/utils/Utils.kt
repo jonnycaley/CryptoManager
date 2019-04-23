@@ -98,42 +98,6 @@ object Utils {
         }
     }
 
-//    fun formatPrice(priceAsDouble: BigDecimal, symbol: String): String {
-//
-//        if (priceAsDouble.toString() == "0" || priceAsDouble.toString() == "0.0" || priceAsDouble.toString() == "0.00") {
-//            return "${symbol}0"
-//        }
-//
-//        var absPrice = priceAsDouble
-//
-//        var priceSubtractor = false
-//
-//        if (priceAsDouble < 0.toBigDecimal()) {
-//            priceSubtractor = true
-//            absPrice = priceAsDouble * (-1).toBigDecimal()
-//        }
-//
-//        val price = Utils.toDecimals(absPrice, 8).toDouble()
-//
-//        var priceText: String
-//
-//        priceText = if (price > 1)
-//            Utils.toDecimals(absPrice, 2)
-//        else
-//            "0${Utils.toDecimals(absPrice, 6)}"
-//
-//        if (priceText.indexOf(".") != -1 && (priceText.indexOf(".") + 1 == priceText.length - 1))
-//            priceText += "0"
-//
-//        priceText = symbol + priceText
-//
-//        if (priceSubtractor)
-//            priceText = "-$priceText"
-//
-//        return priceText
-//    }
-
-
     fun getReadTime(words: Int?): String {
         if (words != null)
             return "${Integer.valueOf(Math.ceil((words?.div(130)?.toDouble()!!)).toInt())} min read  •  "
@@ -186,7 +150,8 @@ object Utils {
             val formatter = DecimalFormat("#,###,###.##")
 
             when {
-                absPrice!! < 0.000001 -> return "${symbol}0"
+                absPrice == 0.toDouble() -> return "${symbol}0"
+                absPrice!! < 0.000001 -> return "${symbol}0.000001"
                 absPrice < 1 -> text = String.format("%.6f", absPrice)
                 else -> {
                     text = formatter.format(absPrice)
@@ -207,7 +172,8 @@ object Utils {
             if(text[text.length - 2].toString()  ==  ".")
                 text += "0"
 
-        //TODO: MAYBE REDUCE $0.330000 TO $0.33
+        if(!text.contains("."))
+            text += ".00"
 
         return text
     }

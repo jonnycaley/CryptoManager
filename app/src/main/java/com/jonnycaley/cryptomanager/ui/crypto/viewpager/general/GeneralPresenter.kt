@@ -54,7 +54,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
         if (dataManager.checkConnection()) {
             view.notifyActivityOfInternet()
-            getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD) //TODO: needs to be refactored
+            getCurrencyChart(view.getSelectedChartTimeFrame(), view.getSymbol(), conversionUSD)
             getCurrencyGeneralData(view.getSymbol())
             getCurrencyNews(view.getSymbol())
         } else {
@@ -155,7 +155,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
 
                         override fun onNext(graphData: HistoricalData) {
                             if (graphData.data?.isEmpty() == true) {
-                                //TODO: IF THE DATA COMES BACK EMPTY (DGTX) REQUEST
+
                             } else {
 
                                 graphData.data?.first()?.open?.let { open -> graphData.data?.last()?.close?.let { close -> mBaseFiat?.let { baseFiat -> view.showPriceChange(open, close, baseFiat) } } }

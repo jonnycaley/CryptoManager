@@ -56,7 +56,6 @@ class CryptoPresenter (var dataManager: CryptoDataManager, var view: CryptoContr
 
         } else {
 //            view.showNoInternet()
-            //TODO: GET IMAGE FROM STORAGE SLOOOOOOOOWER
         }
     }
 

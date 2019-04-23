@@ -14,6 +14,7 @@ import com.jonnycaley.cryptomanager.data.model.CryptoCompare.AllCurrencies.Datum
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.Rate
 import com.jonnycaley.cryptomanager.ui.portfolio.PortfolioFragment
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQueryTextListener {
@@ -43,6 +44,9 @@ class SearchActivity : AppCompatActivity() , SearchContract.View, SearchView.OnQ
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
         }
+
+        Slidr.attach(this)
+
         setupToolbar()
         setupSearchBar()
         recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() { //add listener

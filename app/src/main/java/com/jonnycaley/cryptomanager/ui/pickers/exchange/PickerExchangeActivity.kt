@@ -17,6 +17,7 @@ import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.CryptoCompare.Exchanges.Exchange
 import com.jonnycaley.cryptomanager.ui.transactions.crypto.CryptoTransactionActivity
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_picker_exchange.*
 
 class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View, SearchView.OnQueryTextListener {
@@ -43,6 +44,8 @@ class PickerExchangeActivity : AppCompatActivity(), PickerExchangeContract.View,
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_picker_exchange)
+
+        Slidr.attach(this)
 
         if(!Utils.isDarkTheme()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp) //change icon

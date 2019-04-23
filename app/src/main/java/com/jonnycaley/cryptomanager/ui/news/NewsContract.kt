@@ -13,7 +13,6 @@ interface NewsContract {
         fun showScrollLayout()
         fun showProgressBar()
         fun showNoInternetLayout()
-//        fun showMoreNews(linkedCrypto: HashMap<Article, Currency?>, savedArticles: ArrayList<Article>)
         fun setIsLoading(b: Boolean)
         fun hideNoInternetLayout()
         fun showError()

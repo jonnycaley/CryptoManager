@@ -28,8 +28,6 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
         holder.setIsRecyclable(false)
 
-        val convertedPrice = transaction.price.times(baseFiat.rate?: 1.toBigDecimal()) //
-
         val symbol = Utils.getFiatSymbol(baseFiat.fiat)
 
         val priceUsd = getPrice(transaction)
@@ -66,55 +64,23 @@ class TransactionsAdapter(val transactions: List<Transaction>, val currency: Str
 
         if(transaction.symbol == currency){ //buy transaction
 
-            var multiplier = 1.toBigDecimal()
-
             if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a buy transaction
                 holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_green)
             }
             if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a sell transaction
-                multiplier = (-1).toBigDecimal()
                 holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_red)
-//                holder.textProceeds.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * multiplier * convertedPrice)).toDouble(), symbol)
-            }
-
-            if (currentUSDPrice != null) {
-//                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * multiplier)).toDouble(), symbol)
-
-//                val change = ((((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))).minus((currentUSDPrice * (transaction.quantity * multiplier)))).div((transaction.isDeductedPriceUsd.times((convertedPrice * transaction.quantity))))).times((-100).toBigDecimal()))
-//                holder.textChange.text = Utils.formatPercentage(change)
-//
-//                if(change > 0.toBigDecimal())
-//                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
-//                else
-//                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
-
             }
         }
         if(transaction.pairSymbol == currency){ //sell transaction
-
-            var multiplier = 1.toBigDecimal()
 
             if(transaction.quantity > 0.toBigDecimal()){ //positive quantity means its a sell transaction
                 holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_red)
             }
             if(transaction.quantity < 0.toBigDecimal()){ //negative quantity means its actually a buy transaction
-                multiplier = -1.toBigDecimal()
                 holder.type.background = context?.resources?.getDrawable(R.drawable.button_checked_green)
             }
 
-//            holder.textProceeds.text = Utils.getPriceTextAbs((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).toDouble(), symbol)
-//            holder.textCost.text = Utils.getPriceTextAbs(transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
-
             if (currentUSDPrice != null) {
-//                holder.textWorth.text = Utils.getPriceTextAbs((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)).toDouble(), symbol)
-
-//                val change = (((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))).minus((currentUSDPrice * (transaction.quantity * convertedPrice * multiplier)))).div((transaction.isDeductedPriceUsd.times((transaction.quantity * convertedPrice * multiplier))))).times(-100.toBigDecimal())
-//                holder.textChange.text = Utils.formatPercentage(change)
-//
-//                if(change > 0.toBigDecimal())
-//                    context?.resources?.getColor(R.color.green)?.let { holder.textChange.setTextColor(it) }
-//                else
-//                    context?.resources?.getColor(R.color.red)?.let { holder.textChange.setTextColor(it) }
             }
         }
 

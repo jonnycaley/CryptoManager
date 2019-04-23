@@ -95,7 +95,6 @@ class SplashPresenter(var dataManager: SplashDataManager, var view: SplashContra
     */
     override fun getCurrencies() {
 
-        //TODO: FINISH ERROR HANDLING
 
         if(dataManager.checkConnection()){
 

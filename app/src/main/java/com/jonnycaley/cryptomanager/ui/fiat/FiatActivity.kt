@@ -14,6 +14,7 @@ import com.jonnycaley.cryptomanager.R
 import com.jonnycaley.cryptomanager.data.model.DataBase.Transaction
 import com.jonnycaley.cryptomanager.ui.transactions.fiat.FiatTransactionArgs
 import com.jonnycaley.cryptomanager.utils.Utils
+import com.r0adkll.slidr.Slidr
 import kotlinx.android.synthetic.main.activity_fiat.*
 import java.math.BigDecimal
 import kotlin.math.absoluteValue
@@ -42,6 +43,8 @@ class FiatActivity : AppCompatActivity() , FiatContract.View, View.OnClickListen
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fiat)
+
+        Slidr.attach(this)
 
         buttonAddTransaction.setOnClickListener(this) //add transaction button listener
 

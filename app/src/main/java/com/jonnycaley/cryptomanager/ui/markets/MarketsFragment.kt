@@ -47,9 +47,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     val textVolume by lazy { root.findViewById<TextView>(R.id.text_volume) }
     val textBTCDominance by lazy { root.findViewById<TextView>(R.id.text_btc_dominance) }
 
-    val headerGlobalData by lazy { root.findViewById<TextView>(R.id.header_global_data) }
-    val headerAllCurrencies by lazy { root.findViewById<TextView>(R.id.header_currencies) }
-
     val text1H by lazy { root.findViewById<TextView>(R.id.text_1H) }
     val text1D by lazy { root.findViewById<TextView>(R.id.text_1D) }
     val text1W by lazy { root.findViewById<TextView>(R.id.text_1W) }
@@ -91,11 +88,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
 
         swipeRefreshLayout.setOnRefreshListener(this) //set onrefresh
-
-//        val custom_font = Typeface.createFromAsset(context?.applicationContext?.assets, "fonts/Roboto-Bold.ttf")
-
-//        headerAllCurrencies.typeface = custom_font
-//        headerGlobalData.typeface = custom_font
 
         textTryAgain.setOnClickListener(this) //set onclick
         rank.setOnClickListener(this) //set onclick
@@ -173,11 +165,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     Function changes the time frame text
     */
     private fun changeTimeFrameText() {
-
-//        text1H.setTypeface(null, Typeface.NORMAL)
-//        text1D.setTypeface(null, Typeface.NORMAL)
-//        text1W.setTypeface(null, Typeface.NORMAL)
-
         setTextColorSecondary(text1H) //reset time frame
         setTextColorSecondary(text1D) //reset time frame
         setTextColorSecondary(text1W) //reset time frame
@@ -185,15 +172,12 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         when (timeframe) {
             TIMEFRAME_1H -> {
                 setTextColorPrimary(text1H)
-//                text1H.setTypeface(text1H.typeface, Typeface.BOLD)
             }
             TIMEFRAME_1D -> {
                 setTextColorPrimary(text1D)
-//                text1D.setTypeface(text1D.typeface, Typeface.BOLD)
             }
             TIMEFRAME_1W -> {
                 setTextColorPrimary(text1W)
-//                text1W.setTypeface(text1W.typeface, Typeface.BOLD)
             }
         }
     }
@@ -249,22 +233,18 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         when (filter) {
             FILTER_RANK_DOWN -> {
                 setTextColorPrimary(rank)
-//                rank.setTypeface(rank.typeface, Typeface.BOLD)
                 rank.text = "#▼"
             }
             FILTER_RANK_UP -> {
                 setTextColorPrimary(rank)
-//                rank.setTypeface(rank.typeface, Typeface.BOLD)
                 rank.text = "#▲"
             }
             FILTER_NAME_DOWN -> {
                 setTextColorPrimary(name)
-//                name.setTypeface(name.typeface, Typeface.BOLD)
                 name.text = "Name▼"
             }
             FILTER_NAME_UP -> {
                 setTextColorPrimary(name)
-//                name.setTypeface(name.typeface, Typeface.BOLD)
                 name.text = "Name▲"
             }
             FILTER_PRICE_DOWN -> {
@@ -299,8 +279,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
     */
     @SuppressLint("SetTextI18n")
     override fun showMarketData(marketData: Market, baseFiat: Rate) {
-
-        //TODO: MARKET DATA COMES BACK NULL SOMETIMES WTF
 
         textMarketCap.text = "${Utils.getFiatSymbol(baseFiat.fiat)}${marketData.data?.quote?.uSD?.totalMarketCap?.let { baseFiat.rate?.let { it1 -> truncateNumber(it*it1)  }}}"
 
@@ -397,98 +375,6 @@ class MarketsFragment : androidx.fragment.app.Fragment(), MarketsContract.View, 
         }
         currenciesAdapter.sort(filter)
     }
-
-
-//    override fun showTop8Changes(currencies: List<Currency>?, baseRate: Rate, resultsCount: Int) {
-//
-//        isLoading = false
-//
-//        Log.i(TAG, currencies?.size.toString() + " S E E  H E R E1")
-//        Log.i(TAG, "$resultsCount results")
-//
-//        if (mLayoutManager == null) {
-//
-//            Log.i(TAG, currencies?.size.toString() + " S E E  H E R E2")
-//
-//            mLayoutManager = LinearLayoutManager(context)
-//            recyclerViewCurrencies.layoutManager = mLayoutManager
-//            currenciesAdapter = CurrenciesAdapter(ArrayList(currencies), baseRate, context, timeframe)
-//            recyclerViewCurrencies.adapter = currenciesAdapter
-//
-//            nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
-//
-//                val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
-//                val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
-//
-//                if ((diff == 0) && !isLoading) {
-//
-//
-//
-//                    isLoading = true
-//                    if(resultsCount > currenciesAdapter.currencies?.size!!){
-//                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
-//                        progressBar.visibility = View.VISIBLE
-//                    } else {
-//                        progressBar.visibility = View.GONE
-//                    }
-//
-//                    println("1")
-//                    println(resultsCount)
-//                    println(currenciesAdapter.currencies?.size!!)
-//                    isLoading = true
-//                    if (resultsCount > currenciesAdapter.currencies?.size!!) {
-//                        println("2")
-//                        presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
-//                        progressBar.visibility = View.VISIBLE
-//                    } else {
-//                        println("3")
-//                        progressBar.visibility = View.GONE
-//                    }
-//                }
-//
-//            }
-//        } else {
-//
-//            Log.i(TAG, currencies?.size.toString() + " S E E  H E R E3")
-//            Log.i(TAG, resultsCount.toString())
-//            Log.i(TAG, currenciesAdapter.currencies?.size.toString()!!)
-//
-//            currenciesAdapter.swap(ArrayList(currencies), baseRate)
-//
-//            if (currencies?.size!! < 100 || resultsCount <= currenciesAdapter.currencies?.size!!) {
-//                progressBar.visibility = View.GONE
-//
-//                nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
-//                    //                var scrollY = nestedScrollView.scrollY
-//                }
-//
-//            } else {
-//
-//                nestedScrollView.viewTreeObserver.addOnScrollChangedListener {
-//
-//                    val view = nestedScrollView.getChildAt(nestedScrollView.childCount - 1) as View
-//                    val diff = view.bottom - (nestedScrollView.height + nestedScrollView.scrollY)
-//
-//
-//
-//
-//                    if ((diff == 0) && !isLoading) {
-//                        isLoading = true
-//                        if(resultsCount > currenciesAdapter.currencies?.size!!){
-//                            presenter.loadMoreItems(currenciesAdapter.currencies, resultsCount - currenciesAdapter.currencies!!.size, searchView.query.trim())
-//                            progressBar.visibility = View.VISIBLE
-//                        } else {
-//                            progressBar.visibility = View.GONE
-//                        }
-//                    }
-//
-//                }
-//
-//            }
-//        }
-//        currenciesAdapter.sort(filter)
-//    }
-
 
     var layoutManager: androidx.recyclerview.widget.LinearLayoutManager? = null
 

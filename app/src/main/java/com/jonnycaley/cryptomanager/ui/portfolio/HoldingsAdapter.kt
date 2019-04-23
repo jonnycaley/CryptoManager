@@ -146,9 +146,7 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
                             holder.change.text = "-"
                             context?.resources?.getColor(R.color.text_grey)?.let { holder.change.setTextColor(it) }
                         } else {
-                            Log.i(TAG, "$change")
-                            Log.i(TAG, "$absBalanceBtc")
-                            val changePct = change?.div(absBalanceBtc) //TODO: IF DIV BY 0 (WHEN PRESSED QUICKLY BETWEEN SORTS)
+                            val changePct = change?.div(absBalanceBtc)
                             formatPercentage(changePct?.times(100.toBigDecimal()), holder.change)
                         }
                     }
@@ -422,8 +420,6 @@ class HoldingsAdapter(var holdings: ArrayList<Holding>, val prices: ArrayList<Pr
         } else {
             Log.i(TAG, "Descending")
             tempHoldings.asReversed().forEach{
-                println(it.symbol)
-                //TODO: MAYBE NOT WORKING PROPERLY
             }
             this.holdings.addAll(tempHoldings)
         }
