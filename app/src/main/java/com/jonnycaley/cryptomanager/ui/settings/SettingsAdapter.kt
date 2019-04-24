@@ -12,6 +12,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.ContextCompat.startActivity
 import com.jonnycaley.cryptomanager.ui.settings.bookmarkedArticles.BookmarkedArticlesActivity
+import com.jonnycaley.cryptomanager.ui.settings.predictor.PredictorActivity
 import com.jonnycaley.cryptomanager.ui.settings.selectCurrency.SelectCurrencyActivity
 import com.jonnycaley.cryptomanager.ui.settings.transactionHistory.TransactionHistoryActivity
 import com.jonnycaley.cryptomanager.utils.Utils
@@ -83,8 +84,7 @@ class SettingsAdapter(val settings: ArrayList<String>, val fiatString: String?, 
                     context.let { context -> startActivity(context, Intent.createChooser(sharingIntent, "Share via"), null) }
                 }
                 context?.resources?.getString(R.string.settings_predictor) ->{
-                    val builder = Utils.webViewBuilder(context)
-                    builder.show("https://jonnycaley.github.io/Crypto.html")
+                    startActivity(context, Intent(context, PredictorActivity::class.java), null)
                 }
                 context?.resources?.getString(R.string.settings_review_app) ->{
                     val intent = Intent(Intent.ACTION_VIEW)

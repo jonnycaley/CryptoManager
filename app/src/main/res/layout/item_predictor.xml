@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_base_horizontal"
+        android:paddingTop="@dimen/margin_base_vertical"
+        android:paddingEnd="@dimen/margin_base_horizontal"
+        android:paddingBottom="@dimen/margin_base_vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/prediction_type"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_base_horizontal"
+                android:background="@drawable/button_checked" />
+
+            <LinearLayout
+                android:id="@+id/layout_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/prediction_type"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LSTM"
+                    android:textColor="?attr/textColor"
+                    android:textSize="@dimen/text_size_body_1" />
+
+
+                <TextView
+                    android:id="@+id/units"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="units=128"
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/shape"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="input_shape=64"
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/return_sequences"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="return_sequences=True"
+                    android:textColor="?attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_body_2"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <include
+        layout="@layout/item_border"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
+
+</LinearLayout>
