@@ -42,9 +42,9 @@ class Article : Serializable{
     @SerializedName("source")
     @Expose
     var source: Source? = null
-    @SerializedName("thumbnail")
-    @Expose
-    var thumbnail: String? = null
+//    @SerializedName("thumbnail")    BECAME REDUNDANT - USING originalImageUrl INSTEAD
+//    @Expose
+//    var thumbnail: String? = null
     @SerializedName("sourceDomain")
     @Expose
     var sourceDomain: String? = null

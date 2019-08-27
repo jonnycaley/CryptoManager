@@ -22,11 +22,11 @@ class BookmarkedArticlesAdapter(val articles: ArrayList<Article>?, val context: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = articles?.get(position)
 
-        if (item?.thumbnail == null) {
+        if (item?.originalImageUrl == null) {
             holder.image.visibility = View.GONE
         } else {
             Picasso.with(context)
-                    .load(item?.thumbnail)
+                    .load(item?.originalImageUrl)
                     .fit()
                     .centerCrop()
                     .into(holder.image)

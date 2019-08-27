@@ -44,7 +44,7 @@ class PredictorAdapter(val layers: MutableList<Layer>, val context: Context?) : 
 
             }
             "BatchNormalizationV1" -> {
-                holder.type.text = "BatchNormalization()"
+                holder.type.text = "Batch Normalization"
                 holder.prediction_type.setBackgroundResource(R.drawable.button_checked_red)
             }
             "Dense" -> {

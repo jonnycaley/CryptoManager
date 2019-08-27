@@ -31,12 +31,12 @@ class NewsArticlesVerticalAdapter(var newsItems: HashMap<Article, Currency?>, va
             holder.imageEnlarged.visibility = View.GONE
             holder.image.visibility = View.VISIBLE
 
-            if (article.thumbnail == null) {
+            if (article.originalImageUrl == null) {
                 holder.image.visibility = View.GONE
                 holder.cardImage.visibility = View.GONE
             } else {
                 Picasso.with(context)
-                        .load(article.thumbnail)
+                        .load(article.originalImageUrl)
                         .placeholder(R.drawable.rounded_card_image)
                         .fit()
                         .centerCrop()

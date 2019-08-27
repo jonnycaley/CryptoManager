@@ -40,7 +40,7 @@ class SimilarArticlesHorizontalAdapter(private val articles : List<SimilarArticl
             newNews.publishedAt = item?.publishedAt
             newNews.sourceDomain = item?.sourceDomain
             newNews.url = item?.url
-            newNews.thumbnail = item?.thumbnail
+            newNews.originalImageUrl = item?.thumbnail
 
             val builder = context?.let { context -> Utils.webViewBuilder(context) }
             item?.url?.let { url -> builder?.show(url) }

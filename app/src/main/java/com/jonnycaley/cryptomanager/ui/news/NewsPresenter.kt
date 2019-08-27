@@ -1,6 +1,7 @@
 package com.jonnycaley.cryptomanager.ui.news
 
 import android.util.Log
+import android.widget.Toast
 import com.jonnycaley.cryptomanager.data.model.CoinMarketCap.Currency
 import com.jonnycaley.cryptomanager.data.model.CryptoControlNews.News.Article
 import com.jonnycaley.cryptomanager.data.model.ExchangeRates.ExchangeRates
@@ -50,7 +51,11 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                     .observeOn(Schedulers.computation())
                     .map { news ->
                         this.news.clear()
-                        news.filter { it.thumbnail != null }.sortedBy { it.publishedAt }.forEach { this.news.add(it) } //filter for ones with an image
+                        println("See here...")
+                        println(news.size)
+                        news.forEach { println(it.originalImageUrl) }
+                        println(news.filter { it.originalImageUrl != null }.sortedBy { it.publishedAt }.size)
+                        news.filter { it.originalImageUrl != null }.sortedBy { it.publishedAt }.forEach { this.news.add(it) } //filter for ones with an image
                     }
                     .observeOn(Schedulers.io())
                     .flatMapCompletable {
@@ -129,6 +134,7 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
                     .map { currencies ->
                         this.top100.clear()
                         currencies.data?.forEach { this.top100.add(it) }
+                        println(this.top100.size)
                         linkedCryptos = linkCryptoToArticles(this.news, top100)
                         return@map currencies
                     }
@@ -231,6 +237,9 @@ class NewsPresenter(var dataManager: NewsDataManager, var view: NewsContract.Vie
     Function links the crypto to articles for crypto icon if possible
     */
     private fun linkCryptoToArticles(newsItems: ArrayList<Article>, top100: ArrayList<Currency>): HashMap<Article, Currency?> {
+
+        println(newsItems.size)
+        println(top100.size)
 
         val map = HashMap<Article, Currency?>() //put in it
 

@@ -213,7 +213,7 @@ class GeneralPresenter(var dataManager: GeneralDataManager, var view: GeneralCon
                             if(articles.isEmpty())
                                 view.showNoNews()
                             else
-                                view.loadCurrencyNews(articles.filter { it.thumbnail != null }.toTypedArray(), savedArticles)
+                                view.loadCurrencyNews(articles.filter { it.originalImageUrl != null }.toTypedArray(), savedArticles)
                         }
 
                         override fun onSubscribe(d: Disposable) {

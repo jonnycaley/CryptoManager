@@ -22,7 +22,7 @@ import kotlin.collections.ArrayList
 import android.graphics.Typeface
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.thefinestartist.Base.getAssets
+//import com.thefinestartist.Base.getAssets
 
 class SettingsFragment : androidx.fragment.app.Fragment(), SettingsContract.View, TabInterface {
 

@@ -24,11 +24,11 @@ class GeneralArticlesVerticalAdapter(var newsItems: ArrayList<Article>, var save
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = newsItems[position]
 
-        if(item.thumbnail == null){
+        if(item.originalImageUrl == null){
             holder.image.visibility = View.GONE
         } else {
             Picasso.with(context)
-                    .load(item.thumbnail)
+                    .load(item.originalImageUrl)
                     .fit()
                     .centerCrop()
                     .into(holder.image)
